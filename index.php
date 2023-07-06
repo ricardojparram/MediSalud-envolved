@@ -1,7 +1,5 @@
 <?php  
  
- /* SERA QUE SIRVE XD*/
-
   session_start();
 
   if(file_exists('vendor/autoload.php')) {
