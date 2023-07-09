@@ -202,7 +202,7 @@
              <?php if(isset($mostraPres)){
                foreach($mostraPres as $data){
                  ?> 
-                 <option value="<?php echo $data->cod_pres; ?>" class="opcion"><?php echo $data->cantidad; ?></option>
+                 <option value="<?php echo $data->cod_pres; ?>" class="opcion"><?php echo $data->cantidad; echo $data->medida; ?></option>
                  <?php
                }
              }else{"";}?>
@@ -414,6 +414,25 @@
        </div>
 
        <div class="form-group col-lg-3">
+        <label class="col-form-label"> <strong>Presentación*</strong> </label>
+        <div class="input-group">
+         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx  bxs-capsule"></i></button>
+         <select class="form-control" aria-label="Default select example" name="presentaciónEd" id="presentaciónEd">
+           <option selected disabled>Seleccione una opción</option>
+           <?php if(isset($mostraPres)){
+             foreach($mostraPres as $data){
+               ?> 
+               <option value="<?php echo $data->cod_pres; ?>" class="opcion"><?php echo $data->cantidad; echo $data->medida; ?></option>
+               <?php
+             }
+           }else{"";}?>
+           
+         </select>
+       </div>
+       <p class="error" id="errorE8" style="color: red"></p>  
+     </div>
+
+       <div class="form-group col-lg-3">
         <label class="col-form-label"> <strong>Tipo de producto*</strong> </label>
         <div class="input-group">
           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx bxs-bong"></i></button>
@@ -431,26 +450,6 @@
        </div>
         <p class="error" id="errorE7" style="color: red"></p> 
      </div>
-
-     
-     <div class="form-group col-lg-3">
-      <label class="col-form-label"> <strong>Presentación*</strong> </label>
-      <div class="input-group">
-       <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx  bxs-capsule"></i></button>
-       <select class="form-control" aria-label="Default select example" name="presentaciónEd" id="presentaciónEd">
-         <option selected disabled>Seleccione una opción</option>
-         <?php if(isset($mostraPres)){
-           foreach($mostraPres as $data){
-             ?> 
-             <option value="<?php echo $data->cod_pres; ?>" class="opcion"><?php echo $data->cantidad; ?></option>
-             <?php
-           }
-         }else{"";}?>
-         
-       </select>
-     </div>
-      <p class="error" id="errorE8" style="color: red"></p>  
-    </div>
 
     <div class="form-group col-lg-3">
       <label class="col-form-label"> <strong>Clase*</strong> </label>
