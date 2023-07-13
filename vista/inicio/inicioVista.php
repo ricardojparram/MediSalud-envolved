@@ -8,18 +8,18 @@
   <?php $VarComp->header(); ?>
 </head>
 
-<body class="bg-gradient-primary" id="body">
+<body class="vw-100 vh-100" id="body">
 
-  <header >
-     <nav class="navbar navbar-expand-lg navbar-light fixed-top py-4 d-block" id="navbar">
+  <header class="w-100 h-100">
+     <nav class="navbar navbar-expand-lg navbar-light fixed-top d-block" id="navbar">
         <div class="container">
           <a class="navbar-brand d-inline-flex" href="index.html">
-            <img class="d-inline-block" src="assets/img/Logo_Medi.png" alt="logo" style="width: 2em" />
+            <img class="d-inline-block" src="assets/img/Logo_Medi.png" alt="logo" width="50px" height="50px" />
             <span class="text-1000 fs-0 fw-bold m-2">Medisalud</span>
           </a>
 
           <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-          <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
+          <div class="collapse navbar-collapse mt-4 mt-lg-0" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="#categoryWomen">Inicio</a></li>
               <li class="nav-item px-2"><a class="nav-link fw-medium" href="#header">Nosotros</a></li>
@@ -27,7 +27,7 @@
               <li class="nav-item px-2"><a class="nav-link fw-medium" href="#outlet">Comprar</a></li>
               <li class="nav-item px-2"><a class="nav-link fw-medium" href="#outlet">Contactos</a></li>
             </ul>
-            <form class="d-flex"><a class="text-1000" href="#!">
+            <!-- <form class="d-flex"><a class="text-1000" href="#!">
                 <svg class="feather feather-phone me-3 text-success" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                 </svg></a><a class="text-1000" href="#!">
@@ -46,25 +46,30 @@
                 </svg></a><a class="text-1000" href="#!">
                 <svg class="feather feather-heart me-3 text-success" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg></a></form>
-                <div class="">
-                  <a class="text-decoration-underline text-success" href="#">Iniciar sesión</a>
-                  <a class="text-decoration-underline text-success ps-2" href="#">Registrarse</a> 
+                </svg></a></form> -->
+                <div class="mx-2 mx-lg-0">
+                  <a class="text-success" href="#"><em>Iniciar sesión  </em><i class="bi bi-person-fill"></i></a>
+                  <a class="text-success ps-2" href="#"><em>Registrarse  </em><i class="bi bi-person-lines-fill"></i></a>
                 </div>
           </div>
         </div>
       </nav>
 
-    <section class="d-flex justify-content-center align-items-center h-100 w-100 mt-5">
-      <div>
-        <h1></h1>
-      </div>
-      <div class="mt-5"></div> 
-
+      <section class="d-flex justify-content-center align-items-center h-100 w-100">
+        <div>
+          <h1>ASDGSDGDSG</h1>
+        </div>
+        <div class="mt-5"></div> 
       </section>
-    
-
   </header>
+
+  <main class="w-100 h-100">
+    <h1>MAIN JASDGJSDG</h1>
+  </main>
+
+  <footer class="h-25 w-100">
+    <h1>FOOTER</h1>
+  </footer>
 
   <?php $VarComp->js() ?>
 
