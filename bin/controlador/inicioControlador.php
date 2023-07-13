@@ -5,6 +5,6 @@
 
 	$VarComp = new initcomponents();
 
-	require "vista/inicio/principalVista.php";	
+	require "vista/inicio/inicioVista.php";	
 
 ?>
