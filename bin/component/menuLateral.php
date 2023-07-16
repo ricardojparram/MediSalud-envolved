@@ -25,6 +25,7 @@
     $tipo = ($_GET['url'] == 'tipo')? "active" : "" ;
     $reportes = ($_GET['url'] == 'reportes')? "": "collapsed";
     $usuario = ($_GET['url'] == 'usuario')? "": "collapsed";
+    $bitacora = ($_GET['url'] == 'bitacora')? "": "collapsed";
 
     $menu = '';
     if(!isset($_SESSION['nivel'])){
@@ -147,6 +148,13 @@
               <span>Usuarios</span>
             </a>
           </li>
+
+
+          <li class="nav-item ">
+            <a class="nav-link '.$bitacora.'" href="?url=bitacora">
+              <i class="bi bi-journal-text"></i><span>Bitacora</span>
+            </a>
+          </li>
           <!-- End Profile Page Nav -->
 
         </ul>
@@ -260,6 +268,7 @@
               <i class="bi bi-card-checklist"></i><span>Reportes</span>
             </a>
           </li>
+
 
           <!-- End Tables Nav -->
           
