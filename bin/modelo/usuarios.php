@@ -228,6 +228,9 @@ private function eliminarUsuario(){
   private function editarUsuario(){
 
     try{
+      
+      $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+
       $new = $this->con->prepare("UPDATE `usuario` SET `cedula`= ?,`nombre`= ?,`apellido`= ?,`correo`= ?,`password`=?,`nivel`=? WHERE `usuario`.`cedula` = ?");
       $new->bindValue(1, $this->cedula);
       $new->bindValue(2, $this->name); 
