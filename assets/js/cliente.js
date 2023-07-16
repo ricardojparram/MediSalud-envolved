@@ -30,9 +30,9 @@ $(document).ready(function(){
     const intervalID = setInterval(refrescar, 1000,);
 
     */
-
-    refrescar();
     let tabla;
+    refrescar();
+    
     function refrescar(){ 
       $.ajax({
         method: "post",
