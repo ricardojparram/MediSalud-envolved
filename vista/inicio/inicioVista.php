@@ -38,9 +38,9 @@
       <div class=" d-flex justify-content-center align-items-center h-100 w-100">
           <div id="carouselExampleCaptions" class="carousel">
             <div class="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active bg-black" aria-current="true" aria-label="Slide 1"></button>
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2" class="bg-black"></button>
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3" class="bg-black"></button>
             </div>
             <div class="carousel-inner ">
               <div class="carousel-item active">
@@ -51,7 +51,7 @@
                 </div>
               </div>
               <div class="carousel-item">
-                <img src="assets/img/Grafico.png"" class="d-block vw-100" alt="...">
+                <img src="assets/img/Grafico.png" class="d-block vw-100" alt="...">
                 <div class="carousel-caption d-none d-md-block text-dark">
                   <h5>Second slide label</h5>
                   <p>Some representative placeholder content for the second slide.</p>
