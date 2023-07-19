@@ -17,7 +17,9 @@
   
 
   if(isset($_POST['mostrar'])){
-    $objModel->mostrarLaboratoriosAjax();
+    ($_POST['bitacora'] == 'true')
+      ? $objModel->mostrarLaboratoriosAjax(true)
+      : $objModel->mostrarLaboratoriosAjax();
   }
 
   if(isset($_POST['rif']) && isset($_POST['direccion']) && isset($_POST['razon']) && isset($_POST['telefono'])&& isset($_POST['contacto'])){
