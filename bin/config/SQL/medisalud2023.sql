@@ -69,11 +69,11 @@ CREATE TABLE `usuario`(
 
 -- TABLA PARA BITACORA 
 CREATE TABLE `bitacora` (
-  `id` int(11) AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  `id` int AUTO_INCREMENT PRIMARY KEY,
   `modulo` varchar(20) NOT NULL,
   `usuario` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
-  `fecha` datetime NOT NULL,
+  `fecha` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
   `status` int(11) NOT NULL,
   FOREIGN KEY (`usuario`) REFERENCES `usuario` (`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
