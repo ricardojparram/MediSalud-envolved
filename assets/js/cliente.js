@@ -32,6 +32,16 @@ $(document).ready(function(){
     */
     let tabla;
     refrescar();
+    consulta();
+
+    function consulta(){
+      $.ajax({
+        method: "post",
+        url: "",
+        dataType: "json",
+        data: {consul: "clien" },
+      })
+    }
     
     function refrescar(){ 
       $.ajax({
@@ -177,7 +187,7 @@ $(document).ready(function(){
           $("#emailClienEdit").val(data[0].correo);
         }
       })
-
+    });
 
       $("#enviarEdit").click((e)=>{
         e.preventDefault();
@@ -206,7 +216,7 @@ $(document).ready(function(){
             console.log(result);
             if (result.resultado === "Editado") {
               tabla.destroy();
-              $("#cerrarRegisEdit").click();
+              $("#cerrarModalEdit").click();
               Toast.fire({ icon: 'success', title: 'Cliente Actualizado' })
               refrescar();
             }
@@ -217,7 +227,19 @@ $(document).ready(function(){
 
         })  
       })
-    });
+
+      $(document).on('click', '#cerrarModalEdit', function() {
+        $('#error2').text(" ");
+        $("#editModal input").attr("style","border-color: none;")
+        $("#editModal input").attr("style","backgraund-image: none;");
+      })
+
+      $(document).on('click', '#cerrarModal', function() {
+        $('#error').text(" ");
+        $("#basicModal input").attr("style","border-color: none;")
+        $("#basicModal input").attr("style","backgraund-image: none;");
+      })
+    
 
     function validarC(){
       $.getJSON('',{

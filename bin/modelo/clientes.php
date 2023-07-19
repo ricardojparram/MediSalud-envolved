@@ -15,14 +15,16 @@ class clientes extends DBConnect{
     private $id;
     private $unico;
 
-	private $sesionCedula;
-
-
     public function __construct(){
         parent::__construct();
     }
 
-    public function getRegistrarClientes($nombre, $apellido, $cedula, $direccion, $telefono, $correo, $sesionCedula){
+    public function consulta(){
+        $this->binnacle("Cliente",$_SESSION['cedula'],"Consulto listado");
+        die();
+    }
+
+    public function getRegistrarClientes($nombre, $apellido, $cedula, $direccion, $telefono, $correo){
 
         if(preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $nombre) == false){
             $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
@@ -51,7 +53,6 @@ class clientes extends DBConnect{
         $this->direccion =$direccion;
         $this->telefono =$telefono;
         $this->correo =$correo;
-        $this->sesionCedula =$sesionCedula;
 
         return $this->registraCliente();
     }
@@ -80,12 +81,10 @@ class clientes extends DBConnect{
               $new->execute();
               $resultado = ['resultado' => 'Registrado correctamente.'];
               echo json_encode($resultado);
-              
-
-              $new = $this->con->prepare("INSERT INTO bitacora(id, modulo, usuario, descripcion, fecha, status) VALUES (DEFAULT,'Cliente',?,'Registro un cliente',DEFAULT,1)");
-              $new->bindValue(1, $this->sesionCedula);
-              $new->execute();
+              $this->binnacle("Cliente",$_SESSION['cedula'],"Registro un cliente");
               die();
+
+
 
           }else{
             $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
@@ -99,9 +98,8 @@ class clientes extends DBConnect{
 
     }
 
-    public function eliminarClientes($cedulaDel, $sesionCedula){
+    public function eliminarClientes($cedulaDel){
         $this->id = $cedulaDel;
-        $this->sesionCedula =$sesionCedula;
 
         return $this->eliminar();
     }
@@ -113,10 +111,7 @@ class clientes extends DBConnect{
             $new->execute();
             $resultado = ['resultado' => 'Eliminado'];
             echo json_encode($resultado);
-            
-            $new = $this->con->prepare("INSERT INTO bitacora(id, modulo, usuario, descripcion, fecha, status) VALUES (DEFAULT,'Cliente',?,'Elimino un cliente',DEFAULT,1)");
-            $new->bindValue(1, $this->sesionCedula);
-            $new->execute();
+            $this->binnacle("Cliente",$_SESSION['cedula'],"Elimino un cliente");
             die();
 
         }
@@ -125,32 +120,16 @@ class clientes extends DBConnect{
         }
     }
 
-    public function mostrarClientes($sesionCedula){
+    public function mostrarClientes(){
         try{
             $query = "SELECT c.nombre, c.apellido, c.cedula, c.direccion, cc.celular, cc.correo, CONCAT('<button type=\"button\" class=\"btn btn-success editar\" id=\"',c.cedula,'\" data-bs-toggle=\"modal\" data-bs-target=\"#editModal\"><i class=\"bi bi-pencil\"></i></button> <button type=\"button\" class=\"btn btn-danger eliminar\" id=\"',c.cedula,'\" data-bs-toggle=\"modal\" data-bs-target=\"#delModal\"><i class=\"bi bi-trash3\"></i></button>') AS opciones FROM cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula WHERE status = 1";
             $new = $this->con->prepare($query);
             $new->execute();
             $data = $new->fetchAll();
             echo json_encode($data);
-            
+            die();
         }
         catch(\PDOexection $error){
-            return $error;
-        }
-
-        $this->sesionCedula =$sesionCedula;
-
-        $this->bCliente();
-
-    }
-
-    private function bCliente(){
-        try {
-            $new = $this->con->prepare("INSERT INTO bitacora(id, modulo, usuario, descripcion, fecha, status) VALUES (DEFAULT,'Cliente',?,'Consulto listado de clientes',DEFAULT,1)");
-            $new->bindValue(1, $this->sesionCedula);
-            $new->execute();
-            die();
-        } catch (\PDOexection $error) {
             return $error;
         }
     }
@@ -176,7 +155,7 @@ class clientes extends DBConnect{
         }
     }
 
-    public function getEditar($nombre, $apellido, $cedula, $direccion, $telefono, $correo, $id, $sesionCedula){
+    public function getEditar($nombre, $apellido, $cedula, $direccion, $telefono, $correo, $id){
 
         if(preg_match_all("/^[a-zA-Z]{0,30}$/", $nombre) == false){
             $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
@@ -206,7 +185,6 @@ class clientes extends DBConnect{
         $this->telefono =$telefono;
         $this->correo =$correo;
         $this->id = $id;
-        $this->sesionCedula =$sesionCedula;
 
         return $this->editarCliente();
     }
@@ -225,12 +203,8 @@ class clientes extends DBConnect{
             $new->execute();
             $resultado = ['resultado' => 'Editado'];
             echo json_encode($resultado);
-            
-            $new = $this->con->prepare("INSERT INTO bitacora(id, modulo, usuario, descripcion, fecha, status) VALUES (DEFAULT,'Cliente',?,'Edito un cliente',DEFAULT,1)");
-            $new->bindValue(1, $this->sesionCedula);
-            $new->execute();
+            $this->binnacle("Cliente",$_SESSION['cedula'],"Edito un cliente");
             die();
-
         } catch (\PDOException $error) {
             return $error;
         }
