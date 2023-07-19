@@ -16,6 +16,10 @@
 		die('<script> window.location = "?url=login" </script>');
 	}
 
+	if(isset($_POST['consul'])){
+		$objModel->consulta();
+	}
+
 	if(isset($_GET['cedula']) && isset($_GET['validar'])){
 		$objModel->getValidarC($_GET['cedula']);
 	}
