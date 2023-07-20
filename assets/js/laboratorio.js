@@ -1,14 +1,14 @@
 $(document).ready(function(){
 
 
-	rellenar();
+	rellenar(true);
 	let mostrar
-	function rellenar(){ 
+	function rellenar(bitacora = false){ 
 		$.ajax({
 			type: "post",
 			url: "",
 			dataType: "json",
-			data: {mostrar: "labs" },
+			data: {mostrar: "labs", bitacora},
 			success(data){
 				mostrar = $('#tableMostrar').DataTable({
 					responsive: true,

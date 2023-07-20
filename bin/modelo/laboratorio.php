@@ -20,7 +20,7 @@
 
       }
  
-      public function mostrarLaboratoriosAjax(){
+      public function mostrarLaboratoriosAjax($bitacora = false){
         try{
           $new = $this->con->prepare("SELECT l.rif, l.razon_social, l.direccion, cl.telefono, cl.contacto, CONCAT('<button type=\"button\" id=\"', l.cod_lab ,'\" class=\"btn btn-success editar\" data-bs-toggle=\"modal\" data-bs-target=\"#Editar\"><i class=\"bi bi-pencil\"></i></button>
             <button type=\"button\" id=\"', l.cod_lab ,'\" class=\"btn btn-danger borrar\" data-bs-toggle=\"modal\" data-bs-target=\"#Borrar\"><i class=\"bi bi-trash3\"></i></button>') as opciones FROM laboratorio l
@@ -31,6 +31,7 @@
           $new->execute();
           $data = $new->fetchAll();
           echo json_encode($data);
+          if($bitacora) $this->binnacle("Laboratorio",$_SESSION['cedula'],"Consultó listado.");
           die();
 
         }catch(\PDOException $e){
@@ -93,6 +94,7 @@
                   $new->execute();
                   $resultado = ['resultado' => 'Laboratorio registrado.'];
                   echo json_encode($resultado);
+                  $this->binnacle("Laboratorio",$_SESSION['cedula'],"Registró laboratorio.");
                   die();
                 
               }else{
@@ -213,36 +215,23 @@
 
         try{
 
-          $new = $this->con->prepare("SELECT rif FROM laboratorio WHERE status = 1 and rif = ?");
+          $new = $this->con->prepare("
+            UPDATE laboratorio l
+            INNER JOIN contacto_lab cl 
+            ON l.cod_lab = cl.cod_lab
+            SET l.rif = ? , l.direccion = ? , l.razon_social = ? , cl.telefono = ?, cl.contacto = ?
+            WHERE l.cod_lab = ?");
           $new->bindValue(1, $this->rif);
+          $new->bindValue(2, $this->direccion);
+          $new->bindValue(3, $this->razon);
+          $new->bindValue(4, $this->telefono);
+          $new->bindValue(5, $this->contacto);
+          $new->bindValue(6, $this->idedit);
           $new->execute();
-          $data = $new->fetchAll();
-
-          if(!isset($data[0]["rif"])){ 
-
-            $new = $this->con->prepare("
-              UPDATE laboratorio l
-              INNER JOIN contacto_lab cl 
-              ON l.cod_lab = cl.cod_lab
-              SET l.rif = ? , l.direccion = ? , l.razon_social = ? , cl.telefono = ?, cl.contacto = ?
-              WHERE l.cod_lab = ?");
-            $new->bindValue(1, $this->rif);
-            $new->bindValue(2, $this->direccion);
-            $new->bindValue(3, $this->razon);
-            $new->bindValue(4, $this->telefono);
-            $new->bindValue(5, $this->contacto);
-            $new->bindValue(6, $this->idedit);
-            $new->execute();
-            $resultado = ['resultado' => 'Editado'];
-            echo json_encode($resultado);
-            die();
-
-
-          }else{
-            $resultado = ['resultado' => 'Error de rif' , 'error' => 'El rif ya está registrado.'];
-            echo json_encode($resultado);
-            die();
-          }
+          $resultado = ['resultado' => 'Editado'];
+          echo json_encode($resultado);
+          $this->binnacle("Laboratorio",$_SESSION['cedula'],"Editó laboratorio.");
+          die();
 
         }catch(\PDOException $error){
             echo json_encode($error);
@@ -273,6 +262,7 @@
         $new->execute();
         $resultado = ['resultado' => 'Eliminado'];
         echo json_encode($resultado);
+        $this->binnacle("Laboratorio",$_SESSION['cedula'],"Eliminó laboratorio.");
         die();
 
       }catch(\PDOException $e){
