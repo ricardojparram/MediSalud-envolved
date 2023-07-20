@@ -6,13 +6,6 @@ DROP DATABASE IF EXISTS medisalud;
 CREATE DATABASE  medisalud CHARACTER SET utf8mb4;
 USE medisalud;
 
--- TABLA PARA NIVEL DE USUARIO 
-CREATE TABLE `nivel`(
-    `cod_nivel` int AUTO_INCREMENT PRIMARY KEY,
-    `nombre` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
-    `status` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
 -- TABLA PARA CLIENTES 
 CREATE TABLE `cliente`(
     `cedula` varchar(15) COLLATE utf8_spanish2_ci PRIMARY KEY,
@@ -65,6 +58,33 @@ CREATE TABLE `usuario`(
     `img` varchar(120) COLLATE utf8_spanish2_ci,
     `status` int NOT NULL,
     FOREIGN KEY (`nivel`) REFERENCES `nivel`(`cod_nivel`) ON DELETE CASCADE ON UPDATE CASCADE 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- TABLA PARA NIVEL DE USUARIO 
+CREATE TABLE `nivel`(
+    `cod_nivel` int AUTO_INCREMENT PRIMARY KEY,
+    `nombre` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
+    `status` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- TABLA PARA MODULOS DE USUARIO
+
+CREATE TABLE `modulos` (
+    `id` int AUTO_INCREMENT PRIMARY KEY,
+    `nombre` varchar(30) NOT NULL,
+    `status` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+CREATE TABLE `permisos`(
+    `cod_nivel` int NOT NULL,
+    `id_modulo` int NOT NULL,
+    `registrar` int NOT NULL,
+    `editar` int NOT NULL,
+    `consultar` int NOT NULL,
+    `eliminar` int NOT NULL,
+    `status` int NOT NULL ,
+    FOREIGN KEY (`cod_nivel`) REFERENCES `nivel`(`cod_nivel`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`id_modulo`) REFERENCES `modulo`(`id`) ON DELETE CASCADE ON UPDATE CASCADE 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- TABLA PARA BITACORA 
