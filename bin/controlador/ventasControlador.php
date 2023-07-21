@@ -5,15 +5,19 @@
   use component\menuLateral as menuLateral;
   use modelo\ventas as ventas;
 
+     $VarComp = new initcomponents();
+     $header = new header();
+     $menu = new menuLateral();
+
+      if(!isset($_SESSION['nivel'])){
+       die('<script> window.location = "?url=login" </script>');
+     }
 
 	    $objModel = new ventas();
       
       $mostrarC = $objModel->getMostrarCliente();
       $mostrerM = $objModel->getMostrarMetodo();
 
-      if(!isset($_SESSION['nivel'])){
-        die('<script> window.location = "?url=login" </script>');
-      }
 
       if (isset($_POST['selectM'])) {
         $mostrarM = $objModel->getMostrarMoneda();
@@ -50,10 +54,6 @@
     if (isset($_POST["eliminar"])) {
      $MS = $objModel->eliminarVenta($_POST["id"]);
       }
-
-    $VarComp = new initcomponents();
-    $header = new header();
-    $menu = new menuLateral();
 
 
    if(file_exists("vista/interno/ventasVista.php")){
