@@ -54,18 +54,6 @@ CREATE TABLE `producto`(
     `status` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
-
--- TABLA PARA BITACORA 
-CREATE TABLE `bitacora` (
-  `id` int(11) NOT NULL,
-  `modulo` varchar(20) NOT NULL,
-  `usuario` int(11) NOT NULL,
-  `descripcion` varchar(50) NOT NULL,
-  `fecha` datetime NOT NULL,
-  `status` int(11) NOT NULL,
-  FOREIGN KEY (`usuario`) REFERENCES `usuario` (`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
 -- TABLA PARA USUARIOS 
 CREATE TABLE `usuario`(
     `cedula` int PRIMARY KEY,
@@ -77,6 +65,25 @@ CREATE TABLE `usuario`(
     `img` varchar(120) COLLATE utf8_spanish2_ci,
     `status` int NOT NULL,
     FOREIGN KEY (`nivel`) REFERENCES `nivel`(`cod_nivel`) ON DELETE CASCADE ON UPDATE CASCADE 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- TABLA PARA BITACORA 
+CREATE TABLE `bitacora` (
+<<<<<<< HEAD
+  `id` int(11) AUTO_INCREMENT PRIMARY KEY,
+  `modulo` varchar(20) NOT NULL,
+  `usuario` int(11) NOT NULL,
+  `descripcion` varchar(50) NOT NULL,
+  `fecha` datetime NOT NULL,
+=======
+  `id` int AUTO_INCREMENT PRIMARY KEY,
+  `modulo` varchar(20) NOT NULL,
+  `usuario` int(11) NOT NULL,
+  `descripcion` varchar(50) NOT NULL,
+  `fecha` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
+>>>>>>> c899b019fe2b7656c154b6c866d0f4627dcd92ec
+  `status` int(11) NOT NULL,
+  FOREIGN KEY (`usuario`) REFERENCES `usuario` (`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- TABLA PARA EL CONTACTO DE LOS CLIENTES 
