@@ -1,0 +1,60 @@
+body{
+    background-color: rgb(255 252 242);
+}
+
+#carrusel{
+    margin-top: 76px;
+}
+
+#navbar{
+    background-color: rgb(255 255 255 / 90%);
+    box-shadow: 0 1px 20px rgba(0,0,0,.3)
+}
+
+@media (max-width: 1200px) and (min-width: 992px){
+    .ocultarlg{
+        display: none;
+    }
+}
+
+@media (max-width: 1400px) and (min-width: 992px){
+    .icon-car .ocultarlg{
+        display: none;
+    }
+}
+
+@media (min-width: 992px){
+    .sec{
+        display: flex;
+    }
+}
+
+#carRight{
+    color: white;
+    position: fixed;
+    border-radius: 50%;
+    height: 70px;
+    width: 70px;
+    right: 6vw;
+    bottom: 4vw;
+    background-color: #198754;
+    border: #198754;
+    z-index: 4;
+}
+
+#tituloNav{
+    color: #50643c;
+}
+
+.icon-car{
+    position: relative;
+}
+
+.icon-badge{
+    position: absolute;
+    background-color: #198754;
+    border-radius: 50%;
+    color: white;
+    top: -13px;
+    right: -16px;
+}
