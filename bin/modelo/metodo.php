@@ -91,10 +91,10 @@
     public function mostrarunicas($unicas){
       $this->id = $unicas;
 
-      $this->juanita();
+      $this->unicas();
 
   }
-  private function juanita(){
+  private function unicas(){
     try{
       $new = $this->con->prepare("SELECT `cod_tipo_pago`, `des_tipo_pago`, `status` FROM `tipo_pago` WHERE cod_tipo_pago = ?");
       $new->bindValue(1, $this->id);
