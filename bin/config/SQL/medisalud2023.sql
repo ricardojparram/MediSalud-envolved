@@ -412,7 +412,8 @@ INSERT INTO `modulos`(`id`, `nombre`, `status`) VALUES
 (18,'Empresa de Envio',1),
 (19,'Sedes de Envio',1);
 
-INSERT INTO `permisos`(`cod_nivel`, `id_modulo`, `registrar`, `editar`, `consultar`, `eliminar`, `status`) VALUES (1,1,1,1,1,1,1),
+INSERT INTO `permisos`(`cod_nivel`, `id_modulo`, `registrar`, `editar`, `consultar`, `eliminar`, `status`) VALUES 
+(1,1,1,1,1,1,1),
 (1,2,1,1,1,1,1),
 (1,3,1,1,1,1,1),
 (1,4,1,1,1,1,1),
@@ -431,7 +432,6 @@ INSERT INTO `permisos`(`cod_nivel`, `id_modulo`, `registrar`, `editar`, `consult
 (1,17,1,1,1,1,1),
 (1,18,1,1,1,1,1),
 (1,19,1,1,1,1,1),
-(2,1,0,0,0,0,1),
 (2,1,0,0,0,0,1),
 (2,2,0,0,0,0,1),
 (2,3,0,0,0,0,1),

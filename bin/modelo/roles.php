@@ -7,6 +7,7 @@
 	class roles extends DBConnect{
 
 		private $id;
+		private $modulos;
 
 		public function __construct(){
 			parent::__construct();	
@@ -16,11 +17,16 @@
 
 			try{
 
-				$sql = 'SELECT n.cod_nivel as id, n.nombre, COUNT(*) as totales FROM nivel n
-						INNER JOIN usuario u
-						ON n.cod_nivel = u.nivel
-						WHERE n.cod_nivel != 1 AND n.status = 1
-						GROUP BY n.cod_nivel;';
+				$sql = 'SELECT * FROM(
+							SELECT n.cod_nivel as id, n.nombre, COUNT(*) as totales FROM nivel n
+							INNER JOIN usuario u
+							ON u.nivel = n.cod_nivel
+						    GROUP BY n.cod_nivel
+						    UNION
+						    SELECT n.cod_nivel, n.nombre, 0 as totales FROM nivel n
+						) as tabla
+						WHERE tabla.id != 1
+						GROUP BY tabla.id;';
 				$new = $this->con->prepare($sql);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -51,6 +57,37 @@
 			$data = $new->fetchAll(\PDO::FETCH_OBJ);
 
 			die(json_encode($data));
+
+		}
+
+		public function getAccesoModulos($datos, $id){
+			$this->modulos = $datos;
+			$this->id = $id;
+
+			$this->actualizarAccesoModulos();
+		}
+
+		private function actualizarAccesoModulos(){
+
+			$sql = "UPDATE permisos SET status = ?
+					WHERE cod_nivel = ? AND id_modulo = ?";
+
+			foreach ($this->modulos as $modulo) {
+				try{
+
+					$new = $this->con->prepare($sql);
+					$new->bindValue(1, $modulo['status']);
+					$new->bindValue(2, $this->id);
+					$new->bindValue(3, $modulo['id_modulo']);
+					$new->execute();
+
+				}catch(\PDOException $e){
+					die($e);
+				}
+			}
+
+			$respuesta = ['respuesta' => 'ok', 'msg' => 'Se ha actualizado el acceso a los módulos correctamente.'];
+			die(json_encode($respuesta));
 
 		}
 	}

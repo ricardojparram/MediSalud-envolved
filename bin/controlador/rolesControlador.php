@@ -16,6 +16,10 @@
 		$model->getModulo($_POST['id']);
 	}
 
+	if(isset($_POST['datos'], $_POST['id'])){
+		$model->getAccesoModulos($_POST['datos'], $_POST['id']);
+	}
+
 	$VarComp = new initcomponents();
 	$header = new header();
 	$menu = new menuLateral();

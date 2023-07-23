@@ -43,7 +43,7 @@ $(document).ready(function(){
             success(data){
                 let contenido = "";
                 data.forEach(row => {
-                    let check = (row.status = 1) ? "checked" : "";
+                    let check = (row.status == 1) ? "checked" : "";
                     contenido += `
                     <div class="form-check form-switch col-lg-4 col-md-6">
                         <input class="form-check-input" type="checkbox" ${check} role="switch" id="${row.id_modulo}">
@@ -59,8 +59,49 @@ $(document).ready(function(){
     });
 
     $('#enviarModulos').click(()=>{
-        let datos = $('#modulosForm input').map(input => { console.log(input.val())});
-        console.log(datos);
+        let datos = [];
+        $('#modulosForm input').each(function(){
+            let id_modulo = this.id,
+                status = (this.checked == true) ? 1 : 0;
+            datos.push({id_modulo, status});
+        })
+        $.ajax({
+            method: 'POST',
+            url: "",
+            dataType: 'json',
+            data: {datos, id},
+            success(data){
+                if(data.respuesta == 'ok'){
+                    Toast.fire({ icon: 'success', title: data.msg });
+                    $('.cerrar').click();
+                }
+            }
+        })    
     })
+
+    $(document).on('click', '.permisos', function() {
+        id = this.id; 
+        $.ajax({
+            method: "post",
+            url: "",
+            dataType: "json",
+            data: {permisos:'xd', id},
+            success(data){
+                let contenido = "";
+                data.forEach(row => {
+                    let check = (row.status == 1) ? "checked" : "";
+                    contenido += `
+                    <div class="form-check form-switch col-lg-4 col-md-6">
+                        <input class="form-check-input" type="checkbox" ${check} role="switch" id="${row.id_modulo}">
+                        <label class="form-check-label" for="${row.id_modulo}">${row.nombre}</label>
+                    </div>
+                    `
+                });
+                $('#modulosForm').html(contenido);
+            }
+
+        })
+
+    });
 
 })
