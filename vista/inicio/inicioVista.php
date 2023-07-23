@@ -11,11 +11,9 @@
 
 <body class="body" id="body">
 
-<<<<<<< HEAD
   <header class="w-100 h-100">
     
   <!-- Barra navegadora -->
-
     <?php $Nav->nav(); ?>
 
   </header>
@@ -49,9 +47,6 @@
             </button>
           </div>
         </div>
-=======
-  <?php $nav->navClien(); ?>
->>>>>>> e71cffb1f773b5dd2a3edddba0859d610cef0406
 
     <section class="w-100 row">
       <div class="col-md-3 d-flex justify-content-center">
