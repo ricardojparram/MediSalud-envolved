@@ -6,13 +6,6 @@ DROP DATABASE IF EXISTS medisalud;
 CREATE DATABASE  medisalud CHARACTER SET utf8mb4;
 USE medisalud;
 
--- TABLA PARA NIVEL DE USUARIO 
-CREATE TABLE `nivel`(
-    `cod_nivel` int AUTO_INCREMENT PRIMARY KEY,
-    `nombre` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
-    `status` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
 -- TABLA PARA CLIENTES 
 CREATE TABLE `cliente`(
     `cedula` varchar(15) COLLATE utf8_spanish2_ci PRIMARY KEY,
@@ -54,6 +47,12 @@ CREATE TABLE `producto`(
     `status` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
+-- TABLA PARA NIVEL DE USUARIO 
+CREATE TABLE `nivel`(
+    `cod_nivel` int AUTO_INCREMENT PRIMARY KEY,
+    `nombre` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
+    `status` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- TABLA PARA USUARIOS 
 CREATE TABLE `usuario`(
@@ -68,17 +67,37 @@ CREATE TABLE `usuario`(
     FOREIGN KEY (`nivel`) REFERENCES `nivel`(`cod_nivel`) ON DELETE CASCADE ON UPDATE CASCADE 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
+
+-- TABLA PARA MODULOS DE USUARIO
+
+CREATE TABLE `modulos` (
+    `id` int AUTO_INCREMENT PRIMARY KEY,
+    `nombre` varchar(30) NOT NULL,
+    `status` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+CREATE TABLE `permisos`(
+    `cod_nivel` int NOT NULL,
+    `id_modulo` int NOT NULL,
+    `registrar` int NOT NULL,
+    `editar` int NOT NULL,
+    `consultar` int NOT NULL,
+    `eliminar` int NOT NULL,
+    `status` int NOT NULL ,
+    FOREIGN KEY (`cod_nivel`) REFERENCES `nivel`(`cod_nivel`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`id_modulo`) REFERENCES `modulos`(`id`) ON DELETE CASCADE ON UPDATE CASCADE 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
 -- TABLA PARA BITACORA 
 CREATE TABLE `bitacora` (
-  `id` int(11) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  `id` int AUTO_INCREMENT PRIMARY KEY,
   `modulo` varchar(20) NOT NULL,
   `usuario` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
-  `fecha` datetime NOT NULL,
+  `fecha` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
   `status` int(11) NOT NULL,
   FOREIGN KEY (`usuario`) REFERENCES `usuario` (`cedula`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
 
 -- TABLA PARA EL CONTACTO DE LOS CLIENTES 
 CREATE TABLE `contacto_cliente`(
@@ -169,6 +188,7 @@ CREATE TABLE `tipo_producto`(
 CREATE TABLE `tipo_pago`(
     `cod_tipo_pago` int AUTO_INCREMENT PRIMARY KEY,
     `des_tipo_pago` varchar(40) COLLATE utf8_spanish2_ci,
+    `online` int NOT NULL,
     `status` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
@@ -189,6 +209,79 @@ CREATE TABLE `cambio`(
     `status` int NOT NULL,
     FOREIGN KEY(`moneda`) REFERENCES `moneda`(`id_moneda`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- TABLA PARA CARRITO 
+
+ CREATE TABLE `carrito`(
+    `cedula` int NOT NULL,
+    `cod_producto` int NOT NULL,
+    `cantidad` varchar(10) NOT NULL,
+    `precioActual` varchar(10) NOT NULL,
+     FOREIGN KEY (`cedula`) REFERENCES `usuario` (`cedula`) ON DELETE CASCADE ON UPDATE CASCADE,
+     FOREIGN KEY (`cod_producto`) REFERENCES `producto` (`cod_producto`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- TABLA PARA EMPRESA ENVIO
+ 
+   CREATE TABLE `empresa_envio`(
+    `id_empresa` int AUTO_INCREMENT PRIMARY KEY,
+    `rif` varchar(15) NOT NULL,
+    `nombre` varchar(15) NOT NULL,
+    `contacto` varchar(15) ,
+    `status` int NOT NULL    
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- TABLA PARA SEDE EMVIO
+   
+    CREATE TABLE `sede_envio`(
+    `id_sede` int AUTO_INCREMENT PRIMARY KEY,
+    `ubicacion` varchar(40) NOT NULL,
+    `id_empresa` int NOT NULL,
+    `status` int NOT NULL,
+    FOREIGN KEY (`id_empresa`) REFERENCES `empresa_envio` (`id_empresa`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+    -- TABLA PARA BANCO
+    
+    CREATE TABLE `banco`(
+    `id_banco` int AUTO_INCREMENT PRIMARY KEY,
+    `tipo_pago` int NOT NULL,
+    `nombre` varchar(20) NOT NULL,
+    `cedulaRif` varchar(20) NOT NULL,
+    `telefono` varchar(20) ,
+    `NumCuenta` varchar(20) ,
+    `CodBanco` varchar(20),
+    `status` int NOT NULL,
+    FOREIGN KEY (`tipo_pago`) REFERENCES `tipo_pago` (`cod_tipo_pago`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+   
+    -- TABLA PARA FACTURACION
+   
+    CREATE TABLE `facturacion`(
+    `id_fact` int AUTO_INCREMENT PRIMARY KEY,
+    `cedula_cliente` int NOT NULL,
+    `sede_envio` int NOT NULL,
+    `banco` int NOT NULL,
+    `fecha` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `numReferencia` varchar(15) NOT NULL,
+    `direccion_cliente` varchar(50),
+    `status` int NOT NULL,
+     FOREIGN KEY (`cedula_cliente`) REFERENCES `usuario` (`cedula`) ON DELETE CASCADE ON UPDATE CASCADE,
+     FOREIGN KEY (`sede_envio`) REFERENCES `sede_envio` (`id_sede`) ON DELETE CASCADE ON UPDATE CASCADE,
+     FOREIGN KEY (`banco`) REFERENCES `banco` (`id_banco`) ON DELETE CASCADE ON UPDATE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+    
+    -- TABLA PARA DETALLE FACTURACION
+
+     CREATE TABLE `detalle_facturacion`(
+    `cod_producto` int NOT NULL,
+    `id_fact` int NOT NULL,
+    `cantidad` varchar(10) NOT NULL,
+    `precioActual` varchar(10) NOT NULL,
+    FOREIGN KEY (`cod_producto`) REFERENCES `producto` (`cod_producto`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`id_fact`) REFERENCES `facturacion` (`id_fact`) ON DELETE CASCADE ON UPDATE CASCADE                           
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
 
 -- TABLA PARA LAS VENTAS 
 CREATE TABLE `venta`(
@@ -240,7 +333,7 @@ CREATE TABLE `compra_producto`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- INSERTA LOS NIVELES DE USUARIO 
-INSERT INTO nivel(nombre, status) VALUES ('Administrador', '1'), ('Gerente', '1'), ('Empleado', '1');
+INSERT INTO nivel(nombre, status) VALUES ('Administrador', '1'), ('Gerente', '1'), ('Empleado', '1'), ('Cliente', '1');
 
 -- INSERTA LOS PRODUCTOS
 INSERT INTO `producto` (`cod_producto`, `descripcion`, `composicion`, `contraindicaciones`, `ubicacion`, `posologia`, `stock`, `p_venta`, `vencimiento`, `status`) VALUES
@@ -292,9 +385,88 @@ INSERT INTO `tipo`(`des_tipo`, `status`) VALUES
 -- INSERTA LAS CLASE
 INSERT INTO `clase`(`des_clase`, `status`) VALUES ('NO ASIGNADO',1);
 
-INSERT INTO `tipo_pago`(`cod_tipo_pago`, `des_tipo_pago`, `status`) VALUES 
-(1,'Tarjeta de credito',1),
-(2,'Efectivo',1),
-(3,'Divisa',1),
-(4,'Pago movil',1);
+INSERT INTO `tipo_pago`(`cod_tipo_pago`, `des_tipo_pago`, `online`, `status`) VALUES 
+(1,'Tarjeta de credito',0,1),
+(2,'Efectivo',0,1),
+(3,'Divisa',0,1),
+(4,'Pago movil',1,1);
 
+INSERT INTO `modulos`(`id`, `nombre`, `status`) VALUES
+(1,'Clientes',1),
+(2,'Ventas',1),
+(3,'Compras',1),
+(4,'Metodo pago',1),
+(5,'Moneda',1),
+(6,'Producto',1),
+(7,'Laboratorio',1),
+(8,'Proveedor',1),
+(9,'Clase',1),
+(10,'Tipo',1),
+(11,'Presentacion',1),
+(12,'Reportes',1),
+(13,'Usuarios',1),
+(14,'Bitacora',1),
+(15,'Bancos',1),
+(16,'Usuarios',1),
+(17,'Roles',1),
+(18,'Empresa de Envio',1),
+(19,'Sedes de Envio',1);
+
+INSERT INTO `permisos`(`cod_nivel`, `id_modulo`, `registrar`, `editar`, `consultar`, `eliminar`, `status`) VALUES (1,1,1,1,1,1,1),
+(1,2,1,1,1,1,1),
+(1,3,1,1,1,1,1),
+(1,4,1,1,1,1,1),
+(1,5,1,1,1,1,1),
+(1,6,1,1,1,1,1),
+(1,7,1,1,1,1,1),
+(1,8,1,1,1,1,1),
+(1,9,1,1,1,1,1),
+(1,10,1,1,1,1,1),
+(1,11,1,1,1,1,1),
+(1,12,1,1,1,1,1),
+(1,13,1,1,1,1,1),
+(1,14,1,1,1,1,1),
+(1,15,1,1,1,1,1),
+(1,16,1,1,1,1,1),
+(1,17,1,1,1,1,1),
+(1,18,1,1,1,1,1),
+(1,19,1,1,1,1,1),
+(2,1,0,0,0,0,1),
+(2,1,0,0,0,0,1),
+(2,2,0,0,0,0,1),
+(2,3,0,0,0,0,1),
+(2,4,0,0,0,0,1),
+(2,5,0,0,0,0,1),
+(2,6,0,0,0,0,1),
+(2,7,0,0,0,0,1),
+(2,8,0,0,0,0,1),
+(2,9,0,0,0,0,1),
+(2,10,0,0,0,0,1),
+(2,11,0,0,0,0,1),
+(2,12,0,0,0,0,1),
+(2,13,0,0,0,0,1),
+(2,14,0,0,0,0,1),
+(2,15,0,0,0,0,1),
+(2,16,0,0,0,0,1),
+(2,17,0,0,0,0,1),
+(2,18,0,0,0,0,1),
+(2,19,0,0,0,0,1),
+(3,1,0,0,0,0,1),
+(3,2,0,0,0,0,1),
+(3,3,0,0,0,0,1),
+(3,4,0,0,0,0,1),
+(3,5,0,0,0,0,1),
+(3,6,0,0,0,0,1),
+(3,7,0,0,0,0,1),
+(3,8,0,0,0,0,1),
+(3,9,0,0,0,0,1),
+(3,10,0,0,0,0,1),
+(3,11,0,0,0,0,1),
+(3,12,0,0,0,0,1),
+(3,13,0,0,0,0,1),
+(3,14,0,0,0,0,1),
+(3,15,0,0,0,0,1),
+(3,16,0,0,0,0,1),
+(3,17,0,0,0,0,1),
+(3,18,0,0,0,0,1),
+(3,19,0,0,0,0,1);

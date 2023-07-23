@@ -17,6 +17,11 @@ class usuarios extends DBConnect{
     parent::__construct();
   }
 
+  public function consulta(){
+    $this->binnacle("Usuario",$_SESSION['cedula'],"Consulto listado");
+    die();
+  }
+
   public function getAgregarUsuario($cedula,$name,$apellido,$email,$password,$tipoUsuario){
 
     if(preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $name) == false){
@@ -88,6 +93,7 @@ class usuarios extends DBConnect{
         $new->execute();
         $resultado = ['resultado' => 'Registrado correctamente.'];
         echo json_encode($resultado);
+        $this->binnacle("Usuario",$_SESSION['cedula'],"Agrego un usuario");
         die();
 
       }else{
@@ -152,6 +158,7 @@ private function eliminarUsuario(){
         $new->execute();
         $resultado = ['resultado' => 'Eliminado'];
         echo json_encode($resultado);
+        $this->binnacle("Usuario",$_SESSION['cedula'],"Elimino un usuario");
         die();
         
       }catch (\PDOexection $error) {
@@ -243,6 +250,7 @@ private function eliminarUsuario(){
       $data = $new->fetchAll();
       $resultado = ['resultado' => 'Editado'];
       echo json_encode($resultado);
+      $this->binnacle("Usuario",$_SESSION['cedula'],"Edito un usuario");
       die();
     }catch(\PDOexection $error){
 

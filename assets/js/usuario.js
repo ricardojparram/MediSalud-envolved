@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	refrescar();
+	consulta();
 	let tabla;
 	function refrescar(){ 
 		$.ajax({
@@ -17,6 +18,15 @@ $(document).ready(function(){
 			}
 		})
 	}
+
+    function consulta(){
+      $.ajax({
+        method: "post",
+        url: "",
+        dataType: "json",
+        data: {consul: "clien" },
+      })
+    }
 
 
 	$("#cedula").keyup(()=> {  let valid = validarCedula($("#cedula"),$("#error") ,"Error de cédula,") 
@@ -120,7 +130,7 @@ $(document).ready(function(){
 	let id
 	$(document).on('click', '.editar', function(){
 		id = this.id;
-
+	
 		$.ajax({
 			method: "post",
 			url: '',
@@ -135,6 +145,7 @@ $(document).ready(function(){
 				$("#selectEdit").val(data[0].nivel);
 			}
 		})
+	})
 
 		$("#cedulaEdit").keyup(()=> {  validarCedula($("#cedulaEdit"),$("#error2") ,"Error de Cedula,") });
 		$("#nameEdit").keyup(()=> {  validarNombre($("#nameEdit"),$("#error2") ,"Error de Nombre,") });
@@ -179,7 +190,19 @@ $(document).ready(function(){
 				}
 			})
 		})
-	})
+
+		$(document).on('click', '#cerrarRegisEdit', function() {
+			$('#error2').text(" ");
+			$("#editModal input, select").attr("style","border-color: none;")
+			$("#editModal input, select").attr("style","backgraund-image: none;");
+		  })
+	
+		  $(document).on('click', '#cerrarRegis', function() {
+			$('#error').text(" ");
+			$("#basicModal input, select").attr("style","border-color: none;")
+			$("#basicModal input, select").attr("style","backgraund-image: none;");
+		  })
+	
 
 	function validarC(){
 		$.getJSON('',{cedula: $("#cedula").val(),validar: 'lalo'},
