@@ -6,7 +6,6 @@
 	use modelo\roles as roles;
 
 	$model = new roles();
-		// $model->mostrarRoles();
 
 	if(isset($_POST['mostrar'])){
 		$model->mostrarRoles();
@@ -16,8 +15,16 @@
 		$model->getModulo($_POST['id']);
 	}
 
-	if(isset($_POST['datos'], $_POST['id'])){
-		$model->getAccesoModulos($_POST['datos'], $_POST['id']);
+	if(isset($_POST['datos_modulos'], $_POST['id'])){
+		$model->getAccesoModulos($_POST['datos_modulos'], $_POST['id']);
+	}
+
+	if(isset($_POST['permisos'], $_POST['id'])){
+		$model->getPermisos($_POST['id']);
+	}
+
+	if(isset($_POST['datos_permisos'], $_POST['id'])){
+		$model->getDatosPermisos($_POST['datos_permisos'], $_POST['id']);
 	}
 
 	$VarComp = new initcomponents();

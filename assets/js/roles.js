@@ -11,7 +11,6 @@ $(document).ready(function(){
             success(data){
                 let tabla;
                 data.forEach(row => {
-                    console.log(row)
                     tabla += `
                         <tr>
                             <td>${row.nombre}</td>
@@ -46,8 +45,8 @@ $(document).ready(function(){
                     let check = (row.status == 1) ? "checked" : "";
                     contenido += `
                     <div class="form-check form-switch col-lg-4 col-md-6">
-                        <input class="form-check-input" type="checkbox" ${check} role="switch" id="${row.id_modulo}">
-                        <label class="form-check-label" for="${row.id_modulo}">${row.nombre}</label>
+                        <input class="form-check-input" type="checkbox" ${check} modulo_id="${row.id_modulo}" role="switch" id="modulo_${row.id_modulo}">
+                        <label for="modulo_${row.id_modulo}" class="form-check-label">${row.nombre}</label>
                     </div>
                     `
                 });
@@ -59,17 +58,17 @@ $(document).ready(function(){
     });
 
     $('#enviarModulos').click(()=>{
-        let datos = [];
+        let datos_modulos = [];
         $('#modulosForm input').each(function(){
-            let id_modulo = this.id,
+            let id_modulo = $(this).attr('modulo_id'),
                 status = (this.checked == true) ? 1 : 0;
-            datos.push({id_modulo, status});
+            datos_modulos.push({id_modulo, status});
         })
         $.ajax({
             method: 'POST',
             url: "",
             dataType: 'json',
-            data: {datos, id},
+            data: {datos_modulos, id},
             success(data){
                 if(data.respuesta == 'ok'){
                     Toast.fire({ icon: 'success', title: data.msg });
@@ -89,19 +88,70 @@ $(document).ready(function(){
             success(data){
                 let contenido = "";
                 data.forEach(row => {
-                    let check = (row.status == 1) ? "checked" : "";
+                    let consultarCheck = (row.consultar == 1) ? "checked" : "",
+                        registrarCheck = (row.registrar == 1) ? "checked" : "",
+                        editarCheck = (row.editar == 1) ? "checked" : "",
+                        eliminarCheck = (row.eliminar == 1) ? "checked" : ""
                     contenido += `
-                    <div class="form-check form-switch col-lg-4 col-md-6">
-                        <input class="form-check-input" type="checkbox" ${check} role="switch" id="${row.id_modulo}">
-                        <label class="form-check-label" for="${row.id_modulo}">${row.nombre}</label>
+                    <div class="modulo_permiso col-6 row w-50 justify-content-center mb-4">
+                      <p class="text-center col-12" id="${row.id_modulo}" ><b>${row.nombre}</b></p>
+                      <div class="form-check form-switch col-12 col-lg-6 row justify-content-around">
+                        <label class="form-check-label " for="consultar_${row.id_modulo}">Consultar</label>
+                        <input class="form-check-input " type="checkbox" ${consultarCheck} role="switch" id="consultar_${row.id_modulo}">
+                      </div>
+                      <div class="form-check form-switch col-12 col-lg-6 row justify-content-around">
+                        <label class="form-check-label " for="registrar_${row.id_modulo}">Registrar</label>
+                        <input class="form-check-input " type="checkbox" ${registrarCheck} role="switch" id="registrar_${row.id_modulo}">
+                      </div>
+                      <div class="form-check form-switch col-12 col-lg-6 row justify-content-around">
+                        <label class="form-check-label " for="editar_${row.id_modulo}">Editar</label>
+                        <input class="form-check-input " type="checkbox" ${editarCheck} role="switch" id="editar_${row.id_modulo}">
+                      </div>
+                      <div class="form-check form-switch col-12 col-lg-6 row justify-content-around">
+                        <label class="form-check-label " for="eliminar_${row.id_modulo}">Eliminar</label>
+                        <input class="form-check-input " type="checkbox" ${eliminarCheck} role="switch" id="eliminar_${row.id_modulo}">
+                      </div>
                     </div>
                     `
                 });
-                $('#modulosForm').html(contenido);
+                $('#permisosForm').html(contenido);
             }
 
         })
 
     });
+
+    $('#enviarPermisos').click(()=>{
+        let datos_permisos = [];
+        $('.modulo_permiso').each(function(){
+            let id_modulo = $(this).find('p')[0].id;
+
+            let inputs = $(this).find('input[type="checkbox"]')
+            let consultar = (inputs[0].checked == true) ? 1 : 0,
+                registrar = (inputs[1].checked == true) ? 1 : 0,
+                editar = (inputs[2].checked == true) ? 1 : 0,
+                eliminar = (inputs[3].checked == true) ? 1 : 0;
+
+            datos_permisos.push({id_modulo, consultar, registrar, editar, eliminar});
+
+        })
+
+        $.ajax({
+            method: 'POST',
+            url: "",
+            dataType: 'json',
+            data: {datos_permisos, id},
+            success(data){
+                if(data.respuesta == 'ok'){
+                    Toast.fire({ icon: 'success', title: data.msg });
+                    $('.cerrar').click();
+                }else{
+                    Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                }
+            }
+        })    
+    })
+
+
 
 })

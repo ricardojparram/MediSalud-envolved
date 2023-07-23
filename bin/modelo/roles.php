@@ -8,6 +8,7 @@
 
 		private $id;
 		private $modulos;
+		private $permisos;
 
 		public function __construct(){
 			parent::__construct();	
@@ -46,17 +47,23 @@
 
 		private function selectModulo(){
 
-			$sql = 'SELECT m.nombre, p.id_modulo, p.status FROM permisos p
-				INNER JOIN modulos m 
-				ON m.id = p.id_modulo
-				WHERE p.cod_nivel = ?';
+			try {
 
-			$new = $this->con->prepare($sql);
-			$new->bindValue(1, $this->id);
-			$new->execute();
-			$data = $new->fetchAll(\PDO::FETCH_OBJ);
+				$sql = 'SELECT m.nombre, p.id_modulo, p.status FROM permisos p
+					INNER JOIN modulos m 
+					ON m.id = p.id_modulo
+					WHERE p.cod_nivel = ?';
 
-			die(json_encode($data));
+				$new = $this->con->prepare($sql);
+				$new->bindValue(1, $this->id);
+				$new->execute();
+				$data = $new->fetchAll(\PDO::FETCH_OBJ);
+
+				die(json_encode($data));
+				
+			} catch (\PDOException $e) {
+				die($e);
+			}
 
 		}
 
@@ -88,6 +95,75 @@
 
 			$respuesta = ['respuesta' => 'ok', 'msg' => 'Se ha actualizado el acceso a los módulos correctamente.'];
 			die(json_encode($respuesta));
+
+		}
+
+		public function getPermisos($id){
+			$this->id = $id;
+
+			$this->mostrarPermisos();
+		}
+
+		private function mostrarPermisos(){
+
+			try {
+				
+				$sql = 'SELECT m.nombre, p.id_modulo, p.consultar, p.registrar, p.editar, p.eliminar FROM permisos p
+						INNER JOIN modulos m 
+						ON m.id = p.id_modulo
+						WHERE p.cod_nivel = ? AND p.status = 1;';
+
+				$new = $this->con->prepare($sql);
+				$new->bindValue(1, $this->id);
+				$new->execute();
+				$data = $new->fetchAll(\PDO::FETCH_OBJ);
+
+				die(json_encode($data));
+				
+			} catch (\PDOException $e) {
+				die($e);
+			}
+
+		}
+
+		public function getDatosPermisos($datos, $id){
+			$this->permisos = $datos;
+			$this->id = $id;
+
+			// die(json_encode($this->permisos));
+			$this->actualizarPermisos();
+		}
+
+		private function actualizarPermisos(){
+
+			try {
+				
+				$sql = "UPDATE permisos SET registrar = ?, consultar = ?, editar = ?, eliminar = ?
+						WHERE id_modulo = ? AND cod_nivel = ?";
+
+				foreach ($this->permisos as $modulo) {
+					try{
+
+						$new = $this->con->prepare($sql);
+						$new->bindValue(1, $modulo['registrar']);
+						$new->bindValue(2, $modulo['consultar']);
+						$new->bindValue(3, $modulo['editar']);
+						$new->bindValue(4, $modulo['eliminar']);
+						$new->bindValue(5, $modulo['id_modulo']);
+						$new->bindValue(6, $this->id);
+						$new->execute();
+
+					}catch(\PDOException $e){
+						die($e);
+					}
+				}
+
+				$respuesta = ['respuesta' => 'ok', 'msg' => 'Se han actualizado los permisos correctamente.'];
+				die(json_encode($respuesta));
+
+			} catch (\PDOException $e) {
+				die($e);
+			}
 
 		}
 	}
