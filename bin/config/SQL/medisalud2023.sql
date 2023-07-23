@@ -407,10 +407,9 @@ INSERT INTO `modulos`(`id`, `nombre`, `status`) VALUES
 (13,'Usuarios',1),
 (14,'Bitacora',1),
 (15,'Bancos',1),
-(16,'Usuarios',1),
-(17,'Roles',1),
-(18,'Empresa de Envio',1),
-(19,'Sedes de Envio',1);
+(16,'Roles',1),
+(17,'Empresa de Envio',1),
+(18,'Sedes de Envio',1);
 
 INSERT INTO `permisos`(`cod_nivel`, `id_modulo`, `registrar`, `editar`, `consultar`, `eliminar`, `status`) VALUES 
 (1,1,1,1,1,1,1),
@@ -431,7 +430,6 @@ INSERT INTO `permisos`(`cod_nivel`, `id_modulo`, `registrar`, `editar`, `consult
 (1,16,1,1,1,1,1),
 (1,17,1,1,1,1,1),
 (1,18,1,1,1,1,1),
-(1,19,1,1,1,1,1),
 (2,1,0,0,0,0,1),
 (2,2,0,0,0,0,1),
 (2,3,0,0,0,0,1),
@@ -450,7 +448,6 @@ INSERT INTO `permisos`(`cod_nivel`, `id_modulo`, `registrar`, `editar`, `consult
 (2,16,0,0,0,0,1),
 (2,17,0,0,0,0,1),
 (2,18,0,0,0,0,1),
-(2,19,0,0,0,0,1),
 (3,1,0,0,0,0,1),
 (3,2,0,0,0,0,1),
 (3,3,0,0,0,0,1),
@@ -468,5 +465,4 @@ INSERT INTO `permisos`(`cod_nivel`, `id_modulo`, `registrar`, `editar`, `consult
 (3,15,0,0,0,0,1),
 (3,16,0,0,0,0,1),
 (3,17,0,0,0,0,1),
-(3,18,0,0,0,0,1),
-(3,19,0,0,0,0,1);
+(3,18,0,0,0,0,1)
