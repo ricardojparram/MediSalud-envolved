@@ -13,7 +13,6 @@ $(document).ready(function(){
             dataType: "json",
             data: {mostrar: "labs", bitacora},
             success(data){
-                console.log(permisos)
                 let tabla;
                 data.forEach(row => {
                     let editarPermiso = (permisos.editar != 1) ? 'disabled' : '';

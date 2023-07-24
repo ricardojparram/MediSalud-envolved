@@ -10,7 +10,9 @@
 	$model = new roles();
 	$permisos = $model->getPermisosRol($_SESSION['nivel']);
 
-	if(isset($_POST['getPermisos'])){
+	if($permisos['Roles']->status != 1) die('<script> window.location = "?url=home" </script>');
+
+	if(isset($_POST['getPermisos']) && $permisos['Roles']->status == 1){
 		die(json_encode($permisos['Roles']));
 	}
 
