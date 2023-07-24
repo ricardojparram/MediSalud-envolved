@@ -123,7 +123,7 @@
           <i class="bi bi-circle"></i><span>Categoría</span>
         </a>
         <ul>
-          '.$clasLi.'
+          '.$claseLi.'
 
           '.$tipoLi.'
         </ul>
