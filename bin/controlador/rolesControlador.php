@@ -5,31 +5,38 @@
 	use component\menuLateral as menuLateral;
 	use modelo\roles as roles;
 
-	$model = new roles();
+	if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
-	if(isset($_POST['mostrar'])){
+	$model = new roles();
+	$permisos = $model->getPermisosRol($_SESSION['nivel']);
+
+	if(isset($_POST['getPermisos'])){
+		die(json_encode($permisos['Roles']));
+	}
+
+	if(isset($_POST['mostrar']) && $permisos['Roles']->consultar == 1){
 		$model->mostrarRoles();
 	}
 
-	if(isset($_POST['modulos'], $_POST['id'])){
+	if(isset($_POST['modulos'], $_POST['id']) && $permisos['Roles']->editar == 1){
 		$model->getModulo($_POST['id']);
 	}
 
-	if(isset($_POST['datos_modulos'], $_POST['id'])){
+	if(isset($_POST['datos_modulos'], $_POST['id']) && $permisos['Roles']->editar == 1){
 		$model->getAccesoModulos($_POST['datos_modulos'], $_POST['id']);
 	}
 
-	if(isset($_POST['permisos'], $_POST['id'])){
+	if(isset($_POST['permisos'], $_POST['id']) && $permisos['Roles']->editar == 1){
 		$model->getPermisos($_POST['id']);
 	}
 
-	if(isset($_POST['datos_permisos'], $_POST['id'])){
+	if(isset($_POST['datos_permisos'], $_POST['id']) && $permisos['Roles']->editar == 1){
 		$model->getDatosPermisos($_POST['datos_permisos'], $_POST['id']);
 	}
 
 	$VarComp = new initcomponents();
 	$header = new header();
-	$menu = new menuLateral();
+	$menu = new menuLateral($permisos);
 
 	if(file_exists("vista/interno/rolesVista.php")){
 		require_once("vista/interno/rolesVista.php");

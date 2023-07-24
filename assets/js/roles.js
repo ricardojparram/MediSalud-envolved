@@ -1,6 +1,10 @@
 $(document).ready(function(){
 
-    rellenar(true);
+    let permisos;
+    $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:'a'},
+        success(data){ permisos = data; }
+    }).then(rellenar(true));
+
     let mostrar
     function rellenar(bitacora = false){ 
         $.ajax({
@@ -9,15 +13,17 @@ $(document).ready(function(){
             dataType: "json",
             data: {mostrar: "labs", bitacora},
             success(data){
+                console.log(permisos)
                 let tabla;
                 data.forEach(row => {
+                    let editarPermiso = (permisos.editar != 1) ? 'disabled' : '';
                     tabla += `
                         <tr>
                             <td>${row.nombre}</td>
                             <td>${row.totales}</td>
                             <td class="d-flex justify-content-center">
-                                <button type="button" id="${row.id}" class="btn btn-dark modulos mx-2" data-bs-toggle="modal" data-bs-target="#modulos"><i class="bi bi-shield-lock-fill"></i></button>
-                                <button type="button" id="${row.id}" class="btn btn-dark permisos mx-2" data-bs-toggle="modal" data-bs-target="#permisos"><i class="bi bi-lock-fill"></i></button>
+                                <button type="button" id="${row.id}" ${editarPermiso} class="btn btn-dark modulos mx-2" data-bs-toggle="modal" data-bs-target="#modulos"><i class="bi bi-shield-lock-fill"></i></button>
+                                <button type="button" id="${row.id}" ${editarPermiso} class="btn btn-dark permisos mx-2" data-bs-toggle="modal" data-bs-target="#permisos"><i class="bi bi-lock-fill"></i></button>
                             </td>
                         </tr>`;
                 });
@@ -33,6 +39,10 @@ $(document).ready(function(){
     let id 
 
     $(document).on('click', '.modulos', function() {
+        if(permisos.editar != 1){
+            Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
+            throw new Error('Permiso denegado.');
+        }
         id = this.id; 
         $.ajax({
             method: "post",
@@ -79,6 +89,10 @@ $(document).ready(function(){
     })
 
     $(document).on('click', '.permisos', function() {
+        if(permisos.editar != 1){
+            Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
+            throw new Error('Permiso denegado.');
+        }
         id = this.id; 
         $.ajax({
             method: "post",
