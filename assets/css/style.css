@@ -1291,3 +1291,10 @@ h6 {
     outline: 0;
     box-shadow: none;
 }
+
+.form-switch .form-check-input:focus{
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='rgb(167, 183, 84)'/></svg>") !important;
+}
+.form-switch .form-check-input:checked{
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='%23fff'/></svg>") !important;
+}
