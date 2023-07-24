@@ -5,44 +5,44 @@
   use component\menuLateral as menuLateral;
   use modelo\laboratorio as laboratorio;
 
+  if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
+
   $objModel = new laboratorio();
+  $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
 
-  if(isset($_SESSION['nivel'])){
-    if($_SESSION['nivel'] != 1 && $_SESSION['nivel'] != 2){
-      die('<script> window.location = "?url=home" </script>');
-    }
-  }else{
-    die('<script> window.location = "?url=login" </script>');
+  if($permisos['Laboratorio']->status != 1) die('<script> window.location = "?url=home" </script>');
+
+  if(isset($_POST['getPermisos']) && $permisos['Laboratorio']->status == 1){
+    die(json_encode($permisos['Laboratorio']));
   }
-  
 
-  if(isset($_POST['mostrar'])){
+  if(isset($_POST['mostrar']) && $permisos['Laboratorio']->consultar == 1){
     ($_POST['bitacora'] == 'true')
       ? $objModel->mostrarLaboratoriosAjax(true)
       : $objModel->mostrarLaboratoriosAjax();
   }
 
-  if(isset($_POST['rif']) && isset($_POST['direccion']) && isset($_POST['razon']) && isset($_POST['telefono'])&& isset($_POST['contacto'])){
+  if(isset($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto']) && $permisos['Laboratorio']->registrar == 1){
 
-    $respuesta = $objModel->getDatosLab($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto']);
+    $objModel->getDatosLab($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto']);
 
   }
 
-  if(isset($_POST['select'])){
+  if(isset($_POST['select']) && $permisos['Laboratorio']->editar == 1){
     $objModel->getItem($_POST['id']);
   }
 
-  if(isset($_POST['rifEdit']) && isset($_POST['direccionEdit']) && isset($_POST['razonEdit']) && isset($_POST['telefonoEdit'])&& isset($_POST['contactoEdit']) && isset($_POST['id'])){
+  if(isset($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id']) && $permisos['Laboratorio']->editar == 1){
 
-    $respuesta = $objModel->getEditar($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id']);
+    $objModel->getEditar($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id']);
 
   }
 
-  if(isset($_POST['eliminar'])){
+  if(isset($_POST['eliminar']) && $permisos['Laboratorio']->eliminar == 1){
     $objModel->getEliminar($_POST['id']);
   }
 
-  if(isset($_POST['rif']) && isset($_POST['validar'])){
+  if(isset($_POST['rif'], $_POST['validar'])){
     $objModel->getRif($_POST['rif']);
   }
   
@@ -50,7 +50,7 @@
 
   $VarComp = new initcomponents();
   $header = new header();
-  $menu = new menuLateral();
+  $menu = new menuLateral($permisos);
 
   if(file_exists("vista/interno/productos/laboratorioVista.php")){
     require_once("vista/interno/productos/laboratorioVista.php");
