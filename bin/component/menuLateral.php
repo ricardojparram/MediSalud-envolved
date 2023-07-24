@@ -4,6 +4,12 @@
 
   class menuLateral{
 
+    private $permisos;
+
+    public function __construct($permisos){
+      $this->permisos = $permisos;
+    }
+
     public function Menu(){
 
     $home = ($_GET['url'] == 'home')? "": "collapsed";
@@ -26,306 +32,205 @@
     $reportes = ($_GET['url'] == 'reportes')? "": "collapsed";
     $usuario = ($_GET['url'] == 'usuario')? "": "collapsed";
     $bitacora = ($_GET['url'] == 'bitacora')? "": "collapsed";
+    $roles = ($_GET['url'] == 'roles')? "": "collapsed";
 
-    $menu = '';
     if(!isset($_SESSION['nivel'])){
       die('<script> window.location = "?url=login" </script>');
     }
 
-    if($_SESSION['nivel'] == 1){
-        $menu = '
-        <aside id="sidebar" class="sidebar">
-          <ul class="sidebar-nav" id="sidebar-nav">
-
-          <li class="nav-item">
-                <a class="nav-link '.$home.'" href="?url=home">
-                  <i class="bi bi-house-door"></i>
-                  <span>Inicio</span>
-                </a>
-          </li>
-              
-          <!-- End Dashboard Nav -->
-
-          <li class="nav-item">
-            <a class="nav-link '.$clientes.'" href="?url=clientes">
-                <i class="bi bi-people"></i>
-                <span>Clientes</span>
-            </a>
-          </li>
-
-          <li class="nav-item">
-              <a class="nav-link '.$ventas.'" href="?url=ventas">
-                <i class="bi bi-currency-dollar"></i>
-                <span>Ventas</span>
-              </a>
-          </li>
-          
-          <li class="nav-item">
-          <a class="nav-link '.$compras.'" href="?url=compras">
-              <i class="bi bi-cart-check"></i>
-              <span>Compras</span>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link '.$configuracionesA.'" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
-              <i class="bi bi-gear"></i><span>Configuraciones</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="components-nav" class="nav-content '.$configuracionesB.'" data-bs-parent="#sidebar-nav" style="">
-            
-              <li>
-                <a href="?url=metodo" class="'.$metodo.'" >
-                  <i class="bi bi-circle "></i><span>Metodo de pago</span>
-                </a>
-              </li>
-              <li>
-                <a href="?url=moneda" class="'.$moneda.'">
-                  <i class="bi bi-circle "></i><span>Moneda</span>
-                </a>
-              </li>  
-            </ul>
-          </li>
-
-            <!-- End Components Nav -->
-
-          <li class="nav-item">
-            <a class="nav-link '.$productosA.'" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
-                <i class="bi bi-grid"></i><span>Productos</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="forms-nav" class="nav-content '.$productosB.'" data-bs-parent="#sidebar-nav">
-              <li>
-                <a href="?url=producto" class="'.$producto.'">
-                  <i class="bi bi-circle"></i><span>Producto</span>
-                </a>
-              </li>
-              <li>
-                <a href="?url=laboratorio" class="'.$laboratorio.'">
-                  <i class="bi bi-circle"></i><span>Laboratorio</span>
-                </a>
-              </li>
-              <li>
-                <a href="?url=proveedor" class="'.$proveedor.'">
-                  <i class="bi bi-circle"></i><span>Proveedor</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="'.$categoria.'">
-                  <i class="bi bi-circle"></i><span>Categoría</span>
-                </a>
-                <ul>
-                  <li>
-                     <a href="?url=clase" class="'.$clase.'">
-                    <i class="bi bi-circle"></i><span>Clase</span>
+    $clientesLi = ($this->permisos['Clientes']->status == 1) ? 
+    '<li class="nav-item">
+        <a class="nav-link '.$clientes.'" href="?url=clientes">
+            <i class="bi bi-people"></i>
+            <span>Clientes</span>
+        </a>
+      </li>' : '';
+    $ventasLi = ($this->permisos['Ventas']->status == 1 ) ?
+                '<li class="nav-item">
+                    <a class="nav-link '.$ventas.'" href="?url=ventas">
+                        <i class="bi bi-currency-dollar"></i>
+                        <span>Ventas</span>
                     </a>
-                  </li>
-                  <li>
-                     <a href="?url=tipo" class="'.$tipo.'">
-                    <i class="bi bi-circle"></i><span>Tipo</span>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              
-              <li>
-                <a href="?url=presentacion" class="'.$presentacion.'">
-                  <i class="bi bi-circle"></i><span>Presentación</span>
-                </a>
-              </li>
-            </ul>
-          </li><!-- End Forms Nav -->
-          <li class="nav-item ">
-            <a class="nav-link '.$reportes.'" href="?url=reportes">
-              <i class="bi bi-card-checklist"></i><span>Reportes</span>
-            </a>
-          </li>
+                </li>' : '';
+    $comprasLi = ($this->permisos['Compras']->status == 1) ?
+    '<li class="nav-item">
+        <a class="nav-link '.$compras.'" href="?url=compras">
+            <i class="bi bi-cart-check"></i>
+            <span>Compras</span>
+        </a>
+    </li>' : '';
 
-          <!-- End Tables Nav -->
-          
+    $metodoLi = ($this->permisos['Metodo pago']->status == 1) ?
+    '<li>
+        <a href="?url=metodo" class="'.$metodo.'" >
+          <i class="bi bi-circle "></i><span>Metodo de pago</span>
+        </a>
+    </li>' : '';
+    $monedaLi = ($this->permisos['Moneda']->status == 1) ?
+    '<li>
+        <a href="?url=moneda" class="'.$moneda.'">
+          <i class="bi bi-circle "></i><span>Moneda</span>
+        </a>
+    </li> ' : '';
 
-          <li class="nav-item">
-            <a class="nav-link '.$usuario.'" href="?url=usuario">
-              <i class="bi bi-person"></i>
-              <span>Usuarios</span>
-            </a>
-          </li>
+    $configuracionesLi = ($this->permisos['Metodo pago']->status == 1 || $this->permisos['Moneda']->status == 1) ?
+    '<li class="nav-item">
+        <a class="nav-link '.$configuracionesA.'" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
+          <i class="bi bi-gear"></i><span>Configuraciones</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="components-nav" class="nav-content '.$configuracionesB.'" data-bs-parent="#sidebar-nav" style="">
 
+            '.$metodoLi.'
 
-          <li class="nav-item ">
-            <a class="nav-link '.$bitacora.'" href="?url=bitacora">
-              <i class="bi bi-journal-text"></i><span>Bitacora</span>
-            </a>
-          </li>
-          <!-- End Profile Page Nav -->
+            '.$monedaLi.'
 
         </ul>
-        </aside>
+    </li>' : '';
+    $productosLi = ($this->permisos['Producto']->status == 1) ?
+    '<li>
+        <a href="?url=producto" class="'.$producto.'">
+          <i class="bi bi-circle"></i><span>Producto</span>
+        </a>
+    </li>' : '';
+    $laboratorioLi = ($this->permisos['Laboratorio']->status == 1) ?
+    '<li>
+        <a href="?url=laboratorio" class="'.$laboratorio.'">
+          <i class="bi bi-circle"></i><span>Laboratorio</span>
+        </a>
+    </li>' : '';
+    $proveedorLi = ($this->permisos['Proveedor']->status == 1) ?
+    '<li>
+        <a href="?url=proveedor" class="'.$proveedor.'">
+          <i class="bi bi-circle"></i><span>Proveedor</span>
+        </a>
+    </li>' : '';
 
-      ';
-    }else if($_SESSION['nivel'] == 2){
-          $menu = '
-      
-        <aside id="sidebar" class="sidebar">
-          <ul class="sidebar-nav" id="sidebar-nav">
+    $claseLi = ($this->permisos['Clase']->status == 1) ?
+    '<li>
+      <a href="?url=clase" class="'.$clase.'">
+        <i class="bi bi-circle"></i><span>Clase</span>
+      </a>
+    </li>' : '';
+    $tipoLi = ($this->permisos['Tipo']->status == 1) ?
+    '<li>
+      <a href="?url=tipo" class="'.$tipo.'">
+        <i class="bi bi-circle"></i><span>Tipo</span>
+      </a>
+    </li>' : '';
+    $categoriaLi = ($this->permisos['Clase']->status == 1 || $this->permisos['Tipo'] == 1) ?
+    '<li>
+        <a href="#" class="'.$categoria.'">
+          <i class="bi bi-circle"></i><span>Categoría</span>
+        </a>
+        <ul>
+          '.$clasLi.'
 
-          <li class="nav-item">
-                <a class="nav-link '.$home.'" href="?url=home">
-                  <i class="bi bi-house-door"></i>
-                  <span>Inicio</span>
-                </a>
-          </li>
+          '.$tipoLi.'
+        </ul>
+    </li>' : '';
+
+    $presentacionLi = ($this->permisos['Presentacion']->status == 1) ?
+    '<li>
+        <a href="?url=presentacion" class="'.$presentacion.'">
+          <i class="bi bi-circle"></i><span>Presentación</span>
+        </a>
+    </li>' : '';
+
+    $productosNavLi = ($this->permisos['Producto']->status == 1 || $this->permisos['Laboratorio']->status == 1 || $this->permisos['Proveedor']->status == 1 || $this->permisos['Clase']->status == 1 || $this->permisos['Tipo']->status == 1 || $this->permisos['Presentacion']->status == 1) ?
+    '<li class="nav-item">
+          <a class="nav-link '.$productosA.'" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
+              <i class="bi bi-grid"></i><span>Productos</span><i class="bi bi-chevron-down ms-auto"></i>
+          </a>
+          <ul id="forms-nav" class="nav-content '.$productosB.'" data-bs-parent="#sidebar-nav">
               
-          <!-- End Dashboard Nav -->
+              '.$productosLi.'
+
+              '.$laboratorioLi.'
+              
+              '.$proveedorLi.'
+
+              '.$categoriaLi.'
+
+              '.$presentacionLi.'
+
+          </ul>
+    </li>' : '';
+
+    $reportesLi = ($this->permisos['Reportes']->status == 1) ?
+    '<li class="nav-item ">
+        <a class="nav-link '.$reportes.'" href="?url=reportes">
+          <i class="bi bi-card-checklist"></i><span>Reportes</span>
+        </a>
+    </li>' : '';
+
+    $usuarioLi = ($this->permisos['Usuarios']->status == 1) ?
+    '<li class="nav-item">
+        <a class="nav-link '.$usuario.'" href="?url=usuario">
+          <i class="bi bi-person"></i><span>Usuarios</span>
+        </a>
+    </li>' : '';
+
+    $bitacoraLi = ($this->permisos['Bitacora']->status == 1) ?
+    '<li class="nav-item ">
+        <a class="nav-link '.$bitacora.'" href="?url=bitacora">
+          <i class="bi bi-journal-text"></i><span>Bitacora</span>
+        </a>
+    </li>' : '';
+
+    $rolesLi = ($this->permisos['Roles']->status == 1) ?
+    '<li class="nav-item ">
+        <a class="nav-link '.$roles.'" href="?url=roles">
+          <i class="bi bi-person-lock"></i><span>Roles</span>
+        </a>
+    </li>' : '';
+
+    $menu = '
+    <aside id="sidebar" class="sidebar">
+        <ul class="sidebar-nav" id="sidebar-nav">
 
           <li class="nav-item">
-            <a class="nav-link '.$clientes.'" href="?url=clientes">
-                <i class="bi bi-people"></i>
-                <span>Clientes</span>
-            </a>
-          </li>
-
-          <li class="nav-item">
-              <a class="nav-link '.$ventas.'" href="?url=ventas">
-                <i class="bi bi-currency-dollar"></i>
-                <span>Ventas</span>
+              <a class="nav-link '.$home.'" href="?url=home">
+                <i class="bi bi-house-door"></i>
+                <span>Inicio</span>
               </a>
           </li>
-          
-          <li class="nav-item">
-          <a class="nav-link '.$compras.'" href="?url=compras">
-              <i class="bi bi-cart-check"></i>
-              <span>Compras</span>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link '.$configuracionesA.'" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
-              <i class="bi bi-gear"></i><span>Configuraciones</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="components-nav" class="nav-content '.$configuracionesB.'" data-bs-parent="#sidebar-nav" style="">
-            
-              <li>
-                <a href="?url=metodo" class="'.$metodo.'" >
-                  <i class="bi bi-circle "></i><span>Metodo de pago</span>
-                </a>
-              </li>
-              <li>
-                <a href="?url=moneda" class="'.$moneda.'">
-                  <i class="bi bi-circle "></i><span>Moneda</span>
-                </a>
-              </li>  
-            </ul>
-          </li>
-
-            <!-- End Components Nav -->
-
-          <li class="nav-item">
-            <a class="nav-link '.$productosA.'" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
-                <i class="bi bi-grid"></i><span>Productos</span><i class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul id="forms-nav" class="nav-content '.$productosB.'" data-bs-parent="#sidebar-nav">
-              <li>
-                <a href="?url=producto" class="'.$producto.'">
-                  <i class="bi bi-circle"></i><span>Producto</span>
-                </a>
-              </li>
-              <li>
-                <a href="?url=laboratorio" class="'.$laboratorio.'">
-                  <i class="bi bi-circle"></i><span>Laboratorio</span>
-                </a>
-              </li>
-              <li>
-                <a href="?url=proveedor" class="'.$proveedor.'">
-                  <i class="bi bi-circle"></i><span>Proveedor</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="'.$categoria.'">
-                  <i class="bi bi-circle"></i><span>Categoría</span>
-                </a>
-                <ul>
-                  <li>
-                     <a href="?url=clase" class="'.$clase.'">
-                    <i class="bi bi-circle"></i><span>Clase</span>
-                    </a>
-                  </li>
-                  <li>
-                     <a href="?url=tipo" class="'.$tipo.'">
-                    <i class="bi bi-circle"></i><span>Tipo</span>
-                    </a>
-                  </li>
-                </ul>
-              </li>
               
-              <li>
-                <a href="?url=presentacion" class="'.$presentacion.'">
-                  <i class="bi bi-circle"></i><span>Presentación</span>
-                </a>
-              </li>
-            </ul>
-          </li><!-- End Forms Nav -->
-          <li class="nav-item ">
-            <a class="nav-link '.$reportes.'" href="?url=reportes">
-              <i class="bi bi-card-checklist"></i><span>Reportes</span>
-            </a>
-          </li>
+          '.$clientesLi.'
 
-
-          <!-- End Tables Nav -->
+          '.$ventasLi.'
           
+          '.$comprasLi.'
+
+          <!-- Configuraciones desplegable -->
+
+          '.$configuracionesLi.'
+
+          <!-- Final de Configuraciones desplegable -->
+
+          <!-- Productos desplegable -->
+
+          '.$productosNavLi.'
+
+          <!-- Final de Productos desplegable -->
+
+          '.$reportesLi.'
+
+          '.$usuarioLi.'
+
+          '.$bitacoraLi.'
+
+          '.$rolesLi.'
 
         </ul>
-        </aside>
+    </aside>
 
     ';
-    }else if($_SESSION['nivel'] == 3){
-        $menu = '
-  
-        <aside id="sidebar" class="sidebar">
-          <ul class="sidebar-nav" id="sidebar-nav">
-
-          <li class="nav-item">
-                <a class="nav-link '.$home.'" href="?url=home">
-                  <i class="bi bi-house-door"></i>
-                  <span>Inicio</span>
-                </a>
-          </li>
-              
-          <!-- End Dashboard Nav -->
-
-          <li class="nav-item">
-            <a class="nav-link '.$clientes.'" href="?url=clientes">
-                <i class="bi bi-people"></i>
-                <span>Clientes</span>
-            </a>
-          </li>
-
-          <li class="nav-item">
-              <a class="nav-link '.$ventas.'" href="?url=ventas">
-                <i class="bi bi-currency-dollar"></i>
-                <span>Ventas</span>
-              </a>
-          </li>
-          
-          <li class="nav-item">
-          <a class="nav-link '.$compras.'" href="?url=compras">
-              <i class="bi bi-cart-check"></i>
-              <span>Compras</span>
-            </a>
-          </li>
-
-
-          <!-- End Tables Nav -->
-
-        </ul>
-        </aside>
-
-    ';
-    }
 
     echo $menu;
 
 
     }
+
   }
 
   
