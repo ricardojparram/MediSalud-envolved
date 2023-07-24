@@ -5,11 +5,10 @@
   use component\menuLateral as menuLateral;
   use modelo\home as home;
 
-  $objModel = new home();
+  if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
-  if(!isset($_SESSION['nivel'])){
-    die('<script> window.location = "?url=login" </script>');
-  }
+  $objModel = new home();
+  $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
 
   if (isset($_POST['clien'])) {
     $objModel->mostrarClientes();
@@ -29,7 +28,7 @@
 
   $VarComp = new initcomponents();
   $header = new header();
-  $menu = new menuLateral();
+  $menu = new menuLateral($permisos);
 
   if(file_exists("vista/interno/homeVista.php")){
     require_once("vista/interno/homeVista.php");
