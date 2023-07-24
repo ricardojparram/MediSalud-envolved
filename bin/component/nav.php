@@ -23,8 +23,8 @@
                 </ul>
                     <div class="mx-2 mx-lg-0 sec">
                       <div class="m-0"><a class="text-success icon-car me-4" href="#"><em class="ocultarlg">Carrito </em><span class="bi bi-cart4 fs-4"></span><span class="badge badge-light icon-badge">6</span></a></div>
-                      <div class="m-0"><a class="text-success me-2" href="?=login"><em class="ocultarlg">Iniciar sesión</em><i class="bi bi-person-fill fs-4"></i></a></div>
-                      <div class="m-0"><a class="text-success me-2" href="?=registro"><em class="ocultarlg">Registrarse </em><i class="bi bi-person-lines-fill fs-4"></i></a></div>
+                      <div class="m-0"><a class="text-success me-2" href="?url=login"><em class="ocultarlg">Iniciar sesión</em><i class="bi bi-person-fill fs-4"></i></a></div>
+                      <div class="m-0"><a class="text-success me-2" href="?url=registro"><em class="ocultarlg">Registrarse </em><i class="bi bi-person-lines-fill fs-4"></i></a></div>
                     </div>
               </div>
             </div>
