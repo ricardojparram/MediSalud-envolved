@@ -22,14 +22,13 @@
  
       public function mostrarLaboratoriosAjax($bitacora = false){
         try{
-          $new = $this->con->prepare("SELECT l.rif, l.razon_social, l.direccion, cl.telefono, cl.contacto, CONCAT('<button type=\"button\" id=\"', l.cod_lab ,'\" class=\"btn btn-success editar\" data-bs-toggle=\"modal\" data-bs-target=\"#Editar\"><i class=\"bi bi-pencil\"></i></button>
-            <button type=\"button\" id=\"', l.cod_lab ,'\" class=\"btn btn-danger borrar\" data-bs-toggle=\"modal\" data-bs-target=\"#Borrar\"><i class=\"bi bi-trash3\"></i></button>') as opciones FROM laboratorio l
+          $new = $this->con->prepare("SELECT l.rif, l.razon_social, l.direccion, cl.telefono, cl.contacto, l.cod_lab FROM laboratorio l
             INNER JOIN contacto_lab cl 
             ON cl.cod_lab = l.cod_lab
             WHERE l.status = 1;");
 
           $new->execute();
-          $data = $new->fetchAll();
+          $data = $new->fetchAll(\PDO::FETCH_OBJ);
           echo json_encode($data);
           if($bitacora) $this->binnacle("Laboratorio",$_SESSION['cedula'],"Consultó listado.");
           die();
