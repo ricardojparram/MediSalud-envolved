@@ -23,10 +23,8 @@
   $(document).on('click', '.detalleV' , function(){
 
        id = this.id; // id = id
-       console.log(id);
        $.post('',{detalleV : 'detV' , id}, function(data){
         let lista = JSON.parse(data);
-        console.log(lista);
         let tabla;
 
         lista.forEach(row=>{
@@ -295,8 +293,19 @@
      })
       
     }
+
+    function validarCedula(input, select2, div){
+      $.post('',{cedula : input.val(), validar: "cedula"}, function(data){
+        let mensaje = JSON.parse(data);
+        if(mensaje.resultado === "Error de cedula"){
+          div.text(mensaje.error);
+          select2.attr("style","border-color: red;")
+          select2.attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
+        }
+      })
+    }
     
-   
+
      // REGISTRAR VENTA
     let vmetodo, vmoneda;
     $('#metodo').change(function(){
@@ -307,9 +316,17 @@
     })
      $('.iva').keyup(()=> {validarNumero($(".iva"),$("#error4"),"Error de iva") });
 
+     $('.select2').change(function(){
+      let cedula = validarSelec2($(".select2"),$(".select2-selection"),$("#error1"),"Error de Cedula");
+      if(cedula){
+       validarCedula($(".select2"),$(".select2-selection") ,$("#error1"));
+      }
+     })
+
      let click = 0;
      setInterval(()=>{click = 0}, 2000);
-
+    
+    // REGISTRAR VENTA INICIA
      $("#registrar").click((e)=>{
        e.preventDefault();
 
@@ -416,25 +433,57 @@
 
        $(document).on('click', '.borrar', function(){
         id = this.id;
-
+        
       })   
-       
-       $("#delete").click(()=>{ 
-        if(click >= 1){ throw new Error('Spam de clicks');}
-         console.log(id);
-         $.ajax({
-          type: "POST",
-          url: '',
-          data: {eliminar: "asd", id},
-          success(data){
-            tablaMostrar.destroy();
-            rellenar();
-            $('.cerrar').click();
-              Toast.fire({ icon: 'success', title: 'Venta eliminada' }) // ALERTA 
+
+       function validarEliminar() {
+        return new Promise((resolve, reject) => {
+          $.ajax({
+            type: "POST",
+            url: '',
+            dataType: "json",
+            data: { validarCI: "existe", id },
+            success(data) {
+              console.log(data);
+              if (data.resultado === "Error de venta") {  
+                Toast.fire({ icon: 'error', title: 'Esta venta ya esta anulada' }); // ALERTA 
+                tablaMostrar.destroy();
+                rellenar();
+                $('.cerrar').click();
+                reject(); // Rechaza la promesa si la condición se cumple
+              } else {
+                resolve(); // Resuelve la promesa si la condición no se cumple
+              }
             }
+          });
+        });
+      }
+
+      $("#delete").click(() => { 
+        if (click >= 1) {
+          throw new Error('Spam de clicks');
+        }
+        validarEliminar()
+        .then(() => {
+            // Si la promesa se resuelve, la ejecución continúa
+            $.ajax({
+              type: "POST",
+              url: '',
+              data: { eliminar: "asd", id },
+              success(data) {
+                tablaMostrar.destroy();
+                rellenar();
+                $('.cerrar').click();
+                Toast.fire({ icon: 'success', title: 'Venta eliminada' }); // ALERTA 
+              }
+            });
+            click++;
           })
-         click++
-       })
-  
+        .catch(() => {
+      // Si la promesa se rechaza, la ejecución se detiene
+      console.log('No se puede eliminar la venta');
+      });
+    });
+
 
 });

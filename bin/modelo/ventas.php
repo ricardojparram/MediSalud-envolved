@@ -136,7 +136,28 @@
     }
    }
 
+    //---------------------------------VALIDAR ELIMINAR VENTA--------------------------------
 
+     public function validarSelect($id){
+      if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
+        return "Error de id!";
+      }
+
+      $this->id = $id;
+
+      $new = $this->con->prepare("SELECT * FROM venta v WHERE v.status = 1 and v.num_fact = ?");
+      $new->bindValue(1, $this->id);
+      $new->execute();
+      $data = $new->fetchAll();
+
+      if(isset($data[0]["num_fact"])){
+        echo json_encode(['resultado' => 'Si existe esa venta.']);
+        die();
+      }else{
+       echo json_encode(['resultado' => 'Error de venta']);
+       die();
+     }
+   }
    
     //---------------------------------ELIMINAR VENTA--------------------------------
 
@@ -197,6 +218,36 @@
        return $error;     
      }  
     }
+
+     //--------------------------------- VALIDAR CLIENTE --------------------------------
+
+     public function validarCliente($cedula){
+     
+      if(preg_match_all("/^[0-9]{3,30}$/", $cedula) != 1){
+        return "Error de cedula!";
+      }
+      
+       $this->cedula = $cedula;
+
+       return $this->validarC();
+
+     }
+
+     private function validarC(){
+       $new = $this->con->prepare("SELECT `cedula` FROM `cliente` WHERE `status` = 1 and `cedula` = ?");
+       $new->bindValue(1, $this->cedula);
+       $new->execute();
+       $data = $new->fetchAll();
+
+       if(isset($data[0]["cedula"])){
+        echo json_encode(['resultado' => 'cedula valida.']);
+        die();
+       }else{
+        echo json_encode(['resultado' => 'Error de cedula', 'error' => 'La cedula no está registrado.']);
+        die();
+       }
+
+     }
 
      //---------------------------------DETALLES PRODUCTOS POR VENTA--------------------------------
 

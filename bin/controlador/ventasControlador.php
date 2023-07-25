@@ -34,26 +34,34 @@
         $mostrarP = $objModel->getMostrarProducto();
       }
 
+      if(isset($_POST['cedula']) && isset($_POST['validar'])){
+        $objModel->validarCliente($_POST['cedula']);
+      }
+
       if(isset($_GET['producto']) && isset($_GET['fill'])){
-      $objModel->productoDetalle($_GET['producto']);
+        $objModel->productoDetalle($_GET['producto']);
       }
 
 
-	    if(isset($_POST['cedula']) && isset($_POST['montoT']) && isset($_POST['metodo']) && isset($_POST['moneda']) ){
+      if(isset($_POST['cedula']) && isset($_POST['montoT']) && isset($_POST['metodo']) && isset($_POST['moneda']) ){
 
-	     $objModel->getAgregarVenta($_POST['cedula'] , $_POST['montoT'] , $_POST['metodo'] , $_POST['moneda'] );
+        $objModel->getAgregarVenta($_POST['cedula'] , $_POST['montoT'] , $_POST['metodo'] , $_POST['moneda'] );
 
-	  	}
+      }
 
-       if(isset($_POST['producto']) && isset($_POST['precio']) && isset($_POST['cantidad']) && isset($_POST['id']) ){
+      if(isset($_POST['producto']) && isset($_POST['precio']) && isset($_POST['cantidad']) && isset($_POST['id']) ){
 
        $objModel->AgregarVentaXProd($_POST['producto'] , $_POST['precio'] , $_POST['cantidad'], $_POST['id'] );
        
-      }
+     }
 
-    if (isset($_POST["eliminar"])) {
-     $MS = $objModel->eliminarVenta($_POST["id"]);
-      }
+     if(isset($_POST['validarCI']) && isset($_POST['id'])){
+      $objModel->validarSelect($_POST['id']);
+     }
+
+     if (isset($_POST["eliminar"])) {
+       $MS = $objModel->eliminarVenta($_POST["id"]);
+     }
 
 
    if(file_exists("vista/interno/ventasVista.php")){
