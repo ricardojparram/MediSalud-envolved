@@ -79,10 +79,10 @@ CREATE TABLE `modulos` (
 CREATE TABLE `permisos`(
     `cod_nivel` int NOT NULL,
     `id_modulo` int NOT NULL,
-    `registrar` int NOT NULL,
-    `editar` int NOT NULL,
-    `consultar` int NOT NULL,
-    `eliminar` int NOT NULL,
+    `registrar` BOOLEAN NOT NULL,
+    `editar` BOOLEAN NOT NULL,
+    `consultar` BOOLEAN NOT NULL,
+    `eliminar` BOOLEAN NOT NULL,
     `status` int NOT NULL ,
     FOREIGN KEY (`cod_nivel`) REFERENCES `nivel`(`cod_nivel`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`id_modulo`) REFERENCES `modulos`(`id`) ON DELETE CASCADE ON UPDATE CASCADE 
