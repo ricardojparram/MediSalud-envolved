@@ -1,11 +1,7 @@
 #body{
-    background: #fffcf2;
+    background-color: white
 }
-.bg{
-     background-image: url("../img/Logo_confondo2.png");
-     background-position: center;
-     background-size: cover;
-    }
+
 .Shade{
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -17,7 +13,7 @@
 	margin: 0;
 	padding: 0;
 }
-.container{
+.carLogin{
 	margin-top: 15vh;
 }
 .btn-primary{

@@ -9,9 +9,20 @@ $(document).ready(function(){
             data: {mostrar: "xd"},
             success(list){
                 console.log(list);
+                list.forEach(row => {
+                    tabla+=`
+                    <tr>
+                        <td>${row.modulo} </td>
+                        <td>${row.nombre}</td>
+                        <td>${row.descripcion}</td>
+                        <td>${row.fecha}</td>
+                    </tr>
+                    `;
+                });
+                $('#tabla tbody').html(tabla);
                 tabla = $("#tabla").DataTable({
                     responsive: true,
-                    data: list
+                    "order": [[ 3, "desc" ]]
                 });
             }
         })
