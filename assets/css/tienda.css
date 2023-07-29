@@ -58,3 +58,101 @@
     top: -13px;
     right: -16px;
 }
+
+/* Carrit de compras css */
+
+
+.item-carrito{
+    display: flex;
+    align-items: center;
+}
+.item-carrito img {
+    width: 120px;
+    height: 120px;
+/*    object-fit: cover;*/
+}
+
+.item-carrito .descripcion {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-top: 10px;
+    height: 100%;
+}
+.item-carrito .descripcion h3 {
+    margin: 0;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.item-carrito .descripcion p {
+    margin: 0;
+    font-size: 16px;
+}
+
+.item-carrito .precio {
+    margin-left: auto;
+    font-size: 20px;
+    align-self: end;
+}
+
+.item-carrito .opciones {
+    margin-top: auto;
+    padding-top: 10px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 15px;
+}
+.item-carrito .opciones input {
+    height: 30px;
+    width: 85px;
+}
+.item-carrito .opciones a {
+    padding-left: 15px;
+    text-decoration: underline;
+    border-left: solid 1px #afafaf;
+    color: #198754;
+}
+
+.carritoMain a{
+    color: #198754;
+}
+.carritoMain a:hover {
+    transition: all 0.5s;
+    color: #28d787  !important;
+    text-decoration: underline;
+}
+
+.cardContainer {
+    display: flex;
+    gap:25px;
+}
+.cardTotal {
+    position: sticky;
+    top: 180px;
+    max-height: 300px;
+    min-width: 250px;
+}
+.cardTotal .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 15px;
+}
+.cardTotal h4 {
+    font-size: 25px;
+    font-weight: lighter;
+}
+.cardTotal h3 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 800px) {
+    .cardContainer {
+        flex-direction: column;
+    }
+}
