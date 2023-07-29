@@ -150,9 +150,31 @@
     font-size: 30px;
     font-weight: bold;
 }
-
-@media screen and (max-width: 800px) {
+.regresar::after {
+    content: " Regresar a la tienda";
+}
+.vaciar::after {
+    content: " Vaciar el carrito de compra";
+}
+.page-container {
+    max-width: 1100px;
+}
+@media screen and (max-width: 890px) {
     .cardContainer {
         flex-direction: column;
+    }
+    .item-carrito {
+        flex-direction: column;
+        width: 80%;
+        justify-self: center;
+    }
+    .item-carrito .descripcion .opciones {
+        margin-top: 20px;
+    }
+    .regresar::after {
+        content: " Regresar";
+    }
+    .vaciar::after {
+        content: " Vaciar";
     }
 }

@@ -20,7 +20,7 @@
 
   <main class="w-100 d-flex justify-content-center p-5 carritoMain" style="margin-top: 76px"> 
 
-    <div class="">
+    <div class="page-container">
       <div class="pagetitle">
         <h1>Carrito de compras</h1>
         <nav>
@@ -34,22 +34,22 @@
           <div class="card-body">
             <div class="row pt-4 px-4">
               <div class="col-6 p-0 fs-4">
-                <a class="carritoButton" href=""><i class="bi bi-arrow-bar-left fs-3"><use xlink:href="#arrow-right"></i> Regresar a la tienda</a>
+                <a class="carritoButton regresar" href=""><i class="bi bi-arrow-bar-left fs-3"></i></a>
                 </div>
 
                 <div class="col-6 p-0 fs-4 text-end">
-                  <a class="carritoButton" href=""><i class="bi bi-cart-x fs-3"><use xlink:href="#arrow-right"></i> Vaciar el carrito</a>
-                  </div>
+                  <a class="carritoButton vaciar" href=""><i class="bi bi-cart-x fs-3"></i></a>
                 </div>
-                <div class="row p-4">
+                </div>
+                <div class="row justify-content-center p-4">
                   <div class="item-carrito p-2">
                     <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
                     <div class="descripcion">
                       <h3>Paracetamol</h3>
                       <p>Paracetamol 750mg 12 tabletas</p>
                       <div class="opciones">
-                        <input type="number" class="form-control borrar" placeholder="Cant.">
-                        <a class="" href="">Eliminar</a>
+                        <input type="number" class="form-control cantidad" placeholder="Cant.">
+                        <a class="eliminar" href="#">Eliminar</a>
                       </div>
                     </div>
                     <div class="precio">
@@ -61,144 +61,16 @@
                   <div class="item-carrito p-2">
                     <img class="" src="https://farmamedca.com/wp-content/uploads/Acetaminofen.png" alt="">  
                     <div class="descripcion">
-                      <h3>Acetaminofen</h3>
-                      <p>Acetaminofen 500mg x 10 tabletas</p>
+                      <h3 class="nombreProducto">Acetaminofen</h3>
+                      <p class="descripcionProducto">Acetaminofen 500mg x 10 tabletas</p>
                       <div class="opciones">
-                        <input type="number" class="form-control borrar" placeholder="Cant.">
-                        <a href="">Eliminar</a>
+                        <input type="number" class="form-control cantidad" placeholder="Cant.">
+                        <a class="eliminar" href="#">Eliminar</a>
                       </div>
                     </div>
                     <div class="precio">
-                      <h6>Unidad: 10$</h6>
-                      <h6 class="fs-5">Total: 100$</h6>
-                    </div>
-                  </div>
-                  <hr class="my-2">
-                                    <div class="item-carrito p-2">
-                    <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-                    <div class="descripcion">
-                      <h3>Paracetamol</h3>
-                      <p>Paracetamol 750mg 12 tabletas</p>
-                      <div class="opciones">
-                        <input type="number" class="form-control borrar" placeholder="Cant.">
-                        <a class="" href="">Eliminar</a>
-                      </div>
-                    </div>
-                    <div class="precio">
-                      <h6>Unidad: 5$</h6>
-                      <h6 class="fs-5">Total: 25$</h6>
-                    </div>
-                  </div>
-                  <hr class="my-2">
-                  <div class="item-carrito p-2">
-                    <img class="" src="https://farmamedca.com/wp-content/uploads/Acetaminofen.png" alt="">  
-                    <div class="descripcion">
-                      <h3>Acetaminofen</h3>
-                      <p>Acetaminofen 500mg x 10 tabletas</p>
-                      <div class="opciones">
-                        <input type="number" class="form-control borrar" placeholder="Cant.">
-                        <a href="">Eliminar</a>
-                      </div>
-                    </div>
-                    <div class="precio">
-                      <h6>Unidad: 10$</h6>
-                      <h6 class="fs-5">Total: 100$</h6>
-                    </div>
-                  </div>
-                  <hr class="my-2">
-                                    <div class="item-carrito p-2">
-                    <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-                    <div class="descripcion">
-                      <h3>Paracetamol</h3>
-                      <p>Paracetamol 750mg 12 tabletas</p>
-                      <div class="opciones">
-                        <input type="number" class="form-control borrar" placeholder="Cant.">
-                        <a class="" href="">Eliminar</a>
-                      </div>
-                    </div>
-                    <div class="precio">
-                      <h6>Unidad: 5$</h6>
-                      <h6 class="fs-5">Total: 25$</h6>
-                    </div>
-                  </div>
-                  <hr class="my-2">
-                  <div class="item-carrito p-2">
-                    <img class="" src="https://farmamedca.com/wp-content/uploads/Acetaminofen.png" alt="">  
-                    <div class="descripcion">
-                      <h3>Acetaminofen</h3>
-                      <p>Acetaminofen 500mg x 10 tabletas</p>
-                      <div class="opciones">
-                        <input type="number" class="form-control borrar" placeholder="Cant.">
-                        <a href="">Eliminar</a>
-                      </div>
-                    </div>
-                    <div class="precio">
-                      <h6>Unidad: 10$</h6>
-                      <h6 class="fs-5">Total: 100$</h6>
-                    </div>
-                  </div>
-                  <hr class="my-2">
-                                    <div class="item-carrito p-2">
-                    <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-                    <div class="descripcion">
-                      <h3>Paracetamol</h3>
-                      <p>Paracetamol 750mg 12 tabletas</p>
-                      <div class="opciones">
-                        <input type="number" class="form-control borrar" placeholder="Cant.">
-                        <a class="" href="">Eliminar</a>
-                      </div>
-                    </div>
-                    <div class="precio">
-                      <h6>Unidad: 5$</h6>
-                      <h6 class="fs-5">Total: 25$</h6>
-                    </div>
-                  </div>
-                  <hr class="my-2">
-                  <div class="item-carrito p-2">
-                    <img class="" src="https://farmamedca.com/wp-content/uploads/Acetaminofen.png" alt="">  
-                    <div class="descripcion">
-                      <h3>Acetaminofen</h3>
-                      <p>Acetaminofen 500mg x 10 tabletas</p>
-                      <div class="opciones">
-                        <input type="number" class="form-control borrar" placeholder="Cant.">
-                        <a href="">Eliminar</a>
-                      </div>
-                    </div>
-                    <div class="precio">
-                      <h6>Unidad: 10$</h6>
-                      <h6 class="fs-5">Total: 100$</h6>
-                    </div>
-                  </div>
-                  <hr class="my-2">
-                                    <div class="item-carrito p-2">
-                    <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-                    <div class="descripcion">
-                      <h3>Paracetamol</h3>
-                      <p>Paracetamol 750mg 12 tabletas</p>
-                      <div class="opciones">
-                        <input type="number" class="form-control borrar" placeholder="Cant.">
-                        <a class="" href="">Eliminar</a>
-                      </div>
-                    </div>
-                    <div class="precio">
-                      <h6>Unidad: 5$</h6>
-                      <h6 class="fs-5">Total: 25$</h6>
-                    </div>
-                  </div>
-                  <hr class="my-2">
-                  <div class="item-carrito p-2">
-                    <img class="" src="https://farmamedca.com/wp-content/uploads/Acetaminofen.png" alt="">  
-                    <div class="descripcion">
-                      <h3>Acetaminofen</h3>
-                      <p>Acetaminofen 500mg x 10 tabletas</p>
-                      <div class="opciones">
-                        <input type="number" class="form-control borrar" placeholder="Cant.">
-                        <a href="">Eliminar</a>
-                      </div>
-                    </div>
-                    <div class="precio">
-                      <h6>Unidad: 10$</h6>
-                      <h6 class="fs-5">Total: 100$</h6>
+                      <h6 class="precioUnidad">Unidad: 10$</h6>
+                      <h6 class="fs-5 totalProducto">Total: 100$</h6>
                     </div>
                   </div>
 
@@ -209,7 +81,7 @@
               <div class="card-body p-4">
                 <h4>Precio total del carrito</h4>
                 <h3>200$</h3>
-                <button class="btn btn-success">Realizar facturación</button>
+                <button class="btn btn-success"><i class="bi bi-cart-check-fill"></i> Realizar facturación</button>
               </div>
             </div>
           </div>
