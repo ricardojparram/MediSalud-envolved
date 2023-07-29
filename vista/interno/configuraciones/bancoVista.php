@@ -105,6 +105,7 @@
 
 	                  	</select>
 	                  </div>
+	                  <p class="error" style="color:#ff0000;text-align: center;" id="error1"></p>
 	                </div>
 
 	                <div class="form-group col-12">                          
@@ -113,6 +114,7 @@
 	                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el nombre del Banco"><i class="bi bi-bank"></i></button> 
 	                    <input class="form-control" id="nombre" placeholder="Nombre">
 	                  </div>
+	                  <p class="error" style="color:#ff0000;text-align: center;" id="error2"></p>
 	                </div>
 
 	              </div>
@@ -129,6 +131,7 @@
 	                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la cedula o rif del banco"><i class="bi bi-person-fill"></i></button> 
 	                    <input class="form-control" id="cedulaRif" placeholder="Cedula o Rif">
 	                  </div>
+	                  <p class="error" style="color:#ff0000;text-align: center;" id="error3"></p>
 	                </div>
 
 	              </div>
@@ -145,23 +148,26 @@
 	              			<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el número de cuenta del banco"><i class="ri-bank-card-line"></i></button> 
 	              			<input class="form-control" id="cuentaBank" required="" placeholder="Cuenta Bancaria">
 	              		</div>
+	              		<p class="error" style="color:#ff0000;text-align: center;" id="error4"></p>
 	              	</div>
 
-	              	<div class="form-group col-12 CodigoBanco">                          
+	              	<div class="form-group col-12 CodigoBanco" style="display: none;">                          
 	              		<label class="col-form-label"> <strong>Codigo de Banco</strong> </label>
 	              		<div class="input-group">
 	              			<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el codigo de banco"><i class="bi bi-bank2"></i></button> 
 	              			<input class="form-control" id="codBank" placeholder="Codigo de Banco">
 	              		</div>
+	              		<p class="error" style="color:#ff0000;text-align: center;" id="error5"></p>
 	              	</div>
 
 
-	              	<div class="form-group col-12 telefono">                          
+	              	<div class="form-group col-12 telefono" style="display: none;">                          
 	              		<label class="col-form-label Telefono"> <strong>Telefono</strong> </label>
 	              		<div class="input-group">
 	              			<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el telefono de banco afiliado"><i class="bi bi-telephone"></i></button> 
 	              			<input class="form-control" id="telefono" placeholder="Telefono">
 	              		</div>
+	              		<p class="error" style="color:#ff0000;text-align: center;" id="error6"></p>
 	              	</div>
 
 
