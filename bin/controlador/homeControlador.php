@@ -5,7 +5,13 @@
   use component\menuLateral as menuLateral;
   use modelo\home as home;
 
-  if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
+  if(isset($_SESSION['nivel'])) {
+    if ($_SESSION['nivel'] == 4 ) {
+      die('<script> window.location = "?url=login" </script>');
+    }
+  }else {
+    die('<script> window.location = "?url=login" </script>');
+  }
 
   $objModel = new home();
   $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
