@@ -43,38 +43,6 @@
             </div>
             <div class="row justify-content-center p-4 carrito-container">
 
-              <div class="item-carrito p-2">
-                <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-                <div class="descripcion">
-                  <h3>Paracetamol</h3>
-                  <p>Paracetamol 750mg 12 tabletas</p>
-                  <div class="opciones">
-                    <input type="number" class="form-control cantidad" placeholder="Cant.">
-                    <a class="eliminar" href="#">Eliminar</a>
-                  </div>
-                </div>
-                <div class="precio">
-                  <h6>Unidad: 5$</h6>
-                  <h6 class="fs-5">Total: 25$</h6>
-                </div>
-              </div>
-              <hr class="my-2">
-              <div class="item-carrito p-2">
-                <img class="" src="https://farmamedca.com/wp-content/uploads/Acetaminofen.png" alt="">  
-                <div class="descripcion">
-                  <h3 class="nombreProducto">Acetaminofen</h3>
-                  <p class="descripcionProducto">Acetaminofen 500mg x 10 tabletas</p>
-                  <div class="opciones">
-                    <input type="number" class="form-control cantidad" placeholder="Cant.">
-                    <a class="eliminar" href="#">Eliminar</a>
-                  </div>
-                </div>
-                <div class="precio">
-                  <h6 class="precioUnidad">Unidad: 10$</h6>
-                  <h6 class="fs-5 totalProducto">Total: 100$</h6>
-                </div>
-              </div>
-
             </div>
           </div>
         </div>
