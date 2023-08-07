@@ -13,7 +13,13 @@
 		$model->getCarritoUsuario($_SESSION['cedula']);
 	}
 
-	// if()
+	if(isset($_POST['validar'], $_POST['productos'])){
+		$model->getValidarStock($_POST['productos']);
+	}
+
+	if(isset($_POST['editar'], $_POST['id_producto'], $_POST['cantidad'])){
+		$model->getEditarProd($_POST['id_producto'], $_POST['cantidad']);
+	}
 
 	$VarComp = new initcomponents();	
 	$Nav = new nav();
