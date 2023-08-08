@@ -76,9 +76,10 @@
 
 		}
 
-		public function getEditarProd($id_producto, $cantidad){
+		public function getEditarProd($id_producto, $cantidad, $user){
 			$this->id_producto = $id_producto;
 			$this->cantidad = $cantidad;
+			$this->user = $user;
 
 			$this->editarProducto();
 		}
@@ -87,14 +88,47 @@
 
 			try {
 
-				$sql = 'UPDATE carrito SET cantidad = ? WHERE cod_producto = ?';
+				$sql = 'UPDATE carrito SET cantidad = ? 
+						WHERE cod_producto = ? AND cedula = ?';
 				$new = $this->con->prepare($sql);
 				$new->bindValue(1, $this->cantidad);
 				$new->bindValue(2, $this->id_producto);
+				$new->bindValue(3, $this->user);
 				$resultado;
-				
+
 				if($new->execute()){
 					$resultado = ['resultado' => true, 'msg' => 'Se ha editado la cantidad correctamente.'];
+				}else{
+					$resultado = ['resultado' => false, 'msg' => 'Ha ocurrido un error.'];
+				}
+
+				die(json_encode($resultado));
+
+			} catch (\PDOException $e) {
+				die($e);
+			}
+
+		}
+
+		public function getEliminarProd($id_producto, $user){
+			$this->id_producto = $id_producto;
+			$this->user = $user;
+
+			$this->eliminarProd();
+		}
+
+		private function eliminarProd(){
+
+			try {
+				
+				$sql = "DELETE FROM carrito WHERE cod_producto = ? AND cedula = ?";
+				$new = $this->con->prepare($sql);
+				$new->bindValue(1, $this->id_producto);
+				$new->bindValue(2, $this->user);
+				$resultado = [];
+
+				if($new->execute() === true){
+					$resultado = ['resultado' => true, 'msg' => 'Se ha eliminado el producto del carrito.'];
 				}else{
 					$resultado = ['resultado' => false, 'msg' => 'Ha ocurrido un error.'];
 				}

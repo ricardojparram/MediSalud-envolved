@@ -2,6 +2,7 @@ $(document).ready(function(){
 
 	mostrarCarrito().then(() => {
 		editarCantidad();
+		confirmarEliminar();
 	})
 	async function mostrarCarrito(){
 		await $.ajax({
@@ -42,16 +43,16 @@ $(document).ready(function(){
 						precioTotal += precioUnidadTotal;
 						let hr = (i == response.length - 1) ? '' : '<hr class="my-2">';
 						div += `
-						<div class="item-carrito ${flexDirection} p-2">
+						<div class="item-carrito  ${flexDirection} p-2">
 			                <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-			                <div class="descripcion">
+			                <div class="descripcion ">
 			                  <h3>${row.descripcion}</h3>
 			                  <p>${row.contraindicaciones}</p>
-			                  <div class="opciones">
+			                  <div class="opciones position-relative">
 			                    <input type="number" id="${row.cod_producto}" value="${row.cantidad}" class="form-control cantidad" placeholder="Cant.">
-			                    <a class="eliminar" href="#">Eliminar</a>
+			                    <a class="eliminar" prod="${row.cod_producto}" >Eliminar</a>
+			                    <div class="invalid-tooltip">Cantidad no disponible.</div>
 			                  </div>
-			                  <p class="error" style="color:red;"></p>
 			                </div>
 			                <div class="precio">
 			                  <h6>Unidad: ${row.precioActual}$</h6>
@@ -77,13 +78,13 @@ $(document).ready(function(){
 			success(response){ 
 				let resultado = [];
 				response.forEach(row => {
-					let errorElement = $(`#${row.id_producto}`).closest('.descripcion').find('.error');
+					let tooltip = $(`#${row.id_producto}`).closest('.opciones').find('.invalid-tooltip');
 					if(row.info.resultado){
 						$(`#${row.id_producto}`).attr("style","border-color: none;")
-						errorElement.html('')
+						tooltip.hide();
 					}else{
 						$(`#${row.id_producto}`).attr("style","border-color: red;")
-						errorElement.html(response.msg)
+						tooltip.show();
 					}
 					resultado.push(row.info.resultado);
 				})
@@ -100,7 +101,7 @@ $(document).ready(function(){
 			validarStock(productos).then((res) => {
 				if(!res) return;
 
-				$.post('',{editar:'', id_producto, cantidad}, function(response){
+				$.post('?url=carrito',{editar:'', id_producto, cantidad}, function(response){
 					let  result = JSON.parse(response);
 					if(!result.resultado){
 						Toast.fire({ icon: 'error', title: result.msg });
@@ -110,5 +111,33 @@ $(document).ready(function(){
 			})
 		})
 	}
+
+	let id;
+	function confirmarEliminar(){
+		$('.opciones .eliminar').on('click', function(e){
+			e.preventDefault();
+			let prodTitle = $(this).closest('.descripcion').find('h3').text();
+			$('#delProductTitle').html(prodTitle);
+			$('#delModal').modal('show')
+
+			id = $(this).attr('prod');
+		})
+	}
+
+	$('#delProductFromCar').click(function(){
+		
+		$.ajax({type : 'post', url : '?url=carrito', data : {eliminar:'', id}, dataType: 'json',
+			success(data){
+					console.log(data);
+				if(data.resultado === true){
+					Toast.fire({ icon: 'success', title: 'Producto eliminado del carrito.' })
+					$('carrito-container').empty();
+					$('#delModal').modal('hide');
+					mostrarCarrito();
+				}
+			}
+		})
+
+	})
 
 })

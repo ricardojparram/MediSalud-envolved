@@ -17,8 +17,12 @@
 		$model->getValidarStock($_POST['productos']);
 	}
 
-	if(isset($_POST['editar'], $_POST['id_producto'], $_POST['cantidad'])){
-		$model->getEditarProd($_POST['id_producto'], $_POST['cantidad']);
+	if(isset($_POST['editar'], $_POST['id_producto'], $_POST['cantidad'], $_SESSION['cedula'])){
+		$model->getEditarProd($_POST['id_producto'], $_POST['cantidad'], $_SESSION['cedula']);
+	}
+
+	if(isset($_POST['eliminar'], $_POST['id'])){
+		$model->getEliminarProd($_POST['id'], $_SESSION['cedula']); 
 	}
 
 	$VarComp = new initcomponents();	
