@@ -82,6 +82,7 @@
 		private function mostrarReporte(){
 			$this->reporte = $this->obtenerReporte();	
 			echo json_encode($this->reporte);
+			$this->binnacle("Reporte",$_SESSION['cedula'], "Genero reporte de ".$this->tipo);
 			die();
 
 		}
@@ -154,6 +155,7 @@
 			
 			$respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
 			echo json_encode($respuesta);
+			$this->binnacle("Reporte",$_SESSION['cedula'], "Exporto reporte de ".$this->tipo);
 			die();
 		}
 

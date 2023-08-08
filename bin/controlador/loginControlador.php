@@ -2,6 +2,7 @@
 
   use component\initcomponents as initcomponents;
   use modelo\login as login;
+  use component\nav as nav;
   
   $objModel = new login();
 
@@ -22,6 +23,7 @@
   }
 
   $VarComp = new initcomponents();
+  $Nav = new nav();
 
   require_once("vista/sesion/loginVista.php");
 
