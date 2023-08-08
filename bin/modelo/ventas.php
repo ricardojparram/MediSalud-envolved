@@ -139,6 +139,7 @@
     //---------------------------------VALIDAR ELIMINAR VENTA--------------------------------
 
      public function validarSelect($id){
+
       if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
         return "Error de id!";
       }
@@ -157,6 +158,7 @@
        echo json_encode(['resultado' => 'Error de venta']);
        die();
      }
+     
    }
    
     //---------------------------------ELIMINAR VENTA--------------------------------

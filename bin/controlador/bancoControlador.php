@@ -27,6 +27,22 @@
      	$objModel->selecTipoPago();
      }
 
+     if(isset($_POST['id']) && isset($_POST['validar']) && $permiso->status == 1){
+      $objModel->validarTipoP($_POST['id']);
+     }
+
+     if(isset($_POST['tipoP']) && isset($_POST['nombre']) && isset($_POST['cedulaRif']) && isset($_POST['validar']) && $permiso->status == 1 ){
+      $objModel->ValidarDatos($_POST['tipoP'] , $_POST['nombre'] , $_POST['cedulaRif']);
+     }
+
+     if (isset($_POST['data']) && isset($_POST['registro']) && $permiso->status == 1) {
+       $objModel->getRegistrarBanco($_POST['data']);
+     }
+
+     if (isset($_POST['validar']) && isset($_POST['id']) && $permiso->status == 1) {
+       $objModel->validarSelect($_POST['id']);
+     }
+
      $VarComp = new initcomponents();
      $header = new header();
      $menu = new menuLateral($permisos);

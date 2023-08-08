@@ -249,7 +249,7 @@ CREATE TABLE `cambio`(
     `nombre` varchar(20) NOT NULL,
     `cedulaRif` varchar(20) NOT NULL,
     `telefono` varchar(20) ,
-    `NumCuenta` varchar(20) ,
+    `NumCuenta` varchar(50) ,
     `CodBanco` varchar(20),
     `status` int NOT NULL,
     FOREIGN KEY (`tipo_pago`) REFERENCES `tipo_pago` (`cod_tipo_pago`) ON DELETE CASCADE ON UPDATE CASCADE
