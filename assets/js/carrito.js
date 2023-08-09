@@ -1,9 +1,14 @@
 $(document).ready(function(){
 
-	mostrarCarrito().then(() => {
-		editarCantidad();
-		confirmarEliminar();
-	})
+	refrescarCarrito();
+
+	function refrescarCarrito(){
+		mostrarCarrito().then(() => {
+			editarCantidad();
+			confirmarEliminar();
+		})
+	}
+
 	async function mostrarCarrito(){
 		await $.ajax({
 			method: 'POST',
@@ -55,8 +60,8 @@ $(document).ready(function(){
 			                  </div>
 			                </div>
 			                <div class="precio">
-			                  <h6>Unidad: ${row.precioActual}$</h6>
-			                  <h6 class="fs-5">Total: ${precioUnidadTotal}$</h6>
+			                  <h6>Unidad: <span class="precioUnidad">${row.precioActual}</span>$</h6>
+			                  <h6 class="fs-5">Total: <span class="precioUnidadTotal">${precioUnidadTotal}</span>$</h6>
 			                </div>
 			            </div>
 			            ${hr}
@@ -94,17 +99,39 @@ $(document).ready(function(){
 		return res;
 	}
 
+	function actualizarTotalCarrito(){
+		let total = 0;
+		$('.carrito-container').find('.precioUnidadTotal').each(function(){
+			let precio = Number($(this).text());
+			total += precio;
+		})
+		$('#precioTotal').html(total);
+	}
+
+	let precioUnidad, cantidadProducto, precioUnidadTotal, input;
 	function editarCantidad(){
 		$('.opciones .cantidad').on('keyup change', function(){
+			input = $(this);
 			let {id: id_producto, value: cantidad} = this;
 			let productos = [{id_producto, cantidad}];
 			validarStock(productos).then((res) => {
 				if(!res) return;
 
 				$.post('?url=carrito',{editar:'', id_producto, cantidad}, function(response){
-					let  result = JSON.parse(response);
+					let result = JSON.parse(response);
+
 					if(!result.resultado){
-						Toast.fire({ icon: 'error', title: result.msg });
+						Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+					}else{
+						precioUnidad = Number(result.info.precioActual);
+						cantidadProducto = Number(result.info.cantidad);
+						precioUnidadTotal = precioUnidad * cantidadProducto;
+
+						input.closest('.item-carrito').find('.precioUnidadTotal')
+						.html(precioUnidadTotal);
+						input.closest('.item-carrito').find('.precioUnidad')
+						.html(precioUnidad);
+						actualizarTotalCarrito()
 					}
 				})
 
@@ -131,13 +158,33 @@ $(document).ready(function(){
 					console.log(data);
 				if(data.resultado === true){
 					Toast.fire({ icon: 'success', title: 'Producto eliminado del carrito.' })
-					$('carrito-container').empty();
+					$('.carrito-container').empty();
 					$('#delModal').modal('hide');
-					mostrarCarrito();
+					refrescarCarrito();
 				}
 			}
 		})
 
+	})
+
+	$('.vaciar').click(function(e){
+		e.preventDefault();
+		$('#vaciarCarritoModal').modal('show');
+	})
+
+	$('#vaciarCarritoConfirm').click(() => {
+		$.post('?url=carrito', {vaciarCarrito: ''}, function(response){
+			let res = JSON.parse(response);
+			if(res.resultado){
+				$('#vaciarCarritoModal').modal('hide');
+				$('.carrito-container').empty();
+				mostrarCarrito();
+				Toast.fire({ icon: 'success', title: 'Se ha vaciado su carrito, correctamente.'});
+			}else{
+				$('#vaciarCarritoModal').modal('hide');
+				Toast.fire({ icon: 'success', title: 'Ha ocurrido un error.'});
+			}
+		})
 	})
 
 })

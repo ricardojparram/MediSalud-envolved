@@ -94,13 +94,20 @@
 				$new->bindValue(1, $this->cantidad);
 				$new->bindValue(2, $this->id_producto);
 				$new->bindValue(3, $this->user);
+				$new->execute();
+
+				$query = 'SELECT cantidad, precioActual FROM carrito
+						WHERE cedula = ? AND cod_producto = ?';
+				$new = $this->con->prepare($query);
+				$new->bindValue(1, $this->user);
+				$new->bindValue(2, $this->id_producto);
+				$new->execute();
+				$data = $new->fetchAll(\PDO::FETCH_OBJ);
+
+				$info = ['cantidad' => $data[0]->cantidad, 'precioActual' => $data[0]->precioActual];
 				$resultado;
 
-				if($new->execute()){
-					$resultado = ['resultado' => true, 'msg' => 'Se ha editado la cantidad correctamente.'];
-				}else{
-					$resultado = ['resultado' => false, 'msg' => 'Ha ocurrido un error.'];
-				}
+				$resultado = ['resultado' => true, 'msg' => 'Se ha editado la cantidad correctamente.', 'info' => $info];
 
 				die(json_encode($resultado));
 
@@ -139,6 +146,29 @@
 				die($e);
 			}
 
+		}
+
+		public function vaciarCarrito($user){
+			$this->user = $user;
+
+			try {
+
+				$sql = 'DELETE FROM carrito WHERE cedula = ?';
+				$new = $this->con->prepare($sql);
+				$new->bindValue(1, $this->user);
+			
+				$resultado;
+				if($new->execute()){
+					$resultado = ['resultado' => true, 'msg' => 'Se ha vaciado el carrito correctamente.'];
+				}else{
+					$resultado = ['resultado' => false, 'msg' => 'Ha ocurrido un error.'];
+				}
+
+				die(json_encode($resultado));
+				
+			} catch (\PDOException $e) {
+				die($e);
+			}
 		}
 
 	}
