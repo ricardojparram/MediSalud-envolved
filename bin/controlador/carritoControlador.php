@@ -22,10 +22,14 @@
 	}
 
 	if(isset($_POST['eliminar'], $_POST['id'])){
-		$model->getEliminarProd($_POST['id'], $_SESSION['cedula']); 
+		$model->getEliminarProd($_POST['id'], $_SESSION['cedula']);
 	}
 
-	$VarComp = new initcomponents();	
+	if(isset($_POST['vaciarCarrito'])){
+		$model->vaciarCarrito($_SESSION['cedula']);
+	}
+
+	$VarComp = new initcomponents();
 	$Nav = new nav();
 	
 	require "vista/inicio/carritoVista.php";	
