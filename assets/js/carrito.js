@@ -40,6 +40,7 @@ $(document).ready(function(){
 					$('.vaciar').hide();
 				}
 				if(response.length > 0){
+					let productos = [];
 					let precioTotal = 0;
 					let flexDirection = ($('.carrito-container').width() < 400) ? 'item-carrito-tienda' : '';
 					for(let i = 0; i < response.length; i++){
@@ -66,10 +67,12 @@ $(document).ready(function(){
 			            </div>
 			            ${hr}
 			            `
+			            productos.push({id_producto: row.cod_producto, cantidad: row.cantidad});
 					}
 
 					$('.carrito-container').html(div);
 					$('#precioTotal').html(precioTotal);
+					validarStock(productos);
 				}
 
 			}
@@ -161,6 +164,9 @@ $(document).ready(function(){
 					$('.carrito-container').empty();
 					$('#delModal').modal('hide');
 					refrescarCarrito();
+				}else{
+					Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' })
+					$('#delModal').modal('hide');
 				}
 			}
 		})
@@ -178,11 +184,11 @@ $(document).ready(function(){
 			if(res.resultado){
 				$('#vaciarCarritoModal').modal('hide');
 				$('.carrito-container').empty();
-				mostrarCarrito();
+				refrescarCarrito();
 				Toast.fire({ icon: 'success', title: 'Se ha vaciado su carrito, correctamente.'});
 			}else{
 				$('#vaciarCarritoModal').modal('hide');
-				Toast.fire({ icon: 'success', title: 'Ha ocurrido un error.'});
+				Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.'});
 			}
 		})
 	})
