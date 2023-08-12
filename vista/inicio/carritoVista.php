@@ -50,7 +50,7 @@
           <div class="card-body p-4">
             <h4>Precio total del carrito</h4>
             <h3><span id="precioTotal"></span>$</h3>
-            <button class="btn btn-success"><i class="bi bi-cart-check-fill"></i> Realizar facturación</button>
+            <button class="btn btn-success" id="realizarFacturacion"><i class="bi bi-cart-check-fill"></i> Realizar facturación</button>
           </div>
         </div>
       </div>
