@@ -86,7 +86,7 @@ class banco extends DBConnect{
 		}
 	}
 
-	public function ValidarDatos($tipoP, $nombre ,$cedulaRif){
+	public function ValidarDatos($tipoP, $nombre ,$cedulaRif ,$id){
 		if(preg_match_all("/^[0-9]{1,10}$/", $tipoP) != 1){
 			echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
 			die();
@@ -106,7 +106,17 @@ class banco extends DBConnect{
 		$this->nombre = $nombre;
 		$this->cedulaRif = $cedulaRif;
 
-		return $this->validDatos();
+		if ($id != null) {
+		  
+		  $this->id = $id;
+
+		  $this->validDatosEdit();
+
+		}else{
+		  $this->validDatos();
+		}
+
+
 	}
 
 	private function validDatos(){
@@ -129,6 +139,19 @@ class banco extends DBConnect{
 			die($e);
 		}
 
+	}
+
+	private function validDatosEdit(){
+		try {
+		$new = $this->con->prepare('SELECT * FROM banco b WHERE b.tipo_pago = ? and b.nombre = ? and b.cedulaRif = ? and b.status = 1');
+		$new->bindValue(1, $this->tipoP);
+		$new->bindValue(2, $this->nombre);
+		$new->bindValue(3, $this->cedulaRif);
+		$new->bindValue(4, $this->id)
+
+		} catch (\PDOException $e) {
+			die($e);
+		}
 	}
 
 	public function getRegistrarBanco($datos){
@@ -229,28 +252,62 @@ class banco extends DBConnect{
 
 	}
 
-    public function validarSelect($id){
+	public function validarSelect($id){
 
-      if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-      	echo json_encode(['resultado' => 'Error de id','error' => 'id inválida.']);
-      	die();
-      }
+		if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+			echo json_encode(['resultado' => 'Error de id','error' => 'id inválida.']);
+			die();
+		}
 
-      $this->id = $id;
+		$this->id = $id;
 
-      $new = $this->con->prepare("SELECT * FROM banco b WHERE b.status = 1 and b.id_banco = ?");
-      $new->bindValue(1, $this->id);
-      $new->execute();
-      $data = $new->fetchAll();
+		$new = $this->con->prepare("SELECT * FROM banco b WHERE b.status = 1 and b.id_banco = ?");
+		$new->bindValue(1, $this->id);
+		$new->execute();
+		$data = $new->fetchAll();
 
-      if(isset($data[0]["id_banco"])){
-        echo json_encode(['resultado' => 'Si existe esa banco.', 'tipo' => $data[0]['tipo_pago'] ]);
-        die();
-      }else{
-       echo json_encode(['resultado' => 'Error de banco']);
-       die();
-     }
-    }
+		if(isset($data[0]["id_banco"])){
+			echo json_encode(['resultado' => 'Si existe esa banco.']);
+			die();
+		}else{
+			echo json_encode(['resultado' => 'Error de banco']);
+			die();
+		}
+
+	}
+
+	public function rellenarEdit($id){
+
+		if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+			echo json_encode(['resultado' => 'Error de id','error' => 'id inválida.']);
+			die();
+		}
+
+        $this->id = $id;
+
+        return $this->selectItem();
+
+	}
+
+	private function selectItem(){
+
+		try {
+			$new = $this->con->prepare("SELECT * FROM banco b INNER JOIN tipo_pago tp ON b.tipo_pago = tp.cod_tipo_pago WHERE b.status = 1 and tp.online = 1 and b.id_banco = ?");
+			$new->bindValue(1, $this->id);
+			$new->execute();
+			$data = $new->fetchAll(\PDO::FETCH_OBJ);
+			echo json_encode($data);
+			die();
+
+		}catch (\PDOException $e) {
+			die($e);
+		}
+	}
+
+	public function getEditarBanco($data , $id){
+		die("SIRVEEEEEEEEEEEE");
+	}
+
 
 }
 

@@ -84,11 +84,11 @@ $(document).ready(function(){
         })
     }
     
-    function ValidarDatos(dato ,dato1 , dato2, div){
+    function ValidarDatos(dato ,dato1 , dato2, div , id = null){
 
         return new Promise((resolve, reject) => {
-
-            $.post('',{tipoP : dato.val(), nombre : dato1.val(), cedulaRif : dato2.val(),validar: "CedulaRif"},
+            console.log(id)
+            $.post('',{tipoP : dato.val(), nombre : dato1.val(), cedulaRif : dato2.val(), id ,validarD: "CedulaRif"},
                function(data){
                 let mensaje = JSON.parse(data);
                 if(mensaje.resultado === "Error Datos"){
@@ -209,36 +209,183 @@ $(document).ready(function(){
             
             break;
         }
-        
+        click++;
     })
 
     let id;
 
-    $(document).on("click", '.editar' , function(){
-     id = this.id;
-     console.log(id);
-    })
-    
-    function validarEditar(){
-        .ajax({
-            type: "POST",
-            url: '',
-            dataType: "json",
-            data: { validar: "existe", id },
-            success(data) {
-            if (data.resultado === "Error de banco") {  
-                Toast.fire({ icon: 'error', title: 'Esta venta ya esta anulada' }); // ALERTA 
-                tablaMostrar.destroy();
-                rellenar();
-                $('.cerrar').click();
-            }else{
-                let ValueT = data.tipo;
+    $(document).on("click", '.editar', function(){
+        id = this.id;
+        let cuentaBancaria = $('.cuentaBancaria');
+        let codigoBanco = $('.CodigoBanco');
+        let telefono = $('.telefono');
+
+            $.ajax({
+                method: "post",
+                url: "",
+                dataType: "json",
+                data: {clickEdit: "editar Banco", id},
+                success(data){
+                  let tp = data[0].des_tipo_pago;
+                  if (tp  == "Pago movil" || tp  == "Pago Movil" || tp == "pago movil" ||tp  == "pago Movil" || tp  == "pagomovil"){
+                    cuentaBancaria.css("display", "none");
+                    codigoBanco.css("display", "block");
+                    telefono.css("display", "block");
+                    $("#tipopEdit").val(data[0].tipo_pago);
+                    $("#nombreEdit").val(data[0].nombre);
+                    $("#cedulaRifEdit").val(data[0].cedulaRif);
+                    $("#codBankEdit").val(data[0].CodBanco);
+                    $("#telefonoEdit").val(data[0].telefono);
+                }else{
+                    cuentaBancaria.css("display", "block");
+                    codigoBanco.css("display", "none");
+                    telefono.css("display", "none");
+                    $("#tipopEdit").val(data[0].tipo_pago);
+                    $("#nombreEdit").val(data[0].nombre);
+                    $("#cedulaRifEdit").val(data[0].cedulaRif);
+                    $('#cuentaBankEdit').val(data[0].NumCuenta);
+                }
             }
+        });
+    });
+    
+    function validarClick(){
+        return new Promise((resolve, reject) =>{
+            $.ajax({
+                type: "POST",
+                url: '',
+                dataType: "json",
+                data: { validarC: "existe", id},
+                success(data) {
+                if (data.resultado === "Error de banco") {  
+                    Toast.fire({ icon: 'error', title: 'Esta banco ya esta anulada' }); // ALERTA 
+                    tablaMostrar.destroy();
+                    rellenar();
+                    $('.cerrar').click();
+                    reject();
+                }else{
+                    resolve();
+                }
 
             }
         })
+      })
     }
 
+    $('#tipopEdit').change(function(){
+       let valid = validarSelect($("#tipopEdit"),$("#errorEdit1"),"Error elige un tipo");
+       if (valid){
+        validarTipoP($("#tipopEdit"), $("#errorEdit1"));
+       }
+      })
+      $('#nombreEdit').keyup(() =>{ validarStringLong($('#nombreEdit'), $('#errorEdit2') , "Nombre invalido"); });
+      $('#cedulaRifEdit').keyup(() =>{ validarCedula($('#cedulaRifEdit') , $('#errorEdit3') , "Error de Rif") } );
+      $('#cuentaBankEdit').keyup(() =>{ validarBanco($('#cuentaBankEdit'), $('#errorEdit4') , "Error de codigo banco") });
+      $('#codBankEdit').keyup(() =>{ validarCodBank($('#codBankEdit'), $('#errorEdit5') , "Error de codigo banco") });
+      $('#telefonoEdit').keyup(() =>{ validarTelefono($('#telefonoEdit'), $('#errorEdit6') , "Error de telefono") });
+
+ 
+     $('#editar').click((e) =>{
+       e.preventDefault();
+
+       if(click >=  1) throw new Error('Spam de clicks');
+
+       validarClick().then(()=>{
+        
+         let tipopEdit , nombreEdit , cedulaRifEdit , cuentaBankEdit , codBankEdit , telefonoEdit , validarE;
+
+         let tPagoEdit = $('#tipopEdit').find('option:selected').text();
+         let datos = [];
+
+            switch(tPagoEdit){
+
+            case 'Seleccione una opción':
+            $('#errorEdit1').text(" seleccione una opción") 
+            $('#tipopEdit').attr("style","border-color: red;")
+            $('#tipopEdit').attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");                         
+            break;
+
+            case 'Pago movil' || 'Pago Movil' || 'pago movil' || 'pago Movil' || 'pagomovil' :
+            // Validar 
+            tipopEdit = validarSelect($('#tipopEdit'), $('#errorEdit1'), "Tipo invalido");
+            nombreEdit = validarStringLong($('#nombreEdit'), $('#errorEdit2'), "Nombre invalido");
+            cedulaRifEdit = validarCedula($('#cedulaRifEdit'), $('#errorEdit3'), 'Error de Rif');
+            codBankEdit = validarCodBank($('#codBankEdit'), $('#errorEdit5'), "Error de codigo banco");
+            telefonoEdit = validarTelefono($('#telefonoEdit'), $('#errorEdit6'), "Error de telefono");
+
+            ValidarDatos($("#tipopEdit"), $('#nombreEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id).then((validarE) => {
+              if (tipopEdit && nombreEdit && cedulaRifEdit && codBankEdit && telefonoEdit && validarE) {
+                let pago = $('#tipopEdit').val();
+                let name = $('#nombreEdit').val();
+                let cRif = $('#cedulaRifEdit').val();
+                let cBank = $('#codBankEdit').val();
+                let cell = $('#telefonoEdit').val();
+                datos = [pago, name, cRif, cBank, cell];
+                console.log(datos);
+                $.ajax({
+                    type: "post",
+                    url : "" ,
+                    dataType: "json",
+                    data: {data : datos , id ,editar : "editar"},
+                    success(data){
+                       if(data.resultado === "banco registrado."){
+                        mostrar.destroy();
+                        rellenar(); 
+                        $('#agregarform').trigger('reset'); 
+                        $('.cerrar').click(); 
+                        Toast.fire({ icon: 'success', title: 'Banco editado' }) 
+                    }
+                }
+            })
+            } else {
+                e.preventDefault();
+            }
+        });
+            break;
+
+            default: 
+            // Validar
+            tipopEdit = validarSelect($('#tipopEdit'), $('#errorEdit1'), "Tipo invalido");
+            nombreEdit = validarStringLong($('#nombreEdit'), $('#errorEdit2'), "Nombre invalido");
+            cedulaRifEdit = validarCedula($('#cedulaRifEdit'), $('#errorEdit3'), 'Error de Rif');
+            cuentaBankEdit = validarBanco($('#cuentaBankEdit'), $('#errorEdit4') , 'Error de Rif');
+            ValidarDatos($("#tipopEdit"), $('#nombreEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id).then((validarE) => {
+              if (tipopEdit && nombreEdit && cedulaRifEdit && cuentaBankEdit && validarE) {
+                let pago = $('#tipopEdit').val();
+                let name = $('#nombreEdit').val();
+                let cRif = $('#cedulaRifEdit').val();
+                let Banco = $('#cuentaBankEdit').val();
+                datos = [pago, name, cRif, Banco]
+                console.log(datos)
+                $.ajax({
+                    type: "post",
+                    url : "" ,
+                    dataType: "json",
+                    data: {data : datos , id ,editar : "editar"},
+                    success(data){
+                     if(data.resultado === "banco editado."){
+                        mostrar.destroy();
+                        rellenar(); 
+                        $('#agregarform').trigger('reset'); 
+                        $('.cerrar').click(); 
+                        Toast.fire({ icon: 'success', title: 'Banco registrado' }) 
+                    }
+                }
+            })
+            } else {
+                e.preventDefault();
+            }
+        });
+            
+            break;
+        }
+       click++;
+
+       }).catch(() =>{
+       throw new Error('No exite.');
+       })
+
+   })
 
 
 })

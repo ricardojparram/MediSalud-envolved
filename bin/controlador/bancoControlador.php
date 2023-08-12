@@ -31,17 +31,26 @@
       $objModel->validarTipoP($_POST['id']);
      }
 
-     if(isset($_POST['tipoP']) && isset($_POST['nombre']) && isset($_POST['cedulaRif']) && isset($_POST['validar']) && $permiso->status == 1 ){
-      $objModel->ValidarDatos($_POST['tipoP'] , $_POST['nombre'] , $_POST['cedulaRif']);
+     if(isset($_POST['tipoP']) && isset($_POST['nombre']) && isset($_POST['cedulaRif']) && isset($_POST['id']) &&  isset($_POST['validarD']) && $permiso->status == 1 ){
+      $objModel->ValidarDatos($_POST['tipoP'] , $_POST['nombre'] , $_POST['cedulaRif'] , $_POST['id']);
      }
 
      if (isset($_POST['data']) && isset($_POST['registro']) && $permiso->status == 1) {
        $objModel->getRegistrarBanco($_POST['data']);
      }
 
-     if (isset($_POST['validar']) && isset($_POST['id']) && $permiso->status == 1) {
+     if (isset($_POST['validarC']) && isset($_POST['id']) && $permiso->status == 1) {
        $objModel->validarSelect($_POST['id']);
      }
+
+     if (isset($_POST['clickEdit']) && isset($_POST['id']) && $permiso->status == 1) {
+       $objModel->rellenarEdit($_POST['id']);
+     }
+
+     if (isset($_POST['data']) && isset($_POST['id']) && isset($_POST['editar']) && $permiso->status == 1) {
+      $objModel->getEditarBanco($_POST['data'] , $_POST['id']);
+     }
+
 
      $VarComp = new initcomponents();
      $header = new header();

@@ -187,7 +187,7 @@
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header alert alert-success">
-	        <h4 class="modal-title"> <strong>Registrar Banco</strong> </h4>
+	        <h4 class="modal-title"> <strong>Editar Banco</strong> </h4>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 
@@ -208,7 +208,7 @@
 
 	                  	</select>
 	                  </div>
-	                  <p class="error" style="color:#ff0000;text-align: center;" id="error1"></p>
+	                  <p class="error" style="color:#ff0000;text-align: center;" id="errorEdit1"></p>
 	                </div>
 
 	                <div class="form-group col-12">                          
@@ -217,7 +217,7 @@
 	                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el nombre del Banco"><i class="bi bi-bank"></i></button> 
 	                    <input class="form-control" id="nombreEdit" placeholder="Nombre">
 	                  </div>
-	                  <p class="error" style="color:#ff0000;text-align: center;" id="error2"></p>
+	                  <p class="error" style="color:#ff0000;text-align: center;" id="errorEdit2"></p>
 	                </div>
 
 
@@ -227,7 +227,7 @@
 	                		<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la cedula o rif del banco"><i class="bi bi-person-fill"></i></button> 
 	                		<input class="form-control" id="cedulaRifEdit" placeholder="Cedula o Rif">
 	                	</div>
-	                	<p class="error" style="color:#ff0000;text-align: center;" id="error3"></p>
+	                	<p class="error" style="color:#ff0000;text-align: center;" id="errorEdit3"></p>
 	                </div>
 
 
@@ -246,7 +246,7 @@
 	              			<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el número de cuenta del banco"><i class="ri-bank-card-line"></i></button> 
 	              			<input class="form-control" id="cuentaBankEdit" required="" placeholder="Cuenta Bancaria">
 	              		</div>
-	              		<p class="error" style="color:#ff0000;text-align: center;" id="error4"></p>
+	              		<p class="error" style="color:#ff0000;text-align: center;" id="errorEdit4"></p>
 	              	</div>
 
 	              	<div class="form-group col-12 CodigoBanco" style="display: none;">                          
@@ -255,7 +255,7 @@
 	              			<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el codigo de banco"><i class="bi bi-bank2"></i></button> 
 	              			<input class="form-control" id="codBankEdit" placeholder="Codigo de Banco">
 	              		</div>
-	              		<p class="error" style="color:#ff0000;text-align: center;" id="error5"></p>
+	              		<p class="error" style="color:#ff0000;text-align: center;" id="errorEdit5"></p>
 	              	</div>
 
 
@@ -265,7 +265,7 @@
 	              			<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el telefono de banco afiliado"><i class="bi bi-telephone"></i></button> 
 	              			<input class="form-control" id="telefonoEdit" placeholder="Telefono">
 	              		</div>
-	              		<p class="error" style="color:#ff0000;text-align: center;" id="error6"></p>
+	              		<p class="error" style="color:#ff0000;text-align: center;" id="errorEdit6"></p>
 	              	</div>
 
 
@@ -275,7 +275,7 @@
 
 	        </div>
 
-	        <p style="color:#ff0000;text-align: center;" id="error"><?php echo (isset($respuesta)) ? $respuesta : " "; ?></p>
+	        <p style="color:#ff0000;text-align: center;" id="errorEdit"><?php echo (isset($respuesta)) ? $respuesta : " "; ?></p>
 	        
 	        <div class="modal-footer">
 	          <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
