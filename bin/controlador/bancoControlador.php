@@ -51,6 +51,10 @@
       $objModel->getEditarBanco($_POST['data'] , $_POST['id']);
      }
 
+     if (isset($_POST['eliminar']) && isset($_POST['id']) && $permiso->eliminar == 1) {
+       $objModel->getEliminarBanco($_POST['id']);
+     }
+
 
      $VarComp = new initcomponents();
      $header = new header();

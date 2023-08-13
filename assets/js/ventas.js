@@ -463,8 +463,7 @@
         if (click >= 1) {
           throw new Error('Spam de clicks');
         }
-        validarEliminar()
-        .then(() => {
+        validarEliminar().then(() => {
             // Si la promesa se resuelve, la ejecución continúa
             $.ajax({
               type: "POST",
@@ -477,12 +476,11 @@
                 Toast.fire({ icon: 'success', title: 'Venta eliminada' }); // ALERTA 
               }
             });
-            click++;
-          })
-        .catch(() => {
+          }).catch(() => {
       // Si la promesa se rechaza, la ejecución se detiene
       console.log('No se puede eliminar la venta');
       });
+      click++;
     });
 
 

@@ -113,7 +113,9 @@ class banco extends DBConnect{
 		  $this->validDatosEdit();
 
 		}else{
+
 		  $this->validDatos();
+
 		}
 
 
@@ -143,11 +145,21 @@ class banco extends DBConnect{
 
 	private function validDatosEdit(){
 		try {
-		$new = $this->con->prepare('SELECT * FROM banco b WHERE b.tipo_pago = ? and b.nombre = ? and b.cedulaRif = ? and b.status = 1');
+		$new = $this->con->prepare('SELECT * FROM banco b WHERE b.tipo_pago = ? and b.nombre = ? and b.cedulaRif = ? and b.status = 1 and b.id_banco != ?');
 		$new->bindValue(1, $this->tipoP);
 		$new->bindValue(2, $this->nombre);
 		$new->bindValue(3, $this->cedulaRif);
-		$new->bindValue(4, $this->id)
+		$new->bindValue(4, $this->id);
+		$new->execute();
+		$data = $new->fetchAll();
+
+		if (isset($data[0])) {
+			echo json_encode(['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco']);
+			die();
+		}else{
+			echo json_encode(['resultado' => 'Datos validos']);
+			die();
+		}
 
 		} catch (\PDOException $e) {
 			die($e);
@@ -169,7 +181,7 @@ class banco extends DBConnect{
 			}
 
 			if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $datosA[1]) !== 1){
-				echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
+				echo json_encode(['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.']);
 				die();
 			}
 
@@ -198,7 +210,7 @@ class banco extends DBConnect{
 			}
 
 			if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $datosA[1]) !== 1){
-				echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
+				echo json_encode(['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.']);
 				die();
 			}
 
@@ -304,9 +316,143 @@ class banco extends DBConnect{
 		}
 	}
 
-	public function getEditarBanco($data , $id){
-		die("SIRVEEEEEEEEEEEE");
+	public function getEditarBanco($datos , $id){
+		$datosA = $datos;
+		$count = count($datosA);
+
+		switch ($count) {
+
+			case 4 :
+
+            if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+				echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
+				die();
+			}
+
+			if(preg_match_all("/^[0-9]{1,10}$/", $datosA[0]) != 1){
+				echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
+				die();
+			}
+
+			if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $datosA[1]) !== 1){
+				echo json_encode(['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.']);
+				die();
+			}
+
+			if(preg_match_all("/^[0-9]{7,10}$/", $datosA[2]) != 1) {
+				echo json_encode(['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.']);
+				die();
+			}
+			if(preg_match_all("/^(?=.*[0-9])(?=.*[-])[0-9-]{1,25}$/", $datosA[3]) != 1){
+				echo json_encode(['resultado' => 'Error de cuenta de Banco','error' => 'Cuenta de Banco inválida.']);
+				die();
+			}
+            
+            $this->id = $id;
+			$this->tipoP = $datosA[0];
+			$this->nombre = $datosA[1];
+			$this->cedulaRif = $datosA[2];
+			$this->cuentaBank = $datosA[3];
+
+            return $this->editarBanco();
+			break;
+
+			case 5 :
+
+			 if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+				echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
+				die();
+			}
+
+			if(preg_match_all("/^[0-9]{1,10}$/", $datosA[0]) != 1){
+				echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
+				die();
+			}
+
+			if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $datosA[1]) !== 1){
+				echo json_encode(['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.']);
+				die();
+			}
+
+			if(preg_match_all("/^[0-9]{7,10}$/", $datosA[2]) != 1) {
+				echo json_encode(['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.']);
+				die();
+			}
+			if(preg_match_all("/^[0-9]{1,10}$/", $datosA[3]) != 1){
+				echo json_encode(['resultado' => 'Error de Codigo Banco','error' => 'Codigo Banco inválida.']);
+				die();
+			}
+			if(preg_match_all("/^[0-9]{10,30}$/", $datosA[4]) != 1){
+				echo json_encode(['resultado' => 'Error de telefono','error' => 'telefono inválida.']);
+				die();
+			}
+            
+            $this->id = $id;
+			$this->tipoP = $datosA[0];
+			$this->nombre = $datosA[1];
+			$this->cedulaRif = $datosA[2];
+			$this->codBank = $datosA[3];
+			$this->telefono = $datosA[4];
+
+            return $this->editarBanco();
+			break;
+
+			default:
+			die("Error");
+			break;
+		} 
 	}
+
+    private function editarBanco(){
+       try {
+       	$new = $this->con->prepare("UPDATE banco b SET tipo_pago = ? , nombre = ? , cedulaRif = ? , telefono = ? , NumCuenta = ? , CodBanco = ?, status = 1 WHERE b.id_banco = ?");
+       	$new->bindValue(1 ,$this->tipoP);
+       	$new->bindValue(2 ,$this->nombre);
+       	$new->bindValue(3 ,$this->cedulaRif);
+       	$new->bindValue(4 ,$this->telefono);
+       	$new->bindValue(5 ,$this->cuentaBank);
+       	$new->bindValue(6 ,$this->codBank);
+       	$new->bindValue(7 ,$this->id);
+       	$new->execute();
+       	$data = $new->fetchAll();
+
+       	$resultado = ['resultado' => 'banco editado.' , $new->execute()];
+       	echo json_encode($resultado);
+       	die();
+
+       } catch (\PDOException $e) {
+       	die($e);
+       }
+
+    }
+
+    public function getEliminarBanco($id){
+    	if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+    		echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
+    		die();
+    	}
+
+    	$this->id = $id;
+
+    	return $this->eliminarBanco();
+
+    }
+
+    private function eliminarBanco(){
+    	try {
+
+    	$new = $this->con->prepare("UPDATE banco b SET b.status = 0 WHERE b.id_banco = ?");
+    	$new->bindValue(1, $this->id);
+    	$new->execute();
+    	$data = $new->fetchAll();
+        $resultado = ['resultado' => 'Eliminado'];
+        echo json_encode($resultado);
+        die();
+	
+    	} catch (\PDOException $e) {
+    		die($e);	
+    	}
+    }
 
 
 }

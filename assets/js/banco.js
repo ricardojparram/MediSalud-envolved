@@ -18,7 +18,7 @@ $(document).ready(function(){
 					<td>${row.des_tipo_pago}</td>
 					<td class="d-flex justify-content-center">
 					<button type="button" id="${row.id_banco}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
-					<button type="button" id="${row.id_banco}" class="btn btn-danger eliminar mx-2" data-bs-toggle="modal" data-bs-target="#eliminar"><i class="bi bi bi-trash3"></i></button>
+					<button type="button" id="${row.id_banco}" class="btn btn-danger borrar mx-2" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi bi-trash3"></i></button>
 					</td>
 					</tr>
 					`;
@@ -87,7 +87,6 @@ $(document).ready(function(){
     function ValidarDatos(dato ,dato1 , dato2, div , id = null){
 
         return new Promise((resolve, reject) => {
-            console.log(id)
             $.post('',{tipoP : dato.val(), nombre : dato1.val(), cedulaRif : dato2.val(), id ,validarD: "CedulaRif"},
                function(data){
                 let mensaje = JSON.parse(data);
@@ -259,7 +258,7 @@ $(document).ready(function(){
                 success(data) {
                 if (data.resultado === "Error de banco") {  
                     Toast.fire({ icon: 'error', title: 'Esta banco ya esta anulada' }); // ALERTA 
-                    tablaMostrar.destroy();
+                    mostrar.destroy();
                     rellenar();
                     $('.cerrar').click();
                     reject();
@@ -285,19 +284,19 @@ $(document).ready(function(){
       $('#telefonoEdit').keyup(() =>{ validarTelefono($('#telefonoEdit'), $('#errorEdit6') , "Error de telefono") });
 
  
-     $('#editar').click((e) =>{
-       e.preventDefault();
+      $('#editar').click((e) =>{
+         e.preventDefault();
 
-       if(click >=  1) throw new Error('Spam de clicks');
+         if(click >=  1) throw new Error('Spam de clicks');
 
-       validarClick().then(()=>{
-        
-         let tipopEdit , nombreEdit , cedulaRifEdit , cuentaBankEdit , codBankEdit , telefonoEdit , validarE;
+         validarClick().then(()=>{
 
-         let tPagoEdit = $('#tipopEdit').find('option:selected').text();
-         let datos = [];
+           let tipopEdit , nombreEdit , cedulaRifEdit , cuentaBankEdit , codBankEdit , telefonoEdit , validarE;
 
-            switch(tPagoEdit){
+           let tPagoEdit = $('#tipopEdit').find('option:selected').text();
+           let datos = [];
+
+           switch(tPagoEdit){
 
             case 'Seleccione una opción':
             $('#errorEdit1').text(" seleccione una opción") 
@@ -328,7 +327,7 @@ $(document).ready(function(){
                     dataType: "json",
                     data: {data : datos , id ,editar : "editar"},
                     success(data){
-                       if(data.resultado === "banco registrado."){
+                     if(data.resultado === "banco editado."){
                         mostrar.destroy();
                         rellenar(); 
                         $('#agregarform').trigger('reset'); 
@@ -363,15 +362,16 @@ $(document).ready(function(){
                     dataType: "json",
                     data: {data : datos , id ,editar : "editar"},
                     success(data){
-                     if(data.resultado === "banco editado."){
+                       if(data.resultado === "banco editado."){
                         mostrar.destroy();
                         rellenar(); 
                         $('#agregarform').trigger('reset'); 
                         $('.cerrar').click(); 
-                        Toast.fire({ icon: 'success', title: 'Banco registrado' }) 
+                        Toast.fire({ icon: 'success', title: 'Banco Editado' }) 
                     }
                 }
             })
+           
             } else {
                 e.preventDefault();
             }
@@ -379,13 +379,51 @@ $(document).ready(function(){
             
             break;
         }
-       click++;
 
-       }).catch(() =>{
+      
+
+    }).catch(() =>{
        throw new Error('No exite.');
-       })
-
    })
 
+    click++;
+
+ })
+
+    $(document).on('click', '.borrar', function(){
+        id = this.id;
+
+    })   
+    
+    $('#delete').click((e)=>{
+       e.preventDefault();
+
+       if(click >=  1) throw new Error('Spam de clicks');
+
+       validarClick().then(()=>{
+
+        $.ajax({
+            type: "POST",
+            url: "",
+            dataType: "json",
+            data: {eliminar: "eliminar Banco" , id},
+            success(data){
+                if (data.resultado === "Eliminado") {
+                mostrar.destroy();
+                rellenar();
+                $('.cerrar').click();
+                Toast.fire({ icon: 'success', title: 'Banco eliminada' }); // ALERTA 
+                }
+           }
+       })
+
+    }).catch(()=>{
+
+        throw new Error('No exite.');
+
+    })
+
+    click++;
+})
 
 })

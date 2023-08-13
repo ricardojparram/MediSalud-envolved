@@ -287,6 +287,28 @@
 	</div>
 	<!-- MODAL EDITAR FINAL -->
 
+	<!-- Modal delete-->
+
+	<div class="modal fade" id="Borrar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title" id="staticBackdropLabel">¿Estás seguro?</h3>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<h5>Los datos serán anulados del sistema.</h5>
+				</div>
+				<div class="modal-footer">
+					<button id="close" type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
+					<button type="button" class="btn btn-danger" id="delete">Anular</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal DELETE-->
+
    
  </body>
  <?php $VarComp->js(); ?>
