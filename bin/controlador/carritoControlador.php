@@ -2,18 +2,18 @@
 
 	use component\initcomponents as initcomponents;
 	use component\nav as nav;	
-	// use modelo\carrito as carrito;
+	use modelo\carrito as carrito;
 
-	// $model = new carrito();
+	$model = new carrito();
 
-	// if(isset($_POST['mostrar'], $_POST['carrito'])){
-	// 	if(!isset($_SESSION['nivel'])){
-	// 		die(json_encode(['error' => '', 'msg' => 'No ha iniciado sesión.']));
-	// 	}
-	// 	$model->getCarritoUsuario($_SESSION['cedula']);
-	// }
+	if(isset($_POST['mostrar'], $_POST['carrito'])){
+		if(!isset($_SESSION['nivel'])){
+			die(json_encode(['error' => '', 'msg' => 'No ha iniciado sesión.']));
+		}
+		$model->getCarritoUsuario($_SESSION['cedula']);
+	}
 
-	// if()
+	//if()
 
 	$VarComp = new initcomponents();	
 	$Nav = new nav();

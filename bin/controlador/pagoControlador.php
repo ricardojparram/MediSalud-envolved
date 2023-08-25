@@ -18,6 +18,10 @@
     $objModel->tipoP($_POST['tipo']);
   }
 
+  if (isset($_POST['mostrarP']) && isset($_SESSION['cedula'])) {
+    $objModel->mostrarPrecio($_SESSION['cedula']);
+  }
+
   $VarComp = new initcomponents();
   $Nav = new nav();
 

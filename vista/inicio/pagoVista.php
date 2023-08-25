@@ -20,6 +20,10 @@
     #fade{
         display: none;
     } 
+
+    .form-switch {
+        padding-left: 3.5em;
+    }
 </style>
 
 
@@ -65,15 +69,17 @@
                                         <label for="inputText" class="col-6 col-form-label"><strong>Nombre</strong></label>
                                         <div class="input-group ">
                                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El nombre debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-people-fill"></i></button>
-                                            <input type="text" class="form-control" id="nomClien" disabled name="nomClien">
+                                            <input type="text" class="form-control" id="nomClien"  name="nomClien">
                                         </div>
+                                        <p class="m-0" id="errorNomApe" style="color:#ff0000;text-align: center;"></p>
                                     </div>
                                     <div class="col-lg-6">
-                                        <label for="inputText" class="col-6 col-form-label"><strong>Apellido</strong></label>
+                                        <label for="inputText" class="col-6 col-form-label"><strong>Cedula</strong></label>
                                         <div class="input-group">
-                                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca su apellido."><i class="bi bi-people"></i></button>
-                                            <input type="text" class="form-control" disabled id="apeClien" name="apeClien">
+                                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="La cédula debe tener 6 o más carácteres, solo números(0-9)." aria-describedby="popover809249"><i class="bi bi-person-fill"></i></button>
+                                            <input type="text" class="form-control"  id="cedClien" >
                                         </div>
+                                        <p class="m-0" id="errorCed" style="color:#ff0000;text-align: center;"></p>
                                     </div>
                                 </div>
                                 <div class="row form-group col-md-12">
@@ -81,45 +87,78 @@
                                         <label for="inputText" class="col-6 col-form-label"><strong>Telefono</strong></label>
                                         <div class="input-group ">
                                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca su numerico telefonico."><i class="bi bi-telephone"></i></button>
-                                            <input type="text" class="form-control" placeholder="Telefono" id="teleClien" name="teleClien">
+                                            <input type="text" class="form-control" placeholder="Telefono" id="teleClien">
                                         </div>
+                                        <p class="m-0" id="errorTele" style="color:#ff0000;text-align: center;"></p>
                                     </div>
                                     <div class="col-lg-6">
-                                        <label for="inputText" class="col-6 col-form-label"><strong>Cedula</strong></label>
+                                        <label for="inputText" class="col-6 col-form-label"><strong>Correo Electronico</strong></label>
                                         <div class="input-group">
-                                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="La cédula debe tener 6 o más carácteres, solo números(0-9)." aria-describedby="popover809249"><i class="bi bi-person-fill"></i></button>
-                                            <input type="text" class="form-control" disabled id="cedClien" >
+                                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca un correo electrónico válido. Ej: usuario@mail.es"><i class="ri-at-line"></i></button>
+                                            <input type="text" class="form-control" placeholder="ejemplo@email.com" id="emailClien">
                                         </div>
+                                        <p class="m-0" id="errorEmail" style="color:#ff0000;text-align: center;"></p>
                                     </div>
                                 </div>
                                 <div class="row form-group col-md-12">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Correo Electronico</strong></label>
+                                    <label for="inputText" class="col-6 col-form-label"><strong>Direccion Fiscal</strong></label>
                                     <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El apellido debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-people"></i></button>
-                                        <input type="text" class="form-control" id="emailClien" placeholder="ejemplo@email.com">
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Ingrese su direccion para la factura"><i class="bi bi-map"></i></button>
+                                        <input type="text" class="form-control" id="direcClien" placeholder="Direccion">
                                     </div>
+                                    <p class="m-0" id="errorDirec" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                                 <p class="nota col-11 mx-auto small mt-2">*Si encuentras algún dato personal incorrecto, corrígelo en la sección de perfil antes de seguir con el registro</p>
-                                <p class="mt-2" id="error1" style="color:#ff0000;text-align: center;"></p>
+                                <p class="m-0" id="error1" style="color:#ff0000;text-align: center;"></p>
                                 <div class="f1-buttons mt-3">
                                     <button type="button" class="btn btn-success btn-next" id="1">Siguiente</button>
                                 </div>
                         </fieldset>
-                            <!-- fin del paso 1 -->
+                        <!-- fin del paso 1 -->
 
                         <!---paso 2 -->
                         <fieldset>
                             <br>
-                            <div class="row form-group col-md-12">
+                            <div class="col-12 text-end">
+                                <label for="inputText" class="col-form-label"><strong>Direcciones Frecuentes</strong></label>
+                                <button type="button" class="btn btn-success ms-3" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable"><i class="bi bi-search"></i></button>
+                                
+                                <!-- Modal Direcciones Recientes -->
+                                <div class="modal fade" id="modalDialogScrollable" tabindex="-1" aria-hidden="true" style="display: none;">
+                                    <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title">Modal Dialog Scrollable</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                        Non omnis incidunt qui sed occaecati magni asperiores est mollitia. Soluta at et reprehenderit. Placeat autem numquam et fuga numquam. Tempora in facere consequatur sit dolor ipsum. Consequatur nemo amet incidunt est facilis. Dolorem neque recusandae quo sit molestias sint dignissimos.
+                                        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                                        This content should appear at the bottom after you scroll.
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- Fin Modal -->
+
+                            </div>
+                            <div class="row form-group mb-1 col-md-12">
+                                <div class="col-12">
+                                    
+                                </div>
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Nombre</strong></label>
+                                    <label for="inputText" class="col-6 col-form-label"><strong>Estado</strong></label>
                                     <div class="input-group ">
                                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el nombre del cliente."><i class="bi bi-person-fill"></i></button>
                                         <input type="text" class="form-control" placeholder="Nombre" id="nomClien" name="nomClien">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Nombre</strong></label>
+                                    <label for="inputText" class="col-6 col-form-label"><strong>Municipio</strong></label>
                                     <div class="input-group">
                                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el apellido del cliente."><i class="bi bi-people"></i></button>
                                         <input type="text" class="form-control" placeholder="Apellido" id="apeClien" name="apeClien">
@@ -127,25 +166,57 @@
                                 </div>
                             </div>
                             <div class="row mb-1 col-md-12">
-                                <label for="inputText" class="col-6 col-form-label"><strong>Apellido</strong></label>
+                                <label for="inputText" class="col-6 col-form-label"><strong>Direccion</strong></label>
                                 <div class="input-group">
-                                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El apellido debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-people"></i></button>
+                                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El apellido debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-pin-map"></i></button>
                                     <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Apellido">
                                 </div>
                             </div>
-                            <div class="row form-group col-md-12">
+                            <div class="row mb-1 form-group col-md-12">
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Nombre</strong></label>
+                                    <label for="inputText" class="col-6 col-form-label"><strong>Numero de Casa</strong></label>
                                     <div class="input-group ">
                                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el nombre del cliente."><i class="bi bi-person-fill"></i></button>
                                         <input type="text" class="form-control" placeholder="Nombre" id="nomClien" name="nomClien">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Apellido</strong></label>
+                                    <label for="inputText" class="col-6 col-form-label"><strong>Codigo Postal</strong></label>
                                     <div class="input-group">
                                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el apellido del cliente."><i class="bi bi-people"></i></button>
                                         <input type="text" class="form-control" placeholder="Apellido" id="apeClien" name="apeClien">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2 form-group col-md-12">
+                                <div class="form-check form-switch my-3 col-lg-6">
+                                    <input class="form-check-input" type="checkbox" id="checkAlias">
+                                    <label class="form-check-label" >Guardar Direccion</label>
+                                </div>
+                                <div class="col-lg-6 my-auto" id="aliasInp">
+                                    <div class="input-group">
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Coloque un alias para guardar la direccion."><i class="bi bi-people"></i></button>
+                                        <input type="text" class="form-control" placeholder="Alias" >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group col-md-12">
+                                <div class="col-lg-6">
+                                    <label for="inputText" class="col-8 col-form-label "><strong>Empresa de Envio</strong></label>
+                                    <div class="input-group">
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un tipo de pago"><i class="bi bi-truck"></i></button>
+                                        <select class="form-select" id="">
+                                            <option selected="" disabled="">Nombre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="inputText" class="col-8 col-form-label "><strong>Sede de Envio</strong></label>
+                                    <div class="input-group">
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un tipo de pago"><i class="bi bi-sort-up"></i></button>
+                                        <select class="form-select" id="">
+                                            <option selected="" disabled="">Ubicacion</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -154,6 +225,7 @@
                                 <button type="button" class="btn btn-secondary btn-previous">Atrás</button>
                                 <button type="button" class="btn btn-success btn-next" id="2">Siguiente</button>
                             </div>
+                            
                         </fieldset>
                             <!--fin del paso 2 -->
 
@@ -204,22 +276,31 @@
                 </div>
         </div>
     </div>
+
     <div class="col-sm-12 col-md-10 col-lg-5 mx-md-auto mx-lg-0">
+
+        <!-- Precio y Cambio -->
         <div class="card">
-            <div class="f1">
+            <div class="f1" id="precios">
+
                 <div class="row">
                     <h5 class="col-6"><strong>Cantidad a Pagar:</strong></h5>
-                    <h5 class="col-6 text-right">302,45 Bs.</h5>
+                    <h5 class="col-6 text-right" id="valorBs"></h5>
                 </div>
                 <div class="row">
                     <h5 class="col-6"><strong>Al Cambio:</strong></h5>
-                    <h5 class="col-6 text-right">10,00 $</h5>
+                    <h5 class="col-6 text-right" id="valorUsd"></h5>
                 </div>
             </div>
         </div>
 
+        <!-- Metodo de Pago -->
         <div class="card">
+            
             <form action="" method="post" class="f1" id="fade">
+                <div class=" col-8 mx-auto text-center">
+                    <h4 class="m-0">Elija un Metodo a Pagar</h4>
+                </div>
                 <div class="row mb-1 col-sm-12 col-md-8 mx-auto">
                     <label for="inputText" class="col-8 col-form-label mx-auto text-center"><strong>Tipo de Pago</strong></label>
                     <div class="input-group">
@@ -246,7 +327,7 @@
                         <label for="inputText" class="col-8 col-form-label"><strong>Cedula/Rif</strong></label>
                         <div class="input-group">
                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el numero de referencia del deposito."><i class="bi bi-people"></i></button>
-                            <input type="text" class="form-control" disabled  id="cedBanc">
+                            <input type="text" class="form-control" disabled id="cedBanc">
                         </div>
                     </div>
                     <div class="col-lg-6 movil">
@@ -280,6 +361,7 @@
                         <input type="text" id="numCuen" disabled class="form-control">
                     </div>
                 </div>
+                <p class="nota col-11 mx-auto small mt-2">*Al seleccionar un metodo de pago se podra comprobar a que cuenta se hizo el deposito</p>
             </form>
         </div>
 

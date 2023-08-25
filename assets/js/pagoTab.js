@@ -27,7 +27,11 @@ $(document).ready(function() {
 	let memas
 
 	DatosP();
+	precio();
 
+	$("#aliasInp").fadeOut(0);
+
+	// Datos Personales
 	function DatosP() {
 		$.ajax({
 			type: "post",
@@ -37,11 +41,11 @@ $(document).ready(function() {
             success(data) {
 				memas = data;
 				
-
-				$("#nomClien").val(data[0].nombre);
-				$("#apeClien").val(data[0].apellido);
+				$("#nomClien").val(data[0].nombre+' '+data[0].apellido);
 				$("#cedClien").val(data[0].cedula);
 				$("#emailClien").val(data[0].correo);
+				$("#teleClien").val(data[0].celular);
+				$("#direcClien").val(data[0].direccion);
 			}
 		});
 	}
@@ -51,7 +55,7 @@ $(document).ready(function() {
 	}
 
 
-
+	//Metodo de Pago
 	$("#tipoP").change(() => {
 		
 		tipo = $("#tipoP").val();
@@ -81,12 +85,12 @@ $(document).ready(function() {
 				$("#cedBanc").val(resultado.cedulaRif);
 				$("#numCuen").val(resultado.NumCuenta);
 				break;
-		
 			default: console.log("nada");
 				break;
 		}	
 	});
-
+	
+	// Relleno de select
 	function tipoPago() {
 		$.ajax({
 			type: "post",
@@ -104,8 +108,42 @@ $(document).ready(function() {
 			}
 		});
 	}
+	// Fin Metodo de Pago
 
-	
+
+	// Precio y Cambio
+	function precio(){
+		$.ajax({
+			type: "post",
+            url: "",
+            dataType: "json",
+			data:{mostrarP: "hola"},
+			success(pre){
+				let precioUsd
+				if (pre[0].cuenta > 0) {
+					console.log(pre);
+					$("#valorBs").html(parseFloat(pre[0].total).toFixed(2)+" Bs");
+					$("#valorUsd").html(parseFloat(pre[0].total / pre[0].cambio).toFixed(2)+" $")
+				} else {
+					console.log("nada")
+					let div=`
+						<div class="col-8 mx-auto text-center">
+                    		<h3>Su Carrito Esta Vacio</h3>
+                		</div>`;
+					$("#precios").html(div);
+				}
+			}
+		})
+	}
+
+	// Ocultar y Mostrar Input Alias 
+	$("#checkAlias").on('change', function() {
+		if( $(this).is(':checked') ){
+			$("#aliasInp").fadeIn(300);
+		}else{
+			$("#aliasInp").fadeOut(300);
+		}
+	})
 	
 	
     
@@ -121,26 +159,30 @@ $(document).ready(function() {
     */
     $('.f1 fieldset:first').fadeIn('slow');
     
-    $('.f1 input[type="text"], .f1 input[type="password"], .f1 textarea').on('focus', function() {
-    	$(this).removeClass('input-error');
-    });
+
+	// Validicaiones Primer Step
+
+	$("#direcClien").keyup(()=> {  validarDireccion($("#direcClien"),$("#errorDirec") ,"Error de Direccion,") });
+	$("#emailClien").keyup(()=> {  validarCorreo($("#emailClien"),$("#errorEmail") ,"Error de Correo,") });
+	$("#teleClien").keyup(()=> {  validarTelefono($("#teleClien"),$("#errorTele") ,"Error de Telefono,") });
 
 
-	// $("#1").click((e)=>{
+	$("#1").click((e)=>{
 
-	// 	let correo = validarCorreo($("#emailClien"),$("#error1") ,"Error de Correo,") ;
-	// 	let cedula = validarCedula($("#cedClien"),$("#error1") ,"Error de Cedula,") ;
-	// 	let telefono = validarTelefono($("#teleClien"),$("#error1") ,"Error De Telefono,") ;
-	// 	let apellido = validarNombre($("#apeClien"),$("#error1") ,"Error de Apellido,") ;
-	// 	let nombre = validarNombre($("#nomClien"),$("#error1") ,"Error de Nombre,") ;
+		let direccion = validarDireccion($("#direcClien"),$("#errorDirec"), "Error de Direccion,") ;
+		let correo = validarCorreo($("#emailClien"),$("#errorEmail"), "Error de Correo,") ;
+		let telefono = validarTelefono($("#teleClien"),$("#errorTele"), "Error de Telefono,") ;
+		let cedula = validarCedula($("#cedClien"),$("#errorCed"), "Error de Cedula,") ;
+	 	let nombre = validarNombre($("#nomClien"),$("#errorNomApe"), "Error de Nombre,") ;
 
-	// 	if (nombre && apellido && telefono && cedula && correo) {
-	// 		next_step = true;
-	// 	}else{
-	// 		next_step = false;
-	// 	}
-		
-	// });
+	 	// if (nombre && direccion && telefono && cedula && correo) {
+	 	// 	next_step = true;
+	 	// }else{
+	 	// 	next_step = false;
+	 	// }	
+	});
+
+
 
 	fechaHoy($('#fecha'));
 	let distancia
