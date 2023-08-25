@@ -35,7 +35,7 @@
       $objModel->ValidarDatos($_POST['tipoP'] , $_POST['nombre'] , $_POST['cedulaRif'] , $_POST['id']);
      }
 
-     if (isset($_POST['data']) && isset($_POST['registro']) && $permiso->status == 1) {
+     if (isset($_POST['data']) && isset($_POST['registro']) && $permiso->registrar == 1) {
        $objModel->getRegistrarBanco($_POST['data']);
      }
 
@@ -47,7 +47,7 @@
        $objModel->rellenarEdit($_POST['id']);
      }
 
-     if (isset($_POST['data']) && isset($_POST['id']) && isset($_POST['editar']) && $permiso->status == 1) {
+     if (isset($_POST['data']) && isset($_POST['id']) && isset($_POST['editar']) && $permiso->editar == 1) {
       $objModel->getEditarBanco($_POST['data'] , $_POST['id']);
      }
 
@@ -62,6 +62,8 @@
 
      if (file_exists("vista/interno/configuraciones/bancoVista.php")) {
        require_once("vista/interno/configuraciones/bancoVista.php");
+     }else{
+      die('La vista no existe.');
      }
 
  ?>

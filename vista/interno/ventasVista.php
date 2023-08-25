@@ -110,7 +110,7 @@
      <div class="modal-dialog modal-dialog-scrollable modal-lg ">
        <div class="modal-content">
          <div class="modal-header alert alert-success">
-          <h4 class="modal-title"> <strong>Registrar Nuevo Venta</strong> </h4>
+          <h4 class="modal-title"> <strong>Registrar Venta</strong> </h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 

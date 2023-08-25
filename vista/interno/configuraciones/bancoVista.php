@@ -120,7 +120,12 @@
 	                <div class="form-group col-12">                          
 	                	<label class="col-form-label"> <strong>Cedula o Rif</strong> </label>
 	                	<div class="input-group">
-	                		<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la cedula o rif del banco"><i class="bi bi-person-fill"></i></button> 
+	                		 <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el nombre del Banco"><i class="bi bi-person-fill"></i></button>
+	                		<select class="input-group-text bg-white select" id="select">
+	                			<option class="text-center" value="V">V</option>
+	                			<option class="text-center" value="E">E</option>
+	                			<option class="text-center" value="J">J</option>
+	                		</select>
 	                		<input class="form-control" id="cedulaRif" placeholder="Cedula o Rif">
 	                	</div>
 	                	<p class="error" style="color:#ff0000;text-align: center;" id="error3"></p>
@@ -313,5 +318,5 @@
  </body>
  <?php $VarComp->js(); ?>
  <script src="assets/js/banco.js"></script>
-</html>
+ </html>
 
