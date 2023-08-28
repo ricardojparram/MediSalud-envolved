@@ -79,6 +79,31 @@ $(document).ready(function(){
 		})
 	}
 
+	function validarInputCantidad(input){
+		parametro = input.val();
+		let valid = /^([0-9]+\.+[0-9]|[0-9])+$/.test(parametro)
+		let tooltip = input.closest('.opciones').find('.invalid-tooltip');
+		if (parametro == null || parametro =="" || parametro == 0) {
+			tooltip.text("Debe introducir datos.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+			return false
+		}else if (isNaN(parametro)) {
+			tooltip.text("Debe ser solo números.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+			return false
+		}else if(!valid){
+			tooltip.text("Debe ser positivo.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+		}else{
+			tooltip.hide();
+			input.attr("style","border-color: none;")
+			return true 
+		}			             
+	}
+
 	async function validarStock(productos){
 		let res;
 		await $.ajax({ method: 'POST', url: '?url=carrito', dataType: 'json',
@@ -92,6 +117,7 @@ $(document).ready(function(){
 						tooltip.hide();
 					}else{
 						$(`#${row.id_producto}`).attr("style","border-color: red;")
+						tooltip.text('Cantidad no disponible.')
 						tooltip.show();
 					}
 					resultado.push(row.info.resultado);
@@ -117,6 +143,7 @@ $(document).ready(function(){
 			input = $(this);
 			let {id: id_producto, value: cantidad} = this;
 			let productos = [{id_producto, cantidad}];
+			if(validarInputCantidad(input) != true) return;
 			validarStock(productos).then((res) => {
 				if(!res) return;
 
@@ -192,5 +219,20 @@ $(document).ready(function(){
 			}
 		})
 	})
+
+	$('#realizarFacturacion').click(function(){
+		let productos = [];
+		$('.cantidad').each(function(){
+			let input = $(this);
+			if(validarInputCantidad(input) != true) throw new Error('Input inválido.');
+			let {id: id_producto, value: cantidad} = this;
+			productos.push({id_producto, cantidad});
+		})
+		validarStock(productos).then(res => {
+			if(!res) return;
+			console.log('go to facturacion')
+		});
+	})
+
 
 })
