@@ -1,6 +1,6 @@
 
 	const expresiones = {
-		nombre: /^[a-zA-ZÀ-ÿ]{0,30}$/,
+		nombre: /^[a-zA-ZÀ-ÿ ]{0,30}$/,
 		correo: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
 		direccion: /^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s#/,.-]){7,50}$/,
 		cedula: /^[0-9]{7,10}$/,
@@ -41,7 +41,7 @@
 		parametro = input.val();
 		let valid = expresiones.direccion.test(parametro);
 		if (parametro==null||parametro=="") {
-			div.text(mensaje+" debe intruducir la dirección.")
+			div.text(mensaje+" debe introducir la dirección.")
 			input.attr("style","border-color: red;")
 			input.attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");								
 			return false
@@ -176,7 +176,7 @@
 			input.attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");							
 			return false
 		}else if (parametro.length<10){
-			div.text(mensaje+" debe introducir mínimo 10 carácteres.")	
+			div.text(mensaje+" debe introducir maximo 10 carácteres.")	
 			input.attr("style","border-color: red;")
 			input.attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");														
 			return false	
@@ -455,11 +455,34 @@
 			input.attr("style","border-color: red;");															
 			return false
 		}else if (!valid) {
-			div.text(mensaje+" introdusca una fecha")	
+			div.text(mensaje+" introduzca una fecha")	
 			input.attr("style","border-color: red;");					
 			return false
 		}else if (fechaActual > parametro) {
 			div.text(mensaje+" la fecha es menor")	
+			input.attr("style","border-color: red;")
+			return false
+		}else{
+			div.text(" ");
+			input.attr("style","border-color: none;")
+			return true
+		}			             
+	}
+
+	function validarFechaAyer(input, div, mensaje){
+		parametro = input.val();
+		let valid = expresiones.fecha.test(parametro);
+
+		if (parametro==null||parametro=="") {
+			div.text(mensaje+" debe introducir una fecha");
+			input.attr("style","border-color: red;");															
+			return false
+		}else if (!valid) {
+			div.text(mensaje+" introduzca una fecha")	
+			input.attr("style","border-color: red;");					
+			return false
+		}else if (fechaActual < parametro) {
+			div.text(mensaje+" la fecha es mayor")	
 			input.attr("style","border-color: red;")
 			return false
 		}else{

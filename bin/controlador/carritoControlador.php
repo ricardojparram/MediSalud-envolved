@@ -13,9 +13,13 @@
 		$model->getCarritoUsuario($_SESSION['cedula']);
 	}
 
+<<<<<<< HEAD
 	if(isset($_POST['validar'], $_POST['productos'])){
 		$model->getValidarStock($_POST['productos']);
 	}
+=======
+	//if()
+>>>>>>> 9c59cb68211ff4c090ed5f32f74198fa604a10fb
 
 	if(isset($_POST['editar'], $_POST['id_producto'], $_POST['cantidad'], $_SESSION['cedula'])){
 		$model->getEditarProd($_POST['id_producto'], $_POST['cantidad'], $_SESSION['cedula']);

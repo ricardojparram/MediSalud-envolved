@@ -48,7 +48,7 @@ $(document).ready(function(){
             icon: 'success',
           })
           setTimeout(function(){
-            location = '?url=home'
+            location = '?url=login'
           }, 1600);
 
         }
