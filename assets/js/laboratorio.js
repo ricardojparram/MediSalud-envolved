@@ -39,6 +39,10 @@ $(document).ready(function(){
                 mostrar = $('#tableMostrar').DataTable({
                     resposive: true
                 });
+            },
+            error(e){
+                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                throw new Error('Error al mostrar listado: '+e);
             }
         })
 
@@ -120,7 +124,11 @@ $(document).ready(function(){
 
 				}   
 
-			}
+			},
+			error(e){
+                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                throw new Error('Error al mostrar listado: '+e);
+            }
 
 		})
 		click++;
@@ -141,6 +149,10 @@ $(document).ready(function(){
 		        	$("#direccionEdit").val(data[0].direccion);
 		        	$("#telefonoEdit").val(data[0].telefono);
 		        	$("#contactoEdit").val(data[0].contacto);
+		        },
+		        error(e){
+		        	Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+		        	throw new Error('Error al mostrar listado: '+e);
 		        }
 
 		    })
@@ -204,7 +216,11 @@ $(document).ready(function(){
 					$('.cerrar').click();
 					Toast.fire({ icon: 'success', title: 'Laboratorio modificado' })
 				}
-			}
+			},
+			error(e){
+                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                throw new Error('Error al mostrar listado: '+e);
+            }
 
 		})
 		click++
@@ -242,7 +258,11 @@ $(document).ready(function(){
 				$('.cerrar').click();
 				rellenar();
 				Toast.fire({ icon: 'success', title: 'Laboratorio eliminado' })
-			}
+			},
+			error(e){
+                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                throw new Error('Error al mostrar listado: '+e);
+            }
 		})
 		click++;
 	})
