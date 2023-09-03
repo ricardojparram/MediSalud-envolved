@@ -15,7 +15,7 @@
   <?php 
 
   $header->Header();
-
+<!-- HOLA CHURRO -->
   ?>
 
   <!-- End Header -->
@@ -48,7 +48,7 @@
 
         <div class="row">
           <div class="col-6">
-            <h5 class="card-title">Clase</h5>
+            <h5 class="card-title">TIPOS de Clase</h5>
           </div>
 
           <div class="col-6 text-end mt-3">
