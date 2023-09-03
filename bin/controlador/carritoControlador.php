@@ -13,9 +13,23 @@
 		$model->getCarritoUsuario($_SESSION['cedula']);
 	}
 
-	//if()
+	if(isset($_POST['validar'], $_POST['productos'])){
+		$model->getValidarStock($_POST['productos']);
+	}
 
-	$VarComp = new initcomponents();	
+	if(isset($_POST['editar'], $_POST['id_producto'], $_POST['cantidad'], $_SESSION['cedula'])){
+		$model->getEditarProd($_POST['id_producto'], $_POST['cantidad'], $_SESSION['cedula']);
+	}
+
+	if(isset($_POST['eliminar'], $_POST['id'])){
+		$model->getEliminarProd($_POST['id'], $_SESSION['cedula']);
+	}
+
+	if(isset($_POST['vaciarCarrito'])){
+		$model->vaciarCarrito($_SESSION['cedula']);
+	}
+
+	$VarComp = new initcomponents();
 	$Nav = new nav();
 	
 	require "vista/inicio/carritoVista.php";	

@@ -62,5 +62,32 @@
                 return $error;
             }
         }
+
+        public function mostrarEmpresa(){
+            try {
+                $new = $this->con->prepare('SELECT * FROM `empresa_envio` WHERE status = 1;');
+                $new->execute();
+                $data = $new->fetchAll();
+                echo json_encode($data);
+                die();
+
+            } catch(\PDOexection $error){
+                return $error;
+            }
+        }
+
+        public function mostrarSede($sede){
+            try {
+                $new = $this->con->prepare('SELECT * FROM sede_envio WHERE id_empresa =  ? and status = 1');
+                $new->bindValue(1, $sede);
+                $new->execute();
+                $data = $new->fetchAll();
+                echo json_encode($data);
+                die();
+
+            } catch(\PDOexection $error){
+                return $error;
+            }
+        }
     }
 ?>

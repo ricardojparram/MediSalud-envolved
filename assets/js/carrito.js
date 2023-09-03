@@ -1,17 +1,24 @@
 $(document).ready(function(){
 
-	mostrarCarrito();
-	function mostrarCarrito(){
-		$.ajax({
+	refrescarCarrito();
+
+	function refrescarCarrito(){
+		mostrarCarrito().then(() => {
+			editarCantidad();
+			confirmarEliminar();
+		})
+	}
+
+	async function mostrarCarrito(){
+		await $.ajax({
 			method: 'POST',
 			dataType: 'json',
-			url: '',
+			url: '?url=carrito',
 			data: {mostrar:'', carrito:''},
 			success(response){
 				let div = '';
 				if(typeof response.error != 'undefined'){
-					div = `
-							<div class="alert alert-secondary w-75" role="alert">
+					div = `<div class="alert alert-secondary w-75" role="alert">
 				                <h3>Necesita iniciar sesión para agregar productos al carrito.</h3>
 				                <div>
 				                  <a class="text-center col-6" href=""><u>Iniciar sesión</u></a> | 
@@ -23,9 +30,8 @@ $(document).ready(function(){
 					$('.vaciar').hide();
 				}
 				if(response.length == 0){
-					div = `
-							<div class="alert alert-secondary w-75" role="alert">
-				                <h3>Su carrito está vacío.</h3>
+					div = `<div class="alert alert-secondary w-75" role="alert">
+								<h3>Su carrito está vacío.</h3>
 				            </div>`;
 				    $('.carrito-container').html(div);
 				    $('.carrito-container').css({width:'500px'})
@@ -34,35 +40,199 @@ $(document).ready(function(){
 					$('.vaciar').hide();
 				}
 				if(response.length > 0){
+					let productos = [];
 					let precioTotal = 0;
-					response.forEach(row => {
-						console.log(row);
+					let flexDirection = ($('.carrito-container').width() < 400) ? 'item-carrito-tienda' : '';
+					for(let i = 0; i < response.length; i++){
+						let row = response[i];
 						let precioUnidadTotal = row.precioActual * row.cantidad;
 						precioTotal += precioUnidadTotal;
+						let hr = (i == response.length - 1) ? '' : '<hr class="my-2">';
 						div += `
-						<div class="item-carrito p-2">
+						<div class="item-carrito  ${flexDirection} p-2">
 			                <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-			                <div class="descripcion">
+			                <div class="descripcion ">
 			                  <h3>${row.descripcion}</h3>
 			                  <p>${row.contraindicaciones}</p>
-			                  <div class="opciones">
-			                    <input type="number" value="${row.cantidad}" class="form-control cantidad" placeholder="Cant.">
-			                    <a class="eliminar" href="#">Eliminar</a>
+			                  <div class="opciones position-relative">
+			                    <input type="number" id="${row.cod_producto}" value="${row.cantidad}" class="form-control cantidad" placeholder="Cant.">
+			                    <a class="eliminar" prod="${row.cod_producto}" >Eliminar</a>
+			                    <div class="invalid-tooltip">Cantidad no disponible.</div>
 			                  </div>
 			                </div>
 			                <div class="precio">
-			                  <h6>Unidad: ${row.precioActual}$</h6>
-			                  <h6 class="fs-5">Total: ${precioUnidadTotal}$</h6>
+			                  <h6>Unidad: <span class="precioUnidad">${row.precioActual}</span>$</h6>
+			                  <h6 class="fs-5">Total: <span class="precioUnidadTotal">${precioUnidadTotal}</span>$</h6>
 			                </div>
-			              </div>
-						`
-					})
+			            </div>
+			            ${hr}
+			            `
+			            productos.push({id_producto: row.cod_producto, cantidad: row.cantidad});
+					}
+
 					$('.carrito-container').html(div);
-					$('#precioTotal').html(precioTotal+'$');
+					$('#precioTotal').html(precioTotal);
+					validarStock(productos);
 				}
 
 			}
 		})
 	}
+
+	function validarInputCantidad(input){
+		parametro = input.val();
+		let valid = /^([0-9]+\.+[0-9]|[0-9])+$/.test(parametro)
+		let tooltip = input.closest('.opciones').find('.invalid-tooltip');
+		if (parametro == null || parametro =="" || parametro == 0) {
+			tooltip.text("Debe introducir datos.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+			return false
+		}else if (isNaN(parametro)) {
+			tooltip.text("Debe ser solo números.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+			return false
+		}else if(!valid){
+			tooltip.text("Debe ser positivo.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+		}else{
+			tooltip.hide();
+			input.attr("style","border-color: none;")
+			return true 
+		}			             
+	}
+
+	async function validarStock(productos){
+		let res;
+		await $.ajax({ method: 'POST', url: '?url=carrito', dataType: 'json',
+			data: {validar:'', productos},
+			success(response){ 
+				let resultado = [];
+				response.forEach(row => {
+					let tooltip = $(`#${row.id_producto}`).closest('.opciones').find('.invalid-tooltip');
+					if(row.info.resultado){
+						$(`#${row.id_producto}`).attr("style","border-color: none;")
+						tooltip.hide();
+					}else{
+						$(`#${row.id_producto}`).attr("style","border-color: red;")
+						tooltip.text('Cantidad no disponible.')
+						tooltip.show();
+					}
+					resultado.push(row.info.resultado);
+				})
+				res = !resultado.includes(false);
+			}
+		})
+		return res;
+	}
+
+	function actualizarTotalCarrito(){
+		let total = 0;
+		$('.carrito-container').find('.precioUnidadTotal').each(function(){
+			let precio = Number($(this).text());
+			total += precio;
+		})
+		$('#precioTotal').html(total);
+	}
+
+	let precioUnidad, cantidadProducto, precioUnidadTotal, input;
+	function editarCantidad(){
+		$('.opciones .cantidad').on('keyup change', function(){
+			input = $(this);
+			let {id: id_producto, value: cantidad} = this;
+			let productos = [{id_producto, cantidad}];
+			if(validarInputCantidad(input) != true) return;
+			validarStock(productos).then((res) => {
+				if(!res) return;
+
+				$.post('?url=carrito',{editar:'', id_producto, cantidad}, function(response){
+					let result = JSON.parse(response);
+
+					if(!result.resultado){
+						Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+					}else{
+						precioUnidad = Number(result.info.precioActual);
+						cantidadProducto = Number(result.info.cantidad);
+						precioUnidadTotal = precioUnidad * cantidadProducto;
+
+						input.closest('.item-carrito').find('.precioUnidadTotal')
+						.html(precioUnidadTotal);
+						input.closest('.item-carrito').find('.precioUnidad')
+						.html(precioUnidad);
+						actualizarTotalCarrito()
+					}
+				})
+
+			})
+		})
+	}
+
+	let id;
+	function confirmarEliminar(){
+		$('.opciones .eliminar').on('click', function(e){
+			e.preventDefault();
+			let prodTitle = $(this).closest('.descripcion').find('h3').text();
+			$('#delProductTitle').html(prodTitle);
+			$('#delModal').modal('show')
+
+			id = $(this).attr('prod');
+		})
+	}
+
+	$('#delProductFromCar').click(function(){
+		
+		$.ajax({type : 'post', url : '?url=carrito', data : {eliminar:'', id}, dataType: 'json',
+			success(data){
+					console.log(data);
+				if(data.resultado === true){
+					Toast.fire({ icon: 'success', title: 'Producto eliminado del carrito.' })
+					$('.carrito-container').empty();
+					$('#delModal').modal('hide');
+					refrescarCarrito();
+				}else{
+					Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' })
+					$('#delModal').modal('hide');
+				}
+			}
+		})
+
+	})
+
+	$('.vaciar').click(function(e){
+		e.preventDefault();
+		$('#vaciarCarritoModal').modal('show');
+	})
+
+	$('#vaciarCarritoConfirm').click(() => {
+		$.post('?url=carrito', {vaciarCarrito: ''}, function(response){
+			let res = JSON.parse(response);
+			if(res.resultado){
+				$('#vaciarCarritoModal').modal('hide');
+				$('.carrito-container').empty();
+				refrescarCarrito();
+				Toast.fire({ icon: 'success', title: 'Se ha vaciado su carrito, correctamente.'});
+			}else{
+				$('#vaciarCarritoModal').modal('hide');
+				Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.'});
+			}
+		})
+	})
+
+	$('#realizarFacturacion').click(function(){
+		let productos = [];
+		$('.cantidad').each(function(){
+			let input = $(this);
+			if(validarInputCantidad(input) != true) throw new Error('Input inválido.');
+			let {id: id_producto, value: cantidad} = this;
+			productos.push({id_producto, cantidad});
+		})
+		validarStock(productos).then(res => {
+			if(!res) return;
+			console.log('go to facturacion')
+		});
+	})
+
 
 })
