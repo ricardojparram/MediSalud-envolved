@@ -19,8 +19,14 @@
 
     if($permiso->status != 1) die(`<script> window.location = "?url=home" </script>`);
 
-     if (isset($_POST['mostrar']) && $permiso->consultar == 1) {
-      $objModel->mostrarBank();
+    if(isset($_POST['getPermisos']) && $permiso->status == 1){
+      die(json_encode($permiso));
+    }
+
+     if (isset($_POST['mostrar']) && isset($_POST['bitacora'])) {
+      ($_POST['bitacora'] == 'true')
+      ? $objModel->mostrarBank(true)
+      : $objModel->mostrarBank();
      }
 
      if (isset($_POST['selecTipoPago']) && $permiso->status == 1) {

@@ -13,25 +13,31 @@
      $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
      $permiso = $permisos['Ventas'];
 
-       if($permiso->status != 1) die(`<script> window.location = "?url=home" </script>`);
+      if($permiso->status != 1) die(`<script> window.location = "?url=home" </script>`);
+
+      if (isset($_POST['getPermisos']) && $permiso->status == 1) {
+        die(json_encode($permiso));
+      }
       
       $mostrarC = $objModel->getMostrarCliente();
       $mostrerM = $objModel->getMostrarMetodo();
 
+      if (isset($_POST['mostrar']) && isset($_POST['bitacora'])) {
+        ($_POST['bitacora'] == 'true')
+        ? $objModel->getMostrarVentas(true)
+        : $objModel->getMostrarVentas();
+      }
 
-      if (isset($_POST['selectM']) && $permiso->status == 1) {
-        $mostrarM = $objModel->getMostrarMoneda();
-      }
-       
-      if (isset($_POST['mostrar']) && $permiso->status == 1) {
-        $mostrarV = $objModel->getMostrarVentas();
-      }
        if(isset($_POST['detalleV']) && $permiso->consultar == 1) {
-         $mostraDet = $objModel->getDetalleV($_POST['id']);
+          $objModel->getDetalleV($_POST['id']);
        }
 
+      if (isset($_POST['selectM']) && $permiso->status == 1) {
+         $objModel->getMostrarMoneda();
+      }
+       
       if(isset($_POST['select']) && $permiso->status == 1) {
-        $mostrarP = $objModel->getMostrarProducto();
+         $objModel->getMostrarProducto();
       }
 
       if(isset($_POST['cedula']) && isset($_POST['validar']) && $permiso->status == 1){
@@ -53,6 +59,10 @@
 
        $objModel->AgregarVentaXProd($_POST['producto'] , $_POST['precio'] , $_POST['cantidad'], $_POST['id'] );
        
+     }
+
+     if (isset($_POST['id']) && isset($_POST['factura']) ){
+       $objModel->ExportarFactura($_POST['id']);
      }
 
      if(isset($_POST['validarCI']) && isset($_POST['id']) && $permiso->status == 1){

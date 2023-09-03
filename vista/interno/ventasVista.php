@@ -57,7 +57,7 @@
               <h5 class="card-title col-6 ml-3">Ventas de Productos</h5>
 
               <div class="text-end col-6 mt-3" >
-               <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#Agregar">Agregar</button>
+               <button type="button" id="#agregarModals" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#Agregar">Agregar</button>
               </div>
 
               </div>
@@ -77,17 +77,7 @@
                       <th scope="col">Opciones</th>
                     </tr>
                   </thead>
-                  <tfoot>
-                    <tr>
-                      <th scope="col">Cedula</th>
-                      <th scope="col">Productos</th>
-                      <th scope="col">Fecha y Hora</th>
-                      <th scope="col">Metodo de Pago</th>
-                      <th scope="col">Total divisa</th>
-                      <th scope="col">Total Bs</th>
-                      <th scope="col">Opciones</th>
-                    </tr>
-                  </tfoot>
+
                   <tbody id = "tbody">
                     
                   </tbody>
@@ -298,6 +288,7 @@
         </table>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-success factura" data-bs-dismiss="modal" id=" ">Exportar Factura</button>
         <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal" id="cerrarDetalles">Cerrar</button>
       </div>
     </div>

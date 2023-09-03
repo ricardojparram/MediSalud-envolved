@@ -64,7 +64,6 @@
                 <th scope="col">Empresa de envío</th>
                 <th scope="col">Ubicación</th>
                 <th scope="col">Opciones</th>
-
               </tr>
             </thead>
 

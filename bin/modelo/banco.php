@@ -18,7 +18,7 @@ class banco extends DBConnect{
 		parent::__construct();
 	}
 
-	public function mostrarBank(){
+	public function mostrarBank($bitacora = false){
 
 		try{
 
@@ -28,6 +28,7 @@ class banco extends DBConnect{
 			$new->execute();
 			$data = $new->fetchAll(\PDO::FETCH_OBJ);
 			echo json_encode($data);
+			if($bitacora) $this->binnacle("Banco",$_SESSION['cedula'],"Consultó listado.");
 			die();
 
 		}catch(\PDOException $e){
@@ -258,6 +259,7 @@ class banco extends DBConnect{
         $resultado = ['resultado' => 'banco registrado.'];
         echo json_encode($resultado);
         die();
+        $this->binnacle("Banco",$_SESSION['cedula'],"Registró un Banco .");
 		} catch (\PDOException $e) {
 			die($e);
 		}
@@ -418,6 +420,7 @@ class banco extends DBConnect{
 
        	$resultado = ['resultado' => 'banco editado.' , $new->execute()];
        	echo json_encode($resultado);
+       	$this->binnacle("Banco",$_SESSION['cedula'],"Editó un Banco .");
        	die();
 
        } catch (\PDOException $e) {
@@ -447,6 +450,7 @@ class banco extends DBConnect{
     	$data = $new->fetchAll();
         $resultado = ['resultado' => 'Eliminado'];
         echo json_encode($resultado);
+        $this->binnacle("Banco",$_SESSION['cedula'],"Eliminó un Banco .");
         die();
 	
     	} catch (\PDOException $e) {

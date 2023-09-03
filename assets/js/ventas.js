@@ -1,19 +1,46 @@
  $(document).ready(function(){
 
 
-  let tablaMostrar;         
-  rellenar();
-  function rellenar(){
+  let mostrar;
+  let permiso , eliminarPermiso, registrarPermiso;
+
+    $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos : "permiso"},
+      success(data){ permiso = data; }
+
+    }).then(function(){
+      rellenar(true);
+      registrarPermiso = (permiso.registrar != 1)? 'disable' : '';
+        $('#agregarModal').attr(registrarPermiso, '');
+    })         
+
+  function rellenar(bitacora = false){
     $.ajax({
       method: "POST",
       url: " ",
       dataType: "json",
-      data:{mostrar: "venta"},
+      data:{mostrar: "venta" , bitacora},
       success(data){
-        tablaMostrar = $('#tableMostrar').DataTable({
-          responsive : true,
-          data : data
-        });
+        let tabla;
+        data.forEach(row =>{
+          eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
+          tabla +=`
+          <tr>
+          <td>${row.cedula_cliente}</td>
+          <td><button class="btn btn-success detalleV" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#detalleVenta">Ver detalles</button></td>
+          <td>${row.fecha}</td>
+          <td>${row.des_tipo_pago}</td>
+          <td>${row.total_divisa}</td>
+          <td>${row.monto}</td>
+          <td class="d-flex justify-content-center">
+          <button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
+          </td>
+          </tr>
+          `
+        })
+        $('#tbody').html(tabla);
+        mostrar = $('#tableMostrar').DataTable({
+          resposive : true
+        })
       }
     })
   }
@@ -38,7 +65,7 @@
         })
         $('#ventaNombre').text(`Numero de Factura #${lista[0].num_fact}.`);
         $('#bodyDetalle').html(tabla);
-
+        $('.factura').attr("id", id);
       })
      })
 
@@ -392,7 +419,7 @@
        let idVenta = JSON.parse(data);
        console.log(idVenta);
        enviarProductos(idVenta.id);
-       tablaMostrar.destroy();
+       mostrar.destroy();
             rellenar();  // FUNCIÓN PARA RELLENAR
             $('.select2').val(0).trigger('change'); // LIMPIA EL SELECT2
             $('#agregarform').trigger('reset'); // LIMPIAR EL FORMULARIO
@@ -418,6 +445,19 @@
 
     })
   }
+
+  $(document).on('click', '.factura' , function(){
+    id = this.id;
+    $.ajax({
+      type: "POST",
+      url: '',
+      dataType: 'json',
+      data: {id, factura: "factura"},
+      success(data){
+
+      }
+    })
+  })
 
   $('#cerrar').click(()=>{
      $('.select2').val(0).trigger('change'); // LIMPIA EL SELECT2
@@ -447,7 +487,7 @@
               console.log(data);
               if (data.resultado === "Error de venta") {  
                 Toast.fire({ icon: 'error', title: 'Esta venta ya esta anulada' }); // ALERTA 
-                tablaMostrar.destroy();
+                mostrar.destroy();
                 rellenar();
                 $('.cerrar').click();
                 reject(); // Rechaza la promesa si la condición se cumple
@@ -470,7 +510,7 @@
               url: '',
               data: { eliminar: "asd", id },
               success(data) {
-                tablaMostrar.destroy();
+                mostrar.destroy();
                 rellenar();
                 $('.cerrar').click();
                 Toast.fire({ icon: 'success', title: 'Venta eliminada' }); // ALERTA 

@@ -32,11 +32,11 @@ $(document).ready(function(){
 	    	      	<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.id_empresa}" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
 	    	      	<button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.id_empresa}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
 	    	      	</td>
-	    	      	</tr>;
+	    	      	</tr>
     	         	`
     	          })
     	      	$('#tbody').html(tabla);
-    	      	mostrar = $('#tablaMostrar').DataTable({
+    	      	mostrar = $('#tableMostrar').DataTable({
     	      		resposive: true
     	      	})
     		}

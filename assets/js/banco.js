@@ -1,24 +1,36 @@
 $(document).ready(function(){
 
-	rellenar(true);
-	let mostrar;
-	function rellenar(){
+    let mostrar;
+    let permisos , editarPermiso , eliminarPermiso, registrarPermiso;
+
+     $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos : "permiso"},
+        success(data){ permiso = data; }
+
+      }).then(function(){
+        rellenar(true);
+        registrarPermiso = (permiso.registrar != 1)? 'disable' : '';
+        $('#agregarModal').attr(registrarPermiso, '');
+    })
+
+	function rellenar(bitacora = false){
 		$.ajax({
 			type: "POST",
 			url: "",
 			dataType: "json",
-			data: {mostrar: "Bank"},
+			data: {mostrar: "Bank" , bitacora},
 			success(data){
 				let tabla;
 				data.forEach(row =>{
+                    editarPermiso = (permiso.editar != 1)?  'disable' : '';
+                    eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
 					tabla += `
 					<tr>
 					<td>${row.nombre}</td>
 					<td>${row.cedulaRif}</td>
 					<td>${row.des_tipo_pago}</td>
 					<td class="d-flex justify-content-center">
-					<button type="button" id="${row.id_banco}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
-					<button type="button" id="${row.id_banco}" class="btn btn-danger borrar mx-2" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi bi-trash3"></i></button>
+					<button type="button" ${editarPermiso} id="${row.id_banco}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
+					<button type="button" ${eliminarPermiso} id="${row.id_banco}" class="btn btn-danger borrar mx-2" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi bi-trash3"></i></button>
 					</td>
 					</tr>
 					`;
