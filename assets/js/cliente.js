@@ -31,24 +31,24 @@ $(document).ready(function(){
 
     */
     let tabla;
-    refrescar();
-    consulta();
+    refrescar(true);
 
-    function consulta(){
-      $.ajax({
-        method: "post",
-        url: "",
-        dataType: "json",
-        data: {consul: "clien" },
-      })
-    }
+    let permisos, editarPermiso, eliminarPermiso, registrarPermiso;
+    $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:'a'},
+        success(data){ permisos = data; }
+    }).then(function(){
+    	rellenar(true);
+    	console.log(permisos.registrar)
+    	registrarPermiso = (permisos.registrar != 1) ? 'disabled' : ''; 
+    	$('#agregarModalButton').attr(registrarPermiso, '');
+    });
     
-    function refrescar(){ 
+    function refrescar(bitacora = false){ 
       $.ajax({
         method: "post",
         url: "",
         dataType: "json",
-        data: {mostrar: "clien" },
+        data: {mostrar: "clien", bitacora },
         success(list){
           console.log(list);
           tabla = $("#tabla").DataTable({
@@ -82,7 +82,13 @@ $(document).ready(function(){
       $phone = $("#telClien");
       $email = $("#emailClien");
 
-
+      let correo, telefono, direccion, cedula, apellido, nombre
+        correo = validarCorreoOp($("#emailClien"),$("#error") , "Error de correo,");
+        telefono = validarTelefonoOp($("#telClien"),$("#error") ,"Error de telefono,");      
+        direccion = validarDireccion($("#direcClien"),$("#error") , "Error de direccion,");
+        validarCedula($("#cedClien"),$("#error") ,"Error de Cedula,");
+        apellido = validarNombre($("#apeClien"),$("#error") , "Error de apellido,");
+        nombre = validarNombre($("#nomClien"),$("#error") , "Error de nombre,");
 
       $.ajax({
         type: "POST",
@@ -99,13 +105,7 @@ $(document).ready(function(){
         },
         success(user){
           e.preventDefault();
-          let correo, telefono, direccion, cedula, apellido, nombre
-          correo = validarCorreoOp($("#emailClien"),$("#error") , "Error de correo,");
-          telefono = validarTelefonoOp($("#telClien"),$("#error") ,"Error de telefono,");      
-          direccion = validarDireccion($("#direcClien"),$("#error") , "Error de direccion,");
-          validarCedula($("#cedClien"),$("#error") ,"Error de Cedula,");
-          apellido = validarNombre($("#apeClien"),$("#error") , "Error de apellido,");
-          nombre = validarNombre($("#nomClien"),$("#error") , "Error de nombre,");
+          
 
           if(user.resultado === "Error de cedula"){
             $("#error").text(user.error);

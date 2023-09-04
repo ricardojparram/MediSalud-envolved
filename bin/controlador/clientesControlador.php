@@ -7,17 +7,23 @@
 
 
   $objModel = new clientes();
+  $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+  $permiso = $permisos['Clientes'];
+
+  if($permiso->status != 1) die('<script> window.location = "?url=home" </script>');
+
+  if(isset($_POST['getPermisos']) && $permiso->status == 1){
+    die(json_encode($permiso));
+  }
 
   if(!isset($_SESSION['nivel'])){
     die('<script> window.location = "?url=login" </script>');
   }
 
   if(isset($_POST['mostrar'])){
-    $objModel->mostrarClientes();
-  }
-
-  if(isset($_POST['consul'])){
-    $objModel->consulta();
+    ($_POST['bitacora'] == 'true')
+    ? $objModel->mostrarClientes(true)
+    : $objModel->mostrarClientes();
   }
 
   if(isset($_GET['cedula']) && isset($_GET['validar'])){
@@ -38,15 +44,13 @@
   }
 
   if(isset($_POST['nomEdit']) && isset($_POST['apeEdit'])&& isset($_POST['cedEdit'])&& isset($_POST['direcEdit']) && isset($_POST['celuEdit']) && isset($_POST['emailEdit']) && isset($_POST['id'])){
-
-    
     $respuesta = $objModel->getEditar($_POST['nomEdit'],$_POST['apeEdit'],$_POST['cedEdit'],$_POST['direcEdit'],$_POST['celuEdit'],$_POST['emailEdit'],$_POST['id']);
   }
 
 
    $VarComp = new initcomponents();
    $header = new header();
-   $menu = new menuLateral();
+   $menu = new menuLateral($permisos);
 
   if(file_exists("vista/interno/clientesVista.php")){
     require_once("vista/interno/clientesVista.php");

@@ -15,13 +15,14 @@
 
 	$objModel = new bitacora();
 
+	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
 	if(isset($_POST['mostrar'])){
 		$objModel->mostrarBitacora();
 	}
 
 	$VarComp = new initcomponents();
 	$header = new header();
-	$menu = new menuLateral();
+	$menu = new menuLateral($permisos);
 
 	if(file_exists("vista/interno/bitacoraVista.php")){
 		require_once("vista/interno/bitacoraVista.php");

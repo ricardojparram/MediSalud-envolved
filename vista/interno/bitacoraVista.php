@@ -49,7 +49,7 @@
                 		<h5 class="card-title">Registros</h5>
                 	</div>
                 	<div class="table-responsive">
-                    <table class="table table-bordered" id="tabla" width="100%" cellspacing="0">
+                    <table class="table table-hover" id="tabla" width="100%" cellspacing="0">
                       <thead>
                         <tr>
                           <th scope="col">Modulo</th>

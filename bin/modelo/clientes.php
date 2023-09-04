@@ -19,11 +19,6 @@ class clientes extends DBConnect{
         parent::__construct();
     }
 
-    public function consulta(){
-        $this->binnacle("Cliente",$_SESSION['cedula'],"Consulto listado");
-        die();
-    }
-
     public function getRegistrarClientes($nombre, $apellido, $cedula, $direccion, $telefono, $correo){
 
         if(preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $nombre) == false){
@@ -120,13 +115,14 @@ class clientes extends DBConnect{
         }
     }
 
-    public function mostrarClientes(){
+    public function mostrarClientes($bitacora = false){
         try{
             $query = "SELECT c.nombre, c.apellido, c.cedula, c.direccion, cc.celular, cc.correo, CONCAT('<button type=\"button\" class=\"btn btn-success editar\" id=\"',c.cedula,'\" data-bs-toggle=\"modal\" data-bs-target=\"#editModal\"><i class=\"bi bi-pencil\"></i></button> <button type=\"button\" class=\"btn btn-danger eliminar\" id=\"',c.cedula,'\" data-bs-toggle=\"modal\" data-bs-target=\"#delModal\"><i class=\"bi bi-trash3\"></i></button>') AS opciones FROM cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula WHERE status = 1";
             $new = $this->con->prepare($query);
             $new->execute();
             $data = $new->fetchAll();
             echo json_encode($data);
+            if($bitacora) $this->binnacle("Clientes",$_SESSION['cedula'],"Consultó listado.");
             die();
         }
         catch(\PDOexection $error){
