@@ -19,6 +19,11 @@ class clientes extends DBConnect{
         parent::__construct();
     }
 
+    public function consulta(){
+        $this->binnacle("Cliente",$_SESSION['cedula'],"Consulto listado");
+        die();
+    }
+
     public function getRegistrarClientes($nombre, $apellido, $cedula, $direccion, $telefono, $correo){
 
         if(preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $nombre) == false){
@@ -76,6 +81,7 @@ class clientes extends DBConnect{
               $new->execute();
               $resultado = ['resultado' => 'Registrado correctamente.'];
               echo json_encode($resultado);
+              $this->binnacle("Cliente",$_SESSION['cedula'],"Registro un cliente");
               die();
 
 
@@ -105,6 +111,7 @@ class clientes extends DBConnect{
             $new->execute();
             $resultado = ['resultado' => 'Eliminado'];
             echo json_encode($resultado);
+            $this->binnacle("Cliente",$_SESSION['cedula'],"Elimino un cliente");
             die();
 
         }
@@ -196,6 +203,7 @@ class clientes extends DBConnect{
             $new->execute();
             $resultado = ['resultado' => 'Editado'];
             echo json_encode($resultado);
+            $this->binnacle("Cliente",$_SESSION['cedula'],"Edito un cliente");
             die();
         } catch (\PDOException $error) {
             return $error;

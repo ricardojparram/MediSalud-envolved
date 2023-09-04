@@ -10,7 +10,7 @@
 --------------------------------------------------------------*/
 :root {
   scroll-behavior: smooth;
-  --
+
 }
 
 body {
@@ -364,7 +364,7 @@ h6 {
 
 .nav-tabs-bordered .nav-link.active {
   background-color: #fff;
-  color: ##198754;
+  color: #198754;
   border-bottom: 2px solid #198754;
 }
 
@@ -1260,16 +1260,6 @@ h6 {
   color: #012970;
 }
 
-.form-control:focus {
-    color: #212529;
-    background-color: #fff;
-    border-color: #a7b754;
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem #a7b754;
-}
-.form-control-sm{
-  margin: 5px !important;
-}      
 .modalClient{
     float: right;
     margin-bottom: 8px;
@@ -1290,4 +1280,28 @@ h6 {
     border-color: #a7b754;
     outline: 0;
     box-shadow: none;
+}
+
+.form-switch .form-check-input:focus{
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='rgb(167, 183, 84)'/></svg>") !important;
+}
+.form-switch .form-check-input:checked{
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='%23fff'/></svg>") !important;
+}
+
+.form-control:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: #a7b754;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem #a7b754;
+}
+.form-control-sm{
+  margin: 5px !important;
+}
+
+.form-select:focus {
+  border-color: #a7b754;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgb(167 183 84) !important;
 }

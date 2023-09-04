@@ -8,19 +8,25 @@
 
     <?php $VarComp->header(); ?>
     <link href="assets/css/login.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="assets/css/tienda.css">
 </head>
 
 <body class="bg-gradient-primary" id="body">
 
-  <div class="container w-75">
+<header class="w-100 h-100">
+    
+  <!-- Barra navegadora -->
+    <?php $Nav->nav(); ?>
 
-    <div class="card o-hidden border-0 shadow-lg my-5">
+  </header>
+
+  <div class="container carLogin col-xl-5 col-lg-7 col-sm-8">
+
+    <div class="o-hidden border-0 my-5">
       <div class="card-body p-0">
                 <!-- Nested Row within Card Body -->
         <div class="row">
-          <div class="col-md-4 col-lg-5 d-none d-lg-block bg "></div>
-              <div class="col-lg-7">
+              <div class="w-100">
                  <div class="p-5">
 
                     <div class="text-end">

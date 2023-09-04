@@ -1,23 +1,48 @@
 $(document).ready(function(){
 
-
-	rellenar();
 	let mostrar
-	function rellenar(){ 
-		$.ajax({
-			type: "post",
-			url: "",
-			dataType: "json",
-			data: {mostrar: "labs" },
-			success(data){
-				mostrar = $('#tableMostrar').DataTable({
-					responsive: true,
-					data: data
-				})
-			}
-		})
+	let permisos, editarPermiso, eliminarPermiso, registrarPermiso;
+    $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:'a'},
+        success(data){ permisos = data; }
+    }).then(function(){
+    	rellenar(true);
+    	console.log(permisos.registrar)
+    	registrarPermiso = (permisos.registrar != 1) ? 'disabled' : ''; 
+    	$('#agregarModalButton').attr(registrarPermiso, '');
+    });
 
-	}
+	function rellenar(bitacora = false){ 
+        $.ajax({
+            type: "post",
+            url: "",
+            dataType: "json",
+            data: {mostrar: "labs", bitacora},
+            success(data){
+                let tabla;
+                data.forEach(row => {
+                	editarPermiso = (permisos.editar != 1) ? 'disabled' : '';
+                	eliminarPermiso = (permisos.eliminar != 1) ? 'disabled' : '';
+                    tabla += `
+                        <tr>
+                            <td>${row.rif}</th>
+                            <td scope="col">${row.razon_social}</td>
+                            <td scope="col">${row.direccion}</td>                      
+                            <td scope="col">${row.telefono}</td>
+                            <td scope="col">${(row.contacto == null) ? '' : row.contacto}</td>
+                            <td class="d-flex justify-content-center">
+                            	<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.cod_lab}" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
+                            	<button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.cod_lab}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
+                            </td>
+                        </tr>`;
+                });
+                $('#tableMostrar tbody').html(tabla);
+                mostrar = $('#tableMostrar').DataTable({
+                    resposive: true
+                });
+            }
+        })
+
+    }
 
 	function validarRif(input, div){
 		$.post('',{rif : input.val(), validar: "rif"}, function(data){
@@ -43,6 +68,12 @@ $(document).ready(function(){
 	setInterval(()=>{ click = 0; }, 2000);
 
 	$("#registrar").click((e)=>{
+
+		if(permisos.registrar != 1){
+            Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
+            throw new Error('Permiso denegado.');
+        }
+
 		e.preventDefault()
 
 		if(click >= 1) throw new Error('Spam de clicks');
@@ -129,6 +160,11 @@ $(document).ready(function(){
 
 	$("#editar").click((e)=>{
 
+		if(permisos.editar != 1){
+            Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
+            throw new Error('Permiso denegado.');
+        }
+
 		e.preventDefault();
 
 		if(click >= 1) throw new Error('spaaam');
@@ -190,6 +226,11 @@ $(document).ready(function(){
 
 
 	$('#borrar').click(()=>{
+		if(permisos.eliminar != 1){
+            Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
+            throw new Error('Permiso denegado.');
+        }
+
 		if(click >= 1) throw new Error('spaaam');
 		$.ajax({
 			type : 'post',

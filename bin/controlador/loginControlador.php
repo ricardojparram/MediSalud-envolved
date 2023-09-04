@@ -2,12 +2,18 @@
 
   use component\initcomponents as initcomponents;
   use modelo\login as login;
+  use component\nav as nav;
   
   $objModel = new login();
 
   
   if(isset($_SESSION['cedula'])){
+    if ($_SESSION['nivel'] == 4) {
+      die('<script>window.location = "?url=inicio" </script>');
+    }
+    if($_SESSION['nivel'] == 3 || $_SESSION['nivel'] == 2 || $_SESSION['nivel'] == 1){
     die('<script>window.location = "?url=home" </script>');
+    }
   }
 
   if(isset($_GET['cedula']) && isset($_GET['validar'])){
@@ -22,6 +28,7 @@
   }
 
   $VarComp = new initcomponents();
+  $Nav = new nav();
 
   require_once("vista/sesion/loginVista.php");
 

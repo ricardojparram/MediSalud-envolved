@@ -2,6 +2,7 @@
 
     use component\initcomponents as initcomponents;
     use modelo\registro as registro;
+    use component\nav as nav;
     $obj_Model = new registro();
 
     if(isset($_GET['cedula']) && isset($_GET['validar'])){
@@ -18,6 +19,7 @@
 
 
     $VarComp = new initcomponents();
+    $Nav = new nav();
 
 
     if(file_exists("vista/sesion/registroVista.php")){

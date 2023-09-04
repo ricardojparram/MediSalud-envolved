@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>MediSalud C.A</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <?php $VarComp->header(); ?>
+  <link rel="stylesheet" href="assets/css/tienda.css">
+</head>
+
+<body class="body" id="body">
+
+  <header class="w-100 h-100">
+    
+  <!-- Barra navegadora -->
+    <?php $Nav->nav(); ?>
+
+  </header>
+
+   <main class="w-100"> 
+   <div id="carrusel" class=" d-flex justify-content-center align-items-center ">
+          <div id="carouselExampleCaptions" class="carousel">
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active bg-black" aria-current="true" aria-label="Slide 1"></button>
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2" class="bg-black"></button>
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3" class="bg-black"></button>
+            </div>
+            <div class="carousel-inner ">
+              <div class="carousel-item active">
+                <img src="assets/img/tera.jpg" class="d-block w-100" alt="...">
+              </div>
+              <div class="carousel-item">
+                <img src="assets/img/rixigal.jpg" class="d-block w-100" alt="...">
+              </div>
+              <div class="carousel-item">
+                <img src="assets/img/inmukids.jpg" class="d-block w-100" alt="...">
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+
+    <section class="w-100 row">
+      <div class="col-md-3 d-flex justify-content-center">
+        <i class="bi bi-person-fill bi-2x"></i>
+      </div>
+      <div class="col-md-3 d-flex justify-content-center">
+        <i class="bi bi-person-fill bi-2x"></i>
+      </div>
+    </section>
+
+  
+    <h1>MAIN CONTENT</h1>
+  </main>
+
+  <footer class="h-25 w-100">
+    <h1>FOOTER</h1>
+  </footer>
+
+
+  <?php $Car->car(); ?>
+
+  <?php $VarComp->js() ?>
+  <script src="assets/js/carrito.js"></script>
+  <script>
+    
+    const myCarouselElement = document.querySelector('#carouselExampleCaptions')
+
+    const carousel = new bootstrap.Carousel(myCarouselElement, {
+      interval: 1000,
+       touch: false
+    })
+
+  </script>
+</body>
+
+</html>
+
+<!-- Modal eliminar producto del carrito -->
+<div class="modal fade" id="delModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="staticBackdropLabel">¿Estás seguro?</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h5>Desea eliminar el producto <b id="delProductTitle"></b> del carrito?</h5>
+      </div>
+      <div class="modal-footer" id="divEli">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarModalDel">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="delProductFromCar">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,19 +1,46 @@
  $(document).ready(function(){
 
 
-  let tablaMostrar;         
-  rellenar();
-  function rellenar(){
+  let mostrar;
+  let permiso , eliminarPermiso, registrarPermiso;
+
+    $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos : "permiso"},
+      success(data){ permiso = data; }
+
+    }).then(function(){
+      rellenar(true);
+      registrarPermiso = (permiso.registrar != 1)? 'disable' : '';
+        $('#agregarModal').attr(registrarPermiso, '');
+    })         
+
+  function rellenar(bitacora = false){
     $.ajax({
       method: "POST",
       url: " ",
       dataType: "json",
-      data:{mostrar: "venta"},
+      data:{mostrar: "venta" , bitacora},
       success(data){
-        tablaMostrar = $('#tableMostrar').DataTable({
-          responsive : true,
-          data : data
-        });
+        let tabla;
+        data.forEach(row =>{
+          eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
+          tabla +=`
+          <tr>
+          <td>${row.cedula_cliente}</td>
+          <td><button class="btn btn-success detalleV" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#detalleVenta">Ver detalles</button></td>
+          <td>${row.fecha}</td>
+          <td>${row.des_tipo_pago}</td>
+          <td>${row.total_divisa}</td>
+          <td>${row.monto}</td>
+          <td class="d-flex justify-content-center">
+          <button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
+          </td>
+          </tr>
+          `
+        })
+        $('#tbody').html(tabla);
+        mostrar = $('#tableMostrar').DataTable({
+          resposive : true
+        })
       }
     })
   }
@@ -23,10 +50,8 @@
   $(document).on('click', '.detalleV' , function(){
 
        id = this.id; // id = id
-       console.log(id);
        $.post('',{detalleV : 'detV' , id}, function(data){
         let lista = JSON.parse(data);
-        console.log(lista);
         let tabla;
 
         lista.forEach(row=>{
@@ -40,7 +65,7 @@
         })
         $('#ventaNombre').text(`Numero de Factura #${lista[0].num_fact}.`);
         $('#bodyDetalle').html(tabla);
-
+        $('.factura').attr("id", id);
       })
      })
 
@@ -295,8 +320,19 @@
      })
       
     }
+
+    function validarCedula(input, select2, div){
+      $.post('',{cedula : input.val(), validar: "cedula"}, function(data){
+        let mensaje = JSON.parse(data);
+        if(mensaje.resultado === "Error de cedula"){
+          div.text(mensaje.error);
+          select2.attr("style","border-color: red;")
+          select2.attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
+        }
+      })
+    }
     
-   
+
      // REGISTRAR VENTA
     let vmetodo, vmoneda;
     $('#metodo').change(function(){
@@ -307,9 +343,17 @@
     })
      $('.iva').keyup(()=> {validarNumero($(".iva"),$("#error4"),"Error de iva") });
 
+     $('.select2').change(function(){
+      let cedula = validarSelec2($(".select2"),$(".select2-selection"),$("#error1"),"Error de Cedula");
+      if(cedula){
+       validarCedula($(".select2"),$(".select2-selection") ,$("#error1"));
+      }
+     })
+
      let click = 0;
      setInterval(()=>{click = 0}, 2000);
-
+    
+    // REGISTRAR VENTA INICIA
      $("#registrar").click((e)=>{
        e.preventDefault();
 
@@ -375,7 +419,7 @@
        let idVenta = JSON.parse(data);
        console.log(idVenta);
        enviarProductos(idVenta.id);
-       tablaMostrar.destroy();
+       mostrar.destroy();
             rellenar();  // FUNCIÓN PARA RELLENAR
             $('.select2').val(0).trigger('change'); // LIMPIA EL SELECT2
             $('#agregarform').trigger('reset'); // LIMPIAR EL FORMULARIO
@@ -402,6 +446,19 @@
     })
   }
 
+  $(document).on('click', '.factura' , function(){
+    id = this.id;
+    $.ajax({
+      type: "POST",
+      url: '',
+      dataType: 'json',
+      data: {id, factura: "factura"},
+      success(data){
+
+      }
+    })
+  })
+
   $('#cerrar').click(()=>{
      $('.select2').val(0).trigger('change'); // LIMPIA EL SELECT2
      $('#agregarform').trigger('reset'); // LIMPIAR EL FORMULARIO
@@ -416,25 +473,55 @@
 
        $(document).on('click', '.borrar', function(){
         id = this.id;
-
+        
       })   
-       
-       $("#delete").click(()=>{ 
-        if(click >= 1){ throw new Error('Spam de clicks');}
-         console.log(id);
-         $.ajax({
-          type: "POST",
-          url: '',
-          data: {eliminar: "asd", id},
-          success(data){
-            tablaMostrar.destroy();
-            rellenar();
-            $('.cerrar').click();
-              Toast.fire({ icon: 'success', title: 'Venta eliminada' }) // ALERTA 
+
+       function validarEliminar() {
+        return new Promise((resolve, reject) => {
+          $.ajax({
+            type: "POST",
+            url: '',
+            dataType: "json",
+            data: { validarCI: "existe", id },
+            success(data) {
+              console.log(data);
+              if (data.resultado === "Error de venta") {  
+                Toast.fire({ icon: 'error', title: 'Esta venta ya esta anulada' }); // ALERTA 
+                mostrar.destroy();
+                rellenar();
+                $('.cerrar').click();
+                reject(); // Rechaza la promesa si la condición se cumple
+              } else {
+                resolve(); // Resuelve la promesa si la condición no se cumple
+              }
             }
-          })
-         click++
-       })
-  
+          });
+        });
+      }
+
+      $("#delete").click(() => { 
+        if (click >= 1) {
+          throw new Error('Spam de clicks');
+        }
+        validarEliminar().then(() => {
+            // Si la promesa se resuelve, la ejecución continúa
+            $.ajax({
+              type: "POST",
+              url: '',
+              data: { eliminar: "asd", id },
+              success(data) {
+                mostrar.destroy();
+                rellenar();
+                $('.cerrar').click();
+                Toast.fire({ icon: 'success', title: 'Venta eliminada' }); // ALERTA 
+              }
+            });
+          }).catch(() => {
+      // Si la promesa se rechaza, la ejecución se detiene
+      console.log('No se puede eliminar la venta');
+      });
+      click++;
+    });
+
 
 });
