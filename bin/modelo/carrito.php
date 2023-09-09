@@ -46,6 +46,8 @@
 			$this->validarStock();
 		}
 
+
+
 		private function validarStock(){
 
 			try {

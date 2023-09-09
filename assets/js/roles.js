@@ -30,6 +30,10 @@ $(document).ready(function(){
                 mostrar = $('#tabla').DataTable({
                     resposive: true
                 });
+            },
+            error(e){
+                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                throw new Error('Error al mostrar listado: '+e);
             }
         })
 
@@ -60,6 +64,10 @@ $(document).ready(function(){
                     `
                 });
                 $('#modulosForm').html(contenido);
+            },
+            error(e){
+                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                throw new Error('Error al mostrar listado: '+e);
             }
 
         })
@@ -83,6 +91,10 @@ $(document).ready(function(){
                     Toast.fire({ icon: 'success', title: data.msg });
                     $('.cerrar').click();
                 }
+            },
+            error(e){
+                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                throw new Error('Error al mostrar listado: '+e);
             }
         })    
     })
@@ -128,6 +140,10 @@ $(document).ready(function(){
                     `
                 });
                 $('#permisosForm').html(contenido);
+            },
+            error(e){
+                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                throw new Error('Error al mostrar listado: '+e);
             }
 
         })
@@ -161,6 +177,10 @@ $(document).ready(function(){
                 }else{
                     Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
                 }
+            },
+            error(e){
+                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                throw new Error('Error al mostrar listado: '+e);
             }
         })    
     })

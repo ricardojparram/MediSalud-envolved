@@ -5,25 +5,25 @@
 	use component\menuLateral as menuLateral;
 	use modelo\reportes as reportes;
 
-	$VarComp = new initcomponents();
-	$header = new header();
-	$menu = new menuLateral();
+	if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
 	$objModel = new reportes();
+	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+	$permiso = $permisos['Reportes'];
 
+	$VarComp = new initcomponents();
+	$header = new header();
+	$menu = new menuLateral($permisos);
 
-	if(isset($_SESSION['nivel'])){
-		if($_SESSION['nivel'] != 1 && $_SESSION['nivel'] != 2){
-			die('<script> window.location = "?url=home" </script>');
-		}
-	}else{
-		die('<script> window.location = "?url=login" </script>');
+	if(isset($_POST['getPermisos']) && $permiso->status == 1){
+		die(json_encode($permiso));
 	}
 
-	if(isset($_POST['mostrar']) && isset($_POST['tipo']) && isset($_POST['fechaInicio']) && isset($_POST['fechaFinal'])){
+
+	if(isset($_POST['mostrar'], $_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']) && $permiso->consultar == 1){
 		$objModel->getMostrarReporte($_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']);
 	}
-	if(isset($_POST['exportar']) && isset($_POST['tipo']) && isset($_POST['fechaInicio']) && isset($_POST['fechaFinal'])){
+	if(isset($_POST['exportar'], $_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']) && $permiso->consultar == 1){
 		$objModel->getExportar($_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']);
 	}
 
