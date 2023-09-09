@@ -1,7 +1,9 @@
 <?php 
 	
 	namespace modelo;
-	use FPDF as FPDF;
+	// use FPDF as FPDF;
+	use PhpOffice\PhpSpreadsheet\Spreadsheet;
+	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 	use config\connect\DBConnect as DBConnect;
 
@@ -96,6 +98,15 @@
 		}
 
 		private function exportarReporte(){
+
+			$spreadsheet = new Spreadsheet();
+			$activeWorksheet = $spreadsheet->getActiveSheet();
+			$activeWorksheet->setCellValue('A1', 'Hello World !');
+
+			$writer = new Xlsx($spreadsheet);
+			$nombre = $this->tipo.$this->fecha.$this->fechaFinal;
+			$repositorio = 'assets/reportes/'.$nombre;
+			$writer->save($repositorio);
 			
 		}
 
