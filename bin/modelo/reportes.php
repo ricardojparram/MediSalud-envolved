@@ -96,68 +96,72 @@
 		}
 
 		private function exportarReporte(){
-			$reporte = $this->obtenerReporte();
-			if(empty($reporte)){
-				die(json_encode(['Error' => 'Reporte vacío.']));
-			}
-			$fechaI = date('d-m-Y', strtotime($this->fechaInicio));
-			$fechaF = date('d-m-Y', strtotime($this->fechaFinal));
-			$nombre = ($this->tipo == 'compra') ? 'compras_'.$fechaI.'_'.$fechaF.'.pdf' : 'ventas_'.$fechaI.'_'.$fechaF.'.pdf';
-			$titulo = ($this->tipo == 'compra') ? 'Reporte de Compras' : 'Reporte de Ventas';
-			$subTitulo = $fechaI.' a '.$fechaF;
-			$columnas = ($this->tipo == 'compra') ? [0 => 'Orden', 1 => 'Proveedor', 2 => 'Cantidad', 3 => 'Fecha', 4 => 'Total Divisa', 5 => 'Monto Total'] : [0 => 'N°', 1 => 'Cédula', 2 => 'Nombre', 3 => 'Fecha', 4 => 'Total Divisa', 5 => 'Monto Total'];
-
-			$pdf = new FPDF();
-			$pdf->AddPage();
-			$pdf->SetMargins(15,30,15);
 			
-			$pdf->Image('assets/img/Logo_titulo.png',15,5,40);
-			$pdf->SetFont('Arial','B',16);
-			$pdf->setX(20);
-			$pdf->setY(15);
-			$pdf->Cell(0,10,$titulo,0,1,'C');
-			$pdf->Cell(0,10,$subTitulo,0,0,'C');
-			$pdf->Ln(18); 
-
-			$pdf->SetFont('Helvetica','B',9);
-			$pdf->SetFillColor(210, 224, 137);
-
-			$pdf->Cell(20,10,utf8_decode($columnas[0]),1,0,'C',1);
-			$pdf->Cell(30,10,utf8_decode($columnas[1]),1,0,'C',1);
-			$pdf->Cell(35,10,utf8_decode($columnas[2]),1,0,'C',1);
-			$pdf->Cell(35,10,utf8_decode($columnas[3]),1,0,'C',1);
-			$pdf->Cell(30,10,utf8_decode($columnas[4]),1,0,'C',1);
-			$pdf->Cell(30,10,utf8_decode($columnas[5]),1,1,'C',1);
-
-			$pdf->SetFont('Arial','',9);
-			$pdf->SetFillColor(245,245,245);
-
-			$total = 0;
-
-			foreach ($reporte as $col => $value) {
-
-				$pdf->Cell(20,10,utf8_decode($value[0]),1,0,'C',1);
-				$pdf->Cell(30,10,utf8_decode($value[1]),1,0,'C',1);
-				$pdf->Cell(35,10,utf8_decode($value[2]),1,0,'C',1);
-				$pdf->Cell(35,10,utf8_decode($value[3]),1,0,'C',1);
-				$pdf->Cell(30,10,utf8_decode($value[4]),1,0,'C',1);
-				$pdf->Cell(30,10,utf8_decode($value[5]),1,1,'C',1);
-				$total += $value[5];
-			}
-			
-			$pdf->SetFillColor(210, 224, 137);
-			$pdf->setX(135);
-			$pdf->Cell(30,10,utf8_decode('Monto total'),1,0,'C',1);
-			$pdf->Cell(30,10,utf8_decode($total),1,1,'C',1);
-
-			$repositorio = 'assets/reportes/'.$nombre;
-			$pdf->Output('F',$repositorio);
-			
-			$respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
-			echo json_encode($respuesta);
-			$this->binnacle("Reporte",$_SESSION['cedula'], "Exporto reporte de ".$this->tipo);
-			die();
 		}
+
+		// private function exportarReporte(){
+		// 	$reporte = $this->obtenerReporte();
+		// 	if(empty($reporte)){
+		// 		die(json_encode(['Error' => 'Reporte vacío.']));
+		// 	}
+		// 	$fechaI = date('d-m-Y', strtotime($this->fechaInicio));
+		// 	$fechaF = date('d-m-Y', strtotime($this->fechaFinal));
+		// 	$nombre = ($this->tipo == 'compra') ? 'compras_'.$fechaI.'_'.$fechaF.'.pdf' : 'ventas_'.$fechaI.'_'.$fechaF.'.pdf';
+		// 	$titulo = ($this->tipo == 'compra') ? 'Reporte de Compras' : 'Reporte de Ventas';
+		// 	$subTitulo = $fechaI.' a '.$fechaF;
+		// 	$columnas = ($this->tipo == 'compra') ? [0 => 'Orden', 1 => 'Proveedor', 2 => 'Cantidad', 3 => 'Fecha', 4 => 'Total Divisa', 5 => 'Monto Total'] : [0 => 'N°', 1 => 'Cédula', 2 => 'Nombre', 3 => 'Fecha', 4 => 'Total Divisa', 5 => 'Monto Total'];
+
+		// 	$pdf = new FPDF();
+		// 	$pdf->AddPage();
+		// 	$pdf->SetMargins(15,30,15);
+			
+		// 	$pdf->Image('assets/img/Logo_titulo.png',15,5,40);
+		// 	$pdf->SetFont('Arial','B',16);
+		// 	$pdf->setX(20);
+		// 	$pdf->setY(15);
+		// 	$pdf->Cell(0,10,$titulo,0,1,'C');
+		// 	$pdf->Cell(0,10,$subTitulo,0,0,'C');
+		// 	$pdf->Ln(18); 
+
+		// 	$pdf->SetFont('Helvetica','B',9);
+		// 	$pdf->SetFillColor(210, 224, 137);
+
+		// 	$pdf->Cell(20,10,utf8_decode($columnas[0]),1,0,'C',1);
+		// 	$pdf->Cell(30,10,utf8_decode($columnas[1]),1,0,'C',1);
+		// 	$pdf->Cell(35,10,utf8_decode($columnas[2]),1,0,'C',1);
+		// 	$pdf->Cell(35,10,utf8_decode($columnas[3]),1,0,'C',1);
+		// 	$pdf->Cell(30,10,utf8_decode($columnas[4]),1,0,'C',1);
+		// 	$pdf->Cell(30,10,utf8_decode($columnas[5]),1,1,'C',1);
+
+		// 	$pdf->SetFont('Arial','',9);
+		// 	$pdf->SetFillColor(245,245,245);
+
+		// 	$total = 0;
+
+		// 	foreach ($reporte as $col => $value) {
+
+		// 		$pdf->Cell(20,10,utf8_decode($value[0]),1,0,'C',1);
+		// 		$pdf->Cell(30,10,utf8_decode($value[1]),1,0,'C',1);
+		// 		$pdf->Cell(35,10,utf8_decode($value[2]),1,0,'C',1);
+		// 		$pdf->Cell(35,10,utf8_decode($value[3]),1,0,'C',1);
+		// 		$pdf->Cell(30,10,utf8_decode($value[4]),1,0,'C',1);
+		// 		$pdf->Cell(30,10,utf8_decode($value[5]),1,1,'C',1);
+		// 		$total += $value[5];
+		// 	}
+			
+		// 	$pdf->SetFillColor(210, 224, 137);
+		// 	$pdf->setX(135);
+		// 	$pdf->Cell(30,10,utf8_decode('Monto total'),1,0,'C',1);
+		// 	$pdf->Cell(30,10,utf8_decode($total),1,1,'C',1);
+
+		// 	$repositorio = 'assets/reportes/'.$nombre;
+		// 	$pdf->Output('F',$repositorio);
+			
+		// 	$respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
+		// 	echo json_encode($respuesta);
+		// 	$this->binnacle("Reporte",$_SESSION['cedula'], "Exporto reporte de ".$this->tipo);
+		// 	die();
+		// }
 
 	}
 
