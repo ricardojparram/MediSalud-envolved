@@ -197,15 +197,22 @@ $(document).ready(function(){
 
          }).catch(()=>{
             $("#errorEdit").text("El rif ya está registrado. Ingrese otro. ");
-            throw new Error('no exite.');
+            throw new Error('si exite.');
          })
 
         }).catch(() =>{
-         throw new Error('No exite.');
+         throw new Error('No existe.');
      })
 
         click++;
 
+    })
+
+    $('#cerrar').click(()=>{
+     $('#agregarform').trigger('reset'); // LIMPIAR EL FORMULARIO
+     $('#Agregar select').attr("style","borden-color:none;","borden-color:none;");
+     $('#Agregar input').attr("style","borden-color:none;","borden-color:none;");
+     $('.error').text(" ");
     })
 
     $(document).on('click', '.borrar', function(){

@@ -448,6 +448,9 @@
 
   $(document).on('click', '.factura' , function(){
     id = this.id;
+    validarId().catch(()=>{
+      throw new Error('No existe');
+    });
     $.ajax({
       type: "POST",
       url: '',
@@ -476,7 +479,7 @@
         
       })   
 
-       function validarEliminar() {
+       function validarId() {
         return new Promise((resolve, reject) => {
           $.ajax({
             type: "POST",
@@ -486,7 +489,7 @@
             success(data) {
               console.log(data);
               if (data.resultado === "Error de venta") {  
-                Toast.fire({ icon: 'error', title: 'Esta venta ya esta anulada' }); // ALERTA 
+                Toast.fire({ icon: 'error', title: 'Esta venta esta anulada' }); // ALERTA 
                 mostrar.destroy();
                 rellenar();
                 $('.cerrar').click();
@@ -503,7 +506,7 @@
         if (click >= 1) {
           throw new Error('Spam de clicks');
         }
-        validarEliminar().then(() => {
+        validarId().then(() => {
             // Si la promesa se resuelve, la ejecución continúa
             $.ajax({
               type: "POST",

@@ -1,6 +1,7 @@
 <?php 
 
   namespace modelo; 
+  use FPDF as FPDF;
   use config\connect\DBConnect as DBConnect;
 
   class ventas extends DBConnect{
@@ -192,6 +193,9 @@
       $new->bindValue(1, $this->id);
       $new->execute();
       $data = $new->fetchAll(\PDO::FETCH_OBJ);
+      echo json_encode(['resultado' => 'Venta eliminada.']);
+      die();
+
     }
     catch(\PDOexection $error){
       return $error;
@@ -232,6 +236,22 @@
 
     private function exportar(){
       try{
+
+       $query = "SELECT v.cedula_cliente , v.num_fact ,v.fecha , tp.des_tipo_pago , v.monto , CONCAT(IF(MOD(v.monto / cm.cambio, 1) >= 0.5, CEILING(v.monto / cm.cambio), FLOOR(v.monto / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN tipo_pago tp ON v.cod_tipo_pago = tp.cod_tipo_pago INNER JOIN cambio cm ON cm.id_cambio = v.cod_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE v.status = 1 AND v.num_fact = ?";
+       $new = $this->con->prepare($query);
+       $new->bindValue(1 , $this->id);
+       $new->execute();
+       $dataV = $new->fetchAll();
+
+       $queryP = "SELECT p.descripcion , vp.cantidad , vp.precio_actual , v.num_fact FROM venta_producto vp INNER JOIN producto p ON vp.cod_producto = p.cod_producto INNER JOIN venta v ON v.num_fact = vp.num_fact WHERE v.status = 1 AND v.num_fact = ?";
+       $new = $this->con->prepare($queryP);
+       $new->bindValue(1 , $this->id);
+       $new->execute();
+       $dataP = $new->fetchAll();
+
+       $pdf = new FPDF();
+       $pdf->AddPage();
+       $pdf->SetMargins(15,30,15);
 
       }catch(\PDOexection $error){
         die($error);
