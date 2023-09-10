@@ -1,7 +1,7 @@
 <?php 
 	
 	namespace modelo;
-	// use FPDF as FPDF;
+	use FPDF as FPDF;
 	use PhpOffice\PhpSpreadsheet\Spreadsheet;
 	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -104,10 +104,12 @@
 			$activeWorksheet->setCellValue('A1', 'Hello World !');
 
 			$writer = new Xlsx($spreadsheet);
-			$nombre = $this->tipo.$this->fecha.$this->fechaFinal;
-			$repositorio = 'assets/reportes/'.$nombre;
+			$nombre = rand(1000, 9999);
+			// $nombre = $this->tipo.$this->fecha.$this->fechaFinal;
+			$repositorio = 'assets/reportes/'.$nombre.'.xlsx';
 			$writer->save($repositorio);
-			
+			$respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
+			die(json_encode($respuesta));
 		}
 
 		// private function exportarReporte(){
