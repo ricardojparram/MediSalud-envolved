@@ -93,7 +93,8 @@
                   <h5 class="card-title">Reporte generado: </h5>
                 </div>
                 <div class="col-6 mt-3 text-end">
-                  <button class="btn btn-success" id="exportar">Exportar reporte</button>
+                  <button class="btn btn-danger" id="exportar">Reporte <i class="bi bi-file-pdf"></i></button>
+                  <button class="btn btn-success" id="exportarEstadistico">Reporte estadístico <i class="bi bi-file-spreadsheet"></i></button>
                 </div>
               </div>
 

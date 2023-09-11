@@ -16,7 +16,7 @@ $(document).ready(function(){
 					 </tr>`;
 			columns = [{data : 'num_fact'}, {data : 'cedula'},
 					   {data: 'nombre'}, {data : 'fecha'},
-					   {data : 'total_divisa'},{data : 'monto'}];
+					   {data : 'total_divisa'},{data : 'monto_total'}];
 			$('#reporteLista thead').html(thead);
 			$('#error').text('')
 		},
@@ -60,6 +60,13 @@ $(document).ready(function(){
 		click++;
 	})
 
+	$('#exportarEstadistico').click(function(){
+		if(click >= 1) throw new Error('Spam de clicks');
+
+		exportarReporteEstadistico();
+
+		click++;
+	})
 
 	function generarReporte(){ 
 
@@ -74,7 +81,8 @@ $(document).ready(function(){
 
 		$.ajax({type: 'post', url:'', dataType: 'json', 
 			data :{mostrar: 'reporte', tipo, fechaInicio, fechaFinal},
-			success(reporte){
+			success(res){
+				reporte = res;
 				tabla = $('#reporteLista').DataTable({
 							responsive: true,
 							data : reporte,
@@ -97,6 +105,34 @@ $(document).ready(function(){
 
 		$.ajax({method:'POST', url:'', dataType : 'json', 
 			data:{exportar: 'reporte', tipo, fechaInicio, fechaFinal},
+			success(data){
+				if(data.Error == "Reporte vacío."){
+					Toast.fire({ icon: 'error', title: 'No se puede exportar un reporte vacío.' });
+					throw new Error('Reporte vacío.');
+				}
+
+				if(data.respuesta == "Archivo guardado"){
+					Toast.fire({ icon: 'success', title: 'Exportado correctamente.' });
+					descargarArchivo(data.ruta);
+				}else{
+					Toast.fire({ icon: 'error', title: 'No se pudo exportar el reporte.' });
+				}
+			},
+			error(e){
+                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+                throw new Error('Error al exportar el reporte: '+e);
+            }
+		})
+	}
+
+	function exportarReporteEstadistico(){
+		if(reporte.length < 1){
+			Toast.fire({ icon: 'error', title: 'No se puede exportar un reporte vacío.' });
+			throw new Error('Reporte vacío.');
+		}
+
+		$.ajax({method:'POST', url:'', dataType : 'json', 
+			data:{estadistico: 'reporte', tipo, fechaInicio, fechaFinal},
 			success(data){
 				if(data.Error == "Reporte vacío."){
 					Toast.fire({ icon: 'error', title: 'No se puede exportar un reporte vacío.' });
