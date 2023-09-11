@@ -128,4 +128,15 @@
 <?php $VarComp->js();?>
 
 <script src="assets/js/reportes.js"></script>
+
+<div style="position: fixed;z-index: 99999;background: #000000b3;border-radius: 6px;padding: 21px;top: 0;width: 100%;height: 100%;display:none;" id="displayProgreso">
+    <div style="height: 70px;width: 250px;position: relative;top: 50%;margin: auto;">
+        <div style="padding: 23px;background: #fffcf269; border-radius: 8px;">
+            <div class="progress progress-bar-primary">
+                <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" id="progressBar"role="progressbar" style="width: 25%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 </html>

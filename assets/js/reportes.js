@@ -105,7 +105,9 @@ $(document).ready(function(){
 
 		$.ajax({method:'POST', url:'', dataType : 'json', 
 			data:{exportar: 'reporte', tipo, fechaInicio, fechaFinal},
+			xhr: () => loading(),
 			success(data){
+				$('#displayProgreso').hide();
 				if(data.Error == "Reporte vacío."){
 					Toast.fire({ icon: 'error', title: 'No se puede exportar un reporte vacío.' });
 					throw new Error('Reporte vacío.');
@@ -119,6 +121,7 @@ $(document).ready(function(){
 				}
 			},
 			error(e){
+				$('#displayProgreso').hide();
                 Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
                 throw new Error('Error al exportar el reporte: '+e);
             }
@@ -133,7 +136,9 @@ $(document).ready(function(){
 
 		$.ajax({method:'POST', url:'', dataType : 'json', 
 			data:{estadistico: 'reporte', tipo, fechaInicio, fechaFinal},
+			xhr: () => loading(),
 			success(data){
+				$('#displayProgreso').hide();
 				if(data.Error == "Reporte vacío."){
 					Toast.fire({ icon: 'error', title: 'No se puede exportar un reporte vacío.' });
 					throw new Error('Reporte vacío.');
@@ -158,6 +163,35 @@ $(document).ready(function(){
 			link.href = ruta;
 			link.download = ruta.substr(ruta.lastIndexOf('/') + 1);
 			link.click();
+	}
+
+	function loading(){
+		let xhr = new window.XMLHttpRequest();
+		$('#displayProgreso').show();
+		xhr.upload.addEventListener("progress", function(event){
+
+			if(event.lengthComputable){
+				let porcentaje = parseInt( (event.loaded / event.total * 100), 10);
+				$('#progressBar').data("aria-valuenow",porcentaje)
+				$('#progressBar').css("width",porcentaje+'%')
+				$('#progressBar').html(porcentaje+'%')
+			}
+
+		},false)
+		xhr.addEventListener("progress", function(e){
+
+			if (e.lengthComputable) {
+				percentComplete = parseInt( (e.loaded / e.total * 100), 10);
+				$('#progressBar').data("aria-valuenow",percentComplete);
+				$('#progressBar').css("width",percentComplete+'%');
+				$('#progressBar').html(percentComplete+'%');
+			}else{
+				$('#progressBar').html("Upload");
+			}
+
+		}, false);
+
+		return xhr;
 	}
 
 })
