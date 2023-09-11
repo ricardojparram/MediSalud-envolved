@@ -16,6 +16,7 @@
 		private $sql;
 		private $reporte;
 		private $lista;
+		private $sheet;
 
 
 		public function __construct(){
@@ -180,8 +181,8 @@
 			$fechaI = date('d-m-Y', strtotime($this->fechaInicio));
 			$fechaF = date('d-m-Y', strtotime($this->fechaFinal));
 			$nombre = ($this->tipo == 'compra')
-				? 'estadisticas_compras_'.$fechaI.'_'.$fechaF.'.xlsx' 
-				: 'estadisticas_ventas_'.$fechaI.'_'.$fechaF.'.xlsx';
+				? 'estadisticas_compras_'.$fechaI.'_'.$fechaF 
+				: 'estadisticas_ventas_'.$fechaI.'_'.$fechaF;
 			$titulo = ($this->tipo == 'compra') ? 'Reporte estadístico de Compras' : 'Reporte estadístico de Ventas';
 			$subTitulo = $fechaI.' a '.$fechaF;
 			$colValue = ($this->tipo == 'compra') 
@@ -191,11 +192,11 @@
 				3 => 'Fecha', 4 => 'Total', 5 => 'Divisa', 6 => 'Monto Total'];
 
 			$spreadsheet = new Spreadsheet();
-			$sheet = $spreadsheet->getActiveSheet();
+			$this->sheet = $spreadsheet->getActiveSheet();
 
 			$col = range('A', 'Z');
 			foreach ($col as $columna) {
-				$sheet->getColumnDimension($columna)->setAutoSize(true);
+				$this->sheet->getColumnDimension($columna)->setAutoSize(true);
 			}
 
 			$styleColumns = [
@@ -227,33 +228,92 @@
 					],
 				],
 			];
+			$styleTitle = [
+				'font' => [
+					'bold' => true,
+					'size' => 14
+				],
+				'alignment' => [
+					'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+					'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+				],
+			];
 
-			$sheet->getStyle('B2:H2')->applyFromArray($styleColumns);
+			$this->sheet->getStyle('B5:H5')->applyFromArray($styleColumns);
+			$this->sheet->getStyle('D2:F3')->applyFromArray($styleTitle);
 			$columnas = [
 				[$colValue[0], $colValue[1], $colValue[2], $colValue[3], $colValue[4], $colValue[5], $colValue[6]]
 			];
-			$sheet->fromArray($columnas, NULL, 'B2');
+			$listBegin = 'B5';
+			$this->sheet->fromArray($columnas, NULL, $listBegin);
+			$this->sheet->setCellValue('D2', $titulo);
+			$this->sheet->setCellValue('D3', $subTitulo);
+			$this->sheet->mergeCells('D2:F2');
+			$this->sheet->mergeCells('D3:F3');
 
-			$i = 3;
+			$row = 6;
 			foreach ($reporte as $col => $val) {
-				$sheet->setCellValue('B'.$i, $val[0]);
-				$sheet->setCellValue('C'.$i, $val[1]);
-				$sheet->setCellValue('D'.$i, $val[2]);
-				$sheet->setCellValue('E'.$i, $val[3]);
-				$sheet->setCellValue('F'.$i, $val['divisa_total']);
-				$sheet->setCellValue('G'.$i, $val['moneda']);
-				$sheet->setCellValue('H'.$i, $val['monto_total']);
-				$i++;
+				$this->sheet->setCellValue('B'.$row, $val[0]);
+				$this->sheet->setCellValue('C'.$row, $val[1]);
+				$this->sheet->setCellValue('D'.$row, $val[2]);
+				$this->sheet->setCellValue('E'.$row, $val['fecha']);
+				$this->sheet->setCellValue('F'.$row, $val['divisa_total']);
+				$this->sheet->setCellValue('G'.$row, $val['moneda']);
+				$this->sheet->setCellValue('H'.$row, $val['monto_total']);
+				$row++;
 			}
-			$i -= 1;
-			$sheet->setAutoFilter('B2:H'.$i);
-			$sheet->getStyle('B3:H'.$i)->applyFromArray($styleRows);
+			$row--;
+			$lastRow = $row;
+			$listEnd = "H{$row}";
+			$this->sheet->setAutoFilter("{$listBegin}:{$listEnd}");
+			$this->sheet->getStyle("{$listBegin}:{$listEnd}")->applyFromArray($styleRows);
+			
+			$this->funcionesEstadisticas($lastRow);;
+
 
 			$writer = new Xlsx($spreadsheet);
 			$repositorio = 'assets/reportes/'.$nombre.'.xlsx';
 			$writer->save($repositorio);
 			$respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
 			die(json_encode($respuesta));
+		}
+
+		private function funcionesEstadisticas($lastRow){
+
+			$styleHover = [
+				'borders' => [
+					'allBorders' => [
+						'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					],
+					'color' => 'f1f9ca'
+				],
+			];
+
+			$this->sheet->setCellValue('J5', "Suma total:");
+			$this->sheet->setCellValue('K5', "=SUM(H5:{$lastRow})");
+			$this->sheet->setCellValue('J6', "Promedio monto total:");
+			$this->sheet->setCellValue('K6', "=AVERAGE(H5:H{$lastRow})");
+
+			if($this->tipo == "venta"){
+				$this->sheet->setCellValue('J7', "Cliente más frecuente:");
+				$this->sheet->setCellValue('K7', "=MODE.SNGL(C5:C{$lastRow})");
+				$this->sheet->setCellValue('J8', "Fecha con más ventas:");
+				$this->sheet->setCellValue('K8', "=MODE.SNGL(E5:E{$lastRow})");
+				
+			}
+
+			if($this->tipo == "compra"){
+
+			}
+		}
+
+		private function estadisticasDatos(){
+
+			$tipoReporte = [
+				'venta' => '',
+				'compra' => ''
+			];
+
 		}
 
 	}
