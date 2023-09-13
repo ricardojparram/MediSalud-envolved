@@ -105,7 +105,7 @@
 
 			$writer = new Xlsx($spreadsheet);
 			$nombre = $this->tipo.$this->fecha.$this->fechaFinal;
-			$repositorio = 'assets/reportes/'.$nombre;
+			$repositorio = 'assets/reportes/'.$nombre. '.xlsx';
 			$writer->save($repositorio);
 			
 		}

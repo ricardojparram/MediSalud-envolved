@@ -322,13 +322,19 @@
     }
 
     function validarCedula(input, select2, div){
-      $.post('',{cedula : input.val(), validar: "cedula"}, function(data){
-        let mensaje = JSON.parse(data);
-        if(mensaje.resultado === "Error de cedula"){
-          div.text(mensaje.error);
-          select2.attr("style","border-color: red;")
-          select2.attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
-        }
+      return new Promise((resolve , reject)=>{
+        $.post('',{cedula : input.val(), validar: "cedula"}, function(data){
+          let mensaje = JSON.parse(data);
+          if(mensaje.resultado === "Error de cedula"){
+            div.text(mensaje.error);
+            select2.attr("style","border-color: red;")
+            select2.attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");
+            return reject(false); 
+          }else{
+            div.text(" ");
+            return resolve(true);
+          }
+        })
       })
     }
     
@@ -354,32 +360,35 @@
      setInterval(()=>{click = 0}, 2000);
     
     // REGISTRAR VENTA INICIA
-     $("#registrar").click((e)=>{
-       e.preventDefault();
+    $("#registrar").click((e)=>{
+     e.preventDefault();
 
-       if(click >= 1){ throw new Error('Spam de clicks');}
+     if(click >= 1){ throw new Error('Spam de clicks');}
 
-       let cedula = validarSelec2($(".select2"),$(".select2-selection"),$("#error1"),"Error de Cedula");
+     let cedula = validarSelec2($(".select2"),$(".select2-selection"),$("#error1"),"Error de Cedula");
 
-       $('.select2').change(function(){
-         let select2 = $(this).val() 
-         if(select2 == " " || select2 == null ){
-          return cedula = false
-        }else{
-         $('#error1').text(" ");
-         $(".select2-selection").attr("style","border-color: none;")
-         $(".select2-selection").attr("style","backgraund-image: none;");
-         return cedula = true;
-       }
-     })
-       vmoneda =  validarSelect($('#moneda'),$("#error5"),"Error de moneda")
-       vmetodo = validarNumero($("#metodo"),$("#error2"),"Error de metodo de pago");
-       let montoT = validarNumero($("#monto"),$("#error3"),"Error de monto");
-       let iva = validarNumero($(".iva"),$("#error4"),"Error de iva");
-       let selectM = validarSelect($('#moneda'),$("#error5"),"Error de moneda");
-       let vproductos = true;
+     validarCedula($(".select2"),$(".select2-selection") ,$("#error1")).then(()=>{
 
-       $('.table-body tbody tr').each(function(){
+
+      $('.select2').change(function(){
+       let select2 = $(this).val() 
+       if(select2 == " " || select2 == null ){
+        return cedula = false
+      }else{
+       $('#error1').text(" ");
+       $(".select2-selection").attr("style","border-color: none;")
+       $(".select2-selection").attr("style","backgraund-image: none;");
+       return cedula = true;
+     }
+   })
+      vmoneda =  validarSelect($('#moneda'),$("#error5"),"Error de moneda")
+      vmetodo = validarNumero($("#metodo"),$("#error2"),"Error de metodo de pago");
+      let montoT = validarNumero($("#monto"),$("#error3"),"Error de monto");
+      let iva = validarNumero($(".iva"),$("#error4"),"Error de iva");
+      let selectM = validarSelect($('#moneda'),$("#error5"),"Error de moneda");
+      let vproductos = true;
+
+      $('.table-body tbody tr').each(function(){
         let producto = $(this).find('.select-productos').val();
         if(producto == "" || producto == null){
          vproductos = false;
@@ -387,15 +396,15 @@
        }
      })
 
-       let repetidos = true 
-       if($('.select-productos').is('[valid="false"]')){
+      let repetidos = true 
+      if($('.select-productos').is('[valid="false"]')){
         repetidos = false
-       }else if(!$('.select-productos').is('[valid="false"]')){
+      }else if(!$('.select-productos').is('[valid="false"]')){
         repetidos = true
-       }
+      }
 
-       let vstock = true;
-       if($('.stock').is('[valid="false"]')){
+      let vstock = true;
+      if($('.stock').is('[valid="false"]')){
         vstock  = false
         $('#error').text('Cantidad inválida.')
       }else if($('.stock').val() == "" || $('.stock').val() === '0'){
@@ -403,7 +412,7 @@
         $('#error').text('Seleccione un producto');
       } 
 
-       
+
 
       if(cedula && vmetodo && vmoneda && montoT && vproductos && vstock && iva && selectM && repetidos){
 
@@ -431,8 +440,11 @@
 
           })
      }
-     click++;
+   }).catch(()=>{
+        throw new Error('Error');
    })
+   click++;
+ })
 
   //función para enviar productos uno por uno
   function enviarProductos(id){
@@ -457,10 +469,22 @@
       dataType: 'json',
       data: {id, factura: "factura"},
       success(data){
-
+       if(data.respuesta === 'Archivo guardado'){
+        Toast.fire({ icon: 'success', title: 'Exportado correctamente.' });
+        descargarArchivo(data.ruta);
+       }else{
+        Toast.fire({ icon: 'error', title: 'Error de Exportado.' });
+       }
       }
     })
   })
+
+  function descargarArchivo(ruta){
+    let link = document.createElement('a');
+    link.href = ruta;
+    link.target = '_self';
+    link.click();
+  }
 
   $('#cerrar').click(()=>{
      $('.select2').val(0).trigger('change'); // LIMPIA EL SELECT2

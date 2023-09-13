@@ -64,6 +64,7 @@
        $new->execute();
        $this->id = $this->con->lastInsertId();
        echo json_encode(['id' => $this->id]);
+       $this->binnacle("Venta",$_SESSION['cedula'], "Registró Venta.");
        die();
 
        }else{
@@ -194,6 +195,7 @@
       $new->execute();
       $data = $new->fetchAll(\PDO::FETCH_OBJ);
       echo json_encode(['resultado' => 'Venta eliminada.']);
+      $this->binnacle("Venta",$_SESSION['cedula'], "Venta Anulada.");
       die();
 
     }
@@ -237,7 +239,7 @@
     private function exportar(){
       try{
 
-       $query = "SELECT v.cedula_cliente , v.num_fact ,v.fecha , tp.des_tipo_pago , v.monto , CONCAT(IF(MOD(v.monto / cm.cambio, 1) >= 0.5, CEILING(v.monto / cm.cambio), FLOOR(v.monto / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN tipo_pago tp ON v.cod_tipo_pago = tp.cod_tipo_pago INNER JOIN cambio cm ON cm.id_cambio = v.cod_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE v.status = 1 AND v.num_fact = ?";
+       $query = "SELECT v.cedula_cliente, c.nombre , c.apellido , c.direccion, cc.celular , v.num_fact ,v.fecha , tp.des_tipo_pago , v.monto , CONCAT(IF(MOD(v.monto / cm.cambio, 1) >= 0.5, CEILING(v.monto / cm.cambio), FLOOR(v.monto / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN tipo_pago tp ON v.cod_tipo_pago = tp.cod_tipo_pago INNER JOIN cambio cm ON cm.id_cambio = v.cod_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda INNER JOIN cliente c ON c.cedula = v.cedula_cliente INNER JOIN contacto_cliente cc ON cc.cedula = v.cedula_cliente WHERE v.status = 1 AND v.num_fact = ?";
        $new = $this->con->prepare($query);
        $new->bindValue(1 , $this->id);
        $new->execute();
@@ -248,10 +250,113 @@
        $new->bindValue(1 , $this->id);
        $new->execute();
        $dataP = $new->fetchAll();
-
+        
+       $nombre = 'Ticket_'.$dataV[0]['num_fact'].'_'.$dataV[0]['cedula_cliente'].'.pdf';
+       
        $pdf = new FPDF();
+       $pdf->SetMargins(4,10,4);
        $pdf->AddPage();
-       $pdf->SetMargins(15,30,15);
+       
+       $pdf->SetFont('Arial','B',10);
+       $pdf->SetTextColor(0,0,0);
+       $pdf->MultiCell(0,5,utf8_decode(strtoupper('Medisalud C.A')),0,'C',false);
+       $pdf->SetFont('Arial','',9);
+       $pdf->MultiCell(0,5,utf8_decode('Rif: 1234567'),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode('Dirreción: Barrio José Félix Ribas, Barquisimeto-Estado Lara.'),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode('Teléfono: 00000000'),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode('Correo: correo@gmail.com'),0,'C',false);
+
+       $pdf->Ln(1);
+       $pdf->Cell(0,5,utf8_decode("------------------------------------------------------"),0,0,'C');
+       $pdf->Ln(5);
+
+       $pdf->MultiCell(0,5,utf8_decode('Fecha: '. $dataV[0]['fecha']),0,'C',false);
+       $pdf->SetFont('Arial','B',10);
+       $pdf->MultiCell(0,5,utf8_decode(strtoupper("Ticket Nro: ". $dataV[0]['num_fact'])),0,'C',false);
+       $pdf->SetFont('Arial','',9);
+
+       $pdf->Ln(1);
+       $pdf->Cell(0,5,utf8_decode("------------------------------------------------------"),0,0,'C');
+       $pdf->Ln(5);
+
+       $pdf->MultiCell(0,5,utf8_decode("Cliente: ". $dataV[0]['nombre'].' '.$dataV[0]['apellido']),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode("Documento: ".$dataV[0]['cedula_cliente']),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode("Teléfono: ".$dataV[0]['celular']),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode("Dirección: ".$dataV[0]['direccion']),0,'C',false);
+
+       $pdf->Ln(1);
+       $pdf->Cell(0,5,utf8_decode("-------------------------------------------------------------------"),0,0,'C');
+       $pdf->Ln(3);
+
+       $tableWidth = 74;
+       $pdf->SetLeftMargin(($pdf->GetPageWidth() - $tableWidth) / 2);
+
+       $pdf->Cell(18,4,utf8_decode('Articulo'),0,0,'C');
+       $pdf->Cell(19,5,utf8_decode('Cant.'),0,0,'C');
+       $pdf->Cell(15,5,utf8_decode('Precio'),0,0,'C');
+       $pdf->Cell(28,5,utf8_decode('Total'),0,0,'C');
+
+       $pdf->Ln(3);
+       $pdf->Cell($tableWidth,5,utf8_decode("-------------------------------------------------------------------"),0,0,'C');
+       $pdf->Ln(5);
+
+       foreach ($dataP as $col => $value) {
+         $pdf->Cell(18,4,utf8_decode($value[0]),0,0,'C');
+         $pdf->Cell(19,4,utf8_decode($value[1]),0,0,'C');
+         $pdf->Cell(19,4,utf8_decode($value[2]),0,0,'C');
+         $pdf->Cell(28,4,utf8_decode($value[1] * $value[2]),0,1,'C');
+
+       }
+       $pdf->Ln(4);
+
+       $pdf->Cell($tableWidth,5,utf8_decode("-------------------------------------------------------------------"),0,0,'C');
+
+       $pdf->Ln(5);
+
+       $montoTotal = $dataV[0]['monto'];
+
+       $pdf->Cell(18,5,utf8_decode(""),0,0,'C');
+       $pdf->Cell(22,5,utf8_decode("SUBTOTAL"),0,0,'C');
+       $pdf->Cell(32,5,utf8_decode($montoTotal / 1.16),0,0,'C');
+
+       $pdf->Ln(5);
+
+       $pdf->Cell(18,5,utf8_decode(""),0,0,'C');
+       $pdf->Cell(22,5,utf8_decode("IVA (16%)"),0,0,'C');
+       $pdf->Cell(32,5,utf8_decode($montoTotal -($montoTotal / 1.16)),0,0,'C');
+
+       $pdf->Ln(5);
+
+       $pdf->Cell($tableWidth,5,utf8_decode("-------------------------------------------------------------------"),0,0,'C');
+
+       $pdf->Ln(5);
+
+       $pdf->Cell(18,5,utf8_decode(""),0,0,'C');
+       $pdf->Cell(22,5,utf8_decode("TOTAL"),0,0,'C');
+       $pdf->Cell(32,5,utf8_decode($montoTotal),0,0,'C');
+
+       $pdf->Ln(5);
+
+       $pdf->Cell(18,5,utf8_decode(""),0,0,'C');
+       $pdf->Cell(22,5,utf8_decode("CAMBIO"),0,0,'C');
+       $pdf->Cell(32,5,utf8_decode($dataV[0]['total_divisa']),0,0,'C');
+
+       $pdf->Ln(10);
+
+       $pdf->MultiCell($tableWidth,5,utf8_decode('*** Precios de productos incluyen impuestos. Para poder realizar un reclamo o devolución debe de presentar este ticket ***'),0,'C',false);
+
+       $pdf->SetFont('Arial','B',9);
+       $pdf->Cell($tableWidth,7,utf8_decode('Gracias por su compra'),'',0,'C');
+
+       $pdf->Ln(9);
+
+       $repositorio = 'assets/tickets/'.$nombre;
+       $pdf->Output('F',$repositorio);
+
+       $respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
+       echo json_encode($respuesta);
+       $this->binnacle("Venta",$_SESSION['cedula'], "Exporto Ticket de Venta");
+       die();
 
       }catch(\PDOexection $error){
         die($error);
