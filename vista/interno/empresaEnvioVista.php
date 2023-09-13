@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorio</title>
+    <title>Empresa Envio</title>
    <?php $VarComp->header(); ?>
     <link rel="stylesheet" href="assets/css/estiloInterno.css">
     <link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap5.min.css">
@@ -33,10 +33,10 @@
 
   <main class="main" id="main">
     <div class="pagetitle">
-      <h1>Sedes de envío</h1>
+      <h1>Empresas de envío</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item">Gestionar sedes de envío de cada empresa</li>
+          <li class="breadcrumb-item">Gestionar empresas de envío para cada sede</li>
         </ol>
       </nav>
 
@@ -47,7 +47,7 @@
 
         <div class="row">
           <div class="col-6">
-            <h5 class="card-title">Sedes de envío</h5>
+            <h5 class="card-title">Empresas de envío</h5>
           </div>
 
           <div class="col-6 text-end mt-3">
@@ -61,9 +61,11 @@
             <thead>
 
               <tr>
-                <th scope="col">Empresa de envío</th>
-                <th scope="col">Ubicación</th>
+                <th scope="col">rif</th>
+                <th scope="col">nombre</th>
+                <th scope="col">contacto</th>
                 <th scope="col">Opciones</th>
+
               </tr>
             </thead>
 
@@ -80,17 +82,6 @@
 
   </main>
 
-
-</body>
-
-  <?php $VarComp->js(); ?>
-
-  <script src="assets/js/sedeEnvio.js"></script> 
-
-
- 
-</html>
-
 <!-- TODOS LOS MODAL -->
 
 <!-- MODAL AGERGAR -->
@@ -98,7 +89,7 @@
   <div class="modal-dialog modal-md ">
     <div class="modal-content">
       <div class="modal-header alert alert-success">
-        <h4 class="modal-title"> <strong>Registrar Laboratorio</strong> </h4>
+        <h4 class="modal-title"> <strong>Registrar Empresa de envio</strong> </h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
@@ -111,33 +102,32 @@
               <div class="row">
 
                 <div class="form-group col-12 ">                          
-                    <label for="inputText" class="col-form-label"><strong>Empresas de envío</strong></label>
-                    <div class="input-group">
-                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione una cédula registrada en el sistema."><i class="bi bi-person-fill"></i></button>
-                      <select class="form-control" placeholder="Empresas de envío" id="empresa_envio">
-                        <option value="" selected disabled>Selecciona una empresa...</option>
-                        <?php if(isset($selectEmpresa)){
-                          foreach($selectEmpresa as $option){
-                        ?> 
-                            <option value="<?= $option->id_empresa ?>" class="opcion">
-                              <?= $option->nombre.' - '.$option->rif ?>
-                            </option>
-                        <?php
-                          }
-                        }else{"";}
-                        ?>
-                      </select> 
-                    </div>
-                    <p style="color:#ff0000;margin-left: 10px;" id="error1"></p>
+                  <label class="col-form-label"> <strong>Rif</strong> </label>
+                  <div class="input-group">
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el RIF del empresa"><i class="bi bi-card-text"></i></button> 
+                    <input class="form-control" id="rif" required="" placeholder="Introduzca el rif">
+                  </div>
+                  <p style="color:#ff0000;margin-left: 10px;" id="error1"></p>
+
                 </div>
 
                 <div class="form-group col-12 ">                          
-                  <label class="col-form-label"> <strong>Ubicación de la sede</strong> </label>
+                  <label class="col-form-label"> <strong>Nombre Empresa</strong> </label>
                   <div class="input-group">
-                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el RIF del Laboratorio"><i class="bi bi-card-text"></i></button> 
-                    <input class="form-control" id="ubicacion" required="" placeholder="">
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el nombre de la empresa"><i class="bi bi-truck"></i></button>
+                    <input class="form-control" id="nombre" required="" placeholder="Introduzca el nombre">
                   </div>
                   <p style="color:#ff0000;margin-left: 10px;" id="error2"></p>
+
+                </div>
+                
+                <div class="form-group col-12 ">                          
+                  <label class="col-form-label"> <strong>Telefono</strong> </label>
+                  <div class="input-group">
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el contacto de empresa"><i class="bi bi-telephone-fill"></i></button> 
+                    <input class="form-control" id="contacto" required="" placeholder="opcional">
+                  </div>
+                  <p style="color:#ff0000;margin-left: 10px;" id="error3"></p>
 
                 </div>
 
@@ -167,7 +157,7 @@
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header alert alert-success">
-        <h4 class="modal-title"> <strong>Editar Laboratorio</strong> </h4>
+        <h4 class="modal-title"> <strong>Editar Empresa de envio</strong> </h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
@@ -179,33 +169,32 @@
               <div class="row">
 
                 <div class="form-group col-12 ">                          
-                    <label for="inputText" class="col-form-label"><strong>Empresas de envío</strong></label>
-                    <div class="input-group">
-                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione una cédula registrada en el sistema."><i class="bi bi-person-fill"></i></button>
-                      <select class="form-control" placeholder="Empresas de envío" id="empresa_envioEdit">
-                        <option value="" disabled>Selecciona una empresa...</option>
-                        <?php if(isset($selectEmpresa)){
-                          foreach($selectEmpresa as $option){
-                        ?> 
-                            <option value="<?= $option->id_empresa ?>" class="opcion">
-                              <?= $option->nombre.' - '.$option->rif ?>
-                            </option>
-                        <?php
-                          }
-                        }else{"";}
-                        ?>
-                      </select> 
-                    </div>
-                    <p style="color:#ff0000;margin-left: 10px;" id="error3"></p>
+                  <label class="col-form-label"> <strong>Rif</strong> </label>
+                  <div class="input-group">
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el RIF del empresa"><i class="bi bi-card-text"></i></button> 
+                    <input class="form-control" id="rifEdit" required="" placeholder="Introduzca el rif">
+                  </div>
+                  <p style="color:#ff0000;margin-left: 10px;" id="error4"></p>
+
                 </div>
 
                 <div class="form-group col-12 ">                          
-                  <label class="col-form-label"> <strong>Ubicación de la sede</strong> </label>
+                  <label class="col-form-label"> <strong>Nombre Empresa</strong> </label>
                   <div class="input-group">
-                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el RIF del Laboratorio"><i class="bi bi-card-text"></i></button> 
-                    <input class="form-control" id="ubicacionEdit" required="" placeholder="">
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el nombre de la empresa"><i class="bi bi-truck"></i></button>
+                    <input class="form-control" id="nombreEdit" required="" placeholder="Introduzca el nombre">
                   </div>
-                  <p style="color:#ff0000;margin-left: 10px;" id="error4"></p>
+                  <p style="color:#ff0000;margin-left: 10px;" id="error5"></p>
+
+                </div>
+                
+                <div class="form-group col-12 ">                          
+                  <label class="col-form-label"> <strong>Contacto</strong> </label>
+                  <div class="input-group">
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el contacto de empresa"><i class="bi bi-telephone-fill"></i></button> 
+                    <input class="form-control" id="contactoEdit" required="" placeholder="opcional">
+                  </div>
+                  <p style="color:#ff0000;margin-left: 10px;" id="error6"></p>
 
                 </div>
 
@@ -239,7 +228,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ¿Desea Borrar los Datos de la Sede de Envío?
+        ¿Desea Borrar los Datos de la Empresa de Envío?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cerrar</button>
@@ -249,3 +238,14 @@
   </div>
 </div>
               <!-- MODAL BORRAR FINAL-->
+
+</body>
+
+  <?php $VarComp->js(); ?>
+
+  <script src="assets/js/empresaEnvio.js"></script> 
+
+
+ 
+</html>
+

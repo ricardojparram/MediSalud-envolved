@@ -16,9 +16,10 @@
     $clientes = ($_GET['url'] == 'clientes')? "": "collapsed";
     $ventas = ($_GET['url'] == 'ventas')? "" : "collapsed";
     $compras = ($_GET['url'] == 'compras')? ""  : "collapsed" ;
-    $configuracionesA = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda')? "" : "collapsed";
-    $configuracionesB = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda')? "show" : "collapse" ;
+    $configuracionesA = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda' || $_GET['url'] == 'banco')? "" : "collapsed";
+    $configuracionesB = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda' || $_GET['url'] == 'banco')? "show" : "collapse" ;
     $moneda = ($_GET['url'] == 'moneda')? "active"  : "" ;
+    $banco = ($_GET['url'] == 'banco')? "active" : "" ;
     $metodo = ($_GET['url'] == 'metodo')? "active"  : "" ;
     $productosA = ($_GET['url'] == 'producto' || $_GET['url'] == 'laboratorio' || $_GET['url'] == 'proveedor' || $_GET['url'] == 'presentacion' || $_GET['url'] == 'clase' || $_GET['url'] == 'tipo')?  ""  : "collapsed" ;
     $productosB = ($_GET['url'] == 'producto' || $_GET['url'] == 'laboratorio' || $_GET['url'] == 'proveedor' || $_GET['url'] == 'presentacion' || $_GET['url'] == 'clase' || $_GET['url'] == 'tipo')? "show" : "collapse" ;
@@ -73,7 +74,14 @@
         </a>
     </li> ' : '';
 
-    $configuracionesLi = ($this->permisos['Metodo pago']->status == 1 || $this->permisos['Moneda']->status == 1) ?
+    $bancoLi = ($this->permisos['Bancos']->status == 1) ?
+    '<li>
+        <a href="?url=banco" class="'.$banco.'">
+          <i class="bi bi-circle "></i><span>Bancos</span>
+        </a>
+    </li>' : '';
+
+    $configuracionesLi = ($this->permisos['Metodo pago']->status == 1 || $this->permisos['Moneda']->status == 1 || $this->permisos['Bancos']->status == 1) ?
     '<li class="nav-item">
         <a class="nav-link '.$configuracionesA.'" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
           <i class="bi bi-gear"></i><span>Configuraciones</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -83,6 +91,8 @@
             '.$metodoLi.'
 
             '.$monedaLi.'
+
+            '.$bancoLi.'
 
         </ul>
     </li>' : '';

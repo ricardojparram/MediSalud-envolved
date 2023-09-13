@@ -76,7 +76,7 @@ class clientes extends DBConnect{
               $new->execute();
               $resultado = ['resultado' => 'Registrado correctamente.'];
               echo json_encode($resultado);
-              $this->binnacle("Cliente",$_SESSION['cedula'],"Registro un cliente");
+              $this->binnacle("Cliente",$_SESSION['cedula'],"Registró un cliente");
               die();
 
 
@@ -106,7 +106,7 @@ class clientes extends DBConnect{
             $new->execute();
             $resultado = ['resultado' => 'Eliminado'];
             echo json_encode($resultado);
-            $this->binnacle("Cliente",$_SESSION['cedula'],"Elimino un cliente");
+            $this->binnacle("Cliente",$_SESSION['cedula'],"Eliminó un cliente");
             die();
 
         }
@@ -117,7 +117,7 @@ class clientes extends DBConnect{
 
     public function mostrarClientes($bitacora = false){
         try{
-            $query = "SELECT c.nombre, c.apellido, c.cedula, c.direccion, cc.celular, cc.correo, CONCAT('<button type=\"button\" class=\"btn btn-success editar\" id=\"',c.cedula,'\" data-bs-toggle=\"modal\" data-bs-target=\"#editModal\"><i class=\"bi bi-pencil\"></i></button> <button type=\"button\" class=\"btn btn-danger eliminar\" id=\"',c.cedula,'\" data-bs-toggle=\"modal\" data-bs-target=\"#delModal\"><i class=\"bi bi-trash3\"></i></button>') AS opciones FROM cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula WHERE status = 1";
+            $query = "SELECT c.nombre, c.apellido, c.cedula, c.direccion, cc.celular, cc.correo FROM cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula WHERE status = 1";
             $new = $this->con->prepare($query);
             $new->execute();
             $data = $new->fetchAll();
@@ -199,7 +199,7 @@ class clientes extends DBConnect{
             $new->execute();
             $resultado = ['resultado' => 'Editado'];
             echo json_encode($resultado);
-            $this->binnacle("Cliente",$_SESSION['cedula'],"Edito un cliente");
+            $this->binnacle("Cliente",$_SESSION['cedula'],"Editó un cliente");
             die();
         } catch (\PDOException $error) {
             return $error;
@@ -227,7 +227,13 @@ class clientes extends DBConnect{
             $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
             echo json_encode($resultado);
             die();
-            }
+          }else {
+            $resultado = ['resultado' => 'No registrada'];
+            echo json_encode($resultado);
+            die();
+          }
+            
+
         }catch(\PDOException $error){
           return $error;
         }

@@ -5,15 +5,15 @@
 	use component\menuLateral as menuLateral;
 	use modelo\bitacora as bitacora;
 
-	if(isset($_SESSION['nivel'])){
-		if($_SESSION['nivel'] != 1){
-			die('<script> window.location = "?url=home" </script>');
-		}
-	}else{
+	if(!isset($_SESSION['nivel'])){
 		die('<script> window.location = "?url=login" </script>');
 	}
-
+		
 	$objModel = new bitacora();
+	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+	$permiso = $permisos['Bitacora'];
+
+	 if($permiso->status != 1) die(`<script> window.location = "?url=home" </script>`);
 
 	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
 	if(isset($_POST['mostrar'])){

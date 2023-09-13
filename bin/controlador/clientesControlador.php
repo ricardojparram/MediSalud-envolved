@@ -20,7 +20,7 @@
     die('<script> window.location = "?url=login" </script>');
   }
 
-  if(isset($_POST['mostrar'])){
+  if(isset($_POST['mostrar']) && $permiso->consultar == 1){
     ($_POST['bitacora'] == 'true')
     ? $objModel->mostrarClientes(true)
     : $objModel->mostrarClientes();
@@ -30,20 +30,19 @@
       $objModel->getValidarC($_GET['cedula']);
     }
 
-  if(isset($_POST['nomClien']) && isset($_POST['apeClien'])&& isset($_POST['cedClien'])&& isset($_POST['direcClien']) && isset($_POST['telClien']) && isset($_POST['emailClien'])){
-    
-    $respuesta = $objModel->getRegistrarClientes($_POST['nomClien'],$_POST['apeClien'],$_POST['cedClien'],$_POST['direcClien'],$_POST['telClien'],$_POST['emailClien']);
+  if(isset($_POST['nomClien']) && isset($_POST['apeClien'])&& isset($_POST['cedClien'])&& isset($_POST['direcClien']) && isset($_POST['telClien']) && isset($_POST['emailClien']) && $permiso->registrar == 1){
+    $objModel->getRegistrarClientes($_POST['nomClien'],$_POST['apeClien'],$_POST['cedClien'],$_POST['direcClien'],$_POST['telClien'],$_POST['emailClien']);
   }
 
-  if (isset($_POST['cedulaDel']) && isset($_POST['eliminar'])) {
+  if (isset($_POST['cedulaDel']) && isset($_POST['eliminar']) && $permiso->eliminar == 1) {
     $respuestaDel = $objModel->eliminarClientes($_POST['cedulaDel']);
   }
 
-  if (isset($_POST['id']) && isset($_POST['unico'])) {
+  if (isset($_POST['id']) && isset($_POST['unico']) && $permiso->editar == 1) {
     $objModel->unicoCliente($_POST['id']);
   }
 
-  if(isset($_POST['nomEdit']) && isset($_POST['apeEdit'])&& isset($_POST['cedEdit'])&& isset($_POST['direcEdit']) && isset($_POST['celuEdit']) && isset($_POST['emailEdit']) && isset($_POST['id'])){
+  if(isset($_POST['nomEdit']) && isset($_POST['apeEdit'])&& isset($_POST['cedEdit'])&& isset($_POST['direcEdit']) && isset($_POST['celuEdit']) && isset($_POST['emailEdit']) && isset($_POST['id']) && $permiso->editar == 1){
     $respuesta = $objModel->getEditar($_POST['nomEdit'],$_POST['apeEdit'],$_POST['cedEdit'],$_POST['direcEdit'],$_POST['celuEdit'],$_POST['emailEdit'],$_POST['id']);
   }
 

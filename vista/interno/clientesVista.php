@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -50,7 +50,7 @@
                   <h5 class="card-title">Clientes Registrados</h5>
                 </div>
                 <div class="col-6 text-end mt-3">
-                  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#basicModal" >Agregar</button>
+                  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#basicModal" id="agregarModalButton">Agregar</button>
                 </div>
               </div>
 
@@ -98,7 +98,7 @@
 
           <!--Modal Registar-->
 
-          <div class="modal fade" id="basicModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" >
+          <div class="modal fade" id="basicModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header alert alert-success">
@@ -112,15 +112,17 @@
                         <label for="inputText" class="col-sm-2 col-form-label"><strong>Nombre</strong></label>
                         <div class="input-group ">
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el nombre del cliente."><i class="bi bi-person-fill"></i></button>
-                          <input type="text" class="form-control" placeholder="Nombre" id="nomClien" name="nomClien">
+                          <input type="text" class="form-control" placeholder="Nombre" id="nomClien">
                         </div>
+                        <p class="m-0" id="errorNom" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="col-lg-6">
                         <label for="inputText" class="col-sm-2 col-form-label"><strong>Apellido</strong></label>
                         <div class="input-group">
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el apellido del cliente."><i class="bi bi-people"></i></button>
-                          <input type="text" class="form-control" placeholder="Apellido" id="apeClien" name="apeClien">
+                          <input type="text" class="form-control" placeholder="Apellido" id="apeClien">
                         </div>
+                        <p class="m-0" id="errorApe" style="color:#ff0000;text-align: center;"></p>
                       </div>
                     </div>
                     <div class="row form-group col-md-12 mb-3">
@@ -128,8 +130,9 @@
                         <label for="inputText" class="col-sm-2 col-form-label"><strong>Cedula</strong></label>
                         <div class="input-group">
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la cedula del cliente."><i class="bi bi-card-text"></i></button>
-                          <input type="text" class="form-control" placeholder="1234567890" id="cedClien" name="cedClien">
+                          <input type="text" class="form-control" placeholder="1234567890" id="cedClien">
                         </div>
+                        <p class="m-0" id="errorCed" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="col-lg-6" >
                         <label for="inputText" class="col-sm-2 col-form-label"><strong>Direccion</strong></label>
@@ -137,6 +140,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la direccion de la habitacion del cliente"><i class="bi bi-map"></i></button>
                           <input type="text" class="form-control" placeholder="Direccion" id="direcClien" name="direcClien">
                         </div>
+                        <p class="m-0" id="errorDirec" style="color:#ff0000;text-align: center;"></p>
                       </div>
                     </div>
                       <div class="row">
@@ -150,13 +154,14 @@
                         </div>
                       </div>
                     
-                      <div class=" row form-group col-md-12" id="divOcult" >
+                      <div class=" row form-group col-md-12 mb-3" id="divOcult" >
                       <div class="col-lg-6">
                         <label for="inputText" class="col-sm-2 col-form-label"><strong>Telefono</strong></label>
                         <div class="input-group">
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el numero celular del cliente"><i class="bi bi-telephone"></i></button>
                           <input type="text" class="form-control" placeholder="1234567890" id="telClien" name="telClien">
                         </div>
+                        <p class="m-0" id="errorTele" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="col-lg-6">
                         <label for="inputText" class="col-sm-2 col-form-label"><strong>Correo</strong></label>
@@ -164,10 +169,11 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la direccion de correo electronico"><i class="ri-at-line"></i></button>
                           <input type="email" class="form-control" placeholder="ejemplo@ejemplo.com" id="emailClien" name="emailClien">
                         </div>
+                        <p class="m-0" id="errorEmail" style="color:#ff0000;text-align: center;"></p>
                         </div>
                       </div>
                       
-                      <p id="error" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
+                      <p id="error" style="color:#ff0000;text-align: center;"></p>
                     </div>
                     <div class="modal-footer">
 
@@ -201,6 +207,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el nombre del cliente."><i class="bi bi-person-fill"></i></button>
                           <input type="text" class="form-control" placeholder="Nombre" id="nomClienEdit" name="nomClienEdit" value="">
                         </div>
+                        <p class="m-0" id="errorNomEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="col-lg-6">
                         <label for="inputText" class="col-sm-2 col-form-label"><strong>Apellido</strong></label>
@@ -208,6 +215,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el apellido del cliente."><i class="bi bi-people"></i></button>
                           <input type="text" class="form-control" placeholder="Apellido" id="apeClienEdit" name="apeClienEdit" value="">
                         </div>
+                        <p class="m-0" id="errorApeEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
                     </div>
                     <div class="row form-group col-md-12 ">
@@ -217,6 +225,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la cedula del cliente."><i class="bi bi-card-text"></i></button>
                           <input type="text" class="form-control" placeholder="1234567890" id="cedClienEdit" name="cedClienEdit" value="">
                         </div>
+                        <p class="m-0" id="errorCedEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="col-lg-6" >
                         <label for="inputText" class="col-sm-2 col-form-label"><strong>Direccion</strong></label>
@@ -224,6 +233,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la direccion de la habitacion del cliente"><i class="bi bi-map"></i></button>
                           <input type="text" class="form-control" placeholder="Direccion" id="direcClienEdit" name="direcClienEdit" value="">
                         </div>
+                        <p class="m-0" id="errorDirecEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
                     </div>
                     <div class=" row form-group col-md-12">
@@ -233,6 +243,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el numero celular del cliente"><i class="bi bi-telephone"></i></button>
                           <input type="text" class="form-control" placeholder="1234567890" id="telClienEdit" name="telClienEdit" value="">
                         </div>
+                        <p class="m-0" id="errorTeleEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="col-lg-6">
                         <label for="inputText" class="col-sm-2 col-form-label"><strong>Correo</strong></label>
@@ -240,13 +251,13 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la direccion de correo electronico"><i class="ri-at-line"></i></button>
                           <input type="text" class="form-control" placeholder="ejemplo@ejemplo.com" id="emailClienEdit" name="emailClienEdit" value="">
                         </div>
+                        <p class="m-0" id="errorEmailEdit" style="color:#ff0000;text-align: center;"></p>
                         </div>
                       </div>
-                      
-                      <p id="error2" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
+                      <p id="error2" class="mt-2 mb-0" style="color:#ff0000;text-align: center;"></p>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarModalEdit">Cerrar</button>
+                      <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarModalEdit">Cerrar</button>
                       <button type="button" class="btn btn-success" id="enviarEdit">Actualizar</button>
                     </div>
                     </form>
@@ -265,6 +276,7 @@
                     </div>
                     <div class="modal-body">
                       <h5>Los datos serán eliminados completamente del sistema</h5>
+                      <p class="m-0" id="errorDel" style="color:#ff0000;text-align: center;"></p>
                     </div>
                     <div class="modal-footer" id="divEli">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarModalDel">Cancelar</button>

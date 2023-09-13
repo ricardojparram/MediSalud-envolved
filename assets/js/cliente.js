@@ -22,27 +22,19 @@ $(function() {
 
 $(document).ready(function(){
 
-    /*let identificadorIntervaloDeTiempo;
-
-    function Intervalo() {
-    identificadorIntervaloDeTiempo = setInterval(refrescar, 1000);
-    }
-    const intervalID = setInterval(refrescar, 1000,);
-
-    */
     let tabla;
-    refrescar(true);
-
+    
+    //Consulta de Permisos
     let permisos, editarPermiso, eliminarPermiso, registrarPermiso;
     $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:'a'},
         success(data){ permisos = data; }
     }).then(function(){
-    	rellenar(true);
-    	console.log(permisos.registrar)
+      refrescar(true);
     	registrarPermiso = (permisos.registrar != 1) ? 'disabled' : ''; 
     	$('#agregarModalButton').attr(registrarPermiso, '');
     });
-    
+
+    //Rellenar Tabla
     function refrescar(bitacora = false){ 
       $.ajax({
         method: "post",
@@ -50,134 +42,138 @@ $(document).ready(function(){
         dataType: "json",
         data: {mostrar: "clien", bitacora },
         success(list){
-          console.log(list);
+          list.forEach(row => {
+            editarPermiso = (permisos.editar != 1)?  'disabled' : '';
+    	      eliminarPermiso = (permisos.eliminar != 1)? 'disabled' : '';
+            tabla+=`
+              <tr>
+                <td>${row.nombre}</td>
+                <td>${row.apellido}</td>
+                <td>${row.cedula}</td>
+                <td>${row.direccion}</td>
+                <td>${row.celular} </td>
+                <td>${row.correo} </td>
+                <td class="d-flex justify-content-center">
+                  <button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.cedula}" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
+                  <button type="button" ${eliminarPermiso} class="btn btn-danger eliminar mx-2" id="${row.cedula}" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
+	    	      	</td>
+              </tr>`;  
+          });
+          $('#tbody').html(tabla);
           tabla = $("#tabla").DataTable({
             responsive: true,
-            data: list
           });
         }
       })
-
     }
 
-    $("#nomClien").keyup(()=> {  validarNombre($("#nomClien"),$("#error") ,"Error de nombre,") });
-    $("#apeClien").keyup(()=> {  validarNombre($("#apeClien"),$("#error") , "Error de apellido,") });
-    $("#cedClien").keyup(()=> {  let valid = validarCedula($("#cedClien"),$("#error") ,"Error de cédula,") 
-      if(valid == true){
-        validarC();
-      }
-    });
-    $("#direcClien").keyup(()=> { validarDireccion($("#direcClien"),$("#error") , "Error de direccion,") });
-    $("#telClien").keyup(()=> {  validarTelefonoOp($("#telClien"),$("#error") ,"Error de telefono,") });
-    $("#emailClien").keyup(()=> {  validarCorreoOp($("#emailClien"),$("#error") , "Error de correo,") });
+    //Validaciones Keyup Registrar
+    $("#nomClien").keyup(()=> {  validarNombre($("#nomClien"),$("#errorNom") ,"Error de nombre,") });
+    $("#apeClien").keyup(()=> {  validarNombre($("#apeClien"),$("#errorApe") , "Error de apellido,") });
+    $("#cedClien").keyup(()=> {  let valid = validarCedula($("#cedClien"),$("#errorCed") ,"Error de cédula,") 
+      if(valid){ validarC($("#cedClien"),$("#error"), "Error de Cedula,"); } });
+    $("#direcClien").keyup(()=> { validarDireccion($("#direcClien"),$("#errorDirec") , "Error de direccion,") });
+    $("#telClien").keyup(()=> {  validarTelefonoOp($("#telClien"),$("#errorTele") ,"Error de telefono,") });
+    $("#emailClien").keyup(()=> {  validarCorreoOp($("#emailClien"),$("#errorEmail") , "Error de correo,") });
 
-
+    //Envio de Datos Registrar
     $("#enviar").click((e)=>{
-      e.preventDefault();
 
-      $name = $("#nomClien");
-      $lastName = $("#apeClien");
-      $dni = $("#cedClien");
-      $direc = $("#direcClien");
-      $phone = $("#telClien");
-      $email = $("#emailClien");
+      if(permisos.registrar != 1){
+        Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
+        throw new Error('Permiso denegado.');
+      }
 
       let correo, telefono, direccion, cedula, apellido, nombre
-        correo = validarCorreoOp($("#emailClien"),$("#error") , "Error de correo,");
-        telefono = validarTelefonoOp($("#telClien"),$("#error") ,"Error de telefono,");      
-        direccion = validarDireccion($("#direcClien"),$("#error") , "Error de direccion,");
-        validarCedula($("#cedClien"),$("#error") ,"Error de Cedula,");
-        apellido = validarNombre($("#apeClien"),$("#error") , "Error de apellido,");
-        nombre = validarNombre($("#nomClien"),$("#error") , "Error de nombre,");
+      correo = validarCorreoOp($("#emailClien"),$("#errorEmail") , "Error de correo,");
+      telefono = validarTelefonoOp($("#telClien"),$("#errorTele") ,"Error de telefono,");      
+      direccion = validarDireccion($("#direcClien"),$("#errorDirec") , "Error de direccion,");
+      cedula = validarCedula($("#cedClien"),$("#errorCed") ,"Error de Cedula,");
+      apellido = validarNombre($("#apeClien"),$("#errorApe") , "Error de apellido,");
+      nombre = validarNombre($("#nomClien"),$("#errorNom") , "Error de nombre,");
+      if(cedula){ validarC($("#cedClien"),$("#error"), "Error de Cedula, ").then(()=>{
 
-      $.ajax({
-        type: "POST",
-        url: '',
-        dataType: "json",
-        data: {
-          "nomClien": $name.val(),
-          "apeClien": $lastName.val(),
-          "cedClien": $dni.val(),
-          "direcClien": $direc.val(),
-          "telClien": $phone.val(),
-          "emailClien": $email.val()
+        if (correo && telefono && direccion && cedula && apellido && nombre){
 
-        },
-        success(user){
-          e.preventDefault();
-          
-
-          if(user.resultado === "Error de cedula"){
-            $("#error").text(user.error);
-            $("#cedClien").attr("style","border-color: red;")
-            $("#cedClien").attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
-          }else{
-            cedula = true;
-          }
-
-
-          if(correo && telefono && direccion && cedula && apellido && nombre){
-            tabla.destroy();
-            $("#cerrarModal").click();
-            Toast.fire({ icon: 'success', title: 'Cliente Registrado' })
-            refrescar();
-          }else{
-            e.preventDefault()
-          }
+          $.ajax({
+            type: "POST",
+            url: '',
+            dataType: "json",
+            data: {
+              nomClien: $("#nomClien").val(),
+              apeClien: $("#apeClien").val(),
+              cedClien: $("#cedClien").val(),
+              direcClien: $("#direcClien").val(),
+              telClien: $("#telClien").val(),
+              emailClien: $("#emailClien").val()
+            },
+            success(user){
+              console.log(user);
+              if(user.resultado === "Registrado correctamente."){
+                tabla.destroy();
+                $("#cerrarModal").click();
+                Toast.fire({ icon: 'success', title: 'Cliente Registrado' })
+                refrescar();
+              }else{
+                tabla.destroy();
+                $("#error").text(user.resultado+", "+user.error)
+                refrescar();
+              }
+            }
+          })
         }
-
-      })   
-
-
+      }) 
+      }   
     })
-    $("#telClienEdit").keyup(()=> {  validarTelefonoOp($("#telClienEdit"),$("#error2") ,"Error de telefono,") });
-    $("#emailClienEdit").keyup(()=> {  validarCorreoOp($("#emailClienEdit"),$("#error2") , "Error de correo,") });
-    $("#nomClienEdit").keyup(()=> {  validarNombre($("#nomClienEdit"),$("#error2") ,"Error de nombre,") });
-    $("#apeClienEdit").keyup(()=> {  validarNombre($("#apeClienEdit"),$("#error2") , "Error de apellido,") });
-    $("#cedClienEdit").keyup(()=> {  validarCedula($("#cedClienEdit"),$("#error2") , "Error de cedula,") });
-    $("#direcClienEdit").keyup(()=> { validarDireccion($("#direcClienEdit"),$("#error2") , "Error de direccion,") });
 
+    //Asignacion id para Eliminar
     let cedulaDel;
     $(document).on('click', '.eliminar', function() {
       cedulaDel = this.id;
- });
+    });
+    
+    //Eliminar id asignado
       $("#delete").click(() =>{
-        $.ajax({
-          type: "POST",
-          url: '',
-          dataType: 'json',
-          data: {eliminar: 'eliminar',
-          cedulaDel
 
-        },
-        success(eli){
-          if (eli.resultado === "Eliminado") {
-            tabla.destroy();
-            $("#cerrarModalDel").click();
-            Toast.fire({ icon: 'error', title: 'Cliente Eliminado' })
-            refrescar();
-          }else{
-            console.log("No se elimino")
-          }
+        if(permisos.eliminar != 1){
+          Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
+          throw new Error('Permiso denegado.');
         }
-      })
 
-        
-
+        validarC(cedulaDel,$("#errorNo"), "Error de Cedula,").then(() => {
+          $("#errorDel").html("Error de Cedula, Cedula no Registrada")
+        }).catch(()=>{
+          $.ajax({
+            type: "POST",
+            url: '',
+            dataType: 'json',
+            data: {eliminar: 'eliminar',
+            cedulaDel
+            },
+            success(eli){
+              if (eli.resultado === "Eliminado") {
+                tabla.destroy();
+                $("#cerrarModalDel").click();
+                Toast.fire({ icon: 'error', title: 'Cliente Eliminado' })
+                refrescar();
+              }else{
+                console.log("No se elimino")
+              }
+            }
+          })
+        }) 
       })
-   
+    
+    //Asignacion id para Editar con Relleno de Inputs
     let id;
     $(document).on('click', '.editar', function() {
-
       id = this.id; 
-      console.log(id);
 
       $.ajax({
         type: "POST",
         url: "",
         dataType: "json",
         data : {unico: 'lol', id},
-        
         success(data){
           $("#nomClienEdit").val(data[0].nombre);
           $("#apeClienEdit").val(data[0].apellido);
@@ -189,15 +185,28 @@ $(document).ready(function(){
       })
     });
 
-      $("#enviarEdit").click((e)=>{
-        e.preventDefault();
+    //Validaciones Keyup para Editar
+    $("#telClienEdit").keyup(()=> {  validarTelefonoOp($("#telClienEdit"),$("#errorTeleEdit") ,"Error de Telefono,") });
+    $("#emailClienEdit").keyup(()=> {  validarCorreoOp($("#emailClienEdit"),$("#errorEmailEdit") , "Error de Correo,") });
+    $("#nomClienEdit").keyup(()=> {  validarNombre($("#nomClienEdit"),$("#errorNomEdit") ,"Error de Nombre,") });
+    $("#apeClienEdit").keyup(()=> {  validarNombre($("#apeClienEdit"),$("#errorApeEdit") , "Error de Apellido,") });
+    $("#cedClienEdit").keyup(()=> {  validarCedula($("#cedClienEdit"),$("#errorCedEdit") , "Error de Cedula,") });
+    $("#direcClienEdit").keyup(()=> { validarDireccion($("#direcClienEdit"),$("#errorDirecEdit") , "Error de Direccion,") });
 
-        let nombreEdit = validarNombre($("#nomClienEdit"),$("#error2") , "Error de nombre,");
-        let direccionEdit = validarDireccion($("#direcClienEdit"),$("#error2") , "Error de direccion,");
-        let cedulaEdit = validarCedula($("#cedClienEdit"),$("#error2") ,"Error de RIF,");
-        let apellidoEdit = validarNombre($("#apeClienEdit"),$("#error2") , "Error de apellido,");
-        let correoEdit = validarCorreoOp($("#emailClienEdit"),$("#error2") , "Error de correo,");
-        let telefonoEdit = validarTelefonoOp($("#telClienEdit"),$("#error2") ,"Error de telefono,");
+      //Envio de Datos Registrar
+      $("#enviarEdit").click((e)=>{
+
+        if(permisos.editar != 1){
+          Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
+          throw new Error('Permiso denegado.');
+        }
+
+        let nombreEdit = validarNombre($("#nomClienEdit"),$("#errorNomEdit") , "Error de Nombre,");
+        let direccionEdit = validarDireccion($("#direcClienEdit"),$("#errorDirecEdit") , "Error de Direccion,");
+        let cedulaEdit = validarCedula($("#cedClienEdit"),$("#errorCedEdit") ,"Error de Cedula,");
+        let apellidoEdit = validarNombre($("#apeClienEdit"),$("#errorApeEdit") , "Error de Apellido,");
+        let correoEdit = validarCorreoOp($("#emailClienEdit"),$("#errorEmailEdit") , "Error de Correo,");
+        let telefonoEdit = validarTelefonoOp($("#telClienEdit"),$("#errorTeleEdit") ,"Error de Telefono,");
 
         let nomEdit = $("#nomClienEdit").val();
         let apeEdit = $("#apeClienEdit").val();
@@ -205,54 +214,73 @@ $(document).ready(function(){
         let direcEdit = $("#direcClienEdit").val();
         let celuEdit = $("#telClienEdit").val();
         let emailEdit = $("#emailClienEdit").val();
-        console.log(nomEdit, apeEdit, cedEdit, direcEdit, celuEdit, emailEdit, id);
 
-        $.ajax({
-          type: "POST",
-          url: '',
-          dataType: "json",
-          data: {nomEdit, apeEdit, cedEdit, direcEdit, celuEdit, emailEdit, id},
-          success(result){
-            console.log(result);
-            if (result.resultado === "Editado") {
-              tabla.destroy();
-              $("#cerrarModalEdit").click();
-              Toast.fire({ icon: 'success', title: 'Cliente Actualizado' })
-              refrescar();
-            }
-            else{
-              e.preventDefault();
-            }
+        if(cedulaEdit){ validarC($("#cedClienEdit"),$("#errorNo"), "Error de Cedula, ").then(() => {
+          $("#error2").html("Error de Cedula, Cedula no Registrada")
+        }).catch(()=>{
+          if (nombreEdit && direccionEdit && apellidoEdit && correoEdit && telefonoEdit) {
+            $.ajax({
+              type: "POST",
+              url: '',
+              dataType: "json",
+              data: {nomEdit, apeEdit, cedEdit, direcEdit, celuEdit, emailEdit, id},
+              success(result){
+                console.log(result);
+                if (result.resultado === "Editado") {
+                  tabla.destroy();
+                  $("#cerrarModalEdit").click();
+                  Toast.fire({ icon: 'success', title: 'Cliente Actualizado' })
+                  refrescar();
+                }else{
+                  tabla.destroy();
+                  $("#error2").text(user.resultado+", "+user.error)
+                  refrescar();
+                }
+              }
+            })  
           }
-
-        })  
+        })} 
       })
 
+      //Reset de Error y Validaciones
       $(document).on('click', '#cerrarModalEdit', function() {
-        $('#error2').text(" ");
+        $("#editModal p").text(" ");
         $("#editModal input").attr("style","border-color: none;")
         $("#editModal input").attr("style","backgraund-image: none;");
       })
 
       $(document).on('click', '#cerrarModal', function() {
-        $('#error').text(" ");
+        $("#basicModal p").text(" ");
         $("#basicModal input").attr("style","border-color: none;")
         $("#basicModal input").attr("style","backgraund-image: none;");
       })
-    
 
-    function validarC(){
-      $.getJSON('',{
-        cedula: $("#cedClien").val(), 
-        validar: 'xd'},
-        function(valid){
-          console.log(valid);
-          if(valid.resultado === "Error de cedula"){
-            $("#error").text(valid.error);
-            $("#cedClien").attr("style","border-color: red;")
-            $("#cedClien").attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
+      $(document).on('click', '#cerrarModalDel', function() {
+        $("#delModal p").text(" ");
+      })
+      
+    //Validacion para la Cedula 
+    function validarC(input, div, mensaje){
+      return new Promise((resolve , reject)=>{
+        console.log()
+        $.getJSON('',{
+          cedula: input.val(), 
+          validar: 'xd'},
+          function(valid){
+            console.log(valid);
+            if(valid.resultado === "Error de cedula"){
+              div.text(mensaje+" "+valid.error);
+              input.attr("style","border-color: red;")
+              input.attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
+              return reject(false);
+            }else{
+    					div.text("");
+    					return resolve(true);
+    				}
           }
-        })
+        )
+      })
     }
+
 
   })
