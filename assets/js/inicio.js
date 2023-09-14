@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	mostrarCatalogo()
+
 	function mostrarCatalogo(){
 		$.ajax({
 			type: 'POST',
@@ -52,10 +53,10 @@ $(document).ready(function(){
          <p class="fw-bold">Precio: ${data[0].p_venta}</p>
          <p class="fw-bold">fecha vencimiento: ${data[0].vencimiento}</p>
          <div class="d-flex justify-content-between h-25">
-          <input placeholder="${data[0].stock}" class="form-control w-50 align-self-center" type="number">
-          <p class="card-title fw-bold fs-5 align-self-center">Total: <span class="Total fs-5 text-black">200</span></p>
+	        <input id="catalogoCantidadInput" placeholder="${data[0].stock}" class="w-50 form-control align-self-center" type="number">
+			<p class="card-title fw-bold fs-5 align-self-center">Total: <span class="Total fs-5 text-black">200</span></p>
          </div>
-         
+         <p style="color:red;display:none;font-size:15px" id="errorCantidadCatalogo"></p>
          `
          $('.mostrarP').html(datos);
      	}
@@ -63,17 +64,67 @@ $(document).ready(function(){
  
 	})
 
-	function stockMax(id , input){
-     $.ajax({
-     	type: 'POST',
-     	url: '',
-     	dataType: 'json',
-     	data: {stockMax: 'mostrar', id },
-     	success(data){
+	let cantidad, error, input;
+	async function validarStock(id, input = $('#catalogoCantidadInput')){
+		let stock = 0;
+		cantidad = Number(input.val());
+		error = $('#errorCantidadCatalogo');
+		await $.ajax({ type: 'POST', url: '', dataType: 'json', 
+			data: { validarStock: 'mostrar', id },
+			success: (data) => { stock = Number(data.stock) },
+			error: () => { throw new Error('Ocurrió un error al validar stock.') }
+		})
 
-     	}
-     })
+		if(cantidad > stock){
+			input.css({"border-color": "red", "background-image":"url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"});														
+			error.html('Cantidad no disponible').css({display: 'block'});
+			return false
+		}else{
+			input.css({"border-color" : "none"});
+			error.css({display: 'none'});
+			return true;
+		}
+
 	}
+
+
+	$('#añadirAlCarrito').click(function(){
+		input = $('#catalogoCantidadInput');
+		cantidad = Number(input.val());
+		error = $('#errorCantidadCatalogo');
+
+		if(validarVC(input, error, 'Error,') != true){
+			error.css({display: 'block'});
+			return
+		}else{
+			error.css({display: 'none'});
+		}
+
+		validarStock(id).then((res) => {
+			if(!res) return;
+
+			$.ajax({ url: '', type: 'post', dataType: 'json',
+				data: {añadirCarrito:'', id, cantidad},
+				success(res){
+					if(res.resultado === true){
+						$('.cerrar').click();
+						carrito.refrescar();
+						Toast.fire({ icon: 'success', title: 'Se ha añadido el producto al carrito.'});
+					}else{
+						$('.cerrar').click();
+						Toast.fire({ icon: 'error', title: res.msg});
+					}
+				},
+				error: (e) => {
+					$('.cerrar').click();
+					Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.'});
+				}
+
+			})
+			
+		})
+
+	})
 
 
 })

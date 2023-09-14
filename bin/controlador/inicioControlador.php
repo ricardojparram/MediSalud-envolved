@@ -15,6 +15,14 @@
 	 $model->rellenarDatos($_POST['id']);
 	}
 
+	if(isset($_POST['validarStock'], $_POST['id'])){
+		$model->getValidarStock($_POST['id']);
+	}
+
+	if(isset($_POST['añadirCarrito'], $_POST['id'], $_POST['cantidad'], $_SESSION['cedula'])){
+		$model->getAgregarProducto($_SESSION['cedula'], $_POST['id'], $_POST['cantidad']);
+	}
+
 	$VarComp = new initcomponents();	
 	$Nav = new nav();
 	$Car = new carDesplegable();
