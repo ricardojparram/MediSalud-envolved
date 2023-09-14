@@ -10,7 +10,7 @@ $(document).ready(function(){
 			data: {mostraC: 'XD' },
 			success(data){
 			let mostrar = '';
-             data.forEach(row =>{
+            data.forEach(row =>{
              	mostrar += `
 	            <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
 	              <div class="card">
@@ -36,7 +36,22 @@ $(document).ready(function(){
 		})
 	}
 
-	let id;
+	let id, producto;
+	let cantidad, error, input;
+
+	function actualizarTotal(){
+		input = $('#catalogoCantidadInput');
+		cantidad = Number(input.val());
+		error = $('#errorCantidadCatalogo');
+		if(validarVC(input, error, 'Error,') != true){
+			error.css({display: 'block'});
+			return
+		}else{
+			error.css({display: 'none'});
+		}
+		let total = producto.p_venta * cantidad;
+		$('#totalProductoCatalogo').html(total);
+	}
 
 	$(document).on('click' , '.mostrarC' , function(){
      id = this.id;
@@ -47,24 +62,25 @@ $(document).ready(function(){
      	dataType: 'json',
      	data: {mostraProductos: 'mostrar', id },
      	success(data){
-         let datos;
-         datos = `          
-         <p class="fw-bold">Producto: ${data[0].descripcion}</p>
-         <p class="fw-bold">Precio: ${data[0].p_venta}</p>
-         <p class="fw-bold">fecha vencimiento: ${data[0].vencimiento}</p>
-         <div class="d-flex justify-content-between h-25">
-	        <input id="catalogoCantidadInput" placeholder="${data[0].stock}" class="w-50 form-control align-self-center" type="number">
-			<p class="card-title fw-bold fs-5 align-self-center">Total: <span class="Total fs-5 text-black">200</span></p>
-         </div>
-         <p style="color:red;display:none;font-size:15px" id="errorCantidadCatalogo"></p>
-         `
-         $('.mostrarP').html(datos);
+     		producto = data[0];
+        	let datos;
+	        datos = `          
+		         <p class="fw-bold">Producto: ${data[0].descripcion}</p>
+		         <p class="fw-bold">Precio: ${data[0].p_venta}</p>
+		         <p class="fw-bold">fecha vencimiento: ${data[0].vencimiento}</p>
+		         <div class="d-flex justify-content-between h-25">
+			        <input id="catalogoCantidadInput" placeholder="${data[0].stock}" class="w-50 form-control align-self-center" type="number">
+					<p class="card-title fw-bold fs-5 align-self-center">Total: <span id="totalProductoCatalogo" class="fs-5 text-black">200</span></p>
+		         </div>
+		         <p style="color:red;display:none;font-size:15px" id="errorCantidadCatalogo"></p>
+         		`
+        	$('.mostrarP').html(datos);
+        	$('#catalogoCantidadInput').keyup(() => actualizarTotal())
      	}
-     }) 
+     })
  
 	})
 
-	let cantidad, error, input;
 	async function validarStock(id, input = $('#catalogoCantidadInput')){
 		let stock = 0;
 		cantidad = Number(input.val());
@@ -86,7 +102,6 @@ $(document).ready(function(){
 		}
 
 	}
-
 
 	$('#añadirAlCarrito').click(function(){
 		input = $('#catalogoCantidadInput');

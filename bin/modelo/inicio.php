@@ -95,21 +95,23 @@
 
     try {
 
-        $new = $this->con->prepare("SELECT cod_producto FROM carrito WHERE cod_producto = ? AND cedula = ?");
-        $new->bindValue(1, $this->id_producto);
-        $new->bindValue(2, $this->user);
-        $new->execute();
-        $res = $new->fetchAll(\PDO::FETCH_OBJ);
-        $resultado;
-        if(isset($res[0]->cod_producto)){
-            $resultado = ['resultado' => false, 'msg' => 'Este producto ya estaba agregado en el carrito.'];
-            die(json_encode($resultado));
-        }
+        // $new = $this->con->prepare("SELECT cod_producto FROM carrito WHERE cod_producto = ? AND cedula = ?");
+        // $new->bindValue(1, $this->id_producto);
+        // $new->bindValue(2, $this->user);
+        // $new->execute();
+        // $res = $new->fetchAll(\PDO::FETCH_OBJ);
+        // $resultado;
+        // if(isset($res[0]->cod_producto)){
+        //     $resultado = ['resultado' => false, 'msg' => 'Este producto ya estaba agregado en el carrito.'];
+        //     die(json_encode($resultado));
+        // }
 
         $new = $this->con->prepare("SELECT p_venta FROM producto WHERE cod_producto = ?");
         $new->bindValue(1,  $this->id_producto);
         $new->execute();
         [0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
+
+        $precio = floatval($data->p_venta) * $this->cantidad;
 
         $sql = "INSERT INTO carrito(cedula, cod_producto, cantidad, precioActual)
                 VALUES(?, ?, ?, ?)";
@@ -117,7 +119,7 @@
         $new->bindValue(1, $this->user);
         $new->bindValue(2, $this->id_producto);
         $new->bindValue(3, $this->cantidad);
-        $new->bindValue(4, $data->p_venta);
+        $new->bindValue(4, $precio);
         $new->execute();
 
         $resultado = ['resultado' => true, "msg" => "Se ha agregado el producto al carrito."];
