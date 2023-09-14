@@ -48,134 +48,123 @@
           </div>
         </div>
 
-        <!-- ======= Cta Section ======= -->
-        <section id="cta" class="cta">
-          <div class="container" data-aos="zoom-in">
 
-            <div class="text-center m-2">
-              <h3>Bienvenido a Medisalud</h3>
-              <p class="fs-5"> Somos una farmacia dedicada a la venta de medicamentos que puedan</p>
+        <!-- ======= Services Section ======= -->
+        <section id="services" class="services my-5">
+          <div class="container">
+
+            <div class="section-title">
+              <h2 class="text-center">Servicios</h2>
+              <p class="fs-4 text-center">Nuestra farmacia ofrece una amplia gama de productos que incluyen , entre otros, la venta de medicamentos en las siguientes presentaciones: </p>
             </div>
 
-          </div>
-        </section><!-- End Cta Section -->
-
-             <!-- ======= Services Section ======= -->
-    <section id="services" class="services my-5">
-      <div class="container">
-
-        <div class="section-title">
-          <h2 class="text-center">Servicios</h2>
-          <p class="fs-4 text-center">Nuestra farmacia ofrece una amplia gama de productos que incluyen , entre otros, la venta de medicamentos en las siguientes presentaciones: </p>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-            <div id="services_1" class="icon-box">
-              <div class="icon text-center mb-4 mt-4 ">
-                <i class="ri-capsule-fill"></i>
+            <div class="row">
+              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                <div id="services_1" class="icon-box">
+                  <div class="icon text-center mb-4 mt-4 ">
+                    <i class="ri-capsule-fill"></i>
+                  </div>
+                  <h4 class="title text-center"><a>Tabletas y Cápsulas</a></h4>
+                  <p class="description text-justify fs-7">Son formas sólidas de administración de medicamentos que contienen una dosis precisa de ingredientes activos</p>
+                </div>
               </div>
-              <h4 class="title text-center"><a>Tabletas y Cápsulas</a></h4>
-              <p class="description text-justify fs-7">Son formas sólidas de administración de medicamentos que contienen una dosis precisa de ingredientes activos</p>
-            </div>
-          </div>
 
-          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-            <div id="services_2" class="icon-box" data-aos="fade-up" data-aos-delay="100">
-              <div class="icon text-center mb-4 mt-4">
-                <i class="ri-medicine-bottle-fill"></i>
+              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                <div id="services_2" class="icon-box" data-aos="fade-up" data-aos-delay="100">
+                  <div class="icon text-center mb-4 mt-4">
+                    <i class="ri-medicine-bottle-fill"></i>
+                  </div>
+                  <h4 class="title text-center"><a>Jarabes</a></h4>
+                  <p class="description text-justify fs-7">Son formas líquidas de administración de medicamentos que contienen una solución de ingredientes activos en una base de agua y azúcar</p>
+                </div>
               </div>
-              <h4 class="title text-center"><a>Jarabes</a></h4>
-              <p class="description text-justify fs-7">Son formas líquidas de administración de medicamentos que contienen una solución de ingredientes activos en una base de agua y azúcar</p>
-            </div>
-          </div>
 
-          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-            <div id="services_3" class="icon-box" data-aos="fade-up" data-aos-delay="200">
-              <div class="icon text-center mb-4 mt-4">
-                <i class="ri-syringe-fill"></i>
+              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                <div id="services_3" class="icon-box" data-aos="fade-up" data-aos-delay="200">
+                  <div class="icon text-center mb-4 mt-4">
+                    <i class="ri-syringe-fill"></i>
+                  </div>
+                  <h4 class="title text-center"><a>Inyecciones</a></h4>
+                  <p class="description text-justify fs-7">Son formas de administración de medicamentos que se aplican directamente en el cuerpo a través de una aguja y una jeringa</p>
+                </div>
               </div>
-              <h4 class="title text-center"><a>Inyecciones</a></h4>
-              <p class="description text-justify fs-7">Son formas de administración de medicamentos que se aplican directamente en el cuerpo a través de una aguja y una jeringa</p>
-            </div>
-          </div>
 
-          <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-            <div id="services_4" class="icon-box" data-aos="fade-up" data-aos-delay="300">
-              <div class="icon text-center mb-4 mt-4">
-                <i class="ri-hand-sanitizer-fill"></i>
+              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                <div id="services_4" class="icon-box" data-aos="fade-up" data-aos-delay="300">
+                  <div class="icon text-center mb-4 mt-4">
+                    <i class="ri-hand-sanitizer-fill"></i>
+                  </div>
+                  <h4 class="title text-center"><a>Loción</a></h4>
+                  <p class="description text-justify fs-7">Es una forma líquida de administración de medicamentos que se aplica tópicamente en la piel para tratar afecciones dermatológicas</p>
+                </div>
               </div>
-              <h4 class="title text-center"><a>Loción</a></h4>
-              <p class="description text-justify fs-7">Es una forma líquida de administración de medicamentos que se aplica tópicamente en la piel para tratar afecciones dermatológicas</p>
+
             </div>
+
+          </div>
+        </section><!-- End Services Section -->
+
+        <section id="productos" class="productos my-4">
+         <div class="container">
+           <h3 class="text-center p-3 mt-3">Productos</h3>
+           <div class="row mx-auto">
+
+            <div class="col-lg-3 col-md-6 col-sm-4 mb-3">
+              <div class="card">
+                <div class="text-center m-3">
+                  <img class="card-img-top mx-auto" style="width: 80%" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
+                </div>
+                <div class="card-body d-flex justify-content-between">
+                  <p class="card-title align-self-center">Paracetamol</p>
+                  <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-4 mb-3">
+              <div class="card">
+                <div class="text-center m-3">
+                  <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
+                </div>
+                <div class="card-body d-flex justify-content-between">
+                  <p class="card-title align-self-center">Paracetamol</p>
+                  <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-4 mb-3">
+              <div class="card">
+                <div class="text-center m-3">
+                  <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
+                </div>
+                <div class="card-body d-flex justify-content-between">
+                  <p class="card-title align-self-center">Paracetamol</p>
+                  <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-4 mb-3">
+              <div class="card">
+                <div class="text-center m-3">
+                  <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
+                </div>
+                <div class="card-body d-flex justify-content-between">
+                  <p class="card-title align-self-center">Paracetamol</p>
+                  <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center mb-2"> 
+              <a class="btn btn-lg btn-dark" href="#!">Ver Todo</a>
+            </div>
+
           </div>
 
         </div>
-
-      </div>
-    </section><!-- End Services Section -->
-
-   <section id="productos" class="productos my-4">
-     <div class="container">
-       <h3 class="text-center p-3 mt-3">Productos</h3>
-       <div class="row mx-auto">
-
-        <div class="col-lg-3 col-md-6 col-sm-4 mb-3">
-          <div class="card">
-            <div class="text-center m-3">
-            <img class="card-img-top mx-auto" style="width: 80%" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-            </div>
-            <div class="card-body d-flex justify-content-between">
-              <p class="card-title align-self-center">Paracetamol</p>
-              <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-4 mb-3">
-          <div class="card">
-            <div class="text-center m-3">
-              <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-            </div>
-            <div class="card-body d-flex justify-content-between">
-              <p class="card-title align-self-center">Paracetamol</p>
-              <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-4 mb-3">
-          <div class="card">
-            <div class="text-center m-3">
-              <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-            </div>
-            <div class="card-body d-flex justify-content-between">
-              <p class="card-title align-self-center">Paracetamol</p>
-              <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-4 mb-3">
-          <div class="card">
-            <div class="text-center m-3">
-              <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-            </div>
-            <div class="card-body d-flex justify-content-between">
-              <p class="card-title align-self-center">Paracetamol</p>
-              <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
-            </div>
-          </div>
-        </div>
-
-         <div class="col-12 d-flex justify-content-center mb-2"> 
-          <a class="btn btn-lg btn-dark" href="#!">Ver Todo</a>
-        </div>
-
-       </div>
-
-     </div>
-   </section>
+      </section>
 
    
   </main>
@@ -243,6 +232,7 @@
   <?php $Car->car(); ?>
 
   <?php $VarComp->js() ?>
+  <script src="assets/js/inicio.js"></script>
   <script src="assets/js/carrito.js"></script>
   <script>
     
