@@ -6,6 +6,8 @@
   use modelo\moneda as moneda;
   
   $objModel = new moneda();
+  $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+  $permiso = $permisos['Moneda'];
 
   if(isset($_SESSION['nivel'])){
     if($_SESSION['nivel'] != 1 && $_SESSION['nivel'] != 2){
@@ -76,7 +78,7 @@
 
   $VarComp = new initcomponents();
   $header = new header();
-  $menu = new menuLateral();
+  $menu = new menuLateral($permisos);
 
   if(file_exists("vista/interno/configuraciones/monedaVista.php")){
     require_once("vista/interno/configuraciones/monedaVista.php");

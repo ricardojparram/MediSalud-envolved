@@ -7,6 +7,8 @@
 
 
   $objModel = new clientes();
+  $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+  $permiso = $permisos['Clientes'];
 
   if(!isset($_SESSION['nivel'])){
     die('<script> window.location = "?url=login" </script>');
@@ -46,7 +48,7 @@
 
    $VarComp = new initcomponents();
    $header = new header();
-   $menu = new menuLateral();
+   $menu = new menuLateral($permisos);
 
   if(file_exists("vista/interno/clientesVista.php")){
     require_once("vista/interno/clientesVista.php");

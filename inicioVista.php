@@ -125,10 +125,7 @@
 
     </main>
 
-<footer>
-   <?php $footer->footer(); ?>
-
-</footer>
+  <?php $footer->footer();  ?>
 
   <?php $Car->car(); ?>
 

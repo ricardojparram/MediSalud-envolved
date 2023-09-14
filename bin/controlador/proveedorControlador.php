@@ -6,6 +6,9 @@
   use modelo\proveedor as proveedor;
 
   $objModel = new proveedor();
+  $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+  $permiso = $permisos['Proveedor'];
+
 
   if(isset($_SESSION['nivel'])){
     if($_SESSION['nivel'] != 1 && $_SESSION['nivel'] != 2){
@@ -48,7 +51,7 @@
 
   $VarComp = new initcomponents();
   $header = new header();
-  $menu = new menuLateral();
+  $menu = new menuLateral($permisos);
 
   if(file_exists("vista/interno/productos/proveedorVista.php")){
     require_once("vista/interno/productos/proveedorVista.php");

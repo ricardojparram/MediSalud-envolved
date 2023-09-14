@@ -62,7 +62,7 @@
           <table class="table table-bordered" id="tableMostrar" width="100%" cellspacing="0">
             <thead>
               <tr>
-                <th scope="col">Descripcion</th>
+                <th scope="col">Descripción</th>
                 <th scope="col">Cant.</th>
                 <th scope="col">P.Venta</th>
                 <th scope="col">Tipo</th>
@@ -104,17 +104,27 @@
                   <div class="container-fluid">
                     <div class="row">
 
-                      <div class="form-group col-lg-8">
-                        <label class="col-form-label"> <strong>Descripcion del Producto *</strong> </label>
+                      <div class="form-group col-lg-4">
+                        <label class="col-form-label"> <strong>Código de barra</strong> </label>
+                        <div class="input-group">
+                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-fill"></i></button> 
+                         <input id="descripcion" class="form-control" placeholder="Ingresar código del producto">
+                       </div>
+                      <p class="error" id="error1" style="color: red"></p>
+                     </div>
+
+                      <div class="form-group col-lg-4">
+                        <label class="col-form-label"> <strong>Descripción del Producto</strong> </label>
                         <div class="input-group">
                          <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-fill"></i></button> 
                          <input id="descripcion" class="form-control" placeholder="descripcion del producto">
                        </div>
-                      <p class="error" id="error1" style="color: red"></p> 
+                      <p class="error" id="error1" style="color: red"></p>
                      </div>
 
+
                      <div class="form-group col-lg-4">
-                      <label class="col-form-label"> <strong>Vencimiento*</strong> </label>
+                      <label class="col-form-label"> <strong>Vencimiento</strong> </label>
                       <div class="input-group">
                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=" Descripción "><i class="bi bi-calendar"></i></button> 
                        <input type="date" id="fecha" class="form-control">
@@ -132,7 +142,7 @@
                  <div class="row">
 
                   <div class="form-group col-lg-4">
-                    <label class="col-form-label"> <strong>Composición del producto*</strong> </label>
+                    <label class="col-form-label"> <strong>Composición del producto</strong> </label>
                     <div class="input-group">
                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-line"></i></button>
                      <input class="form-control" id="composición" placeholder="Composición del producto">
@@ -141,7 +151,7 @@
                  </div>
 
                  <div class="form-group col-lg-4">
-                  <label class="col-form-label"> <strong>Posología*</strong> </label>
+                  <label class="col-form-label"> <strong>Posología</strong> </label>
                   <div class="input-group">
                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-clock"></i></button>
                    <input class="form-control" id="posologia" placeholder="posologia">
@@ -150,7 +160,7 @@
                </div>
 
                <div class="form-group col-lg-4">
-                <label class="col-form-label"> <strong>Ubicación*</strong> </label>
+                <label class="col-form-label"> <strong>Ubicación</strong> </label>
                 <div class="input-group">
                  <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class=" ri-map-2-line"></i></button>
                  <select class="form-control" aria-label="Default select example" id="ubicación">
@@ -174,7 +184,7 @@
           <div class="row">
 
             <div class="form-group col-lg-3">
-              <label class="col-form-label"> <strong>Laboratorio*</strong> </label>
+              <label class="col-form-label"> <strong>Laboratorio</strong></label>
               <div class="input-group">
                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class=" ri-flask-fill"></i></button>
                <select class="form-control" aria-label="Default select example" id="laboratorio">
@@ -194,7 +204,7 @@
 
 
          <div class="form-group col-lg-3">
-          <label class="col-form-label"> <strong>Presentación*</strong> </label>
+          <label class="col-form-label"> <strong>Presentación</strong> </label>
           <div class="input-group">
            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx  bxs-capsule"></i></button>
            <select class="form-control" aria-label="Default select example" id="presentación">
@@ -213,7 +223,7 @@
        </div>
 
        <div class="form-group col-lg-3">
-        <label class="col-form-label"> <strong>Tipo de producto*</strong> </label>
+        <label class="col-form-label"> <strong>Tipo de producto</strong> </label>
         <div class="input-group">
           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx bxs-bong"></i></button>
           <select class="form-control" aria-label="Default select example" id="tipoP">
@@ -232,7 +242,7 @@
      </div>
 
      <div class="form-group col-lg-3">
-       <label class="col-form-label"> <strong>Clase*</strong> </label>
+       <label class="col-form-label"> <strong>Clase</strong> </label>
        <div class="input-group">
         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx  bxs-capsule"></i></button>
         <select class="form-control" aria-label="Default select example" id="clase">
@@ -262,7 +272,7 @@
 
 
           <div class="form-group col-lg-4">
-            <label class="col-form-label"><strong>Contraindicaciones*</strong></label>
+            <label class="col-form-label"><strong>Contraindicaciones</strong></label>
             <div class="input-group">
              <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx  bx-no-entry"></i></button>
              <input class="form-control" id="contraIn" placeholder="text">
@@ -271,7 +281,7 @@
          </div>
 
          <div class="form-group col-lg-4">
-          <label class="col-form-label"> <strong>Cantidad*</strong> </label>
+          <label class="col-form-label"> <strong>Cantidad</strong> </label>
           <div class="input-group">
            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-sort-up"></i></button>
            <input type="number" class="form-control" id="cantidad" placeholder="cantidad">
@@ -280,7 +290,7 @@
        </div> 
 
        <div class="form-group col-lg-4">
-         <label class="col-form-label"> <strong> Precio de venta*</strong></label>
+         <label class="col-form-label"> <strong> Precio de venta</strong></label>
          <div class="input-group">
           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-cash-coin"></i></button>
           <input  class="form-control" id="precioV" placeholder="Precio de venta">
@@ -322,7 +332,7 @@
                 <div class="container-fluid">
                   <div class="row">
 
-                    <div class="form-group col-lg-8">
+                    <div class="form-group col-lg-4">
                       <label class="col-form-label"> <strong>Descripcion del Producto *</strong> </label>
                       <div class="input-group">
                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-fill"></i></button> 
@@ -330,9 +340,17 @@
                      </div>
                      <p class="error" id="errorE1" style="color: red"></p> 
                    </div>
+                   <div class="form-group col-lg-4">
+                      <label class="col-form-label"> <strong>Código de barra</strong> </label>
+                      <div class="input-group">
+                       <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-fill"></i></button> 
+                       <input name="descripcionEd" id="descripcionEd" class="form-control" placeholder="Ingresar código del producto">
+                     </div>
+                     <p class="error" id="errorE1" style="color: red"></p> 
+                   </div>
 
                    <div class="form-group col-lg-4">
-                    <label class="col-form-label"> <strong>Vencimiento*</strong> </label>
+                    <label class="col-form-label"> <strong>Vencimiento</strong> </label>
                     <div class="input-group">
                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=" Descripción "><i class="bi bi-calendar"></i></button> 
                      <input type="date" name="fechaEd" id="fechaEd" class="form-control">
@@ -352,7 +370,7 @@
                 
 
                 <div class="form-group col-lg-4">
-                  <label class="col-form-label"> <strong>Composición del producto*</strong> </label>
+                  <label class="col-form-label"> <strong>Composición del producto</strong> </label>
                   <div class="input-group">
                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-line"></i></button>
                    <input class="form-control" name="composicionEd" id="composicionEd" placeholder="Composición del producto">
@@ -361,7 +379,7 @@
                </div>
 
                <div class="form-group col-lg-4">
-                <label class="col-form-label"> <strong>Posología*</strong> </label>
+                <label class="col-form-label"> <strong>Posología</strong> </label>
                 <div class="input-group">
                  <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-clock"></i></button>
                  <input class="form-control" name="posologiaEd" id="posologiaEd" placeholder="posologia">
@@ -370,7 +388,7 @@
              </div>
 
              <div class="form-group col-lg-4">
-              <label class="col-form-label"> <strong>Ubicación*</strong> </label>
+              <label class="col-form-label"> <strong>Ubicación</strong> </label>
               <div class="input-group">
                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class=" ri-map-2-line"></i></button>
                <select class="form-control" aria-label="Default select example" id="ubicaciónEd">
@@ -395,7 +413,7 @@
         <div class="row">
 
           <div class="form-group col-lg-3">
-            <label class="col-form-label"> <strong>Laboratorio*</strong> </label>
+            <label class="col-form-label"> <strong>Laboratorio</strong> </label>
             <div class="input-group">
              <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class=" ri-flask-fill"></i></button>
              <select class="form-control" aria-label="Default select example" name="laboratorioEd" id="laboratorioEd">
@@ -414,7 +432,7 @@
        </div>
 
        <div class="form-group col-lg-3">
-        <label class="col-form-label"> <strong>Presentación*</strong> </label>
+        <label class="col-form-label"> <strong>Presentación</strong> </label>
         <div class="input-group">
          <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx  bxs-capsule"></i></button>
          <select class="form-control" aria-label="Default select example" name="presentaciónEd" id="presentaciónEd">
@@ -433,7 +451,7 @@
      </div>
 
        <div class="form-group col-lg-3">
-        <label class="col-form-label"> <strong>Tipo de producto*</strong> </label>
+        <label class="col-form-label"> <strong>Tipo de producto</strong> </label>
         <div class="input-group">
           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx bxs-bong"></i></button>
           <select class="form-control" aria-label="Default select example" name="tipoEd" id="tipoEd">
@@ -452,7 +470,7 @@
      </div>
 
     <div class="form-group col-lg-3">
-      <label class="col-form-label"> <strong>Clase*</strong> </label>
+      <label class="col-form-label"> <strong>Clase</strong> </label>
       <div class="input-group">
        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx  bxs-capsule"></i></button>
        <select class="form-control" aria-label="Default select example" id="claseEd">
@@ -481,7 +499,7 @@
         <div class="row">
 
           <div class="form-group col-lg-4">
-            <label class="col-form-label"><strong>Contraindicaciones*</strong></label>
+            <label class="col-form-label"><strong>Contraindicaciones</strong></label>
             <div class="input-group">
              <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx  bx-no-entry"></i></button>
              <input class="form-control" name="contraInEd" id="contraInEd" placeholder="text">
@@ -490,7 +508,7 @@
          </div>
 
          <div class="form-group col-lg-4">
-          <label class="col-form-label"> <strong>Cantidad*</strong> </label>
+          <label class="col-form-label"> <strong>Cantidad</strong> </label>
           <div class="input-group">
            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-sort-up"></i></button>
            <input type="number" class="form-control" name="cantidadEd" id="cantidadEd" placeholder="cantidad">
@@ -499,7 +517,7 @@
        </div> 
 
        <div class="form-group col-lg-4">
-         <label class="col-form-label"> <strong> Precio de venta*</strong></label>
+         <label class="col-form-label"> <strong> Precio de venta</strong></label>
          <div class="input-group">
           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-cash-coin"></i></button>
           <input  class="form-control" name="VentaEd" id="VentaEd" placeholder="Precio de venta">

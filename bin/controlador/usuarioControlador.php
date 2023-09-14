@@ -7,6 +7,8 @@
 
 	$objModel = new usuarios();
 	$mostrarN = $objModel->mostrarNivel();
+	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+    $permiso = $permisos['Usuarios'];
 
 	if(isset($_SESSION['nivel'])){
 		if($_SESSION['nivel'] != 1){
@@ -51,7 +53,7 @@
 
 	$VarComp = new initcomponents();
 	$header = new header();
-	$menu = new menuLateral();
+	$menu = new menuLateral($permisos);
 
 	if(file_exists("vista/interno/usuarioVista.php")){
 		require_once("vista/interno/usuarioVista.php");

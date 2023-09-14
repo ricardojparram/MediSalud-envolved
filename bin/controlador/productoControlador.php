@@ -5,7 +5,9 @@
   use component\menuLateral as menuLateral;
   use modelo\productos as productos;
 
-   $objModel = new productos();
+     $objModel = new productos();
+     $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+     $permiso = $permisos['Producto'];
 
   if(isset($_SESSION['nivel'])){
     if($_SESSION['nivel'] != 1 && $_SESSION['nivel'] != 2){
@@ -48,7 +50,7 @@
    
    $VarComp = new initcomponents();
    $header = new header();
-   $menu = new menuLateral();
+   $menu = new menuLateral($permisos);
 
   if(file_exists("vista/interno/productos/productoVista.php")){
     require_once("vista/interno/productos/productoVista.php");
