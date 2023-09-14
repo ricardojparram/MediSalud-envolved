@@ -1,6 +1,7 @@
 <?php 
 
   namespace modelo; 
+  use FPDF as FPDF;
   use config\connect\DBConnect as DBConnect;
 
   class ventas extends DBConnect{
@@ -63,6 +64,7 @@
        $new->execute();
        $this->id = $this->con->lastInsertId();
        echo json_encode(['id' => $this->id]);
+       $this->binnacle("Venta",$_SESSION['cedula'], "Registró Venta.");
        die();
 
        }else{
@@ -136,7 +138,30 @@
     }
    }
 
+    //---------------------------------VALIDAR ELIMINAR VENTA--------------------------------
 
+     public function validarSelect($id){
+
+      if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
+        return "Error de id!";
+      }
+
+      $this->id = $id;
+
+      $new = $this->con->prepare("SELECT * FROM venta v WHERE v.status = 1 and v.num_fact = ?");
+      $new->bindValue(1, $this->id);
+      $new->execute();
+      $data = $new->fetchAll();
+
+      if(isset($data[0]["num_fact"])){
+        echo json_encode(['resultado' => 'Si existe esa venta.']);
+        die();
+      }else{
+       echo json_encode(['resultado' => 'Error de venta']);
+       die();
+     }
+     
+   }
    
     //---------------------------------ELIMINAR VENTA--------------------------------
 
@@ -169,6 +194,10 @@
       $new->bindValue(1, $this->id);
       $new->execute();
       $data = $new->fetchAll(\PDO::FETCH_OBJ);
+      echo json_encode(['resultado' => 'Venta eliminada.']);
+      $this->binnacle("Venta",$_SESSION['cedula'], "Venta Anulada.");
+      die();
+
     }
     catch(\PDOexection $error){
       return $error;
@@ -178,25 +207,191 @@
     
     //---------------------------------MOSTRAR VENTA--------------------------------
 
-    public function getMostrarVentas(){
+    public function getMostrarVentas($bitacora = false){
       try{
-        $query = "SELECT v.cedula_cliente, CONCAT('<button class=\"btn btn-success detalleV\" id=\"', v.num_fact ,'\" data-bs-toggle=\"modal\" data-bs-target=\"#detalleVenta\">Ver detalles</button>') as productos, v.fecha , tp.des_tipo_pago,  CONCAT(IF(MOD(v.monto / cm.cambio, 1) >= 0.5, CEILING(v.monto / cm.cambio), FLOOR(v.monto / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' ,v.monto ,CONCAT('<button type=\"button\" id=\"', v.num_fact ,'\" class=\"btn btn-danger borrar\" data-bs-toggle=\"modal\" data-bs-target=\"#Borrar\"><i class=\"bi bi-trash3\"></i></button>') as opciones FROM venta v 
-          INNER JOIN tipo_pago tp ON v.cod_tipo_pago = tp.cod_tipo_pago 
-          INNER JOIN cambio cm ON cm.id_cambio = v.cod_cambio
-          INNER JOIN moneda m ON cm.moneda = m.id_moneda
-          WHERE v.status = 1;";
+        $query = "SELECT v.cedula_cliente , v.num_fact ,v.fecha , tp.des_tipo_pago , v.monto , CONCAT(IF(MOD(v.monto / cm.cambio, 1) >= 0.5, CEILING(v.monto / cm.cambio), FLOOR(v.monto / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN tipo_pago tp ON v.cod_tipo_pago = tp.cod_tipo_pago INNER JOIN cambio cm ON cm.id_cambio = v.cod_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE v.status = 1";
 
         $new = $this->con->prepare($query);
         $new->execute();
-        $data = $new->fetchAll();
-        
+        $data = $new->fetchAll(\PDO::FETCH_OBJ);
         echo json_encode($data);
+        if($bitacora) $this->binnacle("Ventas",$_SESSION['cedula'],"Consultó listado.");
         die();
       }catch(\PDOexection $error){
 
        return $error;     
      }  
     }
+
+     //---------------------------------EXPORTAR FACTURA--------------------------------
+
+    public function ExportarFactura($id){
+
+      if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
+        return "Error de id!";
+      }
+
+      $this->id = $id;
+      
+      return $this->exportar();
+    }
+
+    private function exportar(){
+      try{
+
+       $query = "SELECT v.cedula_cliente, c.nombre , c.apellido , c.direccion, cc.celular , v.num_fact ,v.fecha , tp.des_tipo_pago , v.monto , CONCAT(IF(MOD(v.monto / cm.cambio, 1) >= 0.5, CEILING(v.monto / cm.cambio), FLOOR(v.monto / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN tipo_pago tp ON v.cod_tipo_pago = tp.cod_tipo_pago INNER JOIN cambio cm ON cm.id_cambio = v.cod_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda INNER JOIN cliente c ON c.cedula = v.cedula_cliente INNER JOIN contacto_cliente cc ON cc.cedula = v.cedula_cliente WHERE v.status = 1 AND v.num_fact = ?";
+       $new = $this->con->prepare($query);
+       $new->bindValue(1 , $this->id);
+       $new->execute();
+       $dataV = $new->fetchAll();
+
+       $queryP = "SELECT p.descripcion , vp.cantidad , vp.precio_actual , v.num_fact FROM venta_producto vp INNER JOIN producto p ON vp.cod_producto = p.cod_producto INNER JOIN venta v ON v.num_fact = vp.num_fact WHERE v.status = 1 AND v.num_fact = ?";
+       $new = $this->con->prepare($queryP);
+       $new->bindValue(1 , $this->id);
+       $new->execute();
+       $dataP = $new->fetchAll();
+        
+       $nombre = 'Ticket_'.$dataV[0]['num_fact'].'_'.$dataV[0]['cedula_cliente'].'.pdf';
+       
+       $pdf = new FPDF();
+       $pdf->SetMargins(4,10,4);
+       $pdf->AddPage();
+       
+       $pdf->SetFont('Arial','B',10);
+       $pdf->SetTextColor(0,0,0);
+       $pdf->MultiCell(0,5,utf8_decode(strtoupper('Medisalud C.A')),0,'C',false);
+       $pdf->SetFont('Arial','',9);
+       $pdf->MultiCell(0,5,utf8_decode('Rif: 1234567'),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode('Dirreción: Barrio José Félix Ribas, Barquisimeto-Estado Lara.'),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode('Teléfono: 00000000'),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode('Correo: correo@gmail.com'),0,'C',false);
+
+       $pdf->Ln(1);
+       $pdf->Cell(0,5,utf8_decode("------------------------------------------------------"),0,0,'C');
+       $pdf->Ln(5);
+
+       $pdf->MultiCell(0,5,utf8_decode('Fecha: '. $dataV[0]['fecha']),0,'C',false);
+       $pdf->SetFont('Arial','B',10);
+       $pdf->MultiCell(0,5,utf8_decode(strtoupper("Ticket Nro: ". $dataV[0]['num_fact'])),0,'C',false);
+       $pdf->SetFont('Arial','',9);
+
+       $pdf->Ln(1);
+       $pdf->Cell(0,5,utf8_decode("------------------------------------------------------"),0,0,'C');
+       $pdf->Ln(5);
+
+       $pdf->MultiCell(0,5,utf8_decode("Cliente: ". $dataV[0]['nombre'].' '.$dataV[0]['apellido']),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode("Documento: ".$dataV[0]['cedula_cliente']),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode("Teléfono: ".$dataV[0]['celular']),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode("Dirección: ".$dataV[0]['direccion']),0,'C',false);
+
+       $pdf->Ln(1);
+       $pdf->Cell(0,5,utf8_decode("-------------------------------------------------------------------"),0,0,'C');
+       $pdf->Ln(3);
+
+       $tableWidth = 74;
+       $pdf->SetLeftMargin(($pdf->GetPageWidth() - $tableWidth) / 2);
+
+       $pdf->Cell(18,4,utf8_decode('Articulo'),0,0,'C');
+       $pdf->Cell(19,5,utf8_decode('Cant.'),0,0,'C');
+       $pdf->Cell(15,5,utf8_decode('Precio'),0,0,'C');
+       $pdf->Cell(28,5,utf8_decode('Total'),0,0,'C');
+
+       $pdf->Ln(3);
+       $pdf->Cell($tableWidth,5,utf8_decode("-------------------------------------------------------------------"),0,0,'C');
+       $pdf->Ln(5);
+
+       foreach ($dataP as $col => $value) {
+         $pdf->Cell(18,4,utf8_decode($value[0]),0,0,'C');
+         $pdf->Cell(19,4,utf8_decode($value[1]),0,0,'C');
+         $pdf->Cell(19,4,utf8_decode($value[2]),0,0,'C');
+         $pdf->Cell(28,4,utf8_decode($value[1] * $value[2]),0,1,'C');
+
+       }
+       $pdf->Ln(4);
+
+       $pdf->Cell($tableWidth,5,utf8_decode("-------------------------------------------------------------------"),0,0,'C');
+
+       $pdf->Ln(5);
+
+       $montoTotal = $dataV[0]['monto'];
+
+       $pdf->Cell(18,5,utf8_decode(""),0,0,'C');
+       $pdf->Cell(22,5,utf8_decode("SUBTOTAL"),0,0,'C');
+       $pdf->Cell(32,5,utf8_decode($montoTotal / 1.16),0,0,'C');
+
+       $pdf->Ln(5);
+
+       $pdf->Cell(18,5,utf8_decode(""),0,0,'C');
+       $pdf->Cell(22,5,utf8_decode("IVA (16%)"),0,0,'C');
+       $pdf->Cell(32,5,utf8_decode($montoTotal -($montoTotal / 1.16)),0,0,'C');
+
+       $pdf->Ln(5);
+
+       $pdf->Cell($tableWidth,5,utf8_decode("-------------------------------------------------------------------"),0,0,'C');
+
+       $pdf->Ln(5);
+
+       $pdf->Cell(18,5,utf8_decode(""),0,0,'C');
+       $pdf->Cell(22,5,utf8_decode("TOTAL"),0,0,'C');
+       $pdf->Cell(32,5,utf8_decode($montoTotal),0,0,'C');
+
+       $pdf->Ln(5);
+
+       $pdf->Cell(18,5,utf8_decode(""),0,0,'C');
+       $pdf->Cell(22,5,utf8_decode("CAMBIO"),0,0,'C');
+       $pdf->Cell(32,5,utf8_decode($dataV[0]['total_divisa']),0,0,'C');
+
+       $pdf->Ln(10);
+
+       $pdf->MultiCell($tableWidth,5,utf8_decode('*** Precios de productos incluyen impuestos. Para poder realizar un reclamo o devolución debe de presentar este ticket ***'),0,'C',false);
+
+       $pdf->SetFont('Arial','B',9);
+       $pdf->Cell($tableWidth,7,utf8_decode('Gracias por su compra'),'',0,'C');
+
+       $pdf->Ln(9);
+
+       $repositorio = 'assets/tickets/'.$nombre;
+       $pdf->Output('F',$repositorio);
+
+       $respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
+       echo json_encode($respuesta);
+       $this->binnacle("Venta",$_SESSION['cedula'], "Exporto Ticket de Venta");
+       die();
+
+      }catch(\PDOexection $error){
+        die($error);
+      }
+    }
+
+     //--------------------------------- VALIDAR CLIENTE --------------------------------
+
+     public function validarCliente($cedula){
+     
+      if(preg_match_all("/^[0-9]{3,30}$/", $cedula) != 1){
+        return "Error de cedula!";
+      }
+      
+       $this->cedula = $cedula;
+
+       return $this->validarC();
+
+     }
+
+     private function validarC(){
+       $new = $this->con->prepare("SELECT `cedula` FROM `cliente` WHERE `status` = 1 and `cedula` = ?");
+       $new->bindValue(1, $this->cedula);
+       $new->execute();
+       $data = $new->fetchAll();
+
+       if(isset($data[0]["cedula"])){
+        echo json_encode(['resultado' => 'cedula valida.']);
+        die();
+       }else{
+        echo json_encode(['resultado' => 'Error de cedula', 'error' => 'La cedula no está registrado.']);
+        die();
+       }
+
+     }
 
      //---------------------------------DETALLES PRODUCTOS POR VENTA--------------------------------
 
