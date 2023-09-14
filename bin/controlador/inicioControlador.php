@@ -7,6 +7,10 @@
 
 	$model = new inicio();
 
+	if (isset($_POST['mostraC'])) {
+	 $model->mostrarCatalogo();
+	}
+
 	$VarComp = new initcomponents();	
 	$Nav = new nav();
 	$Car = new carDesplegable();

@@ -11,6 +11,12 @@
   	parent::__construct();
   } 
 
+  public function mostrarCatalogo(){
+  die('Hola');
+  $query = '';
+
+  }
+
  }
 
 
