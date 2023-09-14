@@ -1,6 +1,8 @@
+let carrito = {};
 $(document).ready(function(){
-
-	refrescarCarrito();
+	
+	refrescarCarrito()
+	carrito.refrescar = () => refrescarCarrito();
 
 	function refrescarCarrito(){
 		mostrarCarrito().then(() => {
