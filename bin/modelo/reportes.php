@@ -116,15 +116,6 @@
 			$pdf = new FPDF();
 			$pdf->AddPage();
 			$pdf->SetMargins(15,30,15);
-
-			$spreadsheet = new Spreadsheet();
-			$activeWorksheet = $spreadsheet->getActiveSheet();
-			$activeWorksheet->setCellValue('A1', 'Hello World !');
-
-			$writer = new Xlsx($spreadsheet);
-			$nombre = $this->tipo.$this->fecha.$this->fechaFinal;
-			$repositorio = 'assets/reportes/'.$nombre. '.xlsx';
-			$writer->save($repositorio);
 			
 			$pdf->Image('assets/img/Logo_titulo.png',15,5,40);
 			$pdf->SetFont('Arial','B',16);
