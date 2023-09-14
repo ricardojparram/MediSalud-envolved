@@ -52,8 +52,8 @@
     $header = new header;
     $menu = new menuLateral($permisos);
     
-    if(file_exists("vista/interno/empresaEnvioVista.php")){
-    	require_once("vista/interno/empresaEnvioVista.php");
+    if(file_exists("vista/interno/configuraciones/empresaEnvioVista.php")){
+    	require_once("vista/interno/configuraciones/empresaEnvioVista.php");
     }else{
     	die('No existe la vista');
     }
