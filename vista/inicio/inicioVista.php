@@ -48,19 +48,8 @@
           </div>
         </div>
 
-        <!-- ======= Cta Section ======= -->
-        <section id="cta" class="cta">
-          <div class="container" data-aos="zoom-in">
 
-            <div class="text-center m-2">
-              <h3>Bienvenido a Medisalud</h3>
-              <p class="fs-5"> Somos una farmacia dedicada a la venta de medicamentos que puedan</p>
-            </div>
-
-          </div>
-        </section><!-- End Cta Section -->
-
-             <!-- ======= Services Section ======= -->
+          <!-- ======= Services Section ======= -->
     <section id="services" class="services my-5">
       <div class="container">
 
@@ -120,14 +109,20 @@
        <h3 class="text-center p-3 mt-3">Productos</h3>
        <div class="row mx-auto">
 
+
         <div class="col-lg-3 col-md-6 col-sm-4 mb-3">
           <div class="card">
             <div class="text-center m-3">
-            <img class="card-img-top mx-auto" style="width: 80%" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
+              <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
             </div>
-            <div class="card-body d-flex justify-content-between">
-              <p class="card-title align-self-center">Paracetamol</p>
-              <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div class="d-flex justify-content-between">
+                <p class="card-title align-self-center">Paracetamol</p>
+                <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+              </div>
+              <div class="m-0 d-flex flex-column">
+                <p class="card-text align-self-left">Precio: $200</p>
+              </div>
             </div>
           </div>
         </div>
@@ -137,9 +132,14 @@
             <div class="text-center m-3">
               <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
             </div>
-            <div class="card-body d-flex justify-content-between">
-              <p class="card-title align-self-center">Paracetamol</p>
-              <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div class="d-flex justify-content-between">
+                <p class="card-title align-self-center">Paracetamol</p>
+                <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+              </div>
+              <div class="m-0 d-flex flex-column">
+                <p class="card-text align-self-left">Precio: $200</p>
+              </div>
             </div>
           </div>
         </div>
@@ -149,9 +149,14 @@
             <div class="text-center m-3">
               <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
             </div>
-            <div class="card-body d-flex justify-content-between">
-              <p class="card-title align-self-center">Paracetamol</p>
-              <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div class="d-flex justify-content-between">
+                <p class="card-title align-self-center">Paracetamol</p>
+                <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+              </div>
+              <div class="m-0 d-flex flex-column">
+                <p class="card-text align-self-left">Precio: $200</p>
+              </div>
             </div>
           </div>
         </div>
@@ -161,12 +166,18 @@
             <div class="text-center m-3">
               <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
             </div>
-            <div class="card-body d-flex justify-content-between">
-              <p class="card-title align-self-center">Paracetamol</p>
-              <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div class="d-flex justify-content-between">
+                <p class="card-title align-self-center">Paracetamol</p>
+                <a class="btn btn-success align-self-center" href="#!"><i class="bi bi-cart4"></i></a>
+              </div>
+              <div class="m-0 d-flex flex-column">
+                <p class="card-text align-self-left">Precio: $200</p>
+              </div>
             </div>
           </div>
         </div>
+
 
          <div class="col-12 d-flex justify-content-center mb-2"> 
           <a class="btn btn-lg btn-dark" href="#!">Ver Todo</a>
