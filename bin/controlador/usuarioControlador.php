@@ -8,7 +8,8 @@
 	$objModel = new usuarios();
 	$mostrarN = $objModel->mostrarNivel();
 	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
-  	$permiso = $permisos['Usuarios'];
+
+    $permiso = $permisos['Usuarios'];
 
 	if(!isset($_SESSION['nivel'])){
 		die('<script> window.location = "?url=login" </script>');

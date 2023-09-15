@@ -29,8 +29,13 @@
                   <li class="nav-item px-2"><a class="nav-link fw-medium" href="#">Nosotros</a></li>
                   <li class="nav-item px-2"><a class="nav-link fw-medium" href="#">Catálogo</a></li>
                   <li class="nav-item px-2"><a class="nav-link fw-medium" href="#">Comprar</a></li>
+ 
                   <li class="nav-item px-2"><a class="nav-link fw-medium" href="#">Contactos</a></li>
+                  <li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=miscompras">Mis compras</a>
+                  </li>
+
                 </ul>
+
                     <div class="mx-2 mx-lg-0 sec">
                       <div class="m-0 "><a class="text-success icon-car me-4" href="#"><em class="ocultarlg">Carrito </em><span class="bi bi-cart4 fs-4"></span><span class="badge badge-light icon-badge">6</span></a></div>
                       <div class="m-0 '.$display.'"><a class="text-success me-2" href="?url=login"><em class="ocultarlg">Iniciar sesión</em><i class="bi bi-person-fill fs-4"></i></a></div>

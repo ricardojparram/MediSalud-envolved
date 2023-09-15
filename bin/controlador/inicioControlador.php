@@ -3,6 +3,7 @@
 	use component\initcomponents as initcomponents;
 	use component\nav as nav;
 	use component\carDesplegable as carDesplegable;
+	use component\footerInicio as footerInicio;
 	use modelo\inicio as inicio;
 
 	$model = new inicio();
@@ -27,10 +28,11 @@
 		$model->getAgregarProducto($_SESSION['cedula'], $_POST['id'], $_POST['cantidad']);
 	}
 
+	
 	$VarComp = new initcomponents();	
 	$Nav = new nav();
 	$Car = new carDesplegable();
-	
+	$footer= new footerInicio(); 
 	require "vista/inicio/inicioVista.php";	
 
 ?>

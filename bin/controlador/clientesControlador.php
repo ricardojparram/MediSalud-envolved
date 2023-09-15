@@ -10,11 +10,13 @@
   $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
   $permiso = $permisos['Clientes'];
 
+
   if($permiso->status != 1) die('<script> window.location = "?url=home" </script>');
 
   if(isset($_POST['getPermisos']) && $permiso->status == 1){
     die(json_encode($permiso));
   }
+
 
   if(!isset($_SESSION['nivel'])){
     die('<script> window.location = "?url=login" </script>');
