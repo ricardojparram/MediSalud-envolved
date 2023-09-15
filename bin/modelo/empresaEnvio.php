@@ -162,7 +162,10 @@ class empresaEnvio extends DBConnect{
 
 	public function rellenarEdit($id){
 
-
+        if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+			echo json_encode(['resultado' => 'Error de id','error' => 'id inválida.']);
+			die();
+		}
 
 		$this->id = $id;
 
