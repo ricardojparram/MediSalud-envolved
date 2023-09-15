@@ -95,16 +95,16 @@
 
     try {
 
-        // $new = $this->con->prepare("SELECT cod_producto FROM carrito WHERE cod_producto = ? AND cedula = ?");
-        // $new->bindValue(1, $this->id_producto);
-        // $new->bindValue(2, $this->user);
-        // $new->execute();
-        // $res = $new->fetchAll(\PDO::FETCH_OBJ);
-        // $resultado;
-        // if(isset($res[0]->cod_producto)){
-        //     $resultado = ['resultado' => false, 'msg' => 'Este producto ya estaba agregado en el carrito.'];
-        //     die(json_encode($resultado));
-        // }
+        $new = $this->con->prepare("SELECT cod_producto FROM carrito WHERE cod_producto = ? AND cedula = ?");
+        $new->bindValue(1, $this->id_producto);
+        $new->bindValue(2, $this->user);
+        $new->execute();
+        $res = $new->fetchAll(\PDO::FETCH_OBJ);
+        $resultado;
+        if(isset($res[0]->cod_producto)){
+            $resultado = ['resultado' => false, 'msg' => 'Este producto ya estaba agregado en el carrito.'];
+            die(json_encode($resultado));
+        }
 
         $new = $this->con->prepare("SELECT p_venta FROM producto WHERE cod_producto = ?");
         $new->bindValue(1,  $this->id_producto);
