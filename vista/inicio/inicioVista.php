@@ -181,22 +181,16 @@
         <div class="text-center m-3">
           <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
         </div>
-<<<<<<< HEAD
+
         <div class="card-title mostrarP p-3">
-=======
-        <div class="card-title mostrarP">
->>>>>>> be223fb369006abca0d78a3aa934ed2d4761bb1d
+
 
         </div>
       </div>
       <div class="modal-footer">
-<<<<<<< HEAD
         <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cerrar</button>
         <button type="button" class="btn btn-success" id="añadirAlCarrito">Añadir al carrito</button>
-=======
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Añadir al carrito</button>
->>>>>>> be223fb369006abca0d78a3aa934ed2d4761bb1d
+
       </div>
     </div>
   </div>
