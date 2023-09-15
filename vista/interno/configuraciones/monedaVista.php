@@ -53,7 +53,7 @@
         </div>
 
         <div class="col-6 text-end mt-3">
-          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#registrarMoneda">Agregar</button>
+          <button id="agregarMoneda" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#registrarMoneda">Agregar</button>
 
         </div>
       </div>
@@ -104,7 +104,7 @@
         </div>
 
         <div class="col-6 text-end mt-3">
-          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#registrarModal">Agregar</button>
+          <button id="agregarCambio" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#registrarModal">Agregar</button>
 
         </div>
       </div>
@@ -309,7 +309,7 @@
 
 
 
-<!-- Modal Editar-->
+<!-- Modal Editar cambio-->
 
     <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
      <div class="modal-dialog modal-lg">
@@ -368,7 +368,7 @@
     </div>
     </div>
 
-    <!-- Modal Eliminar-->
+    <!-- Modal Eliminar Cambio-->
 
     <div class="modal fade" id="delModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">

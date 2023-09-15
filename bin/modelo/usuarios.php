@@ -17,11 +17,6 @@ class usuarios extends DBConnect{
     parent::__construct();
   }
 
-  public function consulta(){
-    $this->binnacle("Usuario",$_SESSION['cedula'],"Consulto listado");
-    die();
-  }
-
   public function getAgregarUsuario($cedula,$name,$apellido,$email,$password,$tipoUsuario){
 
     if(preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $name) == false){
@@ -93,7 +88,7 @@ class usuarios extends DBConnect{
         $new->execute();
         $resultado = ['resultado' => 'Registrado correctamente.'];
         echo json_encode($resultado);
-        $this->binnacle("Usuario",$_SESSION['cedula'],"Agrego un usuario");
+        $this->binnacle("Usuario",$_SESSION['cedula'],"Registró un usuario");
         die();
 
       }else{
@@ -114,15 +109,16 @@ class usuarios extends DBConnect{
 
 }
 
-public function getMostrarUsuario(){
+public function getMostrarUsuario($bitacora = false){
 
   try{
-    $query = "SELECT u.cedula, u.nombre, u.apellido, u.correo, u.nivel, CONCAT('<button type=\"button\" class=\"btn btn-success editar\" id=\"',u.cedula,'\" data-bs-toggle=\"modal\" data-bs-target=\"#editModal\"><i class=\"bi bi-pencil\"></i></button> <button type=\"button\" class=\"btn btn-danger eliminar\" id=\"',u.cedula,'\" data-bs-toggle=\"modal\" data-bs-target=\"#delModal\"><i class=\"bi bi-trash3\"></i></button>') AS opciones FROM usuario u WHERE u.status = 1";
+    $query = "SELECT u.cedula, u.nombre, u.apellido, u.correo, u.nivel FROM usuario u WHERE u.status = 1";
 
     $new = $this->con->prepare($query);
     $new->execute();
     $data = $new->fetchAll();
     echo json_encode($data);
+    if($bitacora) $this->binnacle("Ususario",$_SESSION['cedula'],"Consultó listado.");
     die();
 
   }catch(\PDOexection $error){
@@ -158,7 +154,7 @@ private function eliminarUsuario(){
         $new->execute();
         $resultado = ['resultado' => 'Eliminado'];
         echo json_encode($resultado);
-        $this->binnacle("Usuario",$_SESSION['cedula'],"Elimino un usuario");
+        $this->binnacle("Usuario",$_SESSION['cedula'],"Eliminó un usuario");
         die();
         
       }catch (\PDOexection $error) {
@@ -250,7 +246,7 @@ private function eliminarUsuario(){
       $data = $new->fetchAll();
       $resultado = ['resultado' => 'Editado'];
       echo json_encode($resultado);
-      $this->binnacle("Usuario",$_SESSION['cedula'],"Edito un usuario");
+      $this->binnacle("Usuario",$_SESSION['cedula'],"Editó un usuario");
       die();
     }catch(\PDOexection $error){
 
@@ -280,6 +276,10 @@ private function validarC(){
       $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
       echo json_encode($resultado);
       die();
+    }else {
+      $resultado = ['resultado' => 'No Registrada' ];
+      echo json_encode($resultado);
+      die();
     }
   }catch(\PDOException $error){
     return $error;
@@ -305,6 +305,10 @@ private function validarE(){
     $data = $new->fetchAll();
     if(isset($data[0]['correo'])){
       $resultado = ['resultado' => 'Error de email' , 'error' => 'El email ya está registrado.'];
+      echo json_encode($resultado);
+      die();
+    }else {
+      $resultado = ['resultado' => 'No Registrada' ];
       echo json_encode($resultado);
       die();
     }

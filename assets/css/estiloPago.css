@@ -47,7 +47,7 @@
 .f1-step.activated p { color: var(--barraprogress); }
 .f1-step.active p { color: var(--barraprogress); }
 
-.f1 fieldset { display: none; text-align: left; }
+.f1 fieldset {  display: none;  text-align: left; }
 
 .f1-buttons { text-align: right; }
 
@@ -84,4 +84,22 @@ only screen and (                min-resolution: 2dppx) {
 .form-check-input:focus {
     border-color: #a7b754;
     box-shadow: 0 0 0 0.25rem #a7b7548c;
+}
+
+/* Cuadros Direccion Reciente */
+
+.cuadro{
+	border: 3px solid #818181cc;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.cuadro:hover{
+	background-color: #8181815c;
+}
+
+.iconDirec{
+	height: 40px;
+	width: 40px;
+	border-radius: 50%;
 }
