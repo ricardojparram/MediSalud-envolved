@@ -62,6 +62,7 @@ CREATE TABLE modulos (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 CREATE TABLE permisos(
+    id_permiso int AUTO_INCREMENT PRIMARY KEY,
     id_rol int NOT NULL,
     id_modulo int NOT NULL,
     nombre_accion varchar(40) NOT NULL,

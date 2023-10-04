@@ -40,21 +40,21 @@
       die('<script> window.location = "?url=login" </script>');
     }
 
-    $clientesLi = ($this->permisos['Clientes']->status == 1) ? 
+    $clientesLi = ($this->permisos['Clientes']["Consultar"] == 1) ? 
     '<li class="nav-item">
         <a class="nav-link '.$clientes.'" href="?url=clientes">
             <i class="bi bi-people"></i>
             <span>Clientes</span>
         </a>
       </li>' : '';
-    $ventasLi = ($this->permisos['Ventas']->status == 1 ) ?
+    $ventasLi = ($this->permisos['Ventas']["Consultar"] == 1 ) ?
                 '<li class="nav-item">
                     <a class="nav-link '.$ventas.'" href="?url=ventas">
                         <i class="bi bi-currency-dollar"></i>
                         <span>Ventas</span>
                     </a>
                 </li>' : '';
-    $comprasLi = ($this->permisos['Compras']->status == 1) ?
+    $comprasLi = ($this->permisos['Compras']["Consultar"] == 1) ?
     '<li class="nav-item">
         <a class="nav-link '.$compras.'" href="?url=compras">
             <i class="bi bi-cart-check"></i>
@@ -62,34 +62,34 @@
         </a>
     </li>' : '';
 
-    $metodoLi = ($this->permisos['Metodo pago']->status == 1) ?
+    $metodoLi = ($this->permisos['Metodo pago']["Consultar"] == 1) ?
     '<li>
         <a href="?url=metodo" class="'.$metodo.'" >
           <i class="bi bi-circle "></i><span>Metodo de pago</span>
         </a>
     </li>' : '';
-    $monedaLi = ($this->permisos['Moneda']->status == 1) ?
+    $monedaLi = ($this->permisos['Moneda']["Consultar"] == 1) ?
     '<li>
         <a href="?url=moneda" class="'.$moneda.'">
           <i class="bi bi-circle "></i><span>Moneda</span>
         </a>
     </li> ' : '';
 
-    $bancoLi = ($this->permisos['Bancos']->status == 1) ?
+    $bancoLi = ($this->permisos['Bancos']["Consultar"] == 1) ?
     '<li>
         <a href="?url=banco" class="'.$banco.'">
           <i class="bi bi-circle "></i><span>Bancos</span>
         </a>
     </li>' : '';
 
-    $empresaEnvioLi = ($this->permisos['Empresa de Envio']->status == 1) ?
+    $empresaEnvioLi = ($this->permisos['Empresa de Envio']["Consultar"] == 1) ?
     '<li>
         <a href="?url=empresaEnvio" class="'.$empresaEnvio.'">
           <i class="bi bi-circle "></i><span>Empresa envio</span>
         </a>
     </li>' : '';
 
-    $configuracionesLi = ($this->permisos['Metodo pago']->status == 1 || $this->permisos['Moneda']->status == 1 || $this->permisos['Bancos']->status == 1 || $this->permisos['Empresa de Envio']) ?
+    $configuracionesLi = ($this->permisos['Metodo pago']["Consultar"] == 1 || $this->permisos['Moneda']["Consultar"] == 1 || $this->permisos['Bancos']["Consultar"] == 1 || $this->permisos['Empresa de Envio']) ?
     '<li class="nav-item">
         <a class="nav-link '.$configuracionesA.'" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
           <i class="bi bi-gear"></i><span>Configuraciones</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -106,38 +106,38 @@
 
         </ul>
     </li>' : '';
-    $productosLi = ($this->permisos['Producto']->status == 1) ?
+    $productosLi = ($this->permisos['Producto']["Consultar"] == 1) ?
     '<li>
         <a href="?url=producto" class="'.$producto.'">
           <i class="bi bi-circle"></i><span>Producto</span>
         </a>
     </li>' : '';
-    $laboratorioLi = ($this->permisos['Laboratorio']->status == 1) ?
+    $laboratorioLi = ($this->permisos['Laboratorio']["Consultar"] == 1) ?
     '<li>
         <a href="?url=laboratorio" class="'.$laboratorio.'">
           <i class="bi bi-circle"></i><span>Laboratorio</span>
         </a>
     </li>' : '';
-    $proveedorLi = ($this->permisos['Proveedor']->status == 1) ?
+    $proveedorLi = ($this->permisos['Proveedor']["Consultar"] == 1) ?
     '<li>
         <a href="?url=proveedor" class="'.$proveedor.'">
           <i class="bi bi-circle"></i><span>Proveedor</span>
         </a>
     </li>' : '';
 
-    $claseLi = ($this->permisos['Clase']->status == 1) ?
+    $claseLi = ($this->permisos['Clase']["Consultar"] == 1) ?
     '<li>
       <a href="?url=clase" class="'.$clase.'">
         <i class="bi bi-circle"></i><span>Clase</span>
       </a>
     </li>' : '';
-    $tipoLi = ($this->permisos['Tipo']->status == 1) ?
+    $tipoLi = ($this->permisos['Tipo']["Consultar"] == 1) ?
     '<li>
       <a href="?url=tipo" class="'.$tipo.'">
         <i class="bi bi-circle"></i><span>Tipo</span>
       </a>
     </li>' : '';
-    $categoriaLi = ($this->permisos['Clase']->status == 1 || $this->permisos['Tipo'] == 1) ?
+    $categoriaLi = ($this->permisos['Clase']["Consultar"] == 1 || $this->permisos['Tipo'] == 1) ?
     '<li>
         <a href="#" class="'.$categoria.'">
           <i class="bi bi-circle"></i><span>Categoría</span>
@@ -149,14 +149,14 @@
         </ul>
     </li>' : '';
 
-    $presentacionLi = ($this->permisos['Presentacion']->status == 1) ?
+    $presentacionLi = ($this->permisos['Presentacion']["Consultar"] == 1) ?
     '<li>
         <a href="?url=presentacion" class="'.$presentacion.'">
           <i class="bi bi-circle"></i><span>Presentación</span>
         </a>
     </li>' : '';
 
-    $productosNavLi = ($this->permisos['Producto']->status == 1 || $this->permisos['Laboratorio']->status == 1 || $this->permisos['Proveedor']->status == 1 || $this->permisos['Clase']->status == 1 || $this->permisos['Tipo']->status == 1 || $this->permisos['Presentacion']->status == 1) ?
+    $productosNavLi = ($this->permisos['Producto']["Consultar"] == 1 || $this->permisos['Laboratorio']["Consultar"] == 1 || $this->permisos['Proveedor']["Consultar"] == 1 || $this->permisos['Clase']["Consultar"] == 1 || $this->permisos['Tipo']["Consultar"] == 1 || $this->permisos['Presentacion']["Consultar"] == 1) ?
     '<li class="nav-item">
           <a class="nav-link '.$productosA.'" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
               <i class="bi bi-grid"></i><span>Productos</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -176,28 +176,28 @@
           </ul>
     </li>' : '';
 
-    $reportesLi = ($this->permisos['Reportes']->status == 1) ?
+    $reportesLi = ($this->permisos['Reportes']["Consultar"] == 1) ?
     '<li class="nav-item ">
         <a class="nav-link '.$reportes.'" href="?url=reportes">
           <i class="bi bi-card-checklist"></i><span>Reportes</span>
         </a>
     </li>' : '';
 
-    $usuarioLi = ($this->permisos['Usuarios']->status == 1) ?
+    $usuarioLi = ($this->permisos['Usuarios']["Consultar"] == 1) ?
     '<li class="nav-item">
         <a class="nav-link '.$usuario.'" href="?url=usuario">
           <i class="bi bi-person"></i><span>Usuarios</span>
         </a>
     </li>' : '';
 
-    $bitacoraLi = ($this->permisos['Bitacora']->status == 1) ?
+    $bitacoraLi = ($this->permisos['Bitacora']["Consultar"] == 1) ?
     '<li class="nav-item ">
         <a class="nav-link '.$bitacora.'" href="?url=bitacora">
           <i class="bi bi-journal-text"></i><span>Bitacora</span>
         </a>
     </li>' : '';
 
-    $rolesLi = ($this->permisos['Roles']->status == 1) ?
+    $rolesLi = ($this->permisos['Roles']["Consultar"] == 1) ?
     '<li class="nav-item ">
         <a class="nav-link '.$roles.'" href="?url=roles">
           <i class="bi bi-person-lock"></i><span>Roles</span>

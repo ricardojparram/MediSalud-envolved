@@ -57,25 +57,36 @@
 
       try {
 
-        $new = $this->con->prepare('SELECT id, nombre FROM modulos WHERE status = 1;');
+        $new = $this->con->prepare('SELECT id_modulo, nombre FROM modulos WHERE status = 1; ');
         $new->execute();
         $modulos = $new->fetchAll(\PDO::FETCH_OBJ);
         $permisos = [];
         foreach ($modulos as $modulo) { $permisos[$modulo->nombre] = ''; }
 
-        $query = 'SELECT m.nombre, m.id, p.registrar, p.editar, p.eliminar, p.consultar, p.status 
-                  FROM permisos p
-                  INNER JOIN modulos m ON m.id = p.id_modulo
-                  WHERE p.cod_nivel = ? AND m.nombre = ?;';
+        $query = 'SELECT m.nombre, p.nombre_accion, p.status FROM permisos p
+                  INNER JOIN modulos m ON m.id_modulo = p.id_modulo
+                  WHERE p.id_rol = ? AND m.nombre = ?';
 
-        foreach ($permisos as $modulo => $valor) {
+        foreach ($permisos as $nombre_modulo => $valor) {
+
           $new = $this->con->prepare($query);
           $new->bindValue(1, $this->rol);
-          $new->bindValue(2, $modulo);
+          $new->bindValue(2, $nombre_modulo);
           $new->execute();
           $data = $new->fetchAll(\PDO::FETCH_OBJ);
-          $permisos[$modulo] = $data[0];
+
+          $acciones = []; 
+          foreach($data as $modulo){
+            $acciones += [$modulo->nombre_accion => 1];
+          }
+          $permisos[$nombre_modulo] = $acciones;
         }
+
+        echo "<pre>";
+        print_r($permisos);
+        echo "<pre>";
+        die();
+
 
         return $permisos;
 
