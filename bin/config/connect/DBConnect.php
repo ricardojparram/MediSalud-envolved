@@ -82,12 +82,6 @@
           $permisos[$nombre_modulo] = $acciones;
         }
 
-        echo "<pre>";
-        print_r($permisos);
-        echo "<pre>";
-        die();
-
-
         return $permisos;
 
       } catch (\PDOException $e) {
