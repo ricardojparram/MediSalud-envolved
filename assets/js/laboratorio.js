@@ -2,13 +2,10 @@ $(document).ready(function(){
 
 	let mostrar
 	let permisos, editarPermiso, eliminarPermiso, registrarPermiso;
-    $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:'a'},
+    $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:''},
         success(data){ permisos = data; }
     }).then(function(){
     	rellenar(true);
-    	console.log(permisos.registrar)
-    	registrarPermiso = (permisos.registrar != 1) ? 'disabled' : ''; 
-    	$('#agregarModalButton').attr(registrarPermiso, '');
     });
 
 	function rellenar(bitacora = false){ 
@@ -20,8 +17,8 @@ $(document).ready(function(){
             success(data){
                 let tabla;
                 data.forEach(row => {
-                	editarPermiso = (permisos.editar != 1) ? 'disabled' : '';
-                	eliminarPermiso = (permisos.eliminar != 1) ? 'disabled' : '';
+                	editarPermiso = (typeof permisos.Editar === 'undefined') ? 'disabled' : '';
+                	eliminarPermiso = (typeof permisos.Eliminar === 'undefined') ? 'disabled' : '';
                     tabla += `
                         <tr>
                             <td>${row.rif}</th>
@@ -73,7 +70,7 @@ $(document).ready(function(){
 
 	$("#registrar").click((e)=>{
 
-		if(permisos.registrar != 1){
+		if(typeof permisos.Registrar === 'undefined'){
             Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
             throw new Error('Permiso denegado.');
         }
@@ -172,10 +169,11 @@ $(document).ready(function(){
 
 	$("#editar").click((e)=>{
 
-		if(permisos.editar != 1){
+		if(typeof permisos.Editar === 'undefined'){
             Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
             throw new Error('Permiso denegado.');
         }
+
 
 		e.preventDefault();
 
@@ -242,7 +240,7 @@ $(document).ready(function(){
 
 
 	$('#borrar').click(()=>{
-		if(permisos.eliminar != 1){
+		if(typeof permisos.Eliminar === 'undefined'){
             Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
             throw new Error('Permiso denegado.');
         }
