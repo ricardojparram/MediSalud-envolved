@@ -17,8 +17,8 @@
 		die(json_encode($permisos['Roles']));
 	}
 
-	if(isset($_POST['mostrar'], $permiso['Consultar'])){
-		$model->mostrarRoles();
+	if(isset($_POST['mostrar'], $_POST['bitacora'], $permiso['Consultar'])){
+		$model->mostrarRoles($_POST['bitacora']);
 	}
 
 	if(isset($_POST['mostrar_permisos'], $_POST['id'], $permiso['Modificar acciones'])){

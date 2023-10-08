@@ -14,10 +14,10 @@
 			parent::__construct();	
 		}
 
-		public function mostrarRoles(){
+		public function mostrarRoles($bitacora){
 
 			try{
-
+				$this->conectarDB();
 				$sql = 'SELECT * FROM(
 							SELECT r.id_rol as id, r.nombre, COUNT(*) as totales FROM rol r
 							INNER JOIN usuario u
@@ -31,7 +31,8 @@
 				$new = $this->con->prepare($sql);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
-
+				if($bitacora == "true") $this->binnacle("Roles",$_SESSION['cedula'],"Consultó listado.");
+				$this->desconectarDB();
 				die(json_encode($data));
 
 			}catch(\PDOException $e){
@@ -49,7 +50,7 @@
 
 			try {
 				
-				
+				$this->conectarDB();
 				$new = $this->con->prepare('SELECT id_modulo, nombre FROM modulos WHERE status = 1');
 				$new->execute();
 				$modulos = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -77,7 +78,8 @@
 					}
 					$permisos[$nombre_modulo] = $acciones;
 				}
-
+				$this->binnacle("Roles",$_SESSION['cedula'],"Consultó el los permisos del rol {$this->id_rol}");
+				$this->desconectarDB();
 				die(json_encode($permisos));
 				
 			} catch (\PDOException $e) {
@@ -97,6 +99,7 @@
 
 			try {
 				
+				$this->conectarDB();
 				$sql = "UPDATE permisos SET status = ? WHERE id_permiso = ?";
 
 				foreach ($this->permisos as $modulo) {
@@ -112,8 +115,9 @@
 						die($e);
 					}
 				}
-				
 				$respuesta = ['respuesta' => 'ok', 'msg' => 'Se han actualizado los permisos correctamente.'];
+				$this->binnacle("Roles",$_SESSION['cedula'],"Actualizó los permisos del rol {$this->id_rol}");
+				$this->desconectarDB();
 				die(json_encode($respuesta));
 
 			} catch (\PDOException $e) {
