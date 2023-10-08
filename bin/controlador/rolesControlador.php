@@ -21,15 +21,7 @@
 		$model->mostrarRoles();
 	}
 
-	if(isset($_POST['modulos'], $_POST['id'],$permiso['Modificar acceso'])){
-		$model->getModulo($_POST['id']);
-	}
-
-	if(isset($_POST['datos_modulos'], $_POST['id'], $permiso['Modificar acceso'])){
-		$model->getAccesoModulos($_POST['datos_modulos'], $_POST['id']);
-	}
-
-	if(isset($_POST['permisos'], $_POST['id'], $permiso['Modificar acciones'])){
+	if(isset($_POST['mostrar_permisos'], $_POST['id'], $permiso['Modificar acciones'])){
 		$model->getPermisos($_POST['id']);
 	}
 
