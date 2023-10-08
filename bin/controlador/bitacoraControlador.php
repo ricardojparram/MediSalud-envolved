@@ -13,10 +13,9 @@
 	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
 	$permiso = $permisos['Bitacora'];
 
-	 if($permiso->status != 1) die(`<script> window.location = "?url=home" </script>`);
+	 if(!isset($permiso['Consultar'])) die(`<script> window.location = "?url=home" </script>`);
 
-	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
-	if(isset($_POST['mostrar'])){
+	if(isset($_POST['mostrar']) && isset($permiso['Consultar'])){
 		$objModel->mostrarBitacora();
 	}
 
