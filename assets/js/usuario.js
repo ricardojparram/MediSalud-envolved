@@ -7,7 +7,9 @@ $(document).ready(function(){
         success(data){ permisos = data; }
     }).then(function(){
       refrescar(true);
-    	registrarPermiso = (permisos.registrar != 1) ? 'disabled' : ''; 
+    	registrarPermiso = (typeof permisos.Registrar === 'undefined') ? 'disabled' : ''; 
+		editarPermiso = (typeof permisos.Editar === 'undefined') ? 'disabled' : '';
+        eliminarPermiso = (typeof permisos.Eliminar === 'undefined') ? 'disabled' : '';
     	$('#agregarModalButton').attr(registrarPermiso, '');
     });
 
@@ -20,15 +22,13 @@ $(document).ready(function(){
 			data: {mostrar: "user" , bitacora},
 			success(data){
 				data.forEach(row => {
-					editarPermiso = (permisos.editar != 1)? 'disabled' : '';
-					eliminarPermiso = (permisos.eliminar != 1)? 'disabled' : '';
 					tabla+=`
 						<tr>
 							<td>${row.cedula}</td>
 							<td>${row.nombre}</td>
 							<td>${row.apellido}</td>
 							<td>${row.correo}</td>
-							<td>${row.nivel} </td>
+							<td>${row.rol} </td>
 							<td class="d-flex justify-content-center">
 							<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.cedula}" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
 							<button type="button" ${eliminarPermiso} class="btn btn-danger eliminar mx-2" id="${row.cedula}" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
@@ -58,7 +58,7 @@ $(document).ready(function(){
 
 	$("#enviar").click((e)=>{
 
-		if(permisos.registrar != 1){
+		if(typeof permisos.Registrar === 'undefined'){
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
 			throw new Error('Permiso denegado.');
 		}
@@ -113,7 +113,7 @@ $(document).ready(function(){
 
 	$("#delete").click(() =>{
 
-		if(permisos.eliminar != 1){
+		if(typeof permisos.Eliminar === 'undefined'){
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
 			throw new Error('Permiso denegado.');
 		}
@@ -172,7 +172,7 @@ $(document).ready(function(){
 
 		$("#enviarEdit").click((e)=>{
 
-			if(permisos.editar != 1){
+			if(typeof permisos.Editar === 'undefined'){
 				Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
 				throw new Error('Permiso denegado.');
 			}

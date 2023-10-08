@@ -30,7 +30,9 @@ $(document).ready(function(){
         success(data){ permisos = data; }
     }).then(function(){
       refrescar(true);
-    	registrarPermiso = (permisos.registrar != 1) ? 'disabled' : ''; 
+    	registrarPermiso = (typeof permisos.Registrar === 'undefined') ? 'disabled' : ''; 
+      editarPermiso = (typeof permisos.Editar === 'undefined')?  'disabled' : '';
+      eliminarPermiso = (typeof permisos.Eliminar === 'undefined')? 'disabled' : '';
     	$('#agregarModalButton').attr(registrarPermiso, '');
     });
 
@@ -43,8 +45,6 @@ $(document).ready(function(){
         data: {mostrar: "clien", bitacora },
         success(list){
           list.forEach(row => {
-            editarPermiso = (permisos.editar != 1)?  'disabled' : '';
-    	      eliminarPermiso = (permisos.eliminar != 1)? 'disabled' : '';
             tabla+=`
               <tr>
                 <td>${row.nombre}</td>
@@ -79,7 +79,7 @@ $(document).ready(function(){
     //Envio de Datos Registrar
     $("#enviar").click((e)=>{
 
-      if(permisos.registrar != 1){
+      if(typeof permisos.Registrar === 'undefined'){
         Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
         throw new Error('Permiso denegado.');
       }
@@ -135,7 +135,7 @@ $(document).ready(function(){
     //Eliminar id asignado
       $("#delete").click(() =>{
 
-        if(permisos.eliminar != 1){
+        if(typeof permisos.Eliminar === 'undefined'){
           Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
           throw new Error('Permiso denegado.');
         }
@@ -196,7 +196,7 @@ $(document).ready(function(){
       //Envio de Datos Registrar
       $("#enviarEdit").click((e)=>{
 
-        if(permisos.editar != 1){
+        if(typeof permisos.Editar === 'undefined'){
           Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
           throw new Error('Permiso denegado.');
         }

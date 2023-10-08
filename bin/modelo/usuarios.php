@@ -10,7 +10,7 @@ class usuarios extends DBConnect{
   private $apellido;
   private $email;
   private $password;
-  private $nivel;
+  private $rol;
   private $id;
 
   function __construct(){
@@ -45,7 +45,7 @@ class usuarios extends DBConnect{
       die();
     }
     if(preg_match_all("/^[0-9]{1,2}$/", $tipoUsuario) == false){
-      $resultado = ['resultado' => 'Error de Nivel' , 'error' => 'Nivel invalido.'];
+      $resultado = ['resultado' => 'Error de rol' , 'error' => 'rol invalido.'];
       echo json_encode($resultado);
       die();
     }
@@ -55,13 +55,14 @@ class usuarios extends DBConnect{
     $this->apellido = $apellido;
     $this->email = $email;
     $this->password = $password;
-    $this->nivel = $tipoUsuario;
+    $this->rol = $tipoUsuario;
 
     return $this->agregarUsuario();
   }
 
   private function agregarUsuario(){
    try{
+    parent::conectarDB();
     $new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
     $new->bindValue(1, $this->cedula);
     $new->execute();
@@ -78,17 +79,18 @@ class usuarios extends DBConnect{
 
         $this->password = password_hash($this->password, PASSWORD_BCRYPT);
 
-        $new = $this->con->prepare("INSERT INTO `usuario`(`cedula`, `nombre`, `apellido`, `correo`, `password`, `nivel`, `status`) VALUES (?,?,?,?,?,?,1)");
+        $new = $this->con->prepare("INSERT INTO `usuario`(`cedula`, `nombre`, `apellido`, `correo`, `password`, `rol`, `status`) VALUES (?,?,?,?,?,?,1)");
         $new->bindValue(1, $this->cedula);
         $new->bindValue(2, $this->name); 
         $new->bindValue(3, $this->apellido);
         $new->bindValue(4, $this->email);
         $new->bindValue(5, $this->password);
-        $new->bindValue(6, $this->nivel);
+        $new->bindValue(6, $this->rol);
         $new->execute();
         $resultado = ['resultado' => 'Registrado correctamente.'];
         echo json_encode($resultado);
         $this->binnacle("Usuario",$_SESSION['cedula'],"Registró un usuario");
+        parent::desconectarDB();
         die();
 
       }else{
@@ -112,13 +114,15 @@ class usuarios extends DBConnect{
 public function getMostrarUsuario($bitacora = false){
 
   try{
-    $query = "SELECT u.cedula, u.nombre, u.apellido, u.correo, u.nivel FROM usuario u WHERE u.status = 1";
+    parent::conectarDB();
+    $query = "SELECT u.cedula, u.nombre, u.apellido, u.correo, u.rol FROM usuario u WHERE u.status = 1";
 
     $new = $this->con->prepare($query);
     $new->execute();
     $data = $new->fetchAll();
     echo json_encode($data);
     if($bitacora) $this->binnacle("Ususario",$_SESSION['cedula'],"Consultó listado.");
+    parent::desconectarDB();
     die();
 
   }catch(\PDOexection $error){
@@ -128,12 +132,14 @@ public function getMostrarUsuario($bitacora = false){
  }
 }
 
-public function mostrarNivel(){
+public function mostrarRol(){
   try{
-    $new = $this->con->prepare("SELECT * FROM `nivel` WHERE status = 1");
+    parent::conectarDB();
+    $new = $this->con->prepare("SELECT * FROM `rol` WHERE status = 1");
     $new->execute();
     $data = $new->fetchAll(\PDO::FETCH_OBJ);
     return $data;
+    parent::desconectarDB();
   }catch(\PDOexection $error){
 
    return $error;
@@ -149,12 +155,14 @@ public function getEliminar($cedula){
 
 private function eliminarUsuario(){
   try {
+        parent::conectarDB();
         $new = $this->con->prepare("DELETE FROM `usuario` WHERE `usuario`.`cedula` = ?"); //"UPDATE `usuario` SET `status` = '0' WHERE `usuario`.`cedula` = ?"
         $new->bindValue(1, $this->cedula);
         $new->execute();
         $resultado = ['resultado' => 'Eliminado'];
         echo json_encode($resultado);
         $this->binnacle("Usuario",$_SESSION['cedula'],"Eliminó un usuario");
+        parent::desconectarDB();
         die();
         
       }catch (\PDOexection $error) {
@@ -170,11 +178,13 @@ private function eliminarUsuario(){
 
     private function seleccionarUnico(){
       try{
-        $new = $this->con->prepare("SELECT cedula, nombre, apellido, correo, nivel FROM `usuario` WHERE `usuario`.`cedula` = ?");
+        parent::conectarDB();
+        $new = $this->con->prepare("SELECT cedula, nombre, apellido, correo, rol FROM `usuario` WHERE `usuario`.`cedula` = ?");
         $new->bindValue(1, $this->cedula);
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
         echo json_encode($data);
+        parent::desconectarDB();
         die();
 
       }catch(\PDOexection $error){
@@ -212,7 +222,7 @@ private function eliminarUsuario(){
       die();
     }
     if(preg_match_all("/^[0-9]{1,2}$/", $tipoUsuario) == false){
-      $resultado = ['resultado' => 'Error de Nivel' , 'error' => 'Nivel invalido.'];
+      $resultado = ['resultado' => 'Error de rol' , 'error' => 'rol invalido.'];
       echo json_encode($resultado);
       die();
     }
@@ -222,7 +232,7 @@ private function eliminarUsuario(){
     $this->apellido = $apellido;
     $this->email = $email;
     $this->password = $password;
-    $this->nivel = $tipoUsuario;
+    $this->rol = $tipoUsuario;
     $this->id = $id;
 
     $this->editarUsuario();
@@ -233,20 +243,21 @@ private function eliminarUsuario(){
     try{
       
       $this->password = password_hash($this->password, PASSWORD_BCRYPT);
-
-      $new = $this->con->prepare("UPDATE `usuario` SET `cedula`= ?,`nombre`= ?,`apellido`= ?,`correo`= ?,`password`=?,`nivel`=? WHERE `usuario`.`cedula` = ?");
+      parent::conectarDB();
+      $new = $this->con->prepare("UPDATE `usuario` SET `cedula`= ?,`nombre`= ?,`apellido`= ?,`correo`= ?,`password`=?,`rol`=? WHERE `usuario`.`cedula` = ?");
       $new->bindValue(1, $this->cedula);
       $new->bindValue(2, $this->name); 
       $new->bindValue(3, $this->apellido);
       $new->bindValue(4, $this->email);
       $new->bindValue(5, $this->password);
-      $new->bindValue(6, $this->nivel);
+      $new->bindValue(6, $this->rol);
       $new->bindValue(7, $this->id);
       $new->execute();
       $data = $new->fetchAll();
       $resultado = ['resultado' => 'Editado'];
       echo json_encode($resultado);
       $this->binnacle("Usuario",$_SESSION['cedula'],"Editó un usuario");
+      parent::desconectarDB();
       die();
     }catch(\PDOexection $error){
 
@@ -268,10 +279,12 @@ private function eliminarUsuario(){
 
 private function validarC(){
   try{
+    parent::conectarDB();
     $new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
     $new->bindValue(1, $this->cedula);
     $new->execute();
     $data = $new->fetchAll();
+    parent::desconectarDB();
     if(isset($data[0]['cedula'])){
       $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
       echo json_encode($resultado);
@@ -299,10 +312,12 @@ public function getValidarE($email){
 
 private function validarE(){
   try{
+    parent::conectarDB();
     $new = $this->con->prepare("SELECT `correo` FROM `usuario` WHERE `status` = 1 and `correo` = ?");
     $new->bindValue(1, $this->email);
     $new->execute();
     $data = $new->fetchAll();
+    parent::desconectarDB();
     if(isset($data[0]['correo'])){
       $resultado = ['resultado' => 'Error de email' , 'error' => 'El email ya está registrado.'];
       echo json_encode($resultado);
