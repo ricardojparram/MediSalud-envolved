@@ -41,7 +41,8 @@ class moneda extends DBConnect{
       $new->bindValue(2 , $this->moneda);
       $new->execute();
       $resultado = ['resultado' => 'Registado con exito'];
-      echo json_encode($resultado);      
+      echo json_encode($resultado);
+      $this->binnacle("Moneda",$_SESSION['cedula'],"Registró un Valor de Moneda.");
       die();
 
      }catch(\PDOexection $error){
@@ -52,10 +53,7 @@ class moneda extends DBConnect{
    public function getMostrarCambio(){
    	try{
        $new = $this->con->prepare("
-        SELECT m.nombre,c.cambio,c.fecha, CONCAT('<button type=\"button\" class=\"btn btn-success editar\" data-bs-toggle=\"modal\" data-bs-target=\"#editarModal\" id=\"',c.id_cambio,'\"><i class=\"bi bi-pencil\"></i></button>
-        <button type=\"button\" class=\"btn btn-danger borrar\" data-bs-toggle=\"modal\" data-bs-target=\"#delModal\" id=\"',c.id_cambio,'\">
-        <i class=\"bi bi-trash3\"></i>
-        </button>') AS Opciones FROM moneda m INNER JOIN cambio c ON c.moneda = m.id_moneda WHERE c.status = 1 AND m.status = 1");
+        SELECT m.nombre,c.cambio,c.fecha, c.id_cambio FROM moneda m INNER JOIN cambio c ON c.moneda = m.id_moneda WHERE c.status = 1 AND m.status = 1");
        $new->execute();
        $data = $new->fetchAll();
        echo json_encode($data);
@@ -96,6 +94,7 @@ class moneda extends DBConnect{
       $new->bindValue(1, $this->id);
       $new->execute();
       $resultado = ['resultado' => 'Eliminado'];
+      $this->binnacle("Moneda",$_SESSION['cedula'],"Eliminó un Valor de Moneda.");
       echo json_encode($resultado);
       die();
     }
@@ -160,6 +159,7 @@ class moneda extends DBConnect{
       $data = $new->fetchAll();
       
       $resultado = ['resultado' => 'Editado'];
+      $this->binnacle("Moneda",$_SESSION['cedula'],"Editó un Valor de Moneda.");
       echo json_encode($resultado);      
       die();
 
@@ -169,12 +169,13 @@ class moneda extends DBConnect{
 
    }
 
-   public function getMoneda(){
+   public function getMoneda($bitacora = false){
       try{
-       $new = $this->con->prepare("SELECT`nombre`,CONCAT('<button type=\"button\" class=\"btn btn-success update\" data-bs-toggle=\"modal\" data-bs-target=\"#editModal\" id=\"',id_moneda,'\"><i class=\"bi bi-pencil\"></i></button> <button type=\"button\" class=\"btn btn-danger delete\" data-bs-toggle=\"modal\" data-bs-target=\"#deleteModal\" id=\"',id_moneda,'\"> <i class=\"bi bi-trash3\"></i></button>') FROM `moneda` WHERE status = 1");
+       $new = $this->con->prepare("SELECT * FROM `moneda` WHERE status = 1");
        $new->execute();
        $data = $new->fetchAll();
        echo json_encode($data);
+       if($bitacora) $this->binnacle("Moneda",$_SESSION['cedula'],"Consultó listado.");
        die();
 
      }catch(\PDOexection $error){
@@ -201,6 +202,7 @@ class moneda extends DBConnect{
       $new->bindValue(1, $this->moneda);
       $new->execute();
       $resultado = ['resultado' => 'Registado con exito'];
+      $this->binnacle("Moneda",$_SESSION['cedula'],"Registró una Moneda.");
       echo json_encode($resultado);      
       die();
 
@@ -247,6 +249,7 @@ class moneda extends DBConnect{
       $new->bindValue(2, $this->id);
       $new->execute();
       $resultado = ['resultado' => 'Actualizado con exito'];
+      $this->binnacle("Moneda",$_SESSION['cedula'],"Editó una Moneda.");
       echo json_encode($resultado);      
       die();
 
@@ -263,6 +266,7 @@ class moneda extends DBConnect{
        $new->bindValue(1, $this->id);
        $new->execute();
        $data = ['resultado' => 'Eliminado con exito'];
+       $this->binnacle("Moneda",$_SESSION['cedula'],"Eliminó una Moneda.");
        echo json_encode($data);
        die();
 

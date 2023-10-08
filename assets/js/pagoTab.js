@@ -26,8 +26,10 @@ $(document).ready(function() {
 	let select
 	let memas
 
+
 	DatosP();
 	precio();
+	empresaEnvio();
 
 	$("#aliasInp").fadeOut(0);
 
@@ -110,9 +112,10 @@ $(document).ready(function() {
 	}
 	// Fin Metodo de Pago
 
-
 	// Precio y Cambio
 	function precio(){
+		let impuesto
+		let total
 		$.ajax({
 			type: "post",
             url: "",
@@ -123,7 +126,12 @@ $(document).ready(function() {
 				if (pre[0].cuenta > 0) {
 					console.log(pre);
 					$("#valorBs").html(parseFloat(pre[0].total).toFixed(2)+" Bs");
-					$("#valorUsd").html(parseFloat(pre[0].total / pre[0].cambio).toFixed(2)+" $")
+					impuesto = pre[0].total * 0.16;
+					$("#impuesto").html(parseFloat(impuesto).toFixed(2)+" Bs");
+					total = pre[0].total + impuesto;
+					$("#total").html(parseFloat(total).toFixed(2)+" Bs");
+					$("#valorUsd").html(parseFloat(total / pre[0].cambio).toFixed(2)+" $");
+
 				} else {
 					console.log("nada")
 					let div=`
@@ -135,6 +143,52 @@ $(document).ready(function() {
 			}
 		})
 	}
+
+	// Mostrar Empresa y Sede de Envio
+
+	function empresaEnvio(){
+		let selEm
+		$.ajax({
+			type: "post",
+            url: "",
+            dataType: "json",
+			data:{mostrarE: "empre"},
+			success(empre){
+				var empresas = empre
+				empresas.forEach(row => {
+					selEm+=`
+					<option value="${row.id_empresa}">${row.nombre}</option>
+					`;
+				})
+				$('#empresa').html('<option selected disabled>Nombre</option>' + selEm);
+			}
+		});
+		
+
+	};
+	
+	let nomEmpre
+		$("#empresa").change(()=> {
+			let selEnvi
+			nomEmpre = $("#empresa").val();
+			
+			$.ajax({
+				type: "post",
+				url: "",
+				dataType: "json",
+				data:{mostrarS: "empre", nomEmpre},
+				success(sed){
+					console.log(sed);
+					var sede = sed
+					sede.forEach(row => {
+						selEnvi+=`
+						<option value="${row.id_sede}">${row.ubicacion}</option>
+						`;
+					})
+					$('#sede').html('<option selected disabled>Ubicacion</option>' + selEnvi);
+				}
+			});
+		})
 
 	// Ocultar y Mostrar Input Alias 
 	$("#checkAlias").on('change', function() {
@@ -182,29 +236,58 @@ $(document).ready(function() {
 	 	// }	
 	});
 
+	// Validicaiones Segundo Step
+
+	$("#estado").keyup(()=> {  validarNombre($("#estado"),$("#errorEstado"), "Error de Estado,") });
+	$("#municipio").keyup(()=> {  validarNombre($("#municipio"),$("#errorMun"), "Error de Municipio,") });
+	$("#direc").keyup(()=> {  validarDireccion($("#direc"),$("#errorDirecEntre"), "Error de Direccion,") });
+	$("#numCasa").keyup(()=> {  validarDireccion($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") });
+	$("#inputAlias").keyup(()=> {  if($("#checkAlias").is(':checked')) { validarStringLong($("#inputAlias"),$("#errorAlias"), "Error de Alias,") } });
+	$("#codPostal").keyup(()=> {  validarPostal($("#codPostal"),$("#errorCodPostal"), "Error de Direccion,") });
+	$("#empresa").change(()=> {  validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,") });
+	$("#sede").change(()=> {  validarSelect($("#sede"),$("#errorSede"), "Error de Sede,") });
+
+	$("#2").click((e)=>{
+
+		let estado = validarNombre($("#estado"),$("#errorEstado"), "Error de Estado,") ;
+		let municipio = validarNombre($("#municipio"),$("#errorMun"), "Error de Municipio,") ;
+		let direcEntre = validarDireccion($("#direc"),$("#errorDirecEntre"), "Error de Direccion,") ;
+		let numCasa = validarDireccion($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") ;
+		let alias 
+		if($("#checkAlias").is(':checked')) { alias = validarStringLong($("#inputAlias"),$("#errorAlias"), "Error de Alias,") ;}
+		let codPostal = validarPostal($("#codPostal"),$("#errorCodPostal"), "Error de Direccion,") ;
+		let empresa = validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,");
+		let sede = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+
+		console.log($("#direc").val().length)
+
+	 	// if (estado && municipio && direcEntre && numCasa && codPostal && empresa && sede) {
+	 	// 	next_step = true;
+	 	// }else{
+	 	// 	next_step = false;
+	 	// }	
+	});
 
 
 	fechaHoy($('#fecha'));
-	let distancia
-	let numero
-	// $('#canDep').on('keyup', function() {
-	// 	console.log("hola")
-	// 	numero = $('#canDep').val();
 
-	// 	console.log(numero)
-    //     console.log($('#canDep').length)
-	// 	if (distancia === 2) {
-	// 		let nuevo = numero.slice(0, distancia-2)+","+numero.slice(distancia)
+	// Validicaiones Tercer Step
 
-	// 	}
-		
-	// });
+	$("#codPostal").keyup(()=> {  validarVC($("#canDep"),$("#errorCanDep"), "Error en la Cantidad,") });
+	$("#codPostal").keyup(()=> {  validarFecha($("#fecha"),$("#errorFecha"), "Error en la Fecha,") });
+	$("#empresa").keyup(()=> {  validarNumero($("#numRef"),$("#errorNumRef"), "Error en la Cantidad") });
+	$("#sede").keyup(()=> {  validarString($("#nomBanc"),$("#errorNomBanc"), "Error de Banco,") });
+	$("#tipoP").change(()=> {  validarSelect($("#tipoP"),$("#errorTipoP"), "Error de Tipo,") });
+	$("#bancTipo").change(()=> {  validarSelect($("#bancTipo"),$("#errorBancTipo"), "Error de Banco,") });
 
 	$("#3").click((e)=>{
-		let cantidad = validarVC($("#canDep"),$("#error3"), "Error en la cantidad,");
-		let fecha = validarFecha($("#fecha"),$("#error3"), "Error en la fecha,");
-		// let referencia = validarVC($("#canDep"),$("#error3"), "Error en la cantidad");
-		let nomban = validarString($("#nomBanc"),$("#error3"), "Error de nombre de banco,");
+		let cantidad = validarVC($("#canDep"),$("#errorCanDep"), "Error en la Cantidad,");
+		let fecha = validarFecha($("#fecha"),$("#errorFecha"), "Error en la Fecha,");
+		let referencia = validarNumero($("#numRef"),$("#errorNumRef"), "Error en la Cantidad");
+		let nomban = validarString($("#nomBanc"),$("#errorNomBanc"), "Error de Banco,");
+
+		let tipoPago = validarSelect($("#tipoP"),$("#errorTipoP"), "Error de Tipo,");
+		let NomBanc = validarSelect($("#bancTipo"),$("#errorBancTipo"), "Error de Banco,");
 		
 	})
     

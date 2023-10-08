@@ -26,6 +26,9 @@
 	if(isset($_POST['exportar'], $_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']) && $permiso->consultar == 1){
 		$objModel->getExportar($_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']);
 	}
+	if(isset($_POST['estadistico'], $_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']) && $permiso->consultar == 1){
+		$objModel->getReporteEstadistico($_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']);
+	}
 
 
 	if(file_exists("vista/interno/reportesVista.php")){

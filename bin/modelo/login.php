@@ -35,9 +35,9 @@
 		private function loginSistema(){
 
 			try{
-				$new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo, u.password, u.img, u.nivel as nivel, n.nombre as puesto FROM usuario u 
-					INNER JOIN nivel n
-					ON n.cod_nivel = u.nivel
+				$new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo, u.password, u.img, u.rol as nivel, r.nombre as puesto FROM usuario u 
+					INNER JOIN rol r
+					ON r.id_rol = u.rol
 					WHERE u.cedula = ?"); 
 				$new->bindValue(1 , $this->cedula);
 				$new->execute();

@@ -13,7 +13,6 @@
 		$model->getCarritoUsuario($_SESSION['cedula']);
 	}
 
-
 	if(isset($_POST['validar'], $_POST['productos'])){
 		$model->getValidarStock($_POST['productos']);
 	}

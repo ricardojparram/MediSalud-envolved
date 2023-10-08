@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="col-6 text-end mt-3">
-                  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#basicModal">Agregar</button>
+                  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#basicModal" id="agregarModalButton">Agregar</button>
               </div>
 
 
@@ -81,7 +81,7 @@
                       <th scope="col">Opciones</th>
                     </tr>
                   </tfoot>
-                  <tbody >
+                  <tbody id="tbody">
                   </tbody>
                 </table>
               </div>
@@ -103,6 +103,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="La cédula debe tener 6 o más carácteres, solo números(0-9)."><i class="bi bi-person-fill"></i></button>
                           <input type="text" class="form-control" name="cedula" id="cedula" placeholder="Cédula">
                         </div>
+                        <p class="m-0" id="errorCed" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="row mb-1">
                         <label for="inputText" class="col-sm-3 col-form-label"><strong>Nombre</strong></label>
@@ -110,6 +111,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El nombre debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-people-fill"></i></button>
                           <input type="text" class="form-control" name="name" id="name" placeholder="Nombre">
                         </div>
+                        <p class="m-0" id="errorNom" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="row mb-1">
                         <label for="inputText" class="col-sm-3 col-form-label"><strong>Apellido</strong></label>
@@ -117,6 +119,7 @@
                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El apellido debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-people"></i></button>
                           <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Apellido">
                         </div>
+                        <p class="m-0" id="errorApe" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="row mb-1">
                         <label for="inputText" class="col-sm-3 col-form-label"><strong>Correo</strong></label>
@@ -125,6 +128,7 @@
                             Ej: usuario@mail.es"><i class="ri-at-line"></i></button>
                           <input type="email" class="form-control" name="email" id="email" placeholder="Email">
                         </div>
+                        <p class="m-0" id="errorEmail" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="row mb-1">
                         <label for="inputText" class="col-sm-3 col-form-label"><strong>Contraseña</strong></label>
@@ -132,6 +136,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="La contraseña debe tener como mínimo 8 carácteres. Admite cualquier tipo de carácter(a-zA-Z0-9!@#$%^&*)"><i class="bi bi-key-fill"></i></button>
                           <input type="password" class="form-control" name="password" id="password" placeholder="Contraseña">
                         </div>
+                        <p class="m-0" id="errorContra" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="row mb-1">
                         <label for="inputText" class="col-sm-3 col-form-label"><strong>Nivel</strong></label>
@@ -148,8 +153,9 @@
                             }else{"";}?>
                           </select>
                         </div>
+                        <p class="m-0" id="errorNivel" style="color:#ff0000;text-align: center;"></p>
                       </div>
-                      <p id="error" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
+                      <p id="error" style="color:#ff0000;text-align: center;"></p>
                     </div>
                     <div class="modal-footer">
                       <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarRegis">Cerrar</button>
@@ -176,6 +182,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="La cédula debe tener 6 o más carácteres, solo números(0-9)."><i class="bi bi-person-fill"></i></button>
                           <input type="text" class="form-control" name="cedulaEdit" id="cedulaEdit" placeholder="Cédula">
                         </div>
+                        <p class="m-0" id="errorCedEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="row mb-1">
                         <label for="inputText" class="col-sm-3 col-form-label"><strong>Nombre</strong></label>
@@ -183,6 +190,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El nombre debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-people-fill"></i></button>
                           <input type="text" class="form-control" name="nameEdit" id="nameEdit" placeholder="Nombre">
                         </div>
+                        <p class="m-0" id="errorNomEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="row mb-1">
                         <label for="inputText" class="col-sm-3 col-form-label"><strong>Apellido</strong></label>
@@ -190,6 +198,7 @@
                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El apellido debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-people"></i></button>
                           <input type="text" class="form-control" name="apellidoEdit" id="apellidoEdit" placeholder="Apellido">
                         </div>
+                        <p class="m-0" id="errorApeEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="row mb-1">
                         <label for="inputText" class="col-sm-3 col-form-label"><strong>Correo</strong></label>
@@ -198,6 +207,7 @@
                             Ej: usuario@mail.es"><i class="ri-at-line"></i></button>
                           <input type="email" class="form-control" name="emailEdit" id="emailEdit" placeholder="Email">
                         </div>
+                        <p class="m-0" id="errorEmailEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="row mb-1">
                         <label for="inputText" class="col-sm-3 col-form-label"><strong>Contraseña</strong></label>
@@ -205,6 +215,7 @@
                           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="La contraseña debe tener como mínimo 8 carácteres. Admite cualquier tipo de carácter(a-zA-Z0-9!@#$%^&*)"><i class="bi bi-key-fill"></i></button>
                           <input type="password" class="form-control" name="passwordEdit" id="passwordEdit" placeholder="Contraseña">
                         </div>
+                        <p class="m-0" id="errorContraEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
                       <div class="row mb-1">
                         <label for="inputText" class="col-sm-3 col-form-label"><strong>Nivel</strong></label>
@@ -221,8 +232,9 @@
                             }else{"";}?>
                           </select>
                         </div>
+                        <p class="m-0" id="errorNivelEdit" style="color:#ff0000;text-align: center;"></p>
                       </div>
-                      <p id="error2" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
+                      <p id="error2" style="color:#ff0000;text-align: center;"></p>
                     </div>
                     <div class="modal-footer">
                       <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarRegisEdit">Cerrar</button>
@@ -243,6 +255,7 @@
                     </div>
                     <div class="modal-body">
                       <h5>Los datos serán eliminados completamente del sistema</h5>
+                      <p class="m-0" id="errorDel" style="color:#ff0000;text-align: center;"></p>
                     </div>
                     <div class="modal-footer" id="divEli">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarModalDel">Cancelar</button>

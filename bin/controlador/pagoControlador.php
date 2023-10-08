@@ -22,6 +22,14 @@
     $objModel->mostrarPrecio($_SESSION['cedula']);
   }
 
+  if (isset($_POST['mostrarE'])) {
+    $objModel->mostrarEmpresa();
+  }
+
+  if (isset($_POST['mostrarS']) && isset($_POST['nomEmpre'])) {
+    $objModel->mostrarSede($_POST['nomEmpre']);
+  }
+
   $VarComp = new initcomponents();
   $Nav = new nav();
 

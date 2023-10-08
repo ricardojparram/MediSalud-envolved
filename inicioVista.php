@@ -58,7 +58,6 @@
               <p class="fs-4 text-center">Nuestra farmacia ofrece una amplia gama de productos que incluyen , entre otros, la venta de medicamentos en las siguientes presentaciones: </p>
             </div>
 
-
             <div class="row">
               <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
                 <div id="services_1" class="icon-box">
@@ -126,17 +125,13 @@
 
     </main>
 
-<footer>
-   <?php $footer->footer(); ?>
-
-</footer>
+  <?php $footer->footer();  ?>
 
   <?php $Car->car(); ?>
 
   <?php $VarComp->js() ?>
   <script src="assets/js/inicio.js"></script>
   <script src="assets/js/carrito.js"></script>
-  <script src="assets/js/inicio.js"></script>
   <script>
     
     const myCarouselElement = document.querySelector('#carouselExampleCaptions')
@@ -181,16 +176,13 @@
         <div class="text-center m-3">
           <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
         </div>
-
-        <div class="card-title mostrarP p-3">
-
+        <div class="card-title mostrarP">
 
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success" id="añadirAlCarrito">Añadir al carrito</button>
-
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary">Añadir al carrito</button>
       </div>
     </div>
   </div>

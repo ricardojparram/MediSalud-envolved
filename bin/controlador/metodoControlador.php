@@ -6,6 +6,8 @@
   use modelo\metodo as metodo;
 
   $objModel = new metodo();
+  $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+  $permiso = $permisos['Metodo pago'];
 
   if (isset($_POST["mostrar"])) {
     $objModel->getMostrarMetodo();
@@ -38,7 +40,7 @@ if(isset($_POST["tipoEdit"]) && isset($_POST["unicas"])) {
 
   $VarComp = new initcomponents();
   $header = new header();
-  $menu = new menuLateral();
+  $menu = new menuLateral($permisos);
 
 
   if(file_exists("vista/interno/configuraciones/metodoVista.php")){

@@ -1,13 +1,15 @@
- <?php 
+<?php 
 
-  use component\initcomponents as initcomponents;
-  use component\header as header;
-  use component\menuLateral as menuLateral;
-  use modelo\clase as clase;
-	
+	use component\initcomponents as initcomponents;
+	use component\header as header;
+	use component\menuLateral as menuLateral;
+	use modelo\clase as clase;
+
 	$objModel = new clase();
 	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
 	$permiso = $permisos['Clase'];
+
+
 
 	if(isset($_POST["clase"]) && $permiso->registrar == 1) {
 		$objModel->getAgregarClase($_POST["clase"]);
@@ -29,9 +31,9 @@
 		$objModel->getEditarClase($_POST["claseEdit"], $_POST["idedit"]);
 	}
 
-   $VarComp = new initcomponents();
-   $header = new header();
-   $menu = new menuLateral($permisos);
+	$VarComp = new initcomponents();
+	$header = new header();
+	$menu = new menuLateral($permisos);
 
 
 	if(file_exists("vista/interno/productos/claseVista.php")){

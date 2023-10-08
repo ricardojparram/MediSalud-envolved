@@ -11,9 +11,9 @@
     $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
     $permiso = $permisos['Empresa de Envio'];
 
-    if($permiso->status != 1) die('<script> window.location = "?url=home "</script>');
+    if($permiso['Consultar'] != 1) die('<script> window.location = "?url=home "</script>');
 
-    if(isset($_POST['getPermisos']) && $permiso->status == 1){
+    if(isset($_POST['getPermisos']) && $permiso['Consultar'] == 1){
       die(json_encode($permiso));
     }
 
@@ -23,15 +23,15 @@
     	: $objModel->mostrarEmpresas();
     }
 
-    if (isset($_POST['rif']) && isset($_POST['validarRif']) && $permiso->status == 1) {
+    if (isset($_POST['rif']) && isset($_POST['validarRif']) && $permiso['Consultar'] == 1) {
     	$objModel->validarRif($_POST['rif'] , $_POST['id']);
     }
 
-    if(isset($_POST['rif']) && isset($_POST['name']) && isset($_POST['contacto']) && isset($_POST['registra']) && $permiso->registrar == 1) {
+    if(isset($_POST['rif']) && isset($_POST['name']) && isset($_POST['contacto']) && isset($_POST['registra']) && $permiso['Registrar'] == 1) {
         $objModel->getRegistrarEmpresa($_POST['rif'], $_POST['name'], $_POST['contacto']);
     }
 
-    if(isset($_POST['validarC']) && isset($_POST['id']) && $permiso->status == 1) {
+    if(isset($_POST['validarC']) && isset($_POST['id']) && $permiso['Consultar'] == 1) {
     	 $objModel->validarSelect($_POST['id']);
     }
 
@@ -39,11 +39,11 @@
     	$objModel->rellenarEdit($_POST['id']);
     }
 
-    if(isset($_POST['rifEdit']) && isset($_POST['nameEdit']) && isset($_POST['contactoEdit']) && isset($_POST['id']) && isset($_POST['editar']) && $permiso->editar == 1) {
+    if(isset($_POST['rifEdit']) && isset($_POST['nameEdit']) && isset($_POST['contactoEdit']) && isset($_POST['id']) && isset($_POST['editar']) && $permiso['Editar'] == 1) {
     	$objModel->getEditarEmpresa($_POST['rifEdit'], $_POST['nameEdit'], $_POST['contactoEdit'], $_POST['id']);
     }
 
-    if (isset($_POST['ElimnarEmpresa']) && isset($_POST['id']) && $permiso->eliminar){
+    if (isset($_POST['ElimnarEmpresa']) && isset($_POST['id']) && $permiso['Eliminar']){
     	$objModel->getEliminarEmpresa($_POST['id']);
     }
 

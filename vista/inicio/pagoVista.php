@@ -66,25 +66,25 @@
                                 <br>
                     			<div class="row form-group col-md-12">
                                     <div class="col-lg-6">
-                                        <label for="inputText" class="col-6 col-form-label"><strong>Nombre</strong></label>
+                                        <label for="inputText" class="col-12 col-form-label"><strong>Nombre</strong></label>
                                         <div class="input-group ">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El nombre debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-people-fill"></i></button>
-                                            <input type="text" class="form-control" id="nomClien"  name="nomClien">
+                                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El nombre debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-people-fill"></i></button>
+                                            <input type="text" class="form-control" disabled id="nomClien">
                                         </div>
                                         <p class="m-0" id="errorNomApe" style="color:#ff0000;text-align: center;"></p>
                                     </div>
                                     <div class="col-lg-6">
-                                        <label for="inputText" class="col-6 col-form-label"><strong>Cedula</strong></label>
+                                        <label for="inputText" class="col-12 col-form-label"><strong>Cedula</strong></label>
                                         <div class="input-group">
                                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="La cédula debe tener 6 o más carácteres, solo números(0-9)." aria-describedby="popover809249"><i class="bi bi-person-fill"></i></button>
-                                            <input type="text" class="form-control"  id="cedClien" >
+                                            <input type="text" class="form-control" disabled id="cedClien">
                                         </div>
                                         <p class="m-0" id="errorCed" style="color:#ff0000;text-align: center;"></p>
                                     </div>
                                 </div>
                                 <div class="row form-group col-md-12">
                                     <div class="col-lg-6">
-                                        <label for="inputText" class="col-6 col-form-label"><strong>Telefono</strong></label>
+                                        <label for="inputText" class="col-12 col-form-label"><strong>Telefono</strong></label>
                                         <div class="input-group ">
                                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca su numerico telefonico."><i class="bi bi-telephone"></i></button>
                                             <input type="text" class="form-control" placeholder="Telefono" id="teleClien">
@@ -92,7 +92,7 @@
                                         <p class="m-0" id="errorTele" style="color:#ff0000;text-align: center;"></p>
                                     </div>
                                     <div class="col-lg-6">
-                                        <label for="inputText" class="col-6 col-form-label"><strong>Correo Electronico</strong></label>
+                                        <label for="inputText" class="col-12 col-form-label"><strong>Correo Electronico</strong></label>
                                         <div class="input-group">
                                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca un correo electrónico válido. Ej: usuario@mail.es"><i class="ri-at-line"></i></button>
                                             <input type="text" class="form-control" placeholder="ejemplo@email.com" id="emailClien">
@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
                                 <div class="row form-group col-md-12">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Direccion Fiscal</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label"><strong>Direccion Fiscal</strong></label>
                                     <div class="input-group">
                                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Ingrese su direccion para la factura"><i class="bi bi-map"></i></button>
                                         <input type="text" class="form-control" id="direcClien" placeholder="Direccion">
@@ -120,104 +120,86 @@
                         <fieldset>
                             <br>
                             <div class="col-12 text-end">
-                                <label for="inputText" class="col-form-label"><strong>Direcciones Frecuentes</strong></label>
+                                <label for="inputText" class="col-12orm-label"><strong>Direcciones Frecuentes</strong></label>
                                 <button type="button" class="btn btn-success ms-3" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable"><i class="bi bi-search"></i></button>
-                                
-                                <!-- Modal Direcciones Recientes -->
-                                <div class="modal fade" id="modalDialogScrollable" tabindex="-1" aria-hidden="true" style="display: none;">
-                                    <div class="modal-dialog modal-dialog-scrollable">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                        <h5 class="modal-title">Modal Dialog Scrollable</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                        Non omnis incidunt qui sed occaecati magni asperiores est mollitia. Soluta at et reprehenderit. Placeat autem numquam et fuga numquam. Tempora in facere consequatur sit dolor ipsum. Consequatur nemo amet incidunt est facilis. Dolorem neque recusandae quo sit molestias sint dignissimos.
-                                        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                                        This content should appear at the bottom after you scroll.
-                                        </div>
-                                        <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Save changes</button>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-                                <!-- Fin Modal -->
-
                             </div>
                             <div class="row form-group mb-1 col-md-12">
-                                <div class="col-12">
-                                    
-                                </div>
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Estado</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label"><strong>Estado</strong></label>
                                     <div class="input-group ">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el nombre del cliente."><i class="bi bi-person-fill"></i></button>
-                                        <input type="text" class="form-control" placeholder="Nombre" id="nomClien" name="nomClien">
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el estado para la entrega."><i class="bi bi-flag"></i></button>
+                                        <input type="text" class="form-control" placeholder="Estado" id="estado">
                                     </div>
+                                    <p class="m-0" id="errorEstado" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Municipio</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label"><strong>Municipio</strong></label>
                                     <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el apellido del cliente."><i class="bi bi-people"></i></button>
-                                        <input type="text" class="form-control" placeholder="Apellido" id="apeClien" name="apeClien">
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el municipio de la entrega."><i class="bi bi-building"></i></button>
+                                        <input type="text" class="form-control" placeholder="Municipio" id="municipio">
                                     </div>
+                                    <p class="m-0" id="errorMun" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                             </div>
                             <div class="row mb-1 col-md-12">
-                                <label for="inputText" class="col-6 col-form-label"><strong>Direccion</strong></label>
+                                <label for="inputText" class="col-12 col-form-label"><strong>Direccion</strong></label>
                                 <div class="input-group">
-                                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="El apellido debe tener 3 o más letras(a-z, A-Z)"><i class="bi bi-pin-map"></i></button>
-                                    <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Apellido">
+                                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Especifica la direccion para la entrega junto a una referencia."><i class="bi bi-geo"></i></button>
+                                    <input type="text" class="form-control" placeholder="Direccion o Referencia" id="direc">
                                 </div>
+                                <p class="m-0" id="errorDirecEntre" style="color:#ff0000;text-align: center;"></p>
                             </div>
                             <div class="row mb-1 form-group col-md-12">
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Numero de Casa</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label"><strong>Numero de Casa</strong></label>
                                     <div class="input-group ">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el nombre del cliente."><i class="bi bi-person-fill"></i></button>
-                                        <input type="text" class="form-control" placeholder="Nombre" id="nomClien" name="nomClien">
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el numero de la casa"><i class="bi bi-house"></i></button>
+                                        <input type="text" class="form-control" placeholder="Numero de Casa" id="numCasa">
                                     </div>
+                                    <p class="m-0" id="errorNumCasa" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Codigo Postal</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label"><strong>Codigo Postal</strong></label>
                                     <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el apellido del cliente."><i class="bi bi-people"></i></button>
-                                        <input type="text" class="form-control" placeholder="Apellido" id="apeClien" name="apeClien">
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el codigo postal de la zona."><i class="bi bi-envelope"></i></button>
+                                        <input type="text" class="form-control" placeholder="Codigo Postal" id="codPostal">
                                     </div>
+                                    <p class="m-0" id="errorCodPostal" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                             </div>
                             <div class="row mt-2 form-group col-md-12">
                                 <div class="form-check form-switch my-3 col-lg-6">
                                     <input class="form-check-input" type="checkbox" id="checkAlias">
-                                    <label class="form-check-label" >Guardar Direccion</label>
+                                    <label class="form-check-label">Guardar Direccion</label>
                                 </div>
                                 <div class="col-lg-6 my-auto" id="aliasInp">
                                     <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Coloque un alias para guardar la direccion."><i class="bi bi-people"></i></button>
-                                        <input type="text" class="form-control" placeholder="Alias" >
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Coloque un alias para guardar la direccion."><i class="bi bi-journal-text"></i></button>
+                                        <input type="text" class="form-control" placeholder="Alias" id="inputAlias">
                                     </div>
+                                    <p class="m-0" id="errorAlias" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                             </div>
                             <div class="row form-group col-md-12">
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-8 col-form-label "><strong>Empresa de Envio</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label "><strong>Empresa de Envio</strong></label>
                                     <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un tipo de pago"><i class="bi bi-truck"></i></button>
-                                        <select class="form-select" id="">
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone la empresa para enviarle su pedido."><i class="bi bi-truck"></i></button>
+                                        <select class="form-select" id="empresa">
                                             <option selected="" disabled="">Nombre</option>
                                         </select>
                                     </div>
+                                    <p class="m-0" id="errorEmpresa" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-8 col-form-label "><strong>Sede de Envio</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label "><strong>Sede de Envio</strong></label>
                                     <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un tipo de pago"><i class="bi bi-sort-up"></i></button>
-                                        <select class="form-select" id="">
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone la sede de la empresa."><i class="bi bi-box-seam"></i></button>
+                                        <select class="form-select" id="sede">
                                             <option selected="" disabled="">Ubicacion</option>
                                         </select>
                                     </div>
+                                    <p class="m-0" id="errorSede" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                             </div>
                             <p class="mt-2" id="error2" style="color:#ff0000;text-align: center;"></p>
@@ -227,41 +209,45 @@
                             </div>
                             
                         </fieldset>
-                            <!--fin del paso 2 -->
+                        <!--fin del paso 2 -->
 
                         <!---paso 3 -->
                         <fieldset>
                             <br>
                             <div class="row form-group col-md-12">
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Nombre del Banco</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label"><strong>Nombre del Banco</strong></label>
                                     <div class="input-group ">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el nombre del banco desque que hizo el deposito."><i class="bi bi-person-fill"></i></button>
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el nombre del banco desque que hizo el deposito."><i class="bi bi-bank"></i></button>
                                         <input type="text" class="form-control" placeholder="Nombre" id="nomBanc">
                                     </div>
+                                    <p class="m-0" id="errorNomBanc" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-8 col-form-label"><strong>Numero de Referencia</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label"><strong>Numero de Referencia</strong></label>
                                     <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el numero de referencia del deposito."><i class="bi bi-people"></i></button>
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el numero de referencia del deposito."><i class="bi bi-card-checklist"></i></button>
                                         <input type="text" class="form-control" placeholder="123456789123" id="numRef">
                                     </div>
+                                    <p class="m-0" id="errorNumRef" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                             </div>
                             <div class="row form-group col-md-12">
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-6 col-form-label"><strong>Fecha</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label"><strong>Fecha</strong></label>
                                     <div class="input-group">
                                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la fecha de la realizacion del deposito"><i class="bi bi-calendar"></i></button> 
                                         <input type="date" id="fecha" class="form-control">
                                     </div>
+                                    <p class="m-0" id="errorFecha" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                                 <div class="col-lg-6">
-                                    <label for="inputText" class="col-8 col-form-label"><strong>Cantidad de Deposito</strong></label>
+                                    <label for="inputText" class="col-12 col-form-label"><strong>Cantidad de Deposito</strong></label>
                                     <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la cantidad del deposito."><i class="bi bi-people"></i></button>
+                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la cantidad del deposito."><i class="bi bi-cash-stack"></i></button>
                                         <input type="text" class="form-control" placeholder="123,12" id="canDep" step="0.01" min="0" max="10">
                                     </div>
+                                    <p class="m-0" id="errorCanDep" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                             </div>
                             <p class="mt-2" id="error3" style="color:#ff0000;text-align: center;"></p>
@@ -284,12 +270,23 @@
             <div class="f1" id="precios">
 
                 <div class="row">
-                    <h5 class="col-6"><strong>Cantidad a Pagar:</strong></h5>
-                    <h5 class="col-6 text-right" id="valorBs"></h5>
+                    <h5 class="col-6"><strong>Subtotal: </strong></h5>
+                    <h5 class="col-6 text-end" id="valorBs"></h5>
                 </div>
+                <hr class="mt-1">
                 <div class="row">
-                    <h5 class="col-6"><strong>Al Cambio:</strong></h5>
-                    <h5 class="col-6 text-right" id="valorUsd"></h5>
+                    <h5 class="col-6"><strong>I.V.A: </strong></h5>
+                    <h5 class="col-6 text-end" id="impuesto"></h5>
+                </div>
+                <hr class="mt-1">
+                <div class="row">
+                    <h5 class="col-6"><strong>Total: </strong></h5>
+                    <h5 class="col-6 text-end" id="total"></h5>
+                </div>
+                <hr class="mt-1">
+                <div class="row">
+                    <h5 class="col-6"><strong>Al Cambio: </strong></h5>
+                    <h5 class="col-6 text-end" id="valorUsd"></h5>
                 </div>
             </div>
         </div>
@@ -302,66 +299,67 @@
                     <h4 class="m-0">Elija un Metodo a Pagar</h4>
                 </div>
                 <div class="row mb-1 col-sm-12 col-md-8 mx-auto">
-                    <label for="inputText" class="col-8 col-form-label mx-auto text-center"><strong>Tipo de Pago</strong></label>
+                    <label for="inputText" class="col-12 col-form-label mx-auto text-center"><strong>Tipo de Pago</strong></label>
                     <div class="input-group">
-                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un tipo de pago"><i class="bi bi-sort-up"></i></button>
+                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un tipo de pago"><i class="bi bi-credit-card"></i></button>
                         <select  class="form-select" id="tipoP">
                             <option selected disabled>Tipo</option>
                             <option value="4">Pago Movil</option>
                             <option value="5">Transferencia</option>
                         </select>
                     </div>
-
+                    <p class="m-0" id="errorTipoP" style="color:#ff0000;text-align: center;"></p>
                 </div>
                 <div class="row form-group col-md-12">
-                    <div class="col-lg-6">
-                        <label for="inputText" class="col-8 col-form-label "><strong>Nombre de Banco</strong></label>
+                    <div class="col-xl-6 col-md-12">
+                        <label for="inputText" class="col-12 col-form-label "><strong>Nombre de Banco</strong></label>
                         <div class="input-group">
-                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un tipo de pago"><i class="bi bi-sort-up"></i></button>
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un banco"><i class="bi bi-bank"></i></button>
                             <select  class="form-select" id="bancTipo">
                                 <option selected disabled>Nombre</option>
                             </select>
                         </div>
+                        <p class="m-0" id="errorBancTipo" style="color:#ff0000;text-align: center;"></p>
                     </div>
-                    <div class="col-lg-6 trans">
-                        <label for="inputText" class="col-8 col-form-label"><strong>Cedula/Rif</strong></label>
+                    <div class="col-xl-6 col-md-12 trans">
+                        <label for="inputText" class="col-12 col-form-label"><strong>Cedula/Rif</strong></label>
                         <div class="input-group">
-                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el numero de referencia del deposito."><i class="bi bi-people"></i></button>
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Documento de la Cuenta."><i class="bi bi-card-text"></i></button>
                             <input type="text" class="form-control" disabled id="cedBanc">
                         </div>
                     </div>
-                    <div class="col-lg-6 movil">
-                        <label for="inputText" class="col-8 col-form-label"><strong>Cedula/Rif</strong></label>
+                    <div class="col-xl-6 col-md-12 movil">
+                        <label for="inputText" class="col-12 col-form-label"><strong>Cedula/Rif</strong></label>
                         <div class="input-group">
-                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el numero de referencia del deposito."><i class="bi bi-people"></i></button>
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Documento de la Cuenta."><i class="bi bi-card-text"></i></button>
                             <input type="text" class="form-control" disabled  id="cedBancM">
                         </div>
                     </div>
                 </div>
                 <div class="row form-group col-md-12 movil">
-                    <div class="col-lg-6">
-                        <label for="inputText" class="col-8 col-form-label"><strong>Telefono</strong></label>
+                    <div class="col-xl-6 col-md-12">
+                        <label for="inputText" class="col-12 col-form-label"><strong>Telefono</strong></label>
                         <div class="input-group">
-                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la fecha de la realizacion del deposito"><i class="bi bi-calendar"></i></button> 
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Telefono Para Pago Movil"><i class="bi bi-telephone"></i></button> 
                             <input type="text" id="teleMovil" disabled class="form-control">
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <label for="inputText" class="col-8 col-form-label"><strong>Codigo del Banco</strong></label>
+                    <div class="col-xl-6 col-md-12">
+                        <label for="inputText" class="col-12 col-form-label"><strong>Codigo del Banco</strong></label>
                         <div class="input-group">
-                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la fecha de la realizacion del deposito"><i class="bi bi-calendar"></i></button> 
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Codigo para del Banco"><i class="ri-hashtag"></i></button> 
                             <input type="text" id="codBanc" disabled class="form-control">
                         </div>
                     </div>
                 </div>
                 <div class="row form-group col-md-12 trans">
-                    <label for="inputText" class="col-8 col-form-label"><strong>Numero de Cuenta</strong></label>
+                    <label for="inputText" class="col-12 col-form-label"><strong>Numero de Cuenta</strong></label>
                     <div class="input-group">
-                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la fecha de la realizacion del deposito"><i class="bi bi-calendar"></i></button> 
+                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Banco para Depositar"><i class="ri-hashtag"></i></button> 
                         <input type="text" id="numCuen" disabled class="form-control">
                     </div>
                 </div>
-                <p class="nota col-11 mx-auto small mt-2">*Al seleccionar un metodo de pago se podra comprobar a que cuenta se hizo el deposito</p>
+                <p class="nota col-11 mx-auto small mt-2">*Al momento de realizar el registro de los datos, el banco seleccionado en esta sección facilitará la verificación del depósito realizado.</p>
             </form>
         </div>
 
@@ -369,6 +367,47 @@
 
 
   </main>
+
+    <!-- Modal Direcciones Recientes -->
+    <div class="modal fade" id="modalDialogScrollable" tabindex="-1" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">Direcciones Frecuentes</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body listDirec">
+                <div class="col-12 p-2 cuadro d-flex mb-2" id="1">
+                    <div class="col-2 text-center">
+                        <button class="iconDirec btn btn-success m-1">
+                            <i class="bi bi-signpost-split"></i>
+                        </button>
+                    </div>
+                    <div class="col-10">
+                        <h5><strong>Direccion Fija</strong></h5>
+                        <p class="m-0 text-truncate">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsam consequuntur natus perspiciatis beatae consectetur dignissimos! Aperiam architecto labore alias commodi ipsa non expedita ipsam cumque. Et deleniti perferendis minus iure?</p>
+                    </div>
+                </div>
+                <div class="col-12 p-2 cuadro d-flex mb-2" id="2">
+                    <div class="col-2 text-center">
+                        <button class="iconDirec btn btn-success m-1">
+                            <i class="bi bi-signpost-split"></i>
+                        </button>
+                    </div>
+                    <div class="col-10">
+                        <h5><strong>Direccion Fija</strong></h5>
+                        <p class="m-0 text-truncate">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis porro, totam accusamus adipisci deserunt itaque sit magnam blanditiis est quam. Alias illum nisi veniam tempora suscipit quasi eius temporibus laudantium?</p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- Fin Modal -->
 
   
 
