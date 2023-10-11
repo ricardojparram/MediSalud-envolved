@@ -9,9 +9,27 @@
 		private $id_rol;
 		private $modulos;
 		private $permisos;
+		private array $roles;
 
 		public function __construct(){
 			parent::__construct();	
+			$this->getRoles();
+		}
+
+		private function getRoles(){
+			try{
+
+				$this->conectarDB();
+				$new = $this->con->prepare("SELECT id_rol as id, nombre FROM rol");
+				$new->execute();
+				$data = $new->fetchAll(\PDO::FETCH_ASSOC);
+				foreach ($data as $rol) {
+					$this->roles[$rol['id']] = $rol['nombre'];
+				}
+
+			}catch(\PDOException $e){
+				die($e);
+			}
 		}
 
 		public function mostrarRoles($bitacora){
@@ -78,7 +96,7 @@
 					}
 					$permisos[$nombre_modulo] = $acciones;
 				}
-				$this->binnacle("Roles",$_SESSION['cedula'],"Consultó el los permisos del rol {$this->id_rol}");
+				$this->binnacle("Roles",$_SESSION['cedula'],"Consultó el los permisos del rol {$this->roles[$this->id_rol]}.");
 				$this->desconectarDB();
 				die(json_encode($permisos));
 				
@@ -116,7 +134,7 @@
 					}
 				}
 				$respuesta = ['respuesta' => 'ok', 'msg' => 'Se han actualizado los permisos correctamente.'];
-				$this->binnacle("Roles",$_SESSION['cedula'],"Actualizó los permisos del rol {$this->id_rol}");
+				$this->binnacle("Roles",$_SESSION['cedula'],"Actualizó los permisos del rol {$this->roles[$this->id_rol]}.");
 				$this->desconectarDB();
 				die(json_encode($respuesta));
 
