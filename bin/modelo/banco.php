@@ -14,14 +14,11 @@ class banco extends DBConnect{
 	private $cuentaBank;
 	private $codBank;
 
-	public function __construct(){
-		parent::__construct();
-	}
 
 	public function mostrarBank($bitacora = false){
 
 		try{
-
+			parent::conectarDB();
 			$sql = 'SELECT b.id_banco , tp.des_tipo_pago , b.nombre , b.cedulaRif , b.telefono , b.NumCuenta , b.CodBanco FROM banco b INNER JOIN tipo_pago tp ON b.tipo_pago = tp.cod_tipo_pago WHERE b.status = 1 and tp.online = 1';
 
 			$new = $this->con->prepare($sql);
@@ -29,6 +26,7 @@ class banco extends DBConnect{
 			$data = $new->fetchAll(\PDO::FETCH_OBJ);
 			echo json_encode($data);
 			if($bitacora) $this->binnacle("Banco",$_SESSION['cedula'],"Consultó listado.");
+			parent::desconectarDB();
 			die();
 
 		}catch(\PDOException $e){
@@ -39,13 +37,14 @@ class banco extends DBConnect{
 
 	public function SelecTipoPago(){
 		try{
-
+        	parent::conectarDB();
 			$sql = 'SELECT `cod_tipo_pago`, `des_tipo_pago`, `online`, `status` FROM `tipo_pago` WHERE status = 1 and online = 1';
 
 			$new = $this->con->prepare($sql);
 			$new->execute();
 			$data = $new->fetchAll(\PDO::FETCH_OBJ);
 			echo json_encode($data);
+			parent::desconectarDB();
 			die();
 
 		}catch(\PDOException $e){
@@ -69,10 +68,13 @@ class banco extends DBConnect{
 	private function validarT(){
 
 		try{
+			parent::conectarDB();
 			$new = $this->con->prepare("SELECT * FROM tipo_pago tp WHERE tp.online = 1 and tp.status = 1 and tp.cod_tipo_pago = ?");
 			$new->bindValue(1, $this->id);
 			$new->execute();
 			$data = $new->fetchAll();
+
+			parent::desconectarDB();
 
 			if(isset($data[0]['cod_tipo_pago'])) {
 				echo json_encode(['resultado' => 'Codigo tipo válido.']);
@@ -124,12 +126,15 @@ class banco extends DBConnect{
 
 	private function validDatos(){
 		try {
+			parent::conectarDB();
 			$new = $this->con->prepare('SELECT * FROM banco b WHERE b.tipo_pago = ? and b.nombre = ? and b.cedulaRif = ? and b.status = 1');
 			$new->bindValue(1, $this->tipoP);
 			$new->bindValue(2, $this->nombre);
 			$new->bindValue(3, $this->cedulaRif);
 			$new->execute();
 			$data = $new->fetchAll();
+
+			parent::desconectarDB();
             
 			if (isset($data[0])) {
 				echo json_encode(['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco']);
@@ -146,6 +151,7 @@ class banco extends DBConnect{
 
 	private function validDatosEdit(){
 		try {
+		parent::conectarDB();
 		$new = $this->con->prepare('SELECT * FROM banco b WHERE b.tipo_pago = ? and b.nombre = ? and b.cedulaRif = ? and b.status = 1 and b.id_banco != ?');
 		$new->bindValue(1, $this->tipoP);
 		$new->bindValue(2, $this->nombre);
@@ -153,6 +159,8 @@ class banco extends DBConnect{
 		$new->bindValue(4, $this->id);
 		$new->execute();
 		$data = $new->fetchAll();
+
+		parent::desconectarDB();
 
 		if (isset($data[0])) {
 			echo json_encode(['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco']);
@@ -247,6 +255,7 @@ class banco extends DBConnect{
 	private function registrarBanco(){
 
 		try {
+		parent::conectarDB();
         $new = $this->con->prepare("INSERT INTO `banco`(`id_banco`, `tipo_pago`, `nombre`, `cedulaRif`, `telefono`, `NumCuenta`, `CodBanco`, `status`) VALUES (DEFAULT,?,?,?,?,?,?,1)");
         $new->bindValue(1 ,$this->tipoP);
         $new->bindValue(2 ,$this->nombre);
@@ -258,8 +267,9 @@ class banco extends DBConnect{
         $data = $new->fetchAll(); 
         $resultado = ['resultado' => 'banco registrado.'];
         echo json_encode($resultado);
-        die();
         $this->binnacle("Banco",$_SESSION['cedula'],"Registró un Banco .");
+        parent::desconectarDB();
+        die();
 		} catch (\PDOException $e) {
 			die($e);
 		}
@@ -274,11 +284,12 @@ class banco extends DBConnect{
 		}
 
 		$this->id = $id;
-
+        parent::conectarDB();
 		$new = $this->con->prepare("SELECT * FROM banco b WHERE b.status = 1 and b.id_banco = ?");
 		$new->bindValue(1, $this->id);
 		$new->execute();
 		$data = $new->fetchAll();
+		parent::desconectarDB();
 
 		if(isset($data[0]["id_banco"])){
 			echo json_encode(['resultado' => 'Si existe esa banco.']);
@@ -306,11 +317,13 @@ class banco extends DBConnect{
 	private function selectItem(){
 
 		try {
+			parent::conectarDB();
 			$new = $this->con->prepare("SELECT * FROM banco b INNER JOIN tipo_pago tp ON b.tipo_pago = tp.cod_tipo_pago WHERE b.status = 1 and tp.online = 1 and b.id_banco = ?");
 			$new->bindValue(1, $this->id);
 			$new->execute();
 			$data = $new->fetchAll(\PDO::FETCH_OBJ);
 			echo json_encode($data);
+			parent::desconectarDB();
 			die();
 
 		}catch (\PDOException $e) {
@@ -407,6 +420,7 @@ class banco extends DBConnect{
 
     private function editarBanco(){
        try {
+       	parent::conectarDB();
        	$new = $this->con->prepare("UPDATE banco b SET tipo_pago = ? , nombre = ? , cedulaRif = ? , telefono = ? , NumCuenta = ? , CodBanco = ?, status = 1 WHERE b.id_banco = ?");
        	$new->bindValue(1 ,$this->tipoP);
        	$new->bindValue(2 ,$this->nombre);
@@ -421,6 +435,7 @@ class banco extends DBConnect{
        	$resultado = ['resultado' => 'banco editado.' , $new->execute()];
        	echo json_encode($resultado);
        	$this->binnacle("Banco",$_SESSION['cedula'],"Editó un Banco .");
+       	parent::desconectarDB();
        	die();
 
        } catch (\PDOException $e) {
@@ -443,7 +458,7 @@ class banco extends DBConnect{
 
     private function eliminarBanco(){
     	try {
-
+        parent::conectarDB();
     	$new = $this->con->prepare("UPDATE banco b SET b.status = 0 WHERE b.id_banco = ?");
     	$new->bindValue(1, $this->id);
     	$new->execute();
@@ -451,6 +466,7 @@ class banco extends DBConnect{
         $resultado = ['resultado' => 'Eliminado'];
         echo json_encode($resultado);
         $this->binnacle("Banco",$_SESSION['cedula'],"Eliminó un Banco .");
+        parent::desconectarDB();
         die();
 	
     	} catch (\PDOException $e) {

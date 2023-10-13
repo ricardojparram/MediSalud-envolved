@@ -271,6 +271,7 @@
       function filaTipoN(){
         $('#FILL').append(newRowTipo);
         selectTipoPago()
+        validarRepetidoTipoPago()
       }
  
 
@@ -345,38 +346,39 @@
        })
      }
 
-     $(document).on('input', '.precio-tipo', () => {
-      const montoMax = parseFloat($('#monto').val());
-      const preciosPorTipo = $('.precio-tipo');
-      const numFilas = preciosPorTipo.length;
-      
+    $(document).on('keyup', '.precio-tipo', () => {
+      let montoMax = parseFloat($('#monto').val());
+      let preciosPorTipo = $('.precio-tipo');
+      let numFilas = preciosPorTipo.length;
+
       if (numFilas === 1) {
         preciosPorTipo.val(montoMax.toFixed(2));
-      } else {
-        let totalAsignado = 0;
-        preciosPorTipo.each((index, element) => {
-          const precioFila = parseFloat($(element).val());
-          totalAsignado += precioFila;
-        });
-        const precioPorFila = (montoMax - totalAsignado) / (numFilas - 1);
-        preciosPorTipo.each((index, element) => {
-          if (index !== 0) {
-            $(element).val(precioPorFila.toFixed(2));
-          }
-        });
-        manejarCantidadXTipoP(montoMax);
+      } else if(numFilas === 2){
+        let precio1 = parseFloat(preciosPorTipo.eq(0).val());
+        let precio2 = parseFloat(preciosPorTipo.eq(1).val());
+        if (precio1 + precio2 > montoMax) {
+          preciosPorTipo.eq(1).val((montoMax - precio1).toFixed(2));
+        } else {
+          preciosPorTipo.eq(1).val((montoMax - precio1).toFixed(2));
+        }
+
       }
-      
-      const totalAsignado = preciosPorTipo.toArray().reduce((total, element) => {
-        return total + parseFloat($(element).val());
-      }, 0);
-      
+
+      let totalAsignado = 0;
+      preciosPorTipo.each(function(){
+        totalAsignado += parseFloat($(this).val());
+      });
+
       if (totalAsignado > montoMax) {
         preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
-      } else {
-        preciosPorTipo.css({"border": "none"});
+      }else if(totalAsignado < montoMax){
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+      } else if(totalAsignado < 1 ){
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+      }else{
+         preciosPorTipo.css({"border": "none"});
       }
-    });
+    })
 
 
     //Evento keyup para que funcione calculate()
@@ -441,6 +443,45 @@
        
      })
       
+    }
+
+    function validarRepetidoTipoPago() {
+       $('.select-tipo').change(function(){
+        let tipoPago;
+
+        $('.select-tipo').each(function(){
+
+          tipoPago = $(this).val();
+          let count = 0;
+          $('.select-tipo').each(function(){
+
+            if(tipoPago != ''){
+              if(tipoPago == $(this).val()){
+                count++
+                if(count >=2){
+                  $(this).closest('tr').attr('style', 'border-color: red;')
+                  $(this).attr('valid', 'false');
+                  $('#error').text('No pueden haber Tipo de Pagos repetidos');
+                }else{
+                  $(this).attr('valid', 'true');
+                }
+              }
+            }
+
+          });
+
+        })
+        $('.select-tipo').each(function(){
+          if($(this).is('[valid="true"]')){
+            $(this).closest('tr').attr('style', 'border-color: none;');
+          }
+          
+        })
+        if(!$('.select-tipo').is('[valid="false"]')){
+         $('#error').text('');
+       }
+       
+     })
     }
 
     function validarCedula(input, select2, div){
