@@ -22,16 +22,24 @@
       $this->contra = parent::_PASS_();
       $this->local = parent::_LOCAL_();
       $this->nameBD = parent::_BD_();
-      $this->connectarDB();
+      // $this->connectarDB();
     }
 
-    protected function connectarDB(){
+    protected function conectarDB(){
       try {
         $this->con = new \PDO("mysql:host={$this->local};dbname={$this->nameBD}", $this->usuario, $this->contra);  
       } catch (\PDOException $e) {
         print "¡Error!: " . $e->getMessage() . "<br/>";
+        
         die();
       }
+    }
+
+    // protected function conectarDB(){
+      
+    // }
+    protected function desconectarDB(){
+      $this->con = NULL;  
     }
 
     protected function binnacle($modulo, $usuario, $descripcion){
@@ -56,7 +64,7 @@
     private function consultarPermisos(){
 
       try {
-
+        $this->conectarDB();
         $new = $this->con->prepare('SELECT id_modulo, nombre FROM modulos');
         $new->execute();
         $modulos = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -81,6 +89,7 @@
           }
           $permisos[$nombre_modulo] = $acciones;
         }
+        $this->desconectarDB();
 
         return $permisos;
 

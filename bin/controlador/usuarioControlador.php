@@ -6,7 +6,7 @@
 	use modelo\usuarios as usuarios;
 
 	$objModel = new usuarios();
-	$mostrarN = $objModel->mostrarNivel();
+	$mostrarN = $objModel->mostrarRol();
 	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
 
     $permiso = $permisos['Usuarios'];
@@ -15,9 +15,9 @@
 		die('<script> window.location = "?url=login" </script>');
 	}
 
-	if($permiso->status != 1) die('<script> window.location = "?url=home" </script>');
+	if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
 
-	if(isset($_POST['getPermisos']) && $permiso->status == 1){
+	if(isset($_POST['getPermisos'], $permiso["Consultar"]) ){
 		die(json_encode($permiso));
 	}
 
@@ -29,25 +29,25 @@
 		$objModel->getValidarE($_GET['email']);
 	}
 
-	if(isset($_POST['mostrar']) && $permiso->consultar == 1){
+	if(isset($_POST['mostrar'], $permiso["Consultar"])){
 		($_POST['bitacora'] == 'true')
 		  ? $objModel->getMostrarUsuario(true)
 		  : $objModel->getMostrarUsuario();
 	}
 
-	if(isset($_POST['cedula']) && isset($_POST['name'])&& isset($_POST['apellido'])&& isset($_POST['email'])  && isset($_POST['password']) && isset($_POST['tipoUsuario']) && $permiso->registrar == 1){
+	if(isset($_POST['cedula']) && isset($_POST['name'])&& isset($_POST['apellido']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['tipoUsuario']) && isset($permiso["Registrar"])){
 		$objModel->getAgregarUsuario($_POST['cedula'] , $_POST['name'], $_POST['apellido'], $_POST['email'], $_POST['password'], $_POST['tipoUsuario']);
 	}
 
-	if(isset($_POST['eliminar']) && isset($_POST['cedulaDel']) && $permiso->eliminar == 1){
+	if(isset($_POST['eliminar']) && isset($_POST['cedulaDel']) && isset($permiso["Eliminar"])){
 		$objModel->getEliminar($_POST['cedulaDel']);
 	}
 
-	if(isset($_POST['select']) && isset($_POST['id']) && $permiso->editar == 1){
+	if(isset($_POST['select']) && isset($_POST['id']) && isset($permiso["Editar"])){
 		$objModel->getUnico($_POST['id']);
 	}
 
-	if(isset($_POST['cedulaEdit']) && isset($_POST['nameEdit']) && isset($_POST['apellidoEdit']) && isset($_POST['emailEdit']) && isset($_POST['passwordEdit']) && isset($_POST['tipoUsuarioEdit']) && isset($_POST['id']) && $permiso->editar == 1){
+	if(isset($_POST['cedulaEdit']) && isset($_POST['nameEdit']) && isset($_POST['apellidoEdit']) && isset($_POST['emailEdit']) && isset($_POST['passwordEdit']) && isset($_POST['tipoUsuarioEdit']) && isset($_POST['id']) && isset($permiso["Editar"])){
 		$objModel->getEditar($_POST['cedulaEdit'] , $_POST['nameEdit'], $_POST['apellidoEdit'], $_POST['emailEdit'], $_POST['passwordEdit'], $_POST['tipoUsuarioEdit'], $_POST['id']);
 	}
 

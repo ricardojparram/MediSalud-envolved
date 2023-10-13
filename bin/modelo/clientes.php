@@ -55,6 +55,7 @@ class clientes extends DBConnect{
     private function registraCliente(){
 
         try {
+            parent::conectarDB();
             $new = $this->con->prepare("SELECT cedula FROM cliente WHERE status = 1 and cedula = ?");
             $new->bindValue(1, $this->cedula);
             $new->execute();
@@ -77,6 +78,7 @@ class clientes extends DBConnect{
               $resultado = ['resultado' => 'Registrado correctamente.'];
               echo json_encode($resultado);
               $this->binnacle("Cliente",$_SESSION['cedula'],"Registró un cliente");
+              parent::desconectarDB();
               die();
 
 
@@ -101,12 +103,14 @@ class clientes extends DBConnect{
 
     private function eliminar(){
         try{
+            parent::conectarDB();
             $new = $this->con->prepare("DELETE FROM `cliente` WHERE cedula = ?"); //"UPDATE `cliente` SET `status`= 0 WHERE cedula = ?"
             $new->bindValue(1, $this->id);
             $new->execute();
             $resultado = ['resultado' => 'Eliminado'];
             echo json_encode($resultado);
             $this->binnacle("Cliente",$_SESSION['cedula'],"Eliminó un cliente");
+            parent::desconectarDB();
             die();
 
         }
@@ -117,12 +121,14 @@ class clientes extends DBConnect{
 
     public function mostrarClientes($bitacora = false){
         try{
+            parent::conectarDB();
             $query = "SELECT c.nombre, c.apellido, c.cedula, c.direccion, cc.celular, cc.correo FROM cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula WHERE status = 1";
             $new = $this->con->prepare($query);
             $new->execute();
             $data = $new->fetchAll();
             echo json_encode($data);
             if($bitacora) $this->binnacle("Clientes",$_SESSION['cedula'],"Consultó listado.");
+            parent::desconectarDB();
             die();
         }
         catch(\PDOexection $error){
@@ -139,11 +145,13 @@ class clientes extends DBConnect{
 
     private function selectCliente(){
         try{
+            parent::conectarDB();
             $new = $this->con->prepare("SELECT * FROM cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula WHERE status = 1 and c.cedula = ?");
             $new->bindValue(1, $this->unico);
             $new->execute();
             $data = $new->fetchAll(\PDO::FETCH_OBJ);
             echo json_encode($data);
+            parent::desconectarDB();
             die();
         }
         catch(\PDOexection $error){
@@ -187,6 +195,7 @@ class clientes extends DBConnect{
 
     private function editarCliente(){
         try {
+            parent::conectarDB();
             $new = $this->con->prepare("UPDATE cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula SET c.cedula = ?, c.nombre = ?, c.apellido = ?, c.direccion = ?, cc.celular= ?, cc.correo = ?, cc.cedula = ? WHERE c.cedula = ?");
             $new->bindValue(1, $this->cedula);
             $new->bindValue(2, $this->nombre);
@@ -200,6 +209,7 @@ class clientes extends DBConnect{
             $resultado = ['resultado' => 'Editado'];
             echo json_encode($resultado);
             $this->binnacle("Cliente",$_SESSION['cedula'],"Editó un cliente");
+            parent::desconectarDB();
             die();
         } catch (\PDOException $error) {
             return $error;
@@ -219,10 +229,12 @@ class clientes extends DBConnect{
 
     private function validarC(){
         try{
+            parent::conectarDB();
           $new = $this->con->prepare("SELECT `cedula` FROM `cliente` WHERE `status` = 1 and `cedula` = ?");
           $new->bindValue(1, $this->cedula);
           $new->execute();
           $data = $new->fetchAll();
+          parent::desconectarDB();
           if(isset($data[0]['cedula'])){
             $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
             echo json_encode($resultado);
