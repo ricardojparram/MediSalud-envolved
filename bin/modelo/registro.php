@@ -64,6 +64,7 @@
       private function registraSistema(){
 
         try{
+          parent::conectarDB();
           $new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
           $new->bindValue(1, $this->cedula);
           $new->execute();
@@ -89,11 +90,13 @@
               $new->execute();
               $resultado = ['resultado' => 'Registrado correctamente.'];
               echo json_encode($resultado);
+              parent::desconectarDB();
               die();
 
             }else{
               $resultado = ['resultado' => 'Error de email' , 'error' => 'El correo ya está registrado.'];
               echo json_encode($resultado);
+              parent::desconectarDB();
               die();
             }
 
@@ -122,11 +125,12 @@
 
       private function validarC(){
         try{
-
+          parent::conectarDB();
           $new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
           $new->bindValue(1, $this->cedula);
           $new->execute();
           $data = $new->fetchAll();
+          parent::desconectarDB();
           if(isset($data[0]['cedula'])){
             $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
             echo json_encode($resultado);
@@ -151,11 +155,12 @@
 
       private function validarE(){
         try{
-
+          parent::conectarDB();
           $new = $this->con->prepare("SELECT `correo` FROM `usuario` WHERE `status` = 1 and `correo` = ?");
           $new->bindValue(1, $this->email);
           $new->execute();
           $data = $new->fetchAll();
+          parent::desconectarDB();
           if(isset($data[0]['correo'])){
             $resultado = ['resultado' => 'Error de email' , 'error' => 'El email ya está registrado.'];
             echo json_encode($resultado);

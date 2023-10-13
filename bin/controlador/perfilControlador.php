@@ -5,16 +5,16 @@
   use component\menuLateral as menuLateral;
   use modelo\perfil as perfil;
 
-  $VarComp = new initcomponents();
-  $header = new header();
-  $menu = new menuLateral();
+
 
   $objModel = new perfil();
-
+  
   if(!isset($_SESSION['nivel'])){
     die('<script> window.location = "?url=login" </script>');
   }
-
+  
+  $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+  
   if(isset($_SESSION['cedula']) && isset($_POST['mostrar'])) {
     $objModel->mostrarDatos($_SESSION['cedula']);
   }
@@ -38,13 +38,17 @@
   }
 
   if(isset($_SESSION['cedula']) && isset($_POST['passwordAct']) && isset($_POST['passwordNew']) && isset($_POST['passwordNewR'])) {
-
+    
     $objModel->getCambioContra($_SESSION['cedula'], $_POST['passwordAct'], $_POST['passwordNew'], $_POST['passwordNewR']);
   }
+
+  $VarComp = new initcomponents();
+  $header = new header();
+  $menu = new menuLateral($permisos);
   
   if(file_exists("vista/interno/perfilVista.php")){
     require_once("vista/interno/perfilVista.php");
   } 
+  
 
-
-?>
+  ?>

@@ -27,12 +27,12 @@
 		}
 
 		protected function recuperarSistema(){
-
+			parent::conectarDB();
 			$new = $this->con->prepare("SELECT correo, CONCAT(nombre,' ',apellido) AS nombre FROM usuario WHERE status = 1 and correo = ?");
 			$new->bindValue(1 , $this->email);
 			$new->execute();
 			$data = $new->fetchAll();
-
+			parent::desconectarDB();
 			if(isset($data[0]['correo'])){
 
 				$nombre = $data[0]['nombre'];
@@ -45,12 +45,12 @@
 				$pass = password_hash($generatedPass, PASSWORD_BCRYPT);
 
 				try{
-
+					parent::conectarDB();
 					$new = $this->con->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND status = 1");
 					$new->bindValue(1, $pass);
 					$new->bindValue(2, $this->email);
 					$new->execute();
-					
+					parent::desconectarDB();
 					if($this->enviarEmail($correo, $generatedPass, $nombre)){
 						$resultado = ['resultado' => 'Correo enviado'];
 					}else{

@@ -21,7 +21,7 @@ function bar_progress(progress_line_object, direction) {
 
 $(document).ready(function() {
 	var data 
-	var next_step = true;
+	var next_step = false;
 	let tipo
 	let select
 	let memas
@@ -189,16 +189,6 @@ $(document).ready(function() {
 				}
 			});
 		})
-
-	// Ocultar y Mostrar Input Alias 
-	$("#checkAlias").on('change', function() {
-		if( $(this).is(':checked') ){
-			$("#aliasInp").fadeIn(300);
-		}else{
-			$("#aliasInp").fadeOut(300);
-		}
-	})
-	
 	
     
     $('#top-navbar-1').on('shown.bs.collapse', function(){
@@ -229,43 +219,97 @@ $(document).ready(function() {
 		let cedula = validarCedula($("#cedClien"),$("#errorCed"), "Error de Cedula,") ;
 	 	let nombre = validarNombre($("#nomClien"),$("#errorNomApe"), "Error de Nombre,") ;
 
-	 	// if (nombre && direccion && telefono && cedula && correo) {
-	 	// 	next_step = true;
-	 	// }else{
-	 	// 	next_step = false;
-	 	// }	
+	 	if (nombre && direccion && telefono && cedula && correo) {
+	 		next_step = true;
+	 	}else{
+	 		next_step = false;
+	 	}	
 	});
+	let idGlass
+	$(".glass").fadeOut(0);
+
+	$(".botEntre").on('click', function() {
+		$("#errorBot").text("");
+		idGlass = this.id;
+		next_step = false;
+		
+		switch (idGlass) {
+			case "repartidor":
+				console.log("deli");
+				$(".glass").fadeOut(0);
+				$("#delivery").fadeIn(300);
+				break;
+			case "nacional":
+				console.log("perso");
+				$(".glass").fadeOut(0);
+				$("#envio").fadeIn(300);
+				break;
+			case "persona":
+				console.log("perso");
+				$(".glass").fadeOut(0);
+				$("#retirar").fadeIn(300);
+				break;
+		
+			default:
+				break;
+		}
+	})
 
 	// Validicaiones Segundo Step
 
-	$("#estado").keyup(()=> {  validarNombre($("#estado"),$("#errorEstado"), "Error de Estado,") });
-	$("#municipio").keyup(()=> {  validarNombre($("#municipio"),$("#errorMun"), "Error de Municipio,") });
-	$("#direc").keyup(()=> {  validarDireccion($("#direc"),$("#errorDirecEntre"), "Error de Direccion,") });
+
+	$("#calle").keyup(()=> {  validarDireccion($("#calle"),$("#errorCalle"), "Error de Calle,") });
+	$("#numAv").keyup(()=> {  validarDireccion($("#numAv"),$("#errorNumAv"), "Error de Avenida,") });
 	$("#numCasa").keyup(()=> {  validarDireccion($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") });
-	$("#inputAlias").keyup(()=> {  if($("#checkAlias").is(':checked')) { validarStringLong($("#inputAlias"),$("#errorAlias"), "Error de Alias,") } });
-	$("#codPostal").keyup(()=> {  validarPostal($("#codPostal"),$("#errorCodPostal"), "Error de Direccion,") });
+	$("#ref").keyup(()=> {  validarDireccion($("#ref"),$("#errorRef"), "Error de Referencia,") });
 	$("#empresa").change(()=> {  validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,") });
 	$("#sede").change(()=> {  validarSelect($("#sede"),$("#errorSede"), "Error de Sede,") });
 
 	$("#2").click((e)=>{
+		let empresa, sede, calle, avenida, numCasa, referencia
+		if(typeof idGlass == 'undefined'){
+			$("#errorBot").text("Elija una Opcion de Entrega");
+		}else{
+			$("#errorBot").text("");
+		}
 
-		let estado = validarNombre($("#estado"),$("#errorEstado"), "Error de Estado,") ;
-		let municipio = validarNombre($("#municipio"),$("#errorMun"), "Error de Municipio,") ;
-		let direcEntre = validarDireccion($("#direc"),$("#errorDirecEntre"), "Error de Direccion,") ;
-		let numCasa = validarDireccion($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") ;
-		let alias 
-		if($("#checkAlias").is(':checked')) { alias = validarStringLong($("#inputAlias"),$("#errorAlias"), "Error de Alias,") ;}
-		let codPostal = validarPostal($("#codPostal"),$("#errorCodPostal"), "Error de Direccion,") ;
-		let empresa = validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,");
-		let sede = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+		switch (idGlass) {
+			case "repartidor":
+				calle = validarDireccion($("#calle"),$("#errorCalle"), "Error de Calle,");
+				avenida = validarDireccion($("#numAv"),$("#errorNumAv"), "Error de Avenida,");
+				numCasa = validarDireccion($("#numCasa"),$("#errorNumCasa"), "Error de Casa,");
+				referencia = validarDireccion($("#ref"),$("#errorRef"), "Error de Referencia,");
+				
+				if (calle && avenida && numCasa && referencia) {
+	 				next_step = true;
+	 			}else{
+	 				next_step = false;
+	 			}	
+				break;
+			case "nacional":
+				empresa = validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,");
+				sede = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+				if (empresa && sede) {
+					next_step = true;
+				}else{
+					next_step = false;
+				}	
+				break;
+			case "persona":
 
-		console.log($("#direc").val().length)
+				next_step = true;
+				break;
+				
+			default:
+				next_step = false;
+				break;
+		}
 
-	 	// if (estado && municipio && direcEntre && numCasa && codPostal && empresa && sede) {
-	 	// 	next_step = true;
-	 	// }else{
-	 	// 	next_step = false;
-	 	// }	
+	 	// // if (estado && municipio && direcEntre && numCasa && codPostal && empresa && sede) {
+	 	// // 	next_step = true;
+	 	// // }else{
+	 	// // 	next_step = false;
+	 	// // }	
 	});
 
 
@@ -346,22 +390,6 @@ $(document).ready(function() {
     	});
     });
     
-    // submit
-    $('.f1').on('submit', function(e) {
-    	
-    	// fields validation
-    	$(this).find('input[type="text"], input[type="password"], textarea').each(function() {
-    		if( $(this).val() == "" ) {
-    			e.preventDefault();
-    			$(this).addClass('input-error');
-    		}
-    		else {
-    			$(this).removeClass('input-error');
-    		}
-    	});
-    	// fields validation
-    	
-    });
     
     
 });
