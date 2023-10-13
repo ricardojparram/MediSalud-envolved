@@ -96,155 +96,6 @@
   
       <!-- Modal AGREGAR -->
 
-    <div class="modal fade" id="Agregar" >
-     <div class="modal-dialog modal-dialog-scrollable modal-lg ">
-       <div class="modal-content">
-         <div class="modal-header alert alert-success">
-          <h4 class="modal-title"> <strong>Registrar Venta</strong> </h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body ">
-
-          <form id = "agregarform">
-
-            <div class="form-group col-md-12">  
-              <div class="container-fluid">
-                <div class="row">
-
-                  <div class="form-group col-lg-6">                          
-                    <label for="inputText" class="col-sm-3 col-form-label"><strong>Cliente</strong></label>
-                    <div class="input-group">
-                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione una cédula registrada en el sistema."><i class="bi bi-person-fill"></i></button>
-                      <select class="form-control select2" placeholder="Cédula" id="cedula">
-                        <option value="0" selected disabled>Clientes</option>
-                        <?php if(isset($mostrarC)){
-                          foreach($mostrarC as $data){
-                            ?> 
-                            <option value="<?php echo $data->cedula;?>" class="opcion"><?php echo $data->nombre;?> <?php echo $data->apellido;?> <?php echo $data->cedula;?></option>
-                            <?php
-                          }
-                        }else{"";}?>
-                      </select> 
-                    </div>
-                    <p class="error" style="color:#ff0000;text-align: center;" id="error1"></p>
-                  </div>
-
-                  <div class="form-group col-lg-6">                          
-                    <label for="inputText" class="col-sm-3 col-form-label"><strong>Pago</strong></label>
-                    <div class="input-group">
-                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione un metodo de pago al sistema."><i class="bi bi-cash-coin"></i></button>
-                      <select class="form-select select"  placeholder="Metodo de pago" name="metodo" id="metodo">
-                        <option selected disabled>Metodo a pagar</option>
-                        <?php if(isset($mostrerM)){
-                          foreach($mostrerM as $data){
-                            ?> 
-                            <option value="<?php echo $data->cod_tipo_pago;?>" class="opcion"><?php echo $data->des_tipo_pago;?></option>
-                            <?php
-                          }
-                        }else{"";}?>
-                      </select> 
-                    </div>
-                    <p class="error" style="color:#ff0000;text-align: center;" id="error2"></p>
-                  </div>
-                </div>
-              </div>
-            </div> 
-            
-            <div class="form-group col-md-12">  
-              <div class="container-fluid">
-                <div class="row">
-
-                   <div class="form-group col-md-4">                          
-                    <label class="col-form-label"> <strong>Moneda</strong> </label>
-                    <div class="input-group">
-                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Evaluara el Total al valor de la moneda Seleccionada"><i class="bi bi-currency-exchange"></i></button> 
-                      <select class="form-select select2M" id="moneda">
-                        <option selected disabled>Moneda</option>
-                      </select>
-                    </div>
-                    <p class="error" style="color:#ff0000;text-align: center;" id="error5"></p>
-                  </div>
-
-                  <div class="form-group col-md-4">  
-                    <label class="col-form-label" for="config_iva"><strong>IVA</strong></label>
-                    <div class="input-group">
-                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca un IVA para la venta">%</button> 
-                      <input class="form-control iva" type="text" id="config_iva" value="16"/>
-                    </div>
-                    <p class="error" style="color:#ff0000;text-align: center;" id="error4"></p>
-                  </div>
-
-
-                  <div class="form-group col-md-4">                          
-                    <label class="col-form-label"> <strong>Monto</strong> </label>
-                    <div class="input-group">
-                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Monto total de la venta"><i class="bi bi-cash"></i></button> 
-                      <input type="number" class="form-control" disabled="disabled" id="monto" >
-                    </div>
-                    <p class="error" style="color:#ff0000;text-align: center;" id="error3"></p>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group col-md-12">  
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="table-responsive table-body form-group col-12">
-
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th></th>
-                          <th>Producto</th>
-                          <th>Cantidad</th>
-                          <th>Precio</th>
-                          <th>IVA</th>
-                          <th>Total</th>
-                        </tr>
-                      </thead>
-                      <tbody id="ASD">
-                        <tr>
-                          <td width="1%"><a class="removeRow a-asd" href="#"><i class="bi bi-trash-fill"></i></a></td>
-                          <td width='30%'> 
-                            <select class="select-productos select-asd" name="productos">
-                              <option></option>
-                            </select>
-                          </td>
-                          <td width='10%' class="amount"><input class="select-asd stock" type="number" value=""/></td>
-                          <td width='10%' class="rate"><input class="select-asd" type="number" disabled value="" /></td>
-                          <td width='10%'class="tax"></td>
-                          <td width='10%' class="sum"></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <a class="newRow a-asd" href="#"><i class="bi bi-plus-circle-fill"></i> Nueva fila</a> <br>
-                    <div class="text-end">
-                      <p class="text-end" id="montos"></p>
-                      <p class="text-end" id="montos2"></p>
-                      <p class="text-end"id="cambio"></p>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <p class="error" style="color:#ff0000;text-align: center;" id="error"></p>
-          
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary cerrar" id="cerrar" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-success " id="registrar">Registrar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Modal delete-->
 
@@ -295,6 +146,174 @@
   </div>
 </div>
 <!-- FINAL MODAL DE PRODUCTOS -->
+
+<div class="modal fade" id="Agregar" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header alert alert-success">
+        <h3 class="modal-title"> <strong>Registrar Venta</strong> </h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body ">
+        <form id = "agregarform">
+
+          <div class="form-group col-md-12">  
+            <div class="container-fluid">
+              <div class="row">
+
+                <div class="form-group col-md-6">                          
+                  <label for="inputText" class="col-sm-3 col-form-label"><strong>Cliente</strong></label>
+                  <div class="input-group">
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione una cédula registrada en el sistema."><i class="bi bi-person-fill"></i></button>
+                    <select class="form-control select2" placeholder="Cédula" id="cedula">
+                      <option value="0" selected disabled>Clientes</option>
+                      <?php if(isset($mostrarC)){
+                        foreach($mostrarC as $data){
+                          ?> 
+                          <option value="<?php echo $data->cedula;?>" class="opcion"><?php echo $data->nombre;?> <?php echo $data->apellido;?> <?php echo $data->cedula;?></option>
+                          <?php
+                        }
+                      }else{"";}?>
+                    </select> 
+                  </div>
+                  <p class="error" style="color:#ff0000;text-align: center;" id="error1"></p>
+                </div>
+
+                <div class="form-group col-md-6">                          
+                  <label class="col-form-label"> <strong>Moneda</strong> </label>
+                  <div class="input-group">
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Evaluara el Total al valor de la moneda Seleccionada"><i class="bi bi-currency-exchange"></i></button> 
+                    <select class="form-select select2M" id="moneda">
+                      <option selected disabled>Moneda</option>
+                    </select>
+                  </div>
+                  <p class="error" style="color:#ff0000;text-align: center;" id="error5"></p>
+                </div>
+
+              </div>
+            </div>
+          </div> 
+
+          <div class="form-group col-md-12">  
+            <div class="container-fluid">
+              <div class="row">
+
+
+
+              <div class="form-group col-md-6">  
+                <label class="col-form-label" for="config_iva"><strong>IVA</strong></label>
+                <div class="input-group">
+                  <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca un IVA para la venta">%</button> 
+                  <input class="form-control iva" type="text" id="config_iva" value="16"/>
+                </div>
+                <p class="error" style="color:#ff0000;text-align: center;" id="error4"></p>
+              </div>
+
+
+              <div class="form-group col-md-6">                          
+                <label class="col-form-label"> <strong>Monto</strong> </label>
+                <div class="input-group">
+                  <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Monto total de la venta"><i class="bi bi-cash"></i></button> 
+                  <input type="number" class="form-control" disabled="disabled" id="monto" >
+                </div>
+                <p class="error" style="color:#ff0000;text-align: center;" id="error3"></p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+
+          <div class="form-group col-md-5">  
+            <div class="container-fluid">
+              <div class="row">
+                <div class="table-responsive form-group col-12">
+
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Tipo Pago</th>
+                        <th>Precio</th>
+                      </tr>
+                    </thead>
+                    <tbody id="FILL">
+                      <tr>
+                        <td width="1%"><a class="removeRowPagoTipo a-asd" href="#"><i class="bi bi-trash-fill"></i></a></td>
+                        <td width='30%'> 
+                          <select class="select-tipo select-asd" name="TipoPago">
+                            <option></option>
+                          </select>
+                        </td>
+                        <td width='15%' class=""><input class="select-asd precio-tipo" type="number" value=""/></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <a class="newRowPago a-asd" href="#"><i class="bi bi-plus-circle-fill"></i> Nueva fila</a> <br>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        <div class="form-group col-md-7">  
+          <div class="container-fluid">
+            <div class="row">
+              <div class="table-responsive table-body form-group col-12">
+
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Precio</th>
+                      <th>IVA</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="ASD">
+                    <tr>
+                      <td width="1%"><a class="removeRow a-asd" href="#"><i class="bi bi-trash-fill"></i></a></td>
+                      <td width='30%'> 
+                        <select class="select-productos select-asd" name="productos">
+                          <option></option>
+                        </select>
+                      </td>
+                      <td width='10%' class="amount"><input class="select-asd stock" type="number" value=""/></td>
+                      <td width='10%' class="rate"><input class="select-asd" type="number" disabled value="" /></td>
+                      <td width='10%'class="tax"></td>
+                      <td width='10%' class="sum"></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <a class="newRow a-asd" href="#"><i class="bi bi-plus-circle-fill"></i> Nueva fila</a> <br>
+                <div class="text-end">
+                  <p class="text-end" id="montos"></p>
+                  <p class="text-end" id="montos2"></p>
+                  <p class="text-end"id="cambio"></p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="error" style="color:#ff0000;text-align: center;" id="error"></p>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary cerrar" id="cerrar" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-success " id="registrar">Registrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
 
  
 <?php $VarComp->js(); ?>

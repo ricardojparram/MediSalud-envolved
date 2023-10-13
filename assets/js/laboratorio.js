@@ -4,9 +4,7 @@ $(document).ready(function(){
 	let permisos, editarPermiso, eliminarPermiso, registrarPermiso;
     $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:''},
         success(data){ permisos = data; }
-    }).then(function(){
-    	rellenar(true);
-    });
+    }).then(() => rellenar(true));
 
 	function rellenar(bitacora = false){ 
         $.ajax({
@@ -16,9 +14,9 @@ $(document).ready(function(){
             data: {mostrar: "labs", bitacora},
             success(data){
                 let tabla;
+                editarPermiso = (typeof permisos.Editar === 'undefined') ? 'disabled' : '';
+                eliminarPermiso = (typeof permisos.Eliminar === 'undefined') ? 'disabled' : '';
                 data.forEach(row => {
-                	editarPermiso = (typeof permisos.Editar === 'undefined') ? 'disabled' : '';
-                	eliminarPermiso = (typeof permisos.Eliminar === 'undefined') ? 'disabled' : '';
                     tabla += `
                         <tr>
                             <td>${row.rif}</th>

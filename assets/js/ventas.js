@@ -81,6 +81,7 @@
 
 
   selectOptions();
+  selectTipoPago()
   calculate();
 
   function calculate(){
@@ -114,6 +115,7 @@
       $('#montos2').text(`Total + IVA: ${precioTotal}`)
       $('#cambio').text(`Al cambio: ${cambio}`)
       $('#monto').val(precioTotal)
+      manejarCantidadXTipoP(precioTotal);
 
      }
  //  rellena los select de moneda
@@ -176,6 +178,36 @@
       })
     } 
 
+     //  rellena los select de las filas de productos
+    function selectTipoPago(){
+      $.ajax({
+        url: '',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          selectTipo: "tipo de pago"
+        },
+        success(data){
+          let option = ""
+          data.forEach((row)=>{
+            option += `<option value="${row.id_tipo_pago}">${row.des_tipo_pago}</option>`
+          })
+          $('.select-tipo').each(function(){
+             if(this.children.length == 1){
+               $(this).append(option);
+               $(this).chosen({
+                width: '25vw',
+                placeholder_text_single: "Selecciona un tipo de pago",
+                search_contains: true,
+                allow_single_deselect: true,
+                });
+             }
+          })
+
+        }
+      })
+    } 
+
     let producto, select, cantidad, stock;
     //Selecciona cada producto 
     cambio();
@@ -223,6 +255,24 @@
       theme: 'bootstrap-5',
       dropdownParent: $('#Agregar .modal-body'),
     })
+    
+    // fila de tipo pago
+    let newRowTipo = ` <tr>
+                        <td width="1%"><a class="removeRowPagoTipo a-asd" href="#"><i class="bi bi-trash-fill"></i></a></td>
+                        <td width='30%'> 
+                          <select class="select-tipo select-asd" name="TipoPago">
+                            <option></option>
+                          </select>
+                        </td>
+                        <td width='15%' class=""><input class="select-asd precio-tipo" type="number" value=""/></td>
+                      </tr>`;
+    
+    // Caracteriticas de la fila Tipo Pago
+      function filaTipoN(){
+        $('#FILL').append(newRowTipo);
+        selectTipoPago()
+        validarRepetidoTipoPago()
+      }
  
 
      //  fila que se inserta
@@ -238,7 +288,8 @@
           <td width='10%'class="tax"></td>
           <td width='10%' class="sum"></td>
           </tr>`;
-
+    
+    // Caracteriticas de la fila Producto
     function filaN(){
       $('#ASD').append(newRow);
       selectOptions();
@@ -251,11 +302,84 @@
        filaN();
      });
 
+     // Agregar fila para insertar tipo de pago
+     $('.newRowPago').on('click',function(e){
+       filaTipoN();
+     });
+
     // ELiminar fila
      $('body').on('click','.removeRow', function(e){
         $(this).closest('tr').remove();
         calculate()
      });
+
+     // ELiminar fila Tipo de Pago
+     $('body').on('click','.removeRowPagoTipo', function(e){
+        $(this).closest('tr').remove();
+     });
+
+     //Calcular Cantidad por tipo de pago
+
+     function manejarCantidadXTipoP(montoT){
+       let montoMax = parseFloat(montoT);
+       let precioXTipo = $('.precio-tipo');
+       let cantidadFilas = precioXTipo.length;
+       let precioPorFila = montoMax / cantidadFilas;
+
+       let totalAsignado = 0;
+
+       precioXTipo.each(function(){
+        let precioFila = parseFloat($(this).val());
+
+        if (totalAsignado + precioPorFila <= montoMax){
+          $(this).val(precioPorFila.toFixed(2));
+          totalAsignado += precioPorFila;
+
+        }else if(totalAsignado < montoMax){
+          $(this).val((montoMax - totalAsignado).toFixed(2));
+          totalAsignado = montoMax;
+          
+        }else{
+          $(this).val("0.00");
+        }
+
+       })
+     }
+
+    $(document).on('keyup', '.precio-tipo', () => {
+      let montoMax = parseFloat($('#monto').val());
+      let preciosPorTipo = $('.precio-tipo');
+      let numFilas = preciosPorTipo.length;
+
+      if (numFilas === 1) {
+        preciosPorTipo.val(montoMax.toFixed(2));
+      } else if(numFilas === 2){
+        let precio1 = parseFloat(preciosPorTipo.eq(0).val());
+        let precio2 = parseFloat(preciosPorTipo.eq(1).val());
+        if (precio1 + precio2 > montoMax) {
+          preciosPorTipo.eq(1).val((montoMax - precio1).toFixed(2));
+        } else {
+          preciosPorTipo.eq(1).val((montoMax - precio1).toFixed(2));
+        }
+
+      }
+
+      let totalAsignado = 0;
+      preciosPorTipo.each(function(){
+        totalAsignado += parseFloat($(this).val());
+      });
+
+      if (totalAsignado > montoMax) {
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+      }else if(totalAsignado < montoMax){
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+      } else if(totalAsignado < 1 ){
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+      }else{
+         preciosPorTipo.css({"border": "none"});
+      }
+    })
+
 
     //Evento keyup para que funcione calculate()
     $('.table-body').on('keyup','input',function(){
@@ -319,6 +443,45 @@
        
      })
       
+    }
+
+    function validarRepetidoTipoPago() {
+       $('.select-tipo').change(function(){
+        let tipoPago;
+
+        $('.select-tipo').each(function(){
+
+          tipoPago = $(this).val();
+          let count = 0;
+          $('.select-tipo').each(function(){
+
+            if(tipoPago != ''){
+              if(tipoPago == $(this).val()){
+                count++
+                if(count >=2){
+                  $(this).closest('tr').attr('style', 'border-color: red;')
+                  $(this).attr('valid', 'false');
+                  $('#error').text('No pueden haber Tipo de Pagos repetidos');
+                }else{
+                  $(this).attr('valid', 'true');
+                }
+              }
+            }
+
+          });
+
+        })
+        $('.select-tipo').each(function(){
+          if($(this).is('[valid="true"]')){
+            $(this).closest('tr').attr('style', 'border-color: none;');
+          }
+          
+        })
+        if(!$('.select-tipo').is('[valid="false"]')){
+         $('#error').text('');
+       }
+       
+     })
     }
 
     function validarCedula(input, select2, div){
