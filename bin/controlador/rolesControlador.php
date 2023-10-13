@@ -9,30 +9,23 @@
 
 	$model = new roles();
 	$permisos = $model->getPermisosRol($_SESSION['nivel']);
+	$permiso = $permisos['Roles'];
 
-	if($permisos['Roles']->status != 1) die('<script> window.location = "?url=home" </script>');
+	if(!isset($permiso['Consultar'])) die('<script> window.location = "?url=home" </script>');
 
-	if(isset($_POST['getPermisos']) && $permisos['Roles']->status == 1){
+	if(isset($_POST['getPermisos'], $permiso['Consultar'])){
 		die(json_encode($permisos['Roles']));
 	}
 
-	if(isset($_POST['mostrar']) && $permisos['Roles']->consultar == 1){
+	if(isset($_POST['mostrar'], $permiso['Consultar'])){
 		$model->mostrarRoles();
 	}
 
-	if(isset($_POST['modulos'], $_POST['id']) && $permisos['Roles']->editar == 1){
-		$model->getModulo($_POST['id']);
-	}
-
-	if(isset($_POST['datos_modulos'], $_POST['id']) && $permisos['Roles']->editar == 1){
-		$model->getAccesoModulos($_POST['datos_modulos'], $_POST['id']);
-	}
-
-	if(isset($_POST['permisos'], $_POST['id']) && $permisos['Roles']->editar == 1){
+	if(isset($_POST['mostrar_permisos'], $_POST['id'], $permiso['Modificar acciones'])){
 		$model->getPermisos($_POST['id']);
 	}
 
-	if(isset($_POST['datos_permisos'], $_POST['id']) && $permisos['Roles']->editar == 1){
+	if(isset($_POST['datos_permisos'], $_POST['id'], $permiso['Modificar acciones'])){
 		$model->getDatosPermisos($_POST['datos_permisos'], $_POST['id']);
 	}
 

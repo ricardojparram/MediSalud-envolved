@@ -57,7 +57,7 @@
 
       try {
 
-        $new = $this->con->prepare('SELECT id_modulo, nombre FROM modulos WHERE status = 1; ');
+        $new = $this->con->prepare('SELECT id_modulo, nombre FROM modulos');
         $new->execute();
         $modulos = $new->fetchAll(\PDO::FETCH_OBJ);
         $permisos = [];
@@ -65,7 +65,7 @@
 
         $query = 'SELECT m.nombre, p.nombre_accion, p.status FROM permisos p
                   INNER JOIN modulos m ON m.id_modulo = p.id_modulo
-                  WHERE p.id_rol = ? AND m.nombre = ?';
+                  WHERE p.id_rol = ? AND m.nombre = ? AND p.status = 1';
 
         foreach ($permisos as $nombre_modulo => $valor) {
 
@@ -74,10 +74,10 @@
           $new->bindValue(2, $nombre_modulo);
           $new->execute();
           $data = $new->fetchAll(\PDO::FETCH_OBJ);
-
           $acciones = []; 
+
           foreach($data as $modulo){
-            $acciones += [$modulo->nombre_accion => 1];
+            $acciones += [$modulo->nombre_accion => $modulo->status];
           }
           $permisos[$nombre_modulo] = $acciones;
         }

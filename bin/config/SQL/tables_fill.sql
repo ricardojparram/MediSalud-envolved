@@ -7,6 +7,10 @@ INSERT INTO rol(nombre, status) VALUES ('Administrador', '1'), ('Gerente', '1'),
 -- (2, 'Acetominafen', 'asdjgjadsg', 'jsadjasdg', 'jsadjadsg', 'sajdadjsg', '8', '6', '2023-01-02', 1),
 -- (3, 'Ibuprofeno', 'jadsjadsg', 'asjdjgds', 'jasdjgds', 'jasdgjds', '20', '9', '2023-01-16', 1);
 
+-- INSERTA USUARIO ADMIN
+
+INSERT INTO usuario (cedula, nombre, apellido, correo, password, rol, img, status) VALUES ('123123', 'admin', 'admin', 'admin@admin.com', '$2y$10$IQ3tD7JwCMoBHFwv6P4YteAgNOnlevdqxZYwtR8XfvkebK0It3RN.', '1', NULL, '1');
+
 -- INSERTA LOS CLIENTES
 INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES 
 ('30233547','Enmanuel','Torres','Tierra Negra',1),
@@ -58,7 +62,14 @@ INSERT INTO tipo_pago(id_tipo_pago, des_tipo_pago, online, status) VALUES
 (4,'Pago movil',1,1);
 
 INSERT INTO moneda(id_moneda, nombre, status) VALUES(1, 'Dolar', 1), (2, 'Euro', 1);
+<<<<<<< HEAD
 INSERT INTO cambio(id_cambio, cambio, fecha, moneda, status) VALUES(1, '35', DEFAULT, 1, 1), (2, '40', DEFAULT, 2, 1);
+=======
+INSERT INTO cambio(cambio, fecha, moneda, status) VALUES('35', DEFAULT, 1, 1), ('40', DEFAULT, 2, 1);
+
+INSERT INTO empresa_envio (rif, nombre, contacto, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
+INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
+>>>>>>> ef07e5dc8bd3bfc99af0c1aa6059a84750c9f701
 
 INSERT INTO modulos(id_modulo, nombre, status) VALUES
 (1, 'Clientes',1),
@@ -87,7 +98,7 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (1, 1, 'Eliminar', '1'),
 (1, 1, 'Consultar', '1'),
 (1, 2, 'Registrar', '1'),
-(1, 2, 'Editar', '1'),
+(1, 2, 'Editar', '0'),
 (1, 2, 'Eliminar', '1'),
 (1, 2, 'Consultar', '1'),
 (1, 3, 'Registrar', '1'),

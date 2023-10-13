@@ -470,7 +470,8 @@
         $new = $this->con->prepare("SELECT * FROM `tipo_pago` WHERE status = 1");
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        return $data;
+        echo json_encode($data);
+        die();
 
       }catch(\PDOexection $error){
 

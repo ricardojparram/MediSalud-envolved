@@ -207,7 +207,7 @@ CREATE TABLE empresa_envio(
    
 CREATE TABLE sede_envio(
     id_sede int AUTO_INCREMENT PRIMARY KEY,
-    ubicacion varchar(40) NOT NULL,
+    ubicacion varchar(100) NOT NULL,
     id_empresa int NOT NULL,
     status int NOT NULL,
     FOREIGN KEY (id_empresa) REFERENCES empresa_envio (id_empresa) ON DELETE CASCADE ON UPDATE CASCADE
@@ -228,6 +228,7 @@ CREATE TABLE venta(
     cedula_cliente varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
     direccion varchar(60),
     id_envio int,
+    online int,
     status int NOT NULL,
     FOREIGN KEY (id_envio) REFERENCES envio(id_envio) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (cedula_cliente) REFERENCES cliente(cedula) ON DELETE CASCADE ON UPDATE CASCADE

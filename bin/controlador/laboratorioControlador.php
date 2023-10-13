@@ -11,35 +11,35 @@
   $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
   $permiso = $permisos['Laboratorio'];
 
-  if($permiso["Consultar"] != 1) die('<script> window.location = "?url=home" </script>');
+  if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
 
-  if(isset($_POST['getPermisos']) && $permiso["Consultar"] == 1){
+  if(isset($_POST['getPermisos'], $permiso["Consultar"])){
     die(json_encode($permiso));
   }
 
-  if(isset($_POST['mostrar']) && $permiso["Consultar"] == 1){
+  if(isset($_POST['mostrar'], $permiso["Consultar"])){
     ($_POST['bitacora'] == 'true')
       ? $objModel->mostrarLaboratoriosAjax(true)
       : $objModel->mostrarLaboratoriosAjax();
   }
 
-  if(isset($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto']) && $permiso["Registrar"] == 1){
+  if(isset($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto'], $permiso["Registrar"])){
 
     $objModel->getDatosLab($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto']);
 
   }
 
-  if(isset($_POST['select']) && $permiso["Editar"] == 1){
+  if(isset($_POST['select'], $permiso["Editar"])){
     $objModel->getItem($_POST['id']);
   }
 
-  if(isset($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id']) && $permiso["Editar"] == 1){
+  if(isset($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id'], $permiso["Editar"])){
 
     $objModel->getEditar($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id']);
 
   }
 
-  if(isset($_POST['eliminar']) && $permiso["Eliminar"] == 1){
+  if(isset($_POST['eliminar'], $permiso["Eliminar"])){
     $objModel->getEliminar($_POST['id']);
   }
 

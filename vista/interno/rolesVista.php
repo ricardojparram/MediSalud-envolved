@@ -78,46 +78,38 @@
         </div>
         <!-- End Table with stripped rows -->
 
-      <!-- Modal Modulos -->
-      <div class="modal fade" id="modulos" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header alert alert-success">
-              <h5 class="modal-title"><strong>Gestionar Módulos</strong></h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body d-flex justify-content-center">
-              <form id="modulosForm"  class="row mx-4 mb-3">
-              </form>
+        <!-- Modal Ḿódulos y permisos -->
+        <div class="modal fade" id="permisos" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+          <div class="modal-dialog modal-dialog-scrollable modal-md">
+            <div class="modal-content">
+              <div class="modal-header alert alert-success">
+                <h5 class="modal-title "><strong>Módulos y permisos</strong></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body w-100">
+                <div class="table-responsive">
+                  <table class="table table-hover" width="100%" cellspacing="0">
+                    <thead>
+
+                      <tr>
+                        <th class="text-center">Módulos</th>
+                        <th class="text-center">Permisos</th>
+                      </tr>
+
+                    </thead>
+
+                    <tbody id="tabla_permisos">
+                      
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-success " id="enviarModulos">Actualizar</button>
-              </div>
+              <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-success " id="enviarPermisos">Actualizar</button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- Modal Permisos -->
-      <div class="modal fade" id="permisos" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header alert alert-success">
-              <h5 class="modal-title "><strong>Gestionar Permisos</strong></h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body d-flex justify-content-center">
-              <form id="permisosForm"  class="row mb-3 justify-content-center w-100">
-
-              </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-success " id="enviarPermisos">Actualizar</button>
-              </div>
-          </div>
-        </div>
-      </div>
 
   </main>
 
