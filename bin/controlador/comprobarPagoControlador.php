@@ -5,12 +5,28 @@
 	use component\menuLateral as menuLateral;
 	use modelo\comprobarPago;
 
+	if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
+
 	$model = new comprobarPago();
 	$permisos = $model->getPermisosRol($_SESSION['nivel']);
-	$permiso = $permisos['Bitacora'];
+	$permiso = $permisos['Comprobar pago'];
+
+	if(isset($_POST['getPermisos'], $permiso["Consultar"])){
+		die(json_encode($permiso));
+	}
+
+	if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
 
 	if(isset($_POST['mostrar'], $_POST['bitacora'], $permiso['Consultar'])){
 		$model->mostrarPagos($_POST['bitacora']);
+	}
+
+	if(isset($_POST['id_pago'], $_POST['estado'], $permiso['Comprobar pago'])){
+		$model->getComprobacion($_POST['id_pago'], $_POST['estado']);
+	}
+
+	if(isset($_POST['id_pago'], $_POST['detalle_pago'], $permiso['Consultar'])){
+		$model->getDetallePago($_POST['id_pago']);
 	}
 
 	$comp = new initcomponents();
