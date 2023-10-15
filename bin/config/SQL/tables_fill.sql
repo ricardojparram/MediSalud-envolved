@@ -86,7 +86,8 @@ INSERT INTO modulos(id_modulo, nombre, status) VALUES
 (16,'Cuentas farmacia', 1),
 (17,'Roles', 1),
 (18,'Empresa de Envio',1),
-(19,'Sedes de Envio',1);
+(19,'Sedes de Envio',1),
+(20,'Comprobar pago',1);
 
 INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES 
 (1, 1, 'Registrar', '1'),
@@ -159,7 +160,9 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (1, 19, 'Registrar', '1'),
 (1, 19, 'Editar', '1'),
 (1, 19, 'Eliminar', '1'),
-(1, 19, 'Consultar', '1');
+(1, 19, 'Consultar', '1'),
+(1, 20, 'Consultar', '1'),
+(1, 20, 'Comprobar pago', '1');
 INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES 
 (2, 1, 'Registrar', '1'),
 (2, 1, 'Editar', '1'),
@@ -231,7 +234,9 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (2, 19, 'Registrar', '1'),
 (2, 19, 'Editar', '1'),
 (2, 19, 'Eliminar', '1'),
-(2, 19, 'Consultar', '1');
+(2, 19, 'Consultar', '1'),
+(2, 20, 'Consultar', '1'),
+(2, 20, 'Comprobar pago', '1');
 INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES 
 (3, 1, 'Registrar', '1'),
 (3, 1, 'Editar', '1'),
@@ -303,4 +308,6 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (3, 19, 'Registrar', '1'),
 (3, 19, 'Editar', '1'),
 (3, 19, 'Eliminar', '1'),
-(3, 19, 'Consultar', '1');
+(3, 19, 'Consultar', '1'),
+(3, 20, 'Consultar', '1'),
+(3, 20, 'Comprobar pago', '1');
