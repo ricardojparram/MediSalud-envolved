@@ -30,7 +30,7 @@
 	}
 
 	$VarComp = new initcomponents();
-	$Nav = new nav();
+	$tiendaComp = new nav();
 	
 	require "vista/inicio/carritoVista.php";	
 
