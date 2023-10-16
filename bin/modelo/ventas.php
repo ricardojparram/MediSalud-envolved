@@ -17,28 +17,15 @@
 
      //---------------------------------AGREGAR VENTAS--------------------------------
 
-     public function getAgregarVenta($cedula,$montoT,$metodo,$moneda){
+     public function getAgregarVenta($cedula){
 
      if(preg_match_all("/^[0-9]{3,30}$/", $cedula) != 1){
         return "Error de cedula!";
       }
-      if(preg_match_all("/^([0-9]+\.+[0-9]|[0-9])+$/", $montoT) != 1){
-        return "Error de monto!";
-      }
-      if(preg_match_all("/^[0-9]{1,15}$/", $metodo) != 1){
-        return "Error de metodo de pago!";
-      }
-      if(!is_numeric($moneda)){
-        die('Error de moneda!');
-      }
-    
+
       $this->cedula = $cedula; 
-      $this->monto = $montoT;
-      $this->metodo = $metodo;
-      $this->moneda = $moneda;
 
-
-      return $this->agregarVenta();
+      $this->agregarVenta();
 
     }
 
@@ -52,15 +39,14 @@
 
       if(isset($data[0]["cedula"])){
 
-       $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `monto`, `cedula_cliente`, `cod_tipo_pago`, `cod_cambio`, `status`) VALUES (default,default,?,?,?,?,1)");
+       $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) VALUES (default, default , ? , '', null , 0 , 1)");
 
-       $new->bindValue(1, $this->monto);
-       $new->bindValue(2, $this->cedula);
-       $new->bindValue(3, $this->metodo);
-       $new->bindValue(4, $this->moneda);
+       $new->bindValue(1, $this->cedula);
        $new->execute();
+
        $this->id = $this->con->lastInsertId();
        echo json_encode(['id' => $this->id]);
+
        $this->binnacle("Venta",$_SESSION['cedula'], "Registró Venta.");
        parent::desconectarDB();
        die();
@@ -70,22 +56,22 @@
       }
 
     }catch(\PDOexection $error){
-      return $error;	
+      die($error);	
    }
  }
 
   //---------------------------------AGREGAR VENTA POR PRODUCTO--------------------------------
 
-   public function AgregarVentaXProd($producto,$precio,$cantidad,$idVenta){
+   public function agregarVentaXProd($producto,$precio,$cantidad,$idVenta){
     
       if(preg_match_all("/^[0-9]{1,15}$/", $producto) != 1){
-        return "Error de producto!";
+        die("Error de producto!") ;
       }
       if(preg_match_all("/^([0-9]+\.+[0-9]|[0-9])+$/", $precio) != 1){
-        return "Error de precio!";
+        die("Error de precio!") ;
       }
       if(preg_match_all("/^[0-9]{1,15}$/", $cantidad) != 1){
-        return "Error de cantidad!";
+        die("Error de cantidad!") ;
       } 
 
     $this->codigoP = $producto;
@@ -110,7 +96,7 @@
      parent::desconectarDB();
 
     }catch(\PDOexection $error){
-      return $error;
+      die($error);
     }
 
    }
@@ -135,9 +121,86 @@
      $new->execute();
      parent::desconectarDB();
     }catch(\PDOexection $error){
-      return $error;
+      die($error);
     }
    }
+   
+   //---------------------------------AGREGAR PAGO--------------------------------
+
+   public function getPago($montoT , $id){
+    
+    if(preg_match_all("/^([0-9]+\.+[0-9]|[0-9])+$/", $montoT) != 1){
+      die("Error de monto!");
+    }
+
+    if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
+      die("Error de id!");
+    }
+
+    $this->monto = $montoT;
+    $this->id = $id;
+
+    $this->agregarPago();
+
+
+   }
+
+   private function agregarPago(){
+    try {
+      parent::conectarDB();
+      $new = $this->con->prepare('INSERT INTO `pago`(`id_pago`, `monto_total`, `num_fact`, `status`) VALUES (default, ? , ? , 1)');
+      $new->bindValue(1, $this->monto);
+      $new->bindValue(2, $this->id);
+      $new->execute();
+      $this->id = $this->con->lastInsertId();
+      echo json_encode(['id' => $this->id]);
+      parent::desconectarDB();
+      die();
+
+    } catch (\PDOException $error) {
+      die($error);
+    }
+   }
+
+  //---------------------------------VALIDAR ELIMINAR VENTA--------------------------------
+
+     public function agregarDetallePago($tipoPago , $montoPorTipo , $id , $moneda){
+        if(preg_match_all("/^[0-9]{1,15}$/", $tipoPago) != 1){
+          die("Error de id!");
+        }
+        if(preg_match_all("/^([0-9]+\.+[0-9]|[0-9])+$/", $montoPorTipo) != 1){
+          die("Error de precio!") ;
+        }
+        if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
+          die("Error de id!");
+        }
+        if(preg_match_all("/^[0-9]{1,15}$/", $moneda) != 1){
+          die("Error de moneda!");
+        }
+
+        $this->metodo = $tipoPago; 
+        $this->monto = $montoPorTipo; 
+        $this->id = $id;
+        $this->moneda = $moneda;
+
+        $this->detallePago();
+
+     }
+
+     private function detallePago(){
+        try {
+        parent::conectarDB();
+        $new = $this->con->prepare('INSERT INTO `detalle_pago`(`id_detalle_pago`, `id_pago`, `id_tipo_pago`, `id_datos_cobro`, `id_banco_cliente`, `monto_pago`, `id_cambio`) VALUES (DEFAULT, ? , ? , null , null , ? , ?)');
+        $new->bindValue(1, $this->id);
+        $new->bindValue(2, $this->metodo);
+        $new->bindValue(3, $this->monto);
+        $new->bindValue(4, $this->moneda);
+        $new->execute();
+
+      } catch (\PDOException $error) {
+        die($error);
+      }
+     }
 
     //---------------------------------VALIDAR ELIMINAR VENTA--------------------------------
 
@@ -215,7 +278,7 @@
       try{
          parent::conectarDB();
 
-        $query = "SELECT v.cedula_cliente , v.num_fact ,v.fecha , tp.des_tipo_pago , v.monto , CONCAT(IF(MOD(v.monto / cm.cambio, 1) >= 0.5, CEILING(v.monto / cm.cambio), FLOOR(v.monto / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN tipo_pago tp ON v.cod_tipo_pago = tp.cod_tipo_pago INNER JOIN cambio cm ON cm.id_cambio = v.cod_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE v.status = 1 ";
+        $query = "SELECT v.num_fact, v.fecha, v.cedula_cliente , p.monto_total , CONCAT(IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN pago p ON p.num_fact = v.num_fact INNER JOIN detalle_pago dp ON p.id_pago = dp.id_pago INNER JOIN cambio cm ON cm.id_cambio = dp.id_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE v.status = 1";
 
         $new = $this->con->prepare($query);
         $new->execute();
@@ -246,7 +309,7 @@
     private function exportar(){
       try{
        parent::conectarDB();
-       $query = "SELECT v.cedula_cliente, c.nombre , c.apellido , c.direccion, cc.celular , v.num_fact ,v.fecha , tp.des_tipo_pago , v.monto , CONCAT(IF(MOD(v.monto / cm.cambio, 1) >= 0.5, CEILING(v.monto / cm.cambio), FLOOR(v.monto / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN tipo_pago tp ON v.cod_tipo_pago = tp.cod_tipo_pago INNER JOIN cambio cm ON cm.id_cambio = v.cod_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda INNER JOIN cliente c ON c.cedula = v.cedula_cliente INNER JOIN contacto_cliente cc ON cc.cedula = v.cedula_cliente WHERE v.status = 1 AND v.num_fact = ?";
+       $query = "SELECT v.cedula_cliente , c.nombre , c.apellido , c.direccion , cc.celular , v.num_fact , v.fecha , p.monto_total ,CONCAT(IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN pago p ON p.num_fact = v.num_fact INNER JOIN detalle_pago dp ON dp.id_pago = p.id_pago INNER JOIN cliente c ON c.cedula = v.cedula_cliente INNER JOIN contacto_cliente cc ON cc.cedula = c.cedula INNER JOIN cambio cm ON cm.id_cambio = dp.id_cambio INNER JOIN moneda m ON m.id_moneda = cm.moneda WHERE v.status = 1 AND v.num_fact = ?";
        $new = $this->con->prepare($query);
        $new->bindValue(1 , $this->id);
        $new->execute();
@@ -258,7 +321,6 @@
        $new->execute();
        $dataP = $new->fetchAll();
 
-       parent::desconectarDB();
         
        $nombre = 'Ticket_'.$dataV[0]['num_fact'].'_'.$dataV[0]['cedula_cliente'].'.pdf';
        
@@ -322,7 +384,7 @@
 
        $pdf->Ln(5);
 
-       $montoTotal = $dataV[0]['monto'];
+       $montoTotal = $dataV[0]['monto_total'];
 
        $pdf->Cell(18,5,utf8_decode(""),0,0,'C');
        $pdf->Cell(22,5,utf8_decode("SUBTOTAL"),0,0,'C');
@@ -365,6 +427,7 @@
        $respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
        echo json_encode($respuesta);
        $this->binnacle("Venta",$_SESSION['cedula'], "Exporto Ticket de Venta");
+       parent::desconectarDB();
        die();
 
       }catch(\PDOexection $error){
@@ -424,6 +487,27 @@
         return $error;
       }
     }
+
+         //---------------------------------DETALLES PRODUCTOS POR VENTA--------------------------------
+
+    public function getDetalleTipoPago($id){
+      try{
+        $this->id = $id;
+        parent::conectarDB();
+
+        $new = $this->con->prepare("SELECT v.num_fact , tp.des_tipo_pago , dp.monto_pago FROM venta v INNER JOIN pago p ON v.num_fact = p.num_fact INNER JOIN detalle_pago dp ON dp.id_pago = p.id_pago INNER JOIN tipo_pago tp ON tp.id_tipo_pago = dp.id_tipo_pago WHERE v.num_fact = ?");
+        $new->bindValue(1, $this->id);
+        $new->execute();
+        $data = $new->fetchAll(\PDO::FETCH_OBJ);
+        echo json_encode($data);
+        parent::desconectarDB();
+        die();
+
+      }catch(\PDOexection $error){
+        return $error;
+      }
+    }
+
 
      //---------------------------------MOSTRAR PRODUCTO--------------------------------
 
