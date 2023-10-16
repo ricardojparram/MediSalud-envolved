@@ -294,7 +294,8 @@
 
     public function mostrarLaboratorio(){
       try{
-        $new = $this->con->prepare("SELECT * FROM laboratorio l WHERE l.status = 1");
+
+        
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
         return $data;
