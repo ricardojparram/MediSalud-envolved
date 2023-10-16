@@ -70,6 +70,31 @@ INSERT INTO cambio(cambio, fecha, moneda, status) VALUES('35', DEFAULT, 1, 1), (
 INSERT INTO empresa_envio (rif, nombre, contacto, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
 INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
 
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Central de Venezuela', '0001', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco de Venezuela (BDV)', '0102', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Venezolano de Crédito (BVC)', '0104', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Mercantil', '0105', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Provincial (BBVA)', '0108', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bancaribe', '0114', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Exterior', '0115', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Caroní', '0128', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banesco Banco Universal', '0134', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Sofitasa', '0137', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Plaza', '0138', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bangente', '0146', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Fondo Común (BFC)', '0151', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , '100% Banco', '0156', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Del Sur Banco Universal', '0157', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco del Tesoro', '0163', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Agrícola de Venezuela', '0166', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bancrecer', '0168', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Mi Banco, Banco Microfinanciero C.A', '0169', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Activo', '0171', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bancamiga', '0172', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banplus', '0174', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Bicentenario del Pueblo', '0175', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco de la Fuerza Armada Nacional Bolivariana (BANFANB)', '0177', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Nacional de Crédito (BNC)', '0191', 1);
 
 INSERT INTO modulos(id_modulo, nombre, status) VALUES
 (1, 'Clientes',1),

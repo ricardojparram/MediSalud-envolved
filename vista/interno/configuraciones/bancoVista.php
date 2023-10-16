@@ -8,6 +8,9 @@
 	<?php $VarComp->header(); ?>
 	<link rel="stylesheet" href="assets/css/estiloInterno.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap5.min.css">
+	<link rel="stylesheet" href="assets/css/select2.min.css">
+	<link rel="stylesheet" href="assets/css/select2-bootstrap-5-theme.min.css">
+	<link rel="stylesheet" href="assets/css/select2-bootstrap-5-theme.rtl.min.css">
 </head>
  <body>
  	<!-- ======= Header ======= -->
@@ -112,7 +115,9 @@
 	                  <label class="col-form-label"> <strong>Nombre de banco</strong> </label>
 	                  <div class="input-group">
 	                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el nombre del Banco"><i class="bi bi-bank"></i></button> 
-	                    <input class="form-control" id="nombre" placeholder="Nombre">
+	                    <select class="form-control nombre" aria-label="Default select example" id="nombre">
+	                    	<option selected disabled>Seleccione una opción</option>
+	                    </select>
 	                  </div>
 	                  <p class="error" style="color:#ff0000;text-align: center;" id="error2"></p>
 	                </div>
@@ -312,6 +317,7 @@
    
  </body>
  <?php $VarComp->js(); ?>
+ <script src="assets/js/select2.full.min.js"></script>
  <script src="assets/js/banco.js"></script>
  </html>
 

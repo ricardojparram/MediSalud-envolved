@@ -488,7 +488,7 @@
       
     }
     
-    //Validar que no se repita tipo de paog
+    //Validar que no se repita tipo de pago
     function validarRepetidoTipoPago() {
        $('.select-tipo').change(function(){
         let tipoPago;
