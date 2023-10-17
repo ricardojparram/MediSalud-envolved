@@ -117,7 +117,16 @@
 	                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el nombre del Banco"><i class="bi bi-bank"></i></button> 
 	                    <select class="form-control nombre" aria-label="Default select example" id="nombre">
 	                    	<option selected disabled>Seleccione una opción</option>
-	                    </select>
+	                    	<?php var_dump($datosBanco);
+	                    	if (isset($datosBanco)) {
+	                    		foreach ($datosBanco as $data) {
+
+	                    		?>
+	                    		<option value="<?php echo $data->id_banco;?>" class="<?php echo $data->codigo;?>"><?php echo $data->nombre;?></option>
+	                    		<?php
+	                    	}
+	                    }else{"";}?>
+	                </select>
 	                  </div>
 	                  <p class="error" style="color:#ff0000;text-align: center;" id="error2"></p>
 	                </div>

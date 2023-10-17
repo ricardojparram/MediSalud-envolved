@@ -19,7 +19,7 @@ class banco extends DBConnect{
 
 		try{
 			parent::conectarDB();
-			$sql = 'SELECT b.id_banco , tp.des_tipo_pago , b.nombre , b.cedulaRif , b.telefono , b.NumCuenta , b.CodBanco FROM banco b INNER JOIN tipo_pago tp ON b.tipo_pago = tp.cod_tipo_pago WHERE b.status = 1 and tp.online = 1';
+			$sql = 'SELECT df.id_datos_cobro , df.rif_cedula, b.codigo , b.nombre FROM datos_cobro_farmacia df INNER JOIN banco b ON b.id_banco = df.id_banco WHERE df.status = 1';
 
 			$new = $this->con->prepare($sql);
 			$new->execute();
@@ -38,14 +38,13 @@ class banco extends DBConnect{
 	public function datosBanco(){
 		try{
 			parent::conectarDB();
-			$sql = 'SELECT b.id_banco, b.nombre, b.codigo, b.status FROM banco b WHERE b.status = 1';
-
-			$new = $this->con->prepare($sql);
+			
+			$new = $this->con->prepare('SELECT b.id_banco, b.nombre, b.codigo, b.status FROM banco b WHERE b.status = 1');
 			$new->execute();
 			$data = $new->fetchAll(\PDO::FETCH_OBJ);
-			$resultado = ['resultado' => true, $data];
-			//parent::desconectarDB();
-			die(json_encode($resultado));
+			return $data;
+			parent::desconectarDB();
+
 
 		}catch(\PDOException $e){
 			die($e);
@@ -55,7 +54,7 @@ class banco extends DBConnect{
 	public function SelecTipoPago(){
 		try{
         	parent::conectarDB();
-			$sql = 'SELECT `cod_tipo_pago`, `des_tipo_pago`, `online`, `status` FROM `tipo_pago` WHERE status = 1 and online = 1';
+			$sql = 'SELECT tp.id_tipo_pago, tp.des_tipo_pago , tp.online FROM tipo_pago tp WHERE tp.online = 1 and tp.status = 1';
 
 			$new = $this->con->prepare($sql);
 			$new->execute();

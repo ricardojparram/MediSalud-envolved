@@ -29,9 +29,7 @@
       : $objModel->mostrarBank();
      }
 
-     if (isset($_POST['selectBanco']) && $permiso['Consultar'] == 1) {
-      $objModel->datosBanco();
-    }
+      $datosBanco = $objModel->datosBanco();
 
      if (isset($_POST['selecTipoPago']) && $permiso['Consultar'] == 1) {
      	$objModel->selecTipoPago();

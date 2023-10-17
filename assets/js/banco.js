@@ -26,8 +26,8 @@ $(document).ready(function(){
 					tabla += `
 					<tr>
 					<td>${row.nombre}</td>
-					<td>${row.cedulaRif}</td>
-					<td>${row.des_tipo_pago}</td>
+					<td>${row.rif_cedula}</td>
+					<td>${row.codigo}</td>
 					<td class="d-flex justify-content-center">
 					<button type="button" ${editarPermiso} id="${row.id_banco}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
 					<button type="button" ${eliminarPermiso} id="${row.id_banco}" class="btn btn-danger borrar mx-2" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi bi-trash3"></i></button>
