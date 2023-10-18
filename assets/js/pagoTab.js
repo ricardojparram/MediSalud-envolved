@@ -30,8 +30,8 @@ $(document).ready(function() {
 	DatosP();
 	precio();
 	empresaEnvio();
+	selectTipoPago();
 
-	$("#aliasInp").fadeOut(0);
 
 	// Datos Personales
 	function DatosP() {
@@ -57,60 +57,9 @@ $(document).ready(function() {
 	}
 
 
-	//Metodo de Pago
-	$("#tipoP").change(() => {
-		
-		tipo = $("#tipoP").val();
-		select = "";
-		tipoPago();	
-	});
-
-	$("#fade").fadeIn(400);
-	$(".trans, .movil").fadeOut(0);
-	let cedula
-	let resultado
-	$("#bancTipo").change(() => {
-		cedula = $("#bancTipo").val();
-		resultado = data.find(item => item.cedulaRif === cedula);
-		console.log(resultado.cedulaRif);
-		switch (tipo) {
-			case '4':
-				$(".trans").fadeOut(0);
-				$(".movil").fadeIn(300);
-				$("#cedBancM").val(resultado.cedulaRif);
-				$("#teleMovil").val(resultado.telefono);
-				$("#codBanc").val(resultado.CodBanco);
-				break;
-			case '5':
-				$(".movil").fadeOut(0);
-				$(".trans").fadeIn(300);
-				$("#cedBanc").val(resultado.cedulaRif);
-				$("#numCuen").val(resultado.NumCuenta);
-				break;
-			default: console.log("nada");
-				break;
-		}	
-	});
 	
-	// Relleno de select
-	function tipoPago() {
-		$.ajax({
-			type: "post",
-            url: "",
-            dataType: "json",
-			data:{mostrarT: 'xd', tipo},
-            success(list) {
-				
-				data = list
-				data.forEach(row => {
-					select+=`
-					<option value="${row.cedulaRif}">${row.nombre}</option>`;
-				})
-				$('#bancTipo').html('<option selected disabled>Nombre</option>' + select);
-			}
-		});
-	}
-	// Fin Metodo de Pago
+	
+	
 
 	// Precio y Cambio
 	function precio(){
@@ -305,35 +254,291 @@ $(document).ready(function() {
 				break;
 		}
 
-	 	// // if (estado && municipio && direcEntre && numCasa && codPostal && empresa && sede) {
-	 	// // 	next_step = true;
-	 	// // }else{
-	 	// // 	next_step = false;
-	 	// // }	
 	});
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	fechaHoy($('#fecha'));
 
+	  // fila de tipo pago
+	  let newRowTipo = ` <tr>
+						  <td width="1%"><a class="removeRowPagoTipo a-asd" ><i class="bi bi-trash-fill"></i></a></td>
+						  <td width='30%'> 
+							<select class="select-tipo select-asd" name="TipoPago">
+							  <option></option>
+							</select>
+						  </td>
+						  <td width='15%' class=""><input class="select-asd precio-tipo" type="number" placeholder="0,00"></td>
+						</tr>`;
+	  
+	// Caracteriticas de la fila Tipo Pago
+	function filaTipoN(){
+		$('#FILL').append(newRowTipo);
+		selectTipoPago();
+		validarRepetido();
+	}
+	// Agregar fila para insertar tipo de pago
+	$('.newRowPago').on('click',function(e){
+		filaTipoN();
+	});
+
+		// ELiminar fila Tipo de Pago
+	$('body').on('click','.removeRowPagoTipo', function(e){
+		$(this).closest('tr').remove();
+	});
+
+	
+
+	 //  rellena los select de las filas de tipos
+	 function selectTipoPago(){
+		$.ajax({
+		  url: '',
+		  method: 'POST',
+		  dataType: 'json',
+		  data: {
+			selectTipo: "tipo de pago"
+		  },
+		  success(data){
+			let option = ""
+			data.forEach((row)=>{
+			  option += `<option value="${row.id_tipo_pago}">${row.des_tipo_pago}</option>`
+			})
+			$('.select-tipo').each(function(){
+			   if(this.children.length == 1){
+				 $(this).append(option);
+				 $(this).chosen({
+				  width: '25vw',
+				  placeholder_text_single: "Selecciona un tipo de pago",
+				  search_contains: true,
+				  allow_single_deselect: true,
+				  });
+			   }
+			})
+  
+		  }
+		})
+		let move
+		$(".select-tipo").on('change', function(){
+			move = $(this).val()
+			tipoPago(move);
+		})
+	  }
+
+	  $(".trans, .movil").fadeOut(0);
+
+	  function tipoPago(tipo){
+		if (tipo == 4 || tipo == 5){
+			let campos
+			let resultado
+			let muvi 
+			$("#fade").fadeIn(400);
+			
+			$("#fade input").val('');
+			$.ajax({
+				url: '',
+				method: 'POST',
+				dataType: 'json',
+				data:{
+					mostrarT: 'xd', tipo
+				},
+				success(data){
+					console.log(data)
+					  data 
+					let option = ""
+					switch (tipo) {
+						case '4':
+							option = ""
+							data.forEach((row)=>{
+								option += `<option value="${row.id_datos_cobro}">${row.nombre}</option>`
+							})
+							$("#bancTipoM, #bancTipoRM").html("<option selected disabled>Nombre</option>"+option)
+							$(".movil").fadeIn(300);
+							// $(".trans").fadeOut(0);
+							$("#bancTipoM").on('change', function(){
+								
+								muvi = $("#bancTipoM").val()
+								resultado = data.find(item => item.id_datos_cobro == muvi);
+								$("#cedBancM").val(resultado.rif_cedula)
+								$("#teleMovil").val(resultado.telefono)
+								$("#codBanc").val(resultado.codigo)
+							})
+							
+							break;
+						case '5':
+							option = ""
+							data.forEach((row)=>{
+								option += `<option value="${row.id_datos_cobro}">${row.nombre}</option>`
+							})
+							$("#bancTipoT, #bancTipoRT").html("<option selected disabled>Nombre</option>"+option)
+							$(".trans").fadeIn(300);
+							// $(".movil").fadeOut(0);
+
+							$("#bancTipoT").on('change', function(){
+								muvi = $("#bancTipoT").val()
+								resultado = data.find(item => item.id_datos_cobro == muvi);
+								$("#cedBancT").val(resultado.rif_cedula)
+								$("#numCuen").val(resultado.num_cuenta)
+							})
+						break;
+					
+						default:
+							break;
+					}
+				}
+			})
+		}
+	  }
+
 	// Validicaiones Tercer Step
 
-	$("#codPostal").keyup(()=> {  validarVC($("#canDep"),$("#errorCanDep"), "Error en la Cantidad,") });
-	$("#codPostal").keyup(()=> {  validarFecha($("#fecha"),$("#errorFecha"), "Error en la Fecha,") });
-	$("#empresa").keyup(()=> {  validarNumero($("#numRef"),$("#errorNumRef"), "Error en la Cantidad") });
-	$("#sede").keyup(()=> {  validarString($("#nomBanc"),$("#errorNomBanc"), "Error de Banco,") });
+	// function validarRepetido(){
+	// 	$(".select-tipo").change(function(){
+	// 		let tipo
+
+	// 		$(".select-tipo").each(function () {
+	// 			tipo = $(this).val()
+	// 			let count = 0;
+	// 			console.log('tipo = '+tipo)
+
+	// 			$(".select-tipo").each(function() {
+	// 				if(tipo != ''){
+	// 					console.log('segundo = '+$(this).val())
+
+	// 					if(tipo == $(this).val()){
+	// 						console.log(tipo == $(this).val())
+	// 					  count++
+	// 					  console.log(count)
+
+	// 					  if(count >=2){
+	// 						$(this).closest('tr').attr('style', 'border-color: red;')
+	// 						$(this).attr('valid', 'false');
+	// 						$('#error3').text('No pueden haber tipos de pago repetidos');
+
+	// 					  }else{
+	// 						$(this).attr('valid', 'true');
+	// 					  }
+	// 					}
+	// 				  }
+	// 			})
+	// 		})
+	// 	})
+	// }
+	
+	function validarRepetido(){
+		let selects
+		$(".select-tipo").change(function(){
+			var valores = [];
+			let repetidos = false
+			selects = $(this)
+			
+			$('.select-tipo').each(function() {
+				// $(this).attr('valid', 'true');
+  				var valor = $(this).val(); // Obtén el valor de cada elemento select
+  				valores.push(valor); // Agrega el valor al array
+				if($(this).val() == 4 && $(this).val() == 4){
+					tipoPago($(this).val())
+				}
+			});
+			console.log(valores); // Muestra los valores en la consola
+
+			for (var i = 0; i < valores.length; i++) {
+  				var contador = 0;
+  
+				for (var j = 0; j < valores.length; j++) {
+					if (valores[i] === valores[j]) {
+					contador++;
+					ola();
+					}
+					
+				}
+				
+			}
+			
+
+			console.log(contador);
+			function ola() {
+				
+				if (contador >= 2) {
+					selects.closest('tr').attr('style', 'border-color: red;')
+					selects.attr('valid', 'false');
+					$('#error3').text('No pueden haber tipos de pagos repetidos');
+				} else {
+					selects.attr('valid', 'true');
+					selects.closest('tr').attr('style', 'border-color: none;')
+				}
+			}
+				
+				$('.select-tipo').each(function(){
+					if($(this).is('[valid="true"]')){
+						$(this).closest('tr').attr('style', 'border-color: none;');
+					}
+				if(!$('.select-tipo').is('[valid="false"]')){
+					$('#error3').text('');
+				}
+				
+			})
+		})
+	}
+
+	// function validarRepetido() {
+		
+			
+
+	// 			// Escuchar el evento change en cada selector
+	// 		$(".select-tipo").on("change", function() {
+				
+	// 			var valorSeleccionado = $(this).val();
+				
+	// 			// Verificar que el valor no se repita en otros selectores
+	// 			$(".select-tipo").each(function() {
+	// 				if ($(this).val() === valorSeleccionado) {
+	// 					console.log("El número seleccionado ya está duplicado en otro selector.");
+
+	// 					$(this).closest('tr').attr('style', 'border-color: red;')
+
+    //               		$(this).attr('valid', 'false');
+    //               		$('#error3').text('No pueden haber productos repetidos');
+	// 					return false; // Detener el bucle each si se encuentra una repetición
+	// 				}else{
+	// 					$(this).attr('valid', 'true');
+	// 					$(this).closest('tr').attr('style', 'border-color: none;')
+	// 				}
+	// 			});
+
+	// 			$('.select-tipo').each(function(){
+	// 				if($(this).is('[valid="true"]')){
+	// 				  $(this).closest('tr').attr('style', 'border-color: none;');
+	// 				}
+					
+	// 			  })
+	// 			  if(!$('.select-tipo').is('[valid="false"]')){
+	// 			   $('#error3').text('');
+	// 			 }
+				
+	// 		});
+
+			
+	// }
+
 	$("#tipoP").change(()=> {  validarSelect($("#tipoP"),$("#errorTipoP"), "Error de Tipo,") });
 	$("#bancTipo").change(()=> {  validarSelect($("#bancTipo"),$("#errorBancTipo"), "Error de Banco,") });
 
 	$("#3").click((e)=>{
-		let cantidad = validarVC($("#canDep"),$("#errorCanDep"), "Error en la Cantidad,");
-		let fecha = validarFecha($("#fecha"),$("#errorFecha"), "Error en la Fecha,");
-		let referencia = validarNumero($("#numRef"),$("#errorNumRef"), "Error en la Cantidad");
-		let nomban = validarString($("#nomBanc"),$("#errorNomBanc"), "Error de Banco,");
 
-		let tipoPago = validarSelect($("#tipoP"),$("#errorTipoP"), "Error de Tipo,");
-		let NomBanc = validarSelect($("#bancTipo"),$("#errorBancTipo"), "Error de Banco,");
+
 		
+		
+
+
+
+
 	})
+
+
+
+
+
+
+
     
     // next step
     $('.f1 .btn-next').on('click', function() {

@@ -14,6 +14,10 @@
     $objModel->mostrarDatosP($_SESSION['cedula']);
   }
 
+  if (isset($_POST['selectTipo'])) {
+    $objModel->getMostrarMetodo();
+  }
+
   if (isset($_POST['mostrarT']) && isset($_POST['tipo'])) {
     $objModel->tipoP($_POST['tipo']);
   }

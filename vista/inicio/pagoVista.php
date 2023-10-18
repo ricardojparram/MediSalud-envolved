@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="assets/css/tienda.css">
     <!-- <link rel="stylesheet" href="assets/css/form-elements.css"> -->
     <link rel="stylesheet" href="assets/css/estiloPago.css">
+    <link rel="stylesheet" href="assets/css/chosen.min.css">
+
 
 </head>
 <style>
@@ -30,6 +32,9 @@
         padding-left: 0px;
         padding-right: 0px;
     }
+    .table-responsive {
+        overflow: visible;
+}
 </style>
 
 
@@ -62,7 +67,7 @@
                             </div>
                             <div class="f1-step">
                                 <div class="f1-step-icon"><i class="bi bi-credit-card"></i></div>
-                                <p>Referencia de Pago</p>
+                                <p>Metodo de Pago</p>
                             </div>
                         </div>
 
@@ -214,40 +219,34 @@
                         <!---paso 3 -->
                         <fieldset>
                             <br>
-                            <div class="row form-group col-md-12">
-                                <div class="col-lg-6">
-                                    <label for="inputText" class="col-12 col-form-label"><strong>Nombre del Banco</strong></label>
-                                    <div class="input-group ">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el nombre del banco desque que hizo el deposito."><i class="bi bi-bank"></i></button>
-                                        <input type="text" class="form-control" placeholder="Nombre" id="nomBanc">
+                            <div class="form-group col-md-12">  
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="table-responsive form-group col-12">
+
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Tipo Pago</th>
+                                                <th>Precio</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="FILL">
+                                            <tr>
+                                                <td width="1%"><a class="removeRowPagoTipo a-asd"><i class="bi bi-trash-fill"></i></a></td>
+                                                <td width='30%'> 
+                                                <select class="select-tipo select-asd" name="TipoPago">
+                                                    <option></option>
+                                                </select>
+                                                </td>
+                                                <td width='15%' class=""><input class="select-asd precio-tipo" type="number" placeholder="0,00"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <a class="newRowPago a-asd" ><i class="bi bi-plus-circle-fill"></i> Nueva fila</a> 
+                                        </div>
                                     </div>
-                                    <p class="m-0" id="errorNomBanc" style="color:#ff0000;text-align: center;"></p>
-                                </div>
-                                <div class="col-lg-6">
-                                    <label for="inputText" class="col-12 col-form-label"><strong>Numero de Referencia</strong></label>
-                                    <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el numero de referencia del deposito."><i class="bi bi-card-checklist"></i></button>
-                                        <input type="text" class="form-control" placeholder="123456789123" id="numRef">
-                                    </div>
-                                    <p class="m-0" id="errorNumRef" style="color:#ff0000;text-align: center;"></p>
-                                </div>
-                            </div>
-                            <div class="row form-group col-md-12">
-                                <div class="col-lg-6">
-                                    <label for="inputText" class="col-12 col-form-label"><strong>Fecha</strong></label>
-                                    <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la fecha de la realizacion del deposito"><i class="bi bi-calendar"></i></button> 
-                                        <input type="date" id="fecha" class="form-control">
-                                    </div>
-                                    <p class="m-0" id="errorFecha" style="color:#ff0000;text-align: center;"></p>
-                                </div>
-                                <div class="col-lg-6">
-                                    <label for="inputText" class="col-12 col-form-label"><strong>Cantidad de Deposito</strong></label>
-                                    <div class="input-group">
-                                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la cantidad del deposito."><i class="bi bi-cash-stack"></i></button>
-                                        <input type="text" class="form-control" placeholder="123,12" id="canDep" step="0.01" min="0" max="10">
-                                    </div>
-                                    <p class="m-0" id="errorCanDep" style="color:#ff0000;text-align: center;"></p>
                                 </div>
                             </div>
                             <p class="mt-2" id="error3" style="color:#ff0000;text-align: center;"></p>
@@ -298,43 +297,26 @@
                 <div class=" col-8 mx-auto text-center">
                     <h4 class="m-0">Elija un Metodo a Pagar</h4>
                 </div>
-                <div class="row mb-1 col-sm-12 col-md-8 mx-auto">
-                    <label for="inputText" class="col-12 col-form-label mx-auto text-center"><strong>Tipo de Pago</strong></label>
-                    <div class="input-group">
-                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un tipo de pago"><i class="bi bi-credit-card"></i></button>
-                        <select  class="form-select" id="tipoP">
-                            <option selected disabled>Tipo</option>
-                            <option value="4">Pago Movil</option>
-                            <option value="5">Transferencia</option>
-                        </select>
-                    </div>
-                    <p class="m-0" id="errorTipoP" style="color:#ff0000;text-align: center;"></p>
-                </div>
-                <div class="row form-group col-md-12">
+                <div class="row form-group col-md-12 movil mt-4">
+                    <h6 class="text-center">Datos para Movil</h6>
                     <div class="col-xl-6 col-md-12">
                         <label for="inputText" class="col-12 col-form-label "><strong>Nombre de Banco</strong></label>
                         <div class="input-group">
                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un banco"><i class="bi bi-bank"></i></button>
-                            <select  class="form-select" id="bancTipo">
+                            <select  class="form-select" id="bancTipoM">
                                 <option selected disabled>Nombre</option>
                             </select>
                         </div>
                         <p class="m-0" id="errorBancTipo" style="color:#ff0000;text-align: center;"></p>
                     </div>
-                    <div class="col-xl-6 col-md-12 trans">
+                    <div class="col-xl-6 col-md-12">
                         <label for="inputText" class="col-12 col-form-label"><strong>Cedula/Rif</strong></label>
                         <div class="input-group">
                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Documento de la Cuenta."><i class="bi bi-card-text"></i></button>
-                            <input type="text" class="form-control" disabled id="cedBanc">
+                            <input type="text" class="form-control" disabled id="cedBancM">
                         </div>
                     </div>
-                    <div class="col-xl-6 col-md-12 movil">
-                        <label for="inputText" class="col-12 col-form-label"><strong>Cedula/Rif</strong></label>
-                        <div class="input-group">
-                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Documento de la Cuenta."><i class="bi bi-card-text"></i></button>
-                            <input type="text" class="form-control" disabled  id="cedBancM">
-                        </div>
-                    </div>
+                    
                 </div>
                 <div class="row form-group col-md-12 movil">
                     <div class="col-xl-6 col-md-12">
@@ -345,10 +327,50 @@
                         </div>
                     </div>
                     <div class="col-xl-6 col-md-12">
-                        <label for="inputText" class="col-12 col-form-label"><strong>Codigo del Banco</strong></label>
+                        <label for="inputText" class="col-12 col-form-label"><strong>Codigo</strong></label>
                         <div class="input-group">
-                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Codigo para del Banco"><i class="ri-hashtag"></i></button> 
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Codigo del Banco"><i class="bi bi-hash"></i></button> 
                             <input type="text" id="codBanc" disabled class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group col-md-12 mt-4 movil">
+                    <h6 class="text-center">Datos para Verificación de Pago</h6>
+                    <div class="col-xl-6 col-md-12">
+                        <label for="inputText" class="col-12 col-form-label"><strong>Referencia</strong></label>
+                        <div class="input-group">
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Referencia para pago"><i class="bi bi-hash"></i></button> 
+                            <input type="text" id="ReferenciaMovil" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-12">
+                        <label for="inputText" class="col-12 col-form-label "><strong>Nombre de Banco</strong></label>
+                        <div class="input-group">
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone el banco de Donde Hizo la Transferencia"><i class="bi bi-bank"></i></button>
+                            <select  class="form-select" id="bancTipoRM">
+                                <option selected disabled>Nombre</option>
+                            </select>
+                        </div>
+                        <p class="m-0" id="" style="color:#ff0000;text-align: center;"></p>
+                    </div>
+                </div>
+                <div class="row form-group col-md-12 trans mt-4">
+                    <h6 class="text-center">Datos para Transferencia</h6>
+                    <div class="col-xl-6 col-md-12">
+                        <label for="inputText" class="col-12 col-form-label "><strong>Nombre de Banco</strong></label>
+                        <div class="input-group">
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone un banco"><i class="bi bi-bank"></i></button>
+                            <select  class="form-select" id="bancTipoT">
+                                <option selected disabled>Nombre</option>
+                            </select>
+                        </div>
+                        <p class="m-0" id="errorBancTipo" style="color:#ff0000;text-align: center;"></p>
+                    </div>
+                    <div class="col-xl-6 col-md-12 trans">
+                        <label for="inputText" class="col-12 col-form-label"><strong>Cedula/Rif</strong></label>
+                        <div class="input-group">
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Documento de la Cuenta."><i class="bi bi-card-text"></i></button>
+                            <input type="text" class="form-control" disabled  id="cedBancT">
                         </div>
                     </div>
                 </div>
@@ -360,6 +382,27 @@
                     </div>
                 </div>
                 <p class="nota col-11 mx-auto small mt-2">*Al momento de realizar el registro de los datos, el banco seleccionado en esta sección facilitará la verificación del depósito realizado.</p>
+                
+                <div class="row form-group col-md-12 mt-4 trans">
+                    <h6 class="text-center">Datos para Verificación de Pago</h6>
+                    <div class="col-xl-6 col-md-12">
+                        <label for="inputText" class="col-12 col-form-label"><strong>Referencia</strong></label>
+                        <div class="input-group">
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Referencia para pago"><i class="bi bi-hash"></i></button> 
+                            <input type="text" id="ReferenciaTrans" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-12">
+                        <label for="inputText" class="col-12 col-form-label "><strong>Nombre de Banco</strong></label>
+                        <div class="input-group">
+                            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone el banco de Donde Hizo la Transferencia"><i class="bi bi-bank"></i></button>
+                            <select  class="form-select" id="bancTipoRT">
+                                <option selected disabled>Nombre</option>
+                            </select>
+                        </div>
+                        <p class="m-0" id="" style="color:#ff0000;text-align: center;"></p>
+                    </div>
+                </div>
             </form>
         </div>
 
@@ -368,54 +411,17 @@
 
   </main>
 
-    <!-- Modal Direcciones Recientes -->
-    <div class="modal fade" id="modalDialogScrollable" tabindex="-1" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title">Direcciones Frecuentes</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body listDirec">
-                <div class="col-12 p-2 cuadro d-flex mb-2" id="1">
-                    <div class="col-2 text-center">
-                        <button class="iconDirec btn btn-success m-1">
-                            <i class="bi bi-signpost-split"></i>
-                        </button>
-                    </div>
-                    <div class="col-10">
-                        <h5><strong>Direccion Fija</strong></h5>
-                        <p class="m-0 text-truncate">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsam consequuntur natus perspiciatis beatae consectetur dignissimos! Aperiam architecto labore alias commodi ipsa non expedita ipsam cumque. Et deleniti perferendis minus iure?</p>
-                    </div>
-                </div>
-                <div class="col-12 p-2 cuadro d-flex mb-2" id="2">
-                    <div class="col-2 text-center">
-                        <button class="iconDirec btn btn-success m-1">
-                            <i class="bi bi-signpost-split"></i>
-                        </button>
-                    </div>
-                    <div class="col-10">
-                        <h5><strong>Direccion Fija</strong></h5>
-                        <p class="m-0 text-truncate">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis porro, totam accusamus adipisci deserunt itaque sit magnam blanditiis est quam. Alias illum nisi veniam tempora suscipit quasi eius temporibus laudantium?</p>
-                    </div>
-                </div>
-                
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-        </div>
-    </div>
-    <!-- Fin Modal -->
 
   
 
   <?php $VarComp->js();?>   
   <script src="assets/js/pagoTab.js"></script>
+  <script src="assets/js/chosen.jquery.min.js"></script>
+
 
 
 
 </body>
 
 </html>
+

@@ -11,9 +11,21 @@
 
         public function tipoP($tipo){
             try {
+                switch ($tipo) {
+                    case '4':
+                        $query = "SELECT * from banco c INNER JOIN datos_cobro_farmacia d on c.id_banco = d.id_banco WHERE d.num_cuenta is NULL and c.status =1;";
+                        break;
+
+                     case '5':
+                        $query = "SELECT * from banco c INNER JOIN datos_cobro_farmacia d on c.id_banco = d.id_banco WHERE d.telefono is NULL and c.status = 1;";
+                        break;
+                    
+                    default:
+                        die();
+                        break;
+                }
                 parent::conectarDB();
-                $new = $this->con->prepare("SELECT * FROM banco WHERE tipo_pago = ? AND status = 1");
-                $new->bindValue(1, $tipo);
+                $new = $this->con->prepare($query);
                 $new->execute();
                 $data = $new->fetchAll();
                 echo json_encode($data);
@@ -102,5 +114,22 @@
                 return $error;
             }
         }
+
+        public function getMostrarMetodo(){
+            try{
+              parent::conectarDB();
+              $new = $this->con->prepare("SELECT * FROM `tipo_pago` WHERE status = 1 and online = 1");
+              $new->execute();
+              $data = $new->fetchAll(\PDO::FETCH_OBJ);
+              echo json_encode($data);
+              parent::desconectarDB();
+              die();
+      
+            }catch(\PDOexection $error){
+      
+             return $error;   
+      
+           }   
+          }
     }
 ?>
