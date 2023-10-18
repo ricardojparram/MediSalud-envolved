@@ -2,7 +2,6 @@
 
 	use component\initcomponents as initcomponents;
 	use component\tienda as tienda;
-	use component\carDesplegable as carDesplegable;
 	use component\footerInicio as footerInicio;
 	use modelo\inicio as inicio;
 

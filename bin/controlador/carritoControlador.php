@@ -1,7 +1,7 @@
 <?php  
 
 	use component\initcomponents as initcomponents;
-	use component\nav as nav;	
+	use component\tienda;	
 	use modelo\carrito as carrito;
 
 	$model = new carrito();
@@ -34,7 +34,7 @@
 	}
 
 	$VarComp = new initcomponents();
-	$tiendaComp = new nav();
+	$tiendaComp = new tienda();
 	
 	require "vista/inicio/carritoVista.php";	
 
