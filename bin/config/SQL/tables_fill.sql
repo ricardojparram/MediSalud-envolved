@@ -9,7 +9,7 @@ INSERT INTO rol(nombre, status) VALUES ('Administrador', '1'), ('Gerente', '1'),
 
 -- INSERTA USUARIO ADMIN
 
-INSERT INTO usuario (cedula, nombre, apellido, correo, password, rol, img, status) VALUES ('123123', 'admin', 'admin', 'admin@admin.com', '$2y$10$IQ3tD7JwCMoBHFwv6P4YteAgNOnlevdqxZYwtR8XfvkebK0It3RN.', '1', NULL, '1');
+INSERT INTO usuario (cedula, nombre, apellido, correo, password, rol, img, status) VALUES ('123123123', 'admin', 'admin', 'admin@admin.com', '$2y$10$IQ3tD7JwCMoBHFwv6P4YteAgNOnlevdqxZYwtR8XfvkebK0It3RN.', '1', NULL, '1');
 
 -- INSERTA LOS CLIENTES
 INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES 
