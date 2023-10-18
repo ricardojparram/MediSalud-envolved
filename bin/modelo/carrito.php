@@ -40,6 +40,23 @@
 
 		}
 
+		public function getAgregarProducto($producto, $cantidad, $user){
+			$this->id_producto = $producto;
+			$this->cantidad = $cantidad;
+			$this->user = $user;
+
+			$this->agregarProducto();
+		}
+
+		private function agregarProducto(){
+			// try {
+			// 	$this->conectarDB();
+			// 	 $sql = "INSERT INTO carrito(cedula, cod_producto, cantidad, precioActual) VALUES (?,?,?,)"
+			// } catch (\PDOException $e) {
+			// 	die($e);
+			// }
+		}
+
 		public function getValidarStock(array $productos){
 			$this->productos = $productos;
 
