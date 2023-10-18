@@ -23,17 +23,23 @@
 
 			$this->email = $email;
 
-			return $this->recuperarSistema();
+			$this->recuperarSistema();
 		}
 
 		protected function recuperarSistema(){
 
-			$new = $this->con->prepare("SELECT correo, CONCAT(nombre,' ',apellido) AS nombre FROM usuario WHERE status = 1 and correo = ?");
-			$new->bindValue(1 , $this->email);
-			$new->execute();
-			$data = $new->fetchAll();
+			try{
+				
+				$this->conectarDB();
+				$new = $this->con->prepare("SELECT correo, CONCAT(nombre,' ',apellido) AS nombre FROM usuario WHERE status = 1 and correo = ?");
+				$new->bindValue(1 , $this->email);
+				$new->execute();
+				$data = $new->fetchAll();
 
-			if(isset($data[0]['correo'])){
+				if(!isset($data[0]['correo'])){
+					$resultado = ['resultado' => 'Error de email' , 'error' => 'El correo no está registrado.'];
+					die(json_encode($resultado));
+				}
 
 				$nombre = $data[0]['nombre'];
 				$correo = $data[0]['correo'];
@@ -44,30 +50,24 @@
 				$generatedPass = hash('crc32b', $str);
 				$pass = password_hash($generatedPass, PASSWORD_BCRYPT);
 
-				try{
 
-					$new = $this->con->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND status = 1");
-					$new->bindValue(1, $pass);
-					$new->bindValue(2, $this->email);
-					$new->execute();
-					
-					if($this->enviarEmail($correo, $generatedPass, $nombre)){
-						$resultado = ['resultado' => 'Correo enviado'];
-					}else{
-						$resultado = ['resultado' => 'Error al enviar correo'];
-					}
-					echo json_encode($resultado);
-					die();
-					
-				}catch(exection $error){
-					return $error;
+				$new = $this->con->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND status = 1");
+				$new->bindValue(1, $pass);
+				$new->bindValue(2, $this->email);
+				$new->execute();
+
+				if($this->enviarEmail($correo, $generatedPass, $nombre)){
+					$resultado = ['resultado' => 'Correo enviado'];
+				}else{
+					$resultado = ['resultado' => 'Error al enviar correo'];
 				}
+				$this->desconectarDB();
+				die(json_encode($resultado));
 
-			}else{
-				$resultado = ['resultado' => 'Error de email' , 'error' => 'El correo no está registrado.'];
-				echo json_encode($resultado);
-				die();
+			}catch(exection $error){
+				return $error;
 			}
+
 
 		}
 
