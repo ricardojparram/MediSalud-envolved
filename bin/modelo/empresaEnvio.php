@@ -10,18 +10,17 @@ class empresaEnvio extends DBConnect{
 	private $nombre;
 	private $contacto;
 
-	function __construct(){
-		parent::__construct();
-	}
 
     public function mostrarEmpresas($bitacora = false){
     	try {
+    	  parent::conectarDB();
     	  $sql = 'SELECT * FROM empresa_envio e WHERE e.status = 1';
           $new = $this->con->prepare($sql);
           $new->execute();
           $data = $new->fetchAll(\PDO::FETCH_OBJ);
           echo json_encode($data);
           if($bitacora) $this->binnacle("Empresa de envio",$_SESSION['cedula'],"Consultó listado.");
+          parent::desconectarDB();
           die();
 
     	} catch (\PDOException $e) {
@@ -56,11 +55,12 @@ class empresaEnvio extends DBConnect{
 
     private function vRif(){
     	try {
+    		parent::conectarDB();
     		$new = $this->con->prepare('SELECT * FROM empresa_envio e WHERE e.status = 1 and e.rif = ? ');
     		$new->bindValue(1, $this->rif);
     		$new->execute();
     		$data = $new->fetchAll();
-
+            parent::desconectarDB();
     		if(isset($data[0]['rif'])) {
     			echo json_encode(['resultado' => 'Error Datos', 'error' => 'El rif ya está registrado.']);
     			die();
@@ -76,11 +76,13 @@ class empresaEnvio extends DBConnect{
 
     private function vRifEdit(){
     	try {
+    		parent::conectarDB();
     		$new = $this->con->prepare('SELECT * FROM empresa_envio e WHERE e.status = 1 and e.rif = ? and e.id_empresa != ?');
     		$new->bindValue(1, $this->rif);
     		$new->bindValue(2, $this->id);
     		$new->execute();
     		$data = $new->fetchAll();
+            parent::desconectarDB();
 
     		if(isset($data[0]['rif'])) {
     			echo json_encode(['resultado' => 'Error Datos', 'error' => 'El rif ya está registrado.']);
@@ -121,6 +123,7 @@ class empresaEnvio extends DBConnect{
 
     private function registrarEmpresa(){
     	try {
+    	parent::conectarDB();
     	$new = $this->con->prepare('INSERT INTO `empresa_envio`(`id_empresa`, `rif`, `nombre`, `contacto`, `status`) VALUES (DEFAULT,?,?,?,1)');
     	$new->bindValue(1, $this->rif);
     	$new->bindValue(2, $this->nombre);
@@ -130,6 +133,7 @@ class empresaEnvio extends DBConnect{
     	$resultado = ['resultado' => 'Empresa registrado.'];
         echo json_encode($resultado);
         $this->binnacle("Empresa de envío",$_SESSION['cedula'],"Registró empresa de envío .");
+        parent::desconectarDB();
         die();
     	} catch (\PDOException $e) {
     		die($e);
@@ -144,11 +148,13 @@ class empresaEnvio extends DBConnect{
 		}
 
 		$this->id = $id;
+        parent::conectarDB();
 
 		$new = $this->con->prepare("SELECT * FROM empresa_envio e WHERE e.status = 1 AND e.id_empresa = ?");
 		$new->bindValue(1, $this->id);
 		$new->execute();
 		$data = $new->fetchAll();
+        parent::desconectarDB();
 
 		if(isset($data[0]["id_empresa"])){
 			echo json_encode(['resultado' => 'Si existe esa empresa.']);
@@ -176,11 +182,13 @@ class empresaEnvio extends DBConnect{
 	private function selectItem(){
 
 		try {
+			parent::conectarDB();
 			$new = $this->con->prepare("SELECT * FROM empresa_envio e WHERE e.status = 1 AND e.id_empresa = ?");
 			$new->bindValue(1, $this->id);
 			$new->execute();
 			$data = $new->fetchAll(\PDO::FETCH_OBJ);
 			echo json_encode($data);
+			parent::desconectarDB();
 			die();
 
 		}catch (\PDOException $e) {
@@ -219,6 +227,7 @@ class empresaEnvio extends DBConnect{
 
 	private function editarEmpresa(){
 		try {
+			parent::conectarDB();
 			$new = $this->con->prepare('UPDATE empresa_envio e SET `rif`= ?,`nombre`= ? ,`contacto`= ? WHERE e.status = 1 AND e.id_empresa = ?');
 			$new->bindValue(1, $this->rif);
 			$new->bindValue(2, $this->nombre);
@@ -229,6 +238,7 @@ class empresaEnvio extends DBConnect{
 			$resultado = ['resultado' => 'Empresa editado.'];
 			echo json_encode($resultado);
 			$this->binnacle("Empresa de envío",$_SESSION['cedula'],"Editó empresa de envío .");
+			parent::desconectarDB();
 			die();
 		} catch (\PDOException $e) {
 			die($e);
@@ -250,12 +260,13 @@ class empresaEnvio extends DBConnect{
 
 	private function eliminarEmpresa(){
 		try{
-
+        parent::conectarDB();
 		$new = $this->con->prepare("UPDATE empresa_envio e SET `status`= 0 WHERE e.status = 1 AND e.id_empresa = ?");
 		$new->bindValue(1, $this->id);
 		$new->execute();
 		$this->binnacle("Empresa de envío",$_SESSION['cedula'],"Eliminó empresa de envío .");
 		$resultado = ['resultado' => 'Empresa eliminada.'];
+		parent::desconectarDB();
 		die(json_encode($resultado));
 
 

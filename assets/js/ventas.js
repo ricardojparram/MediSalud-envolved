@@ -26,11 +26,11 @@
           tabla +=`
           <tr>
           <td>${row.cedula_cliente}</td>
-          <td><button class="btn btn-success detalleV" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#detalleVenta">Ver detalles</button></td>
+          <td><button class="btn btn-success detalleV" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#detalleVenta">Ver Detalles</button></td>
           <td>${row.fecha}</td>
-          <td>${row.des_tipo_pago}</td>
+          <td><button class="btn btn-success detalleTipo" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#detalleTipoPago">Ver Metodos Pago</button></td>
           <td>${row.total_divisa}</td>
-          <td>${row.monto}</td>
+          <td>${row.monto_total}</td>
           <td class="d-flex justify-content-center">
           <button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
           </td>
@@ -69,6 +69,26 @@
       })
      })
 
+      $(document).on('click', '.detalleTipo' , function(){
+
+       id = this.id; // id = id
+       $.post('',{detalleTipo : 'detTipoPago' , id}, function(data){
+        let lista = JSON.parse(data);
+        let tabla;
+
+        lista.forEach(row=>{
+          tabla += `
+          <tr>
+          <td>${row.des_tipo_pago}</td>
+          <td>${row.monto_pago}</td>                    
+          </tr>
+          `  
+        })
+        $('#ventaNombreTipoPago').text(`Numero de Factura #${lista[0].num_fact}.`);
+        $('#bodyDetalleTipo').html(tabla);
+      })
+     })
+
 
      // FUNCION CALCULATE PARA PRECIOS
   selectMoneda()
@@ -81,6 +101,7 @@
 
 
   selectOptions();
+  selectTipoPago()
   calculate();
 
   function calculate(){
@@ -114,6 +135,7 @@
       $('#montos2').text(`Total + IVA: ${precioTotal}`)
       $('#cambio').text(`Al cambio: ${cambio}`)
       $('#monto').val(precioTotal)
+      manejarCantidadXTipoP(precioTotal);
 
      }
  //  rellena los select de moneda
@@ -176,6 +198,36 @@
       })
     } 
 
+     //  rellena los select de las filas de productos
+    function selectTipoPago(){
+      $.ajax({
+        url: '',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          selectTipo: "tipo de pago"
+        },
+        success(data){
+          let option = ""
+          data.forEach((row)=>{
+            option += `<option value="${row.id_tipo_pago}">${row.des_tipo_pago}</option>`
+          })
+          $('.select-tipo').each(function(){
+             if(this.children.length == 1){
+               $(this).append(option);
+               $(this).chosen({
+                width: '25vw',
+                placeholder_text_single: "Selecciona un metodo",
+                search_contains: true,
+                allow_single_deselect: true,
+                });
+             }
+          })
+
+        }
+      })
+    } 
+
     let producto, select, cantidad, stock;
     //Selecciona cada producto 
     cambio();
@@ -223,6 +275,25 @@
       theme: 'bootstrap-5',
       dropdownParent: $('#Agregar .modal-body'),
     })
+    
+    // fila de tipo pago
+    let newRowTipo = ` <tr>
+                        <td width="1%"><a class="removeRowPagoTipo a-asd" href="#"><i class="bi bi-trash-fill"></i></a></td>
+                        <td width='30%'> 
+                          <select class="select-tipo select-asd" name="TipoPago">
+                            <option></option>
+                          </select>
+                        </td>
+                        <td width='15%' class="precioPorTipo"><input class="select-asd precio-tipo" type="number" value=""/></td>
+                      </tr>`;
+    
+    // Caracteriticas de la fila Tipo Pago
+      function filaTipoN(){
+        $('#FILL').append(newRowTipo);
+        selectTipoPago();
+        validarRepetidoTipoPago();
+        validarValores();
+      }
  
 
      //  fila que se inserta
@@ -238,7 +309,8 @@
           <td width='10%'class="tax"></td>
           <td width='10%' class="sum"></td>
           </tr>`;
-
+    
+    // Caracteriticas de la fila Producto
     function filaN(){
       $('#ASD').append(newRow);
       selectOptions();
@@ -251,11 +323,106 @@
        filaN();
      });
 
+     // Agregar fila para insertar tipo de pago
+     $('.newRowPago').on('click',function(e){
+       filaTipoN();
+     });
+
     // ELiminar fila
      $('body').on('click','.removeRow', function(e){
         $(this).closest('tr').remove();
         calculate()
      });
+
+     // ELiminar fila Tipo de Pago
+     $('body').on('click','.removeRowPagoTipo', function(e){
+        $(this).closest('tr').remove();
+     });
+
+     //Calcular Cantidad por tipo de pago
+
+     function manejarCantidadXTipoP(montoT){
+       let montoMax = parseFloat(montoT);
+       let precioXTipo = $('.precio-tipo');
+       let cantidadFilas = precioXTipo.length;
+       let precioPorFila = montoMax / cantidadFilas;
+
+       let totalAsignado = 0;
+
+       precioXTipo.each(function(){
+        let precioFila = parseFloat($(this).val());
+
+        if (totalAsignado + precioPorFila <= montoMax){
+          $(this).val(precioPorFila.toFixed(2));
+          totalAsignado += precioPorFila;
+
+        }else if(totalAsignado < montoMax){
+          $(this).val((montoMax - totalAsignado).toFixed(2));
+          totalAsignado = montoMax;
+          
+        }else{
+          $(this).val("0.00");
+        }
+
+       })
+     }
+
+     //Calcular Cantidad por tipo de pago por cambio del usuario
+
+    $(document).on('keyup', '.precio-tipo', () => {
+      let montoMax = parseFloat($('#monto').val());
+      let preciosPorTipo = $('.precio-tipo');
+      let numFilas = preciosPorTipo.length;
+
+      if (numFilas === 1) {
+        preciosPorTipo.val(montoMax.toFixed(2));
+      } else if(numFilas === 2){
+        let precio1 = parseFloat(preciosPorTipo.eq(0).val());
+        let precio2 = parseFloat(preciosPorTipo.eq(1).val());
+        if (precio1 + precio2 > montoMax) {
+          preciosPorTipo.eq(1).val((montoMax - precio1).toFixed(2));
+        } else {
+          preciosPorTipo.eq(1).val((montoMax - precio1).toFixed(2));
+        }
+
+      }
+
+      let totalAsignado = 0;
+      preciosPorTipo.each(function(){
+        totalAsignado += parseFloat($(this).val());
+      });
+
+      if (totalAsignado > montoMax) {
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+      }else if(totalAsignado < montoMax){
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+      } else if(totalAsignado < 1 ){
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+      }else{
+         preciosPorTipo.css({"border": "none"});
+      }
+    })
+
+    function validarPrecio(input){
+      let valor = input.val();
+      if(valor <= 0 || isNaN(valor)){
+        $('#error').text('Precio inválido.');
+        input.css({'border': 'solid 2px', 'border-color':'red'})
+        input.attr('valid','false')
+        return false;
+      }else{
+        $('#error').text('');
+        input.css({'border': 'none'});
+        input.attr('valid','true');
+        return true;
+      }
+    }
+
+    validarValores();
+    function validarValores(){
+      $('.precioPorTipo input').keyup(function(){ validarPrecio($(this)) });
+    }
+
 
     //Evento keyup para que funcione calculate()
     $('.table-body').on('keyup','input',function(){
@@ -320,6 +487,46 @@
      })
       
     }
+    
+    //Validar que no se repita tipo de pago
+    function validarRepetidoTipoPago() {
+       $('.select-tipo').change(function(){
+        let tipoPago;
+
+        $('.select-tipo').each(function(){
+
+          tipoPago = $(this).val();
+          let count = 0;
+          $('.select-tipo').each(function(){
+
+            if(tipoPago != ''){
+              if(tipoPago == $(this).val()){
+                count++
+                if(count >=2){
+                  $(this).closest('tr').attr('style', 'border-color: red;')
+                  $(this).attr('valid', 'false');
+                  $('#error').text('No pueden haber Tipo de Pagos repetidos');
+                }else{
+                  $(this).attr('valid', 'true');
+                }
+              }
+            }
+
+          });
+
+        })
+        $('.select-tipo').each(function(){
+          if($(this).is('[valid="true"]')){
+            $(this).closest('tr').attr('style', 'border-color: none;');
+          }
+          
+        })
+        if(!$('.select-tipo').is('[valid="false"]')){
+         $('#error').text('');
+       }
+       
+     })
+    }
 
     function validarCedula(input, select2, div){
       return new Promise((resolve , reject)=>{
@@ -341,9 +548,8 @@
 
      // REGISTRAR VENTA
     let vmetodo, vmoneda;
-    $('#metodo').change(function(){
-      vmetodo = validarNumero($("#metodo"),$("#error2"),"Error de metodo de pago");
-    })
+
+
     $('#moneda').change(function(){
       vmoneda =  validarSelect($('#moneda'),$("#error5"),"Error de moneda")
     })
@@ -367,7 +573,7 @@
 
      let cedula = validarSelec2($(".select2"),$(".select2-selection"),$("#error1"),"Error de Cedula");
 
-     validarCedula($(".select2"),$(".select2-selection") ,$("#error1")).then(()=>{
+      if(cedula) validarCedula($(".select2"),$(".select2-selection") ,$("#error1")).then(()=>{
 
 
       $('.select2').change(function(){
@@ -382,12 +588,13 @@
      }
    })
       vmoneda =  validarSelect($('#moneda'),$("#error5"),"Error de moneda")
-      vmetodo = validarNumero($("#metodo"),$("#error2"),"Error de metodo de pago");
       let montoT = validarNumero($("#monto"),$("#error3"),"Error de monto");
       let iva = validarNumero($(".iva"),$("#error4"),"Error de iva");
-      let selectM = validarSelect($('#moneda'),$("#error5"),"Error de moneda");
       let vproductos = true;
+      let vtipoPago = true;
+      let vprecio = true;
 
+   //Validar Productos
       $('.table-body tbody tr').each(function(){
         let producto = $(this).find('.select-productos').val();
         if(producto == "" || producto == null){
@@ -395,12 +602,38 @@
          $('#error').text('No debe haber productos vacíos.')
        }
      })
+     
+     //Validar Tipo Producto
+      $('.table-body-tipo tbody tr').each(function(){
+        let tipoPago = $(this).find('.select-tipo').val();
+        if(tipoPago == "" || tipoPago == null){
+         vtipoPago = false;
+         $('#error').text('No debe haber tipo pago vacíos.')
+       }
+     })
 
+      $('.precioPorTipo input').each(function(){ validarPrecio($(this)) });
+
+      if($('.precioPorTipo input').is('[valid="false"]')){
+        $('#error').text('Precio inválido.');
+        vprecio = false;
+      }
+      
+      
+      //Validar repetidos productos
       let repetidos = true 
       if($('.select-productos').is('[valid="false"]')){
         repetidos = false
       }else if(!$('.select-productos').is('[valid="false"]')){
         repetidos = true
+      }
+      
+      //Validar repetidos tipo pago
+      let repetidosTipoPago = true 
+      if($('.select-tipo').is('[valid="false"]')){
+        repetidosTipoPago = false
+      }else if(!$('.select-tipo').is('[valid="false"]')){
+        repetidosTipoPago = true
       }
 
       let vstock = true;
@@ -414,31 +647,37 @@
 
 
 
-      if(cedula && vmetodo && vmoneda && montoT && vproductos && vstock && iva && selectM && repetidos){
+      if(cedula && vmoneda && montoT && vproductos && vtipoPago && vstock && vprecio && iva && repetidos && repetidosTipoPago){
 
        console.log("Enviando ...");
 
        $.post('',{
-        cedula: $('#cedula').val(),
-        metodo: $('#metodo').val(),
-        montoT: $('#monto').val(),
-        moneda: $('#moneda').val()
+        cedula: $('#cedula').val()
       },
       function(data){
        let idVenta = JSON.parse(data);
        console.log(idVenta);
        enviarProductos(idVenta.id);
+       datosPago(idVenta.id).then((idPago)=>{
+
+       datosPagoPorTipo(idPago);
        mostrar.destroy();
             rellenar();  // FUNCIÓN PARA RELLENAR
             $('.select2').val(0).trigger('change'); // LIMPIA EL SELECT2
             $('#agregarform').trigger('reset'); // LIMPIAR EL FORMULARIO
             $('.cerrar').click(); // CERRAR EL MODAL
             $('.removeRow').click(); 
+            $('.removeRowPagoTipo').click(); 
             $('#error').text('');
             filaN()
-            Toast.fire({ icon: 'success', title: 'Venta registrada' }) // ALERTA 
+            filaTipoN()
+            Toast.fire({ icon: 'success', title: 'Venta registrada' }) // ALERTA   
 
-          })
+          }).catch(()=>{
+            throw new Error('Error');
+          })       
+
+        })
      }
    }).catch(()=>{
         throw new Error('Error');
@@ -454,8 +693,35 @@
      let precio = $(this).find('.rate input').val();
 
      $.post("",{producto, precio , cantidad, id})
-
+       
     })
+  }
+
+  function datosPago(id){
+    montoT = $('#monto').val();
+
+    return new Promise(function(resolve, reject) {
+      $.post("",{montoT , id} , function(data){
+        let idPago = JSON.parse(data);
+        resolve(idPago.id);
+      }).fail(function() {
+        reject(new Error('Error'));
+      });
+    });
+  }
+
+
+  function datosPagoPorTipo(id){
+    let moneda = $('#moneda').val();
+
+   $('.table-body-tipo tbody tr').each(function(){
+    let tipoPago = $(this).find('.select-tipo').val();
+    let montoPorTipo = $(this).find('.precioPorTipo input').val();
+
+    $.post("",{tipoPago , montoPorTipo , moneda ,id});
+
+   })
+
   }
 
   $(document).on('click', '.factura' , function(){
@@ -482,7 +748,7 @@
   function descargarArchivo(ruta){
     let link = document.createElement('a');
     link.href = ruta;
-    link.target = '_self';
+    link.target = '_black';
     link.click();
   }
 
@@ -492,7 +758,8 @@
      $('#Agregar select').attr("style","borden-color:none;","borden-color:none;");
      $('#Agregar input').attr("style","borden-color:none;","borden-color:none;");
      $('.error').text(" ");
-     $('.removeRow').click(); // LIMPIAR FILAS 
+     $('.removeRow').click(); // LIMPIAR FILAS
+     $('.removeRowPagoTipo').click(); // LIMPIAR FILAS TIPO PAGO
      filaN() // 
   })
 

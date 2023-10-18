@@ -35,6 +35,7 @@
 
 			try{
 				$this->conectarDB();
+
 				$new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo, u.password, u.img, u.rol as nivel, r.nombre as puesto FROM usuario u 
 					INNER JOIN rol r
 					ON r.id_rol = u.rol
@@ -84,11 +85,12 @@
 
 		private function validarC(){
 			try{
-
+                parent::conectarDB();
 				$new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
 				$new->bindValue(1, $this->cedula);
 				$new->execute();
 				$data = $new->fetchAll();
+				parent::desconectarDB();
 				if(!isset($data[0]['cedula'])){
 					$resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula no está registrada.'];
 					echo json_encode($resultado);

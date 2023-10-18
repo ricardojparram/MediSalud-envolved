@@ -20,22 +20,19 @@
 			parent::__construct();
 		}
 
-		public function mostrarCompras(){
+		public function mostrarCompras($bitacora = false){
 
 			try {
-				
-				$query = "SELECT c.orden_compra, p.razon_social, CONCAT('<a class=\"a-asd detalleCompra\" id=\"', c.cod_compra ,'\" data-bs-toggle=\"modal\" data-bs-target=\"#detalleCompra\">Ver detalles</a>') as productos, c.fecha, CONCAT(IF(MOD(c.monto_total / cm.cambio, 1) >= 0.5, CEILING(c.monto_total / cm.cambio), FLOOR(c.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa', c.monto_total, CONCAT('<button type=\"button\" id=\"', c.cod_compra ,'\" class=\"btn btn-danger borrar\" data-bs-toggle=\"modal\" data-bs-target=\"#Borrar\"><i class=\"bi bi-trash3\"></i></button>') as opciones 
-					FROM compra c 
-					INNER JOIN proveedor p ON c.cod_prove = p.cod_prove 
-					INNER JOIN cambio cm ON cm.id_cambio = c.cod_cambio
-					INNER JOIN moneda m ON cm.moneda = m.id_moneda
-					WHERE c.status = 1;";
+				 parent::conectarDB();
+				$query = "SELECT c.cod_compra, c.fecha ,c.orden_compra, p.razon_social, c.monto_total , CONCAT(IF(MOD(c.monto_total / cm.cambio, 1) >= 0.5, CEILING(c.monto_total / cm.cambio), FLOOR(c.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM compra c INNER JOIN proveedor p ON c.cod_prove = p.cod_prove INNER JOIN cambio cm ON cm.id_cambio = c.id_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE c.status = 1";
 
 				$new = $this->con->prepare($query);
 				$new->execute();
 				$data = $new->fetchAll();
 
 				echo json_encode($data);
+				if($bitacora) $this->binnacle("Compras",$_SESSION['cedula'],"Consultó listado.");
+				parent::desconectarDB();
 				die();
 
 			} catch (\PDOException $e) {
@@ -46,11 +43,11 @@
 
 		public function mostrarProveedor(){
 			try {
-
+                parent::conectarDB();
 				$new = $this->con->prepare("SELECT cod_prove, razon_social FROM proveedor WHERE status = 1");
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
-				
+				parent::desconectarDB();
 				return $data;
 
 			} catch (\PDOException $e) {
@@ -60,12 +57,13 @@
 
 		public function mostrarSelect(){
 			try {
-
+				parent::conectarDB();
 				$new = $this->con->prepare("SELECT cod_producto , descripcion FROM producto WHERE status = 1");
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 				
 				echo json_encode($data);
+				parent::desconectarDB();
 				die();
 
 			} catch (\PDOException $e) {
@@ -75,6 +73,7 @@
 
 		public function mostrarMoneda(){
 			try{
+				parent::conectarDB();
 				$new = $this->con->prepare("
 					SELECT * FROM(
 						SELECT c.id_cambio, m.nombre, c.cambio FROM cambio c 
@@ -87,6 +86,7 @@
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 
 				echo json_encode($data);
+				parent::desconectarDB();
 				die();
 
 			}catch(\PDOexection $error){
@@ -103,12 +103,14 @@
 			$this->producto = $id;
 
 			try {
+				parent::conectarDB();
 				$new = $this->con->prepare("SELECT p_venta, stock FROM producto WHERE cod_producto = ? and status = 1");
 				$new->bindValue(1, $this->producto);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 				
 				echo json_encode($data);
+				parent::desconectarDB();
 				die();
 
 			} catch (\PDOException $e) {
@@ -127,11 +129,12 @@
 
 		private function validarOrden(){
 			try {
-				
+				parent::conectarDB();
 				$new = $this->con->prepare("SELECT orden_compra FROM compra WHERE status = 1 AND orden_compra = ?;");
 				$new->bindValue(1, $this->orden);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
+                parent::desconectarDB();
 
 				if(isset($data[0]->orden_compra)){
 					die(json_encode(['resultado' => 'Error de orden', 'error' => 'Orden de compra ya registrada.']));
@@ -174,7 +177,7 @@
 		private function registrarCompras(){
 
 			try{
-
+                parent::conectarDB();
 				$new = $this->con->prepare("SELECT orden_compra FROM compra WHERE status = 1 AND orden_compra = ?;");
 				$new->bindValue(1, $this->orden);
 				$new->execute();
@@ -184,7 +187,7 @@
 					die(json_encode(['resultado' => 'Error de orden', 'error' => 'Orden de compra ya registrada.']));
 				}
 
-				$new = $this->con->prepare('INSERT INTO compra (orden_compra, fecha, cod_cambio, monto_total, status , cod_prove) VALUES (?, ?, ?, ?, 1, ?)');
+				$new = $this->con->prepare('INSERT INTO compra (orden_compra, fecha, id_cambio, monto_total, status , cod_prove) VALUES (?, ?, ?, ?, 1, ?)');
 				$new->bindValue(1, $this->orden);
 				$new->bindValue(2, $this->fecha);
 				$new->bindValue(3, $this->cambio);
@@ -194,6 +197,7 @@
 
 				$this->id = $this->con->lastInsertId();
 				echo json_encode(['resultado' => 'Orden registrada.', 'id' => $this->id]);
+				parent::desconectarDB();
 				die();
 
 			}catch(\PDOException $e){
@@ -217,7 +221,7 @@
 		private function registrarProducto(){
 
 			try {
-				
+				parent::conectarDB();
 				$new = $this->con->prepare('INSERT INTO compra_producto (cod_compra, cod_producto, cantidad, precio_compra) 
 											VALUES (?, ?, ?, ?) ');
 				$new->bindValue(1, $this->id);
@@ -238,6 +242,7 @@
 				$new->bindValue(2, $this->producto);
 				$new->execute();
 				echo "Stock actualizado";
+				parent::desconectarDB();
 				die();	
 				
 			} catch (\PDOException $e) {
@@ -257,16 +262,13 @@
 
 		private function detalleCompra(){
 			try {
-				$new = $this->con->prepare('SELECT cp.cantidad, cp.precio_compra, c.orden_compra, p.descripcion FROM compra_producto cp 
-											INNER JOIN producto p 
-											ON p.cod_producto = cp.cod_producto
-											INNER JOIN compra c 
-											ON c.cod_compra = cp.cod_compra
-											WHERE cp.cod_compra = ?');
+				parent::conectarDB();
+				$new = $this->con->prepare('SELECT cp.cantidad, cp.precio_compra, c.orden_compra, p.descripcion FROM compra_producto cp INNER JOIN producto p ON p.cod_producto = cp.cod_producto INNER JOIN compra c ON c.cod_compra = cp.cod_compra WHERE cp.cod_compra = ?');
 				$new->bindValue(1, $this->id);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 				echo json_encode($data);
+				parent::desconectarDB();
 				die();
 				
 			} catch (\PDOException $e) {
@@ -287,7 +289,7 @@
 		private function eliminarCompra(){
 			try {
 				
-
+				parent::conectarDB();
 				$query="SELECT cp.cod_producto AS producto, cp.cantidad, p.stock FROM compra_producto cp
 						INNER JOIN producto p
 						ON cp.cod_producto = p.cod_producto
@@ -316,7 +318,7 @@
 				$new = $this->con->prepare('UPDATE compra SET status = 0 WHERE cod_compra = ?');
 				$new->bindValue(1, $this->id);
 				$new->execute();
-
+                parent::desconectarDB();
 				die(json_encode(['resultado' => 'Compra anulada.']));
 
 			} catch (\PDOException $e) {

@@ -64,12 +64,18 @@
 
               <tr>
                 <th scope="col">Tipos de pago</th>
-
+                <th scope="col">online</th>
                 <th scope="col">Opciones</th>
 
               </tr>
             </thead>
-
+               <tr>
+                 <td>Pago movil</td>
+                 <td>
+                      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                  </td>
+                 <td><button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button></td>
+               </tr>
 
             <tbody>
              
