@@ -45,6 +45,31 @@ $(document).ready(function(){
 		})
 	}
     
+    selecBanco();
+    function selecBanco(){
+        console.log('HOLA')
+        $.ajax({
+            type: "POST",
+            url: "",
+            dataType: "json",
+            data: {selectBanco: "selectBanco"},
+            success(data){
+                let listo = data
+                let option = "";
+                listo.forEach((row) =>{
+                    option += `<option class="${row.codigo}" value="${row.id_banco}">${row.nombre}</option>`;
+                }) 
+                $('.nombre').each(function(){
+                    if(this.children.length == 1){
+                        $(this).append(option);
+                    }
+                })
+            }
+        })            
+
+
+    }
+    
     selecTipoPago();
 
     function selecTipoPago(){
@@ -73,6 +98,7 @@ $(document).ready(function(){
              "pago Movil" || selectedOption == "pagomovil") {
     			$('.cuentaBancaria').css("display", "none");
     			$('.CodigoBanco').css("display", "block");
+
     			$('.telefono').css("display", "block");
     		} else {
     			$('.cuentaBancaria').css("display", "block");

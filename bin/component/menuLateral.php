@@ -16,11 +16,12 @@
     $clientes = ($_GET['url'] == 'clientes')? "": "collapsed";
     $ventas = ($_GET['url'] == 'ventas')? "" : "collapsed";
     $compras = ($_GET['url'] == 'compras')? ""  : "collapsed" ;
-    $configuracionesA = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda' || $_GET['url'] == 'banco' || $_GET['url'] == 'empresaEnvio')? "" : "collapsed";
-    $configuracionesB = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda' || $_GET['url'] == 'banco' || $_GET['url'] == 'empresaEnvio')? "show" : "collapse" ;
+    $configuracionesA = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda' || $_GET['url'] == 'banco' || $_GET['url'] == 'empresaEnvio'|| $_GET['url'] == "sedeEnvio")? "" : "collapsed";
+    $configuracionesB = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda' || $_GET['url'] == 'banco' || $_GET['url'] == 'empresaEnvio'|| $_GET['url'] == "sedeEnvio")? "show" : "collapse" ;
     $moneda = ($_GET['url'] == 'moneda')? "active"  : "" ;
     $banco = ($_GET['url'] == 'banco')? "active" : "" ;
     $empresaEnvio = ($_GET['url'] == 'empresaEnvio')? "active"  : "" ;
+    $sedeEnvio = ($_GET['url'] == 'sedeEnvio')? "active"  : "" ;
     $metodo = ($_GET['url'] == 'metodo')? "active"  : "" ;
     $productosA = ($_GET['url'] == 'producto' || $_GET['url'] == 'laboratorio' || $_GET['url'] == 'proveedor' || $_GET['url'] == 'presentacion' || $_GET['url'] == 'clase' || $_GET['url'] == 'tipo')?  ""  : "collapsed" ;
     $productosB = ($_GET['url'] == 'producto' || $_GET['url'] == 'laboratorio' || $_GET['url'] == 'proveedor' || $_GET['url'] == 'presentacion' || $_GET['url'] == 'clase' || $_GET['url'] == 'tipo')? "show" : "collapse" ;
@@ -57,7 +58,7 @@
     $comprasLi = (isset($this->permisos['Compras']["Consultar"])) ?
     '<li class="nav-item">
         <a class="nav-link '.$compras.'" href="?url=compras">
-            <i class="bi bi-cart-check"></i>
+            <i class="bi bi-bag-check-fill"></i>
             <span>Compras</span>
         </a>
     </li>' : '';
@@ -65,34 +66,40 @@
     $metodoLi = (isset($this->permisos['Metodo pago']["Consultar"])) ?
     '<li>
         <a href="?url=metodo" class="'.$metodo.'" >
-          <i class="bi bi-circle "></i><span>Metodo de pago</span>
+          <i class="bi bi-circle-fill "></i><span>Metodo de pago</span>
         </a>
     </li>' : '';
     $monedaLi = (isset($this->permisos['Moneda']["Consultar"])) ?
     '<li>
         <a href="?url=moneda" class="'.$moneda.'">
-          <i class="bi bi-circle "></i><span>Moneda</span>
+          <i class="bi bi-circle-fill "></i><span>Moneda</span>
         </a>
     </li> ' : '';
 
     $bancoLi = (isset($this->permisos['Bancos']["Consultar"])) ?
     '<li>
         <a href="?url=banco" class="'.$banco.'">
-          <i class="bi bi-circle "></i><span>Bancos</span>
+          <i class="bi bi-circle-fill "></i><span>Bancos</span>
         </a>
     </li>' : '';
 
     $empresaEnvioLi = (isset($this->permisos['Empresa de Envio']["Consultar"])) ?
     '<li>
         <a href="?url=empresaEnvio" class="'.$empresaEnvio.'">
-          <i class="bi bi-circle "></i><span>Empresa envio</span>
+          <i class="bi bi-circle-fill "></i><span>Empresa envio</span>
+        </a>
+    </li>' : '';
+    $sedeEnvioLi = (isset($this->permisos['Sedes de Envio']["Consultar"])) ?
+    '<li>
+        <a href="?url=sedeEnvio" class="'.$sedeEnvio.'">
+          <i class="bi bi-circle-fill "></i><span>Sedes de envío</span>
         </a>
     </li>' : '';
 
-    $configuracionesLi = (isset($this->permisos['Metodo pago']["Consultar"]) || isset($this->permisos['Moneda']["Consultar"]) || isset($this->permisos['Bancos']["Consultar"]) || isset($this->permisos['Empresa de Envio'])) ?
+    $configuracionesLi = (isset($this->permisos['Metodo pago']["Consultar"]) || isset($this->permisos['Moneda']["Consultar"]) || isset($this->permisos['Bancos']["Consultar"]) || isset($this->permisos['Empresa de Envio']['Consultar']) || isset($this->permisos['Sedes de Envio']['Consultar'])) ?
     '<li class="nav-item">
         <a class="nav-link '.$configuracionesA.'" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
-          <i class="bi bi-gear"></i><span>Configuraciones</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-gear-fill"></i><span>Configuraciones</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="components-nav" class="nav-content '.$configuracionesB.'" data-bs-parent="#sidebar-nav" style="">
 
@@ -104,43 +111,45 @@
 
             '.$empresaEnvioLi.'
 
+            '.$sedeEnvioLi.'
+
         </ul>
     </li>' : '';
     $productosLi = (isset($this->permisos['Producto']["Consultar"])) ?
     '<li>
         <a href="?url=producto" class="'.$producto.'">
-          <i class="bi bi-circle"></i><span>Producto</span>
+          <i class="bi bi-circle-fill"></i><span>Producto</span>
         </a>
     </li>' : '';
     $laboratorioLi = (isset($this->permisos['Laboratorio']["Consultar"])) ?
     '<li>
         <a href="?url=laboratorio" class="'.$laboratorio.'">
-          <i class="bi bi-circle"></i><span>Laboratorio</span>
+          <i class="bi bi-circle-fill"></i><span>Laboratorio</span>
         </a>
     </li>' : '';
     $proveedorLi = (isset($this->permisos['Proveedor']["Consultar"])) ?
     '<li>
         <a href="?url=proveedor" class="'.$proveedor.'">
-          <i class="bi bi-circle"></i><span>Proveedor</span>
+          <i class="bi bi-circle-fill"></i><span>Proveedor</span>
         </a>
     </li>' : '';
 
     $claseLi = (isset($this->permisos['Clase']["Consultar"])) ?
     '<li>
       <a href="?url=clase" class="'.$clase.'">
-        <i class="bi bi-circle"></i><span>Clase</span>
+        <i class="bi bi-circle-fill"></i><span>Clase</span>
       </a>
     </li>' : '';
     $tipoLi = (isset($this->permisos['Tipo']["Consultar"])) ?
     '<li>
       <a href="?url=tipo" class="'.$tipo.'">
-        <i class="bi bi-circle"></i><span>Tipo</span>
+        <i class="bi bi-circle-fill"></i><span>Tipo</span>
       </a>
     </li>' : '';
     $categoriaLi = (isset($this->permisos['Clase']["Consultar"]) || isset($this->permisos['Tipo'])) ?
     '<li>
         <a href="#" class="'.$categoria.'">
-          <i class="bi bi-circle"></i><span>Categoría</span>
+          <i class="bi bi-circle-fill"></i><span>Categoría</span>
         </a>
         <ul>
           '.$claseLi.'
@@ -152,14 +161,14 @@
     $presentacionLi = (isset($this->permisos['Presentacion']["Consultar"])) ?
     '<li>
         <a href="?url=presentacion" class="'.$presentacion.'">
-          <i class="bi bi-circle"></i><span>Presentación</span>
+          <i class="bi bi-circle-fill"></i><span>Presentación</span>
         </a>
     </li>' : '';
 
     $productosNavLi = (isset($this->permisos['Producto']["Consultar"]) || isset($this->permisos['Laboratorio']["Consultar"]) || isset($this->permisos['Proveedor']["Consultar"]) || isset($this->permisos['Clase']["Consultar"]) || isset($this->permisos['Tipo']["Consultar"]) || isset($this->permisos['Presentacion']["Consultar"])) ?
     '<li class="nav-item">
           <a class="nav-link '.$productosA.'" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
-              <i class="bi bi-grid"></i><span>Productos</span><i class="bi bi-chevron-down ms-auto"></i>
+              <i class="bi bi-boxes"></i><span>Productos</span><i class="bi bi-chevron-down ms-auto"></i>
           </a>
           <ul id="forms-nav" class="nav-content '.$productosB.'" data-bs-parent="#sidebar-nav">
               
@@ -179,28 +188,28 @@
     $reportesLi = (isset($this->permisos['Reportes']["Consultar"])) ?
     '<li class="nav-item ">
         <a class="nav-link '.$reportes.'" href="?url=reportes">
-          <i class="bi bi-card-checklist"></i><span>Reportes</span>
+          <i class="bi bi-clipboard2-data-fill"></i><span>Reportes</span>
         </a>
     </li>' : '';
 
     $usuarioLi = (isset($this->permisos['Usuarios']["Consultar"])) ?
     '<li class="nav-item">
         <a class="nav-link '.$usuario.'" href="?url=usuario">
-          <i class="bi bi-person"></i><span>Usuarios</span>
+          <i class="bi bi-people-fill"></i><span>Usuarios</span>
         </a>
     </li>' : '';
 
     $bitacoraLi = (isset($this->permisos['Bitacora']["Consultar"])) ?
     '<li class="nav-item ">
         <a class="nav-link '.$bitacora.'" href="?url=bitacora">
-          <i class="bi bi-journal-text"></i><span>Bitacora</span>
+          <i class="bi bi-journals"></i><span>Bitacora</span>
         </a>
     </li>' : '';
 
     $rolesLi = (isset($this->permisos['Roles']["Consultar"])) ?
     '<li class="nav-item ">
         <a class="nav-link '.$roles.'" href="?url=roles">
-          <i class="bi bi-person-lock"></i><span>Roles</span>
+          <i class="bi bi-person-lines-fill"></i><span>Roles</span>
         </a>
     </li>' : '';
 
@@ -210,7 +219,7 @@
 
           <li class="nav-item">
               <a class="nav-link '.$home.'" href="?url=home">
-                <i class="bi bi-house-door"></i>
+                <i class="bi bi-house-door-fill"></i>
                 <span>Inicio</span>
               </a>
           </li>

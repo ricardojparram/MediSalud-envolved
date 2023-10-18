@@ -18,9 +18,7 @@
   }
 
   if(isset($_POST['mostrar'], $permiso["Consultar"])){
-    ($_POST['bitacora'] == 'true')
-      ? $objModel->mostrarLaboratoriosAjax(true)
-      : $objModel->mostrarLaboratoriosAjax();
+    $objModel->mostrarLaboratoriosAjax($_POST['bitacora']);
   }
 
   if(isset($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto'], $permiso["Registrar"])){
@@ -43,8 +41,9 @@
     $objModel->getEliminar($_POST['id']);
   }
 
-  if(isset($_POST['rif'], $_POST['validar'])){
-    $objModel->getRif($_POST['rif']);
+  if(isset($_POST['rif'], $_POST['validar'], $_POST['edit'])){
+    $resultado = $objModel->getRif($_POST['rif'], $_POST['edit']);
+    die(json_encode($resultado));
   }
   
 

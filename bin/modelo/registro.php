@@ -134,6 +134,7 @@
           if(isset($data[0]['cedula'])){
             $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
             echo json_encode($resultado);
+             parent::desconectarDB();
             die();
           }
 
@@ -164,6 +165,7 @@
           if(isset($data[0]['correo'])){
             $resultado = ['resultado' => 'Error de email' , 'error' => 'El email ya está registrado.'];
             echo json_encode($resultado);
+            parent::desconectarDB();
             die();
           }
 

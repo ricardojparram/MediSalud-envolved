@@ -3,19 +3,46 @@ $(document).ready(function() {
 
 	fechaHoy($('#fecha'));
 
-	rellenar();
 	let tablaMostrar;
-	function rellenar(){ 
+	let permiso , eliminarPermiso, registrarPermiso;
+
+	$.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos : "permiso"},
+		success(data){ permiso = data; }
+
+	}).then(function(){
+		rellenar(true);
+		registrarPermiso = (permiso.registrar != 1)? 'disable' : '';
+		$('#agregarModal').attr(registrarPermiso, '');
+	})
+
+	function rellenar(bitacora = false){ 
 		$.ajax({
 			method: "post",
 			url: "",
 			dataType: "json",
-			data: {mostrar: "compras" },
+			data: {mostrar: "compras", bitacora},
 			success(data){
-				tablaMostrar = $('#tableMostrar').DataTable({
-					responsive: true,
-					data : data
-				});
+            let tabla;
+            data.forEach(row =>{
+            	eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
+            	tabla += `
+            	<tr>
+            	<td>${row.orden_compra}</td>
+            	<td>${row.razon_social}</td>
+            	<td><button class="btn btn-success detalleCompra" id="${row.cod_compra}" data-bs-toggle="modal" data-bs-target="#detalleCompra">Ver Detalles</button></td>
+            	<td>${row.fecha}</td>
+            	<td>${row.total_divisa}</td>
+            	<td>${row.monto_total}</td>
+            	<td class="d-flex justify-content-center">
+            	<button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.cod_compra}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
+            	</td>
+            	</tr>
+            	`
+            })
+            $('#tbody').html(tabla);
+            tablaMostrar = $('#tableMostrar').DataTable({
+            	resposive : true
+            })
 			}
 		})
 

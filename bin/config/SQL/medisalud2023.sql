@@ -217,6 +217,9 @@ CREATE TABLE sede_envio(
 CREATE TABLE envio(
     id_envio int AUTO_INCREMENT PRIMARY KEY,
     id_sede int NOT NULL,
+    fecha_envio datetime,
+    fecha_entrega datetime,
+    monto_envio decimal(10,2),
     status int NOT NULL,
     FOREIGN KEY (id_sede) REFERENCES sede_envio (id_sede) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;

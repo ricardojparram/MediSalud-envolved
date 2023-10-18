@@ -13,6 +13,10 @@
 		$model->getCarritoUsuario($_SESSION['cedula']);
 	}
 
+	if(isset($_POST['agregar'], $_POST['producto'], $_POST['cantidad'], $_SESSION['cedula'])){
+		$model->getAgregarProducto($_POST['producto'], $_POST['cantidad'], $_SESSION['cedula']);
+	}
+
 	if(isset($_POST['validar'], $_POST['productos'])){
 		$model->getValidarStock($_POST['productos']);
 	}
@@ -30,7 +34,7 @@
 	}
 
 	$VarComp = new initcomponents();
-	$Nav = new nav();
+	$tiendaComp = new nav();
 	
 	require "vista/inicio/carritoVista.php";	
 

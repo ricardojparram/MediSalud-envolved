@@ -36,6 +36,10 @@
           $objModel->getDetalleV($_POST['id']);
        }
 
+       if(isset($_POST['detalleTipo']) && $permiso['Consultar'] == 1) {
+          $objModel->getDetalleTipoPago($_POST['id']);
+       }
+
       if (isset($_POST['selectM']) && $permiso['Consultar'] == 1) {
          $objModel->getMostrarMoneda();
       }
@@ -53,16 +57,24 @@
       }
 
 
-      if(isset($_POST['cedula']) && isset($_POST['montoT']) && isset($_POST['metodo']) && isset($_POST['moneda']) && $permiso['Registrar'] == 1){
+      if(isset($_POST['cedula']) && $permiso['Registrar'] == 1){
 
-        $objModel->getAgregarVenta($_POST['cedula'] , $_POST['montoT'] , $_POST['metodo'] , $_POST['moneda'] );
+        $objModel->getAgregarVenta($_POST['cedula']);
 
       }
 
       if(isset($_POST['producto']) && isset($_POST['precio']) && isset($_POST['cantidad']) && isset($_POST['id']) && $permiso['Registrar'] == 1){
 
-       $objModel->AgregarVentaXProd($_POST['producto'] , $_POST['precio'] , $_POST['cantidad'], $_POST['id'] );
+       $objModel->agregarVentaXProd($_POST['producto'] , $_POST['precio'] , $_POST['cantidad'], $_POST['id'] );
        
+     }
+
+     if (isset($_POST['montoT']) && isset($_POST['id']) && $permiso['Registrar'] == 1) {
+       $objModel->getPago($_POST['montoT'] , $_POST['id']);
+     }
+
+     if(isset($_POST['tipoPago']) && isset($_POST['montoPorTipo']) && isset($_POST['id']) && isset($_POST['moneda']) && $permiso['Registrar'] == 1) {
+       $objModel->agregarDetallePago($_POST['tipoPago'] , $_POST['montoPorTipo'] , $_POST['id'] , $_POST['moneda']);
      }
 
      if (isset($_POST['id']) && isset($_POST['factura']) ){

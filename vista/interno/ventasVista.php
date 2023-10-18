@@ -119,6 +119,33 @@
 
 
 <!-- MODAL DE PRODUCTOS -->
+<div class="modal fade" id="detalleTipoPago" tabindex="-1">
+  <div class="modal-dialog modal-dialog-scrollable modal-md">
+    <div class="modal-content">
+      <div class="modal-header alert alert-success">
+        <h5 class="modal-title"><strong id="ventaNombreTipoPago"></strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover">
+          <thead>
+            <th>Tipo de Pago</th>
+            <th>Cantidad</th>
+          </thead>
+          <tbody id="bodyDetalleTipo">
+            
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal" id="cerrarDetalles">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FINAL MODAL DE PRODUCTOS -->
+
+<!-- MODAL DE PRODUCTOS -->
 <div class="modal fade" id="detalleVenta" tabindex="-1">
   <div class="modal-dialog modal-dialog-scrollable modal-md">
     <div class="modal-content">
@@ -226,10 +253,10 @@
         
         <div class="row">
 
-          <div class="form-group col-md-5">  
+          <div class="form-group col-md-5 h-75">  
             <div class="container-fluid">
               <div class="row">
-                <div class="table-responsive form-group col-12">
+                <div class="table table-body-tipo form-group col-12">
 
                   <table class="table table-striped">
                     <thead>
@@ -247,7 +274,7 @@
                             <option></option>
                           </select>
                         </td>
-                        <td width='15%' class=""><input class="select-asd precio-tipo" type="number" value=""/></td>
+                        <td width='15%' class="precioPorTipo"><input class="select-asd precio-tipo" type="number" value=""/></td>
                       </tr>
                     </tbody>
                   </table>
@@ -262,7 +289,7 @@
         <div class="form-group col-md-7">  
           <div class="container-fluid">
             <div class="row">
-              <div class="table-responsive table-body form-group col-12">
+              <div class="table table-body form-group col-12">
 
                 <table class="table table-striped">
                   <thead>

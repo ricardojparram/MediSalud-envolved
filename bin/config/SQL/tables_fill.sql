@@ -62,14 +62,39 @@ INSERT INTO tipo_pago(id_tipo_pago, des_tipo_pago, online, status) VALUES
 (4,'Pago movil',1,1);
 
 INSERT INTO moneda(id_moneda, nombre, status) VALUES(1, 'Dolar', 1), (2, 'Euro', 1);
-<<<<<<< HEAD
+
 INSERT INTO cambio(id_cambio, cambio, fecha, moneda, status) VALUES(1, '35', DEFAULT, 1, 1), (2, '40', DEFAULT, 2, 1);
-=======
+
 INSERT INTO cambio(cambio, fecha, moneda, status) VALUES('35', DEFAULT, 1, 1), ('40', DEFAULT, 2, 1);
 
 INSERT INTO empresa_envio (rif, nombre, contacto, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
 INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
->>>>>>> ef07e5dc8bd3bfc99af0c1aa6059a84750c9f701
+
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Central de Venezuela', '0001', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco de Venezuela (BDV)', '0102', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Venezolano de Crédito (BVC)', '0104', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Mercantil', '0105', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Provincial (BBVA)', '0108', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bancaribe', '0114', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Exterior', '0115', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Caroní', '0128', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banesco Banco Universal', '0134', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Sofitasa', '0137', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Plaza', '0138', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bangente', '0146', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Fondo Común (BFC)', '0151', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , '100% Banco', '0156', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Del Sur Banco Universal', '0157', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco del Tesoro', '0163', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Agrícola de Venezuela', '0166', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bancrecer', '0168', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Mi Banco, Banco Microfinanciero C.A', '0169', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Activo', '0171', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bancamiga', '0172', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banplus', '0174', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Bicentenario del Pueblo', '0175', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco de la Fuerza Armada Nacional Bolivariana (BANFANB)', '0177', 1);
+INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Nacional de Crédito (BNC)', '0191', 1);
 
 INSERT INTO modulos(id_modulo, nombre, status) VALUES
 (1, 'Clientes',1),
@@ -90,7 +115,9 @@ INSERT INTO modulos(id_modulo, nombre, status) VALUES
 (16,'Cuentas farmacia', 1),
 (17,'Roles', 1),
 (18,'Empresa de Envio',1),
-(19,'Sedes de Envio',1);
+(19,'Sedes de Envio',1),
+(20,'Comprobar pago',1),
+(21,'Envios',1);
 
 INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES 
 (1, 1, 'Registrar', '1'),
@@ -163,7 +190,10 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (1, 19, 'Registrar', '1'),
 (1, 19, 'Editar', '1'),
 (1, 19, 'Eliminar', '1'),
-(1, 19, 'Consultar', '1');
+(1, 19, 'Consultar', '1'),
+(1, 20, 'Consultar', '1'),
+(1, 21, 'Consultar', '1'),
+(1, 21, 'Asignar estado', '1');
 INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES 
 (2, 1, 'Registrar', '1'),
 (2, 1, 'Editar', '1'),
@@ -235,7 +265,11 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (2, 19, 'Registrar', '1'),
 (2, 19, 'Editar', '1'),
 (2, 19, 'Eliminar', '1'),
-(2, 19, 'Consultar', '1');
+(2, 19, 'Consultar', '1'),
+(2, 20, 'Consultar', '1'),
+(2, 20, 'Comprobar pago', '1'),
+(2, 21, 'Consultar', '1'),
+(2, 21, 'Asignar estado', '1');
 INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES 
 (3, 1, 'Registrar', '1'),
 (3, 1, 'Editar', '1'),
@@ -307,4 +341,8 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (3, 19, 'Registrar', '1'),
 (3, 19, 'Editar', '1'),
 (3, 19, 'Eliminar', '1'),
-(3, 19, 'Consultar', '1');
+(3, 19, 'Consultar', '1'),
+(3, 20, 'Consultar', '1'),
+(3, 20, 'Comprobar pago', '1'),
+(3, 21, 'Consultar', '1'),
+(3, 21, 'Asignar estado', '1');

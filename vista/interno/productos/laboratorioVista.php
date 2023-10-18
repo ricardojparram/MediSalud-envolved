@@ -104,7 +104,7 @@
 <div class="modal fade " id="Agregar" tabindex="-1">
   <div class="modal-dialog modal-md ">
     <div class="modal-content">
-      <div class="modal-header alert alert-success">
+      <div class="modal-header alert alert-success" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
         <h4 class="modal-title"> <strong>Registrar Laboratorio</strong> </h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -196,7 +196,7 @@
 <div class="modal fade" id="Editar" tabindex="-1">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
-      <div class="modal-header alert alert-success">
+      <div class="modal-header alert alert-success" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
         <h4 class="modal-title"> <strong>Editar Laboratorio</strong> </h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>

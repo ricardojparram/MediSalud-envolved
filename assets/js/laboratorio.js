@@ -1,17 +1,13 @@
 $(document).ready(function(){
 
 	let mostrar
-	let permisos, editarPermiso, eliminarPermiso, registrarPermiso;
+	let permisos, editarPermiso, eliminarPermiso;
     $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:''},
         success(data){ permisos = data; }
     }).then(() => rellenar(true));
 
 	function rellenar(bitacora = false){ 
-        $.ajax({
-            type: "post",
-            url: "",
-            dataType: "json",
-            data: {mostrar: "labs", bitacora},
+        $.ajax({ type: "post", url: "", dataType: "json", data: {mostrar: "labs", bitacora},
             success(data){
                 let tabla;
                 editarPermiso = (typeof permisos.Editar === 'undefined') ? 'disabled' : '';
@@ -43,8 +39,8 @@ $(document).ready(function(){
 
     }
 
-	function validarRif(input, div){
-		$.post('',{rif : input.val(), validar: "rif"}, function(data){
+	function validarRif(input, div, edit = false){
+		$.post('',{rif : input.val(), validar: "rif", edit}, function(data){
 			let mensaje = JSON.parse(data);
 			if(mensaje.resultado === "Error de rif"){
 				div.text(mensaje.error);
@@ -55,9 +51,7 @@ $(document).ready(function(){
 	}
 
 	$("#rif").keyup(()=> {  let valid = validarCedula($("#rif"),$("#error") ,"Error de RIF,");
-		if(valid){
-			validarRif($("#rif"), $("#error"));
-		}
+		if(valid) validarRif($("#rif"), $("#error"));
 	});
 	$("#razon").keyup(()=> {  validarNombre($("#razon"),$("#error") , "Error de nombre,") });
 	$("#direccion").keyup(()=> {  validarDireccion($("#direccion"),$("#error") , "Error de direccion,") });
@@ -67,13 +61,12 @@ $(document).ready(function(){
 	setInterval(()=>{ click = 0; }, 2000);
 
 	$("#registrar").click((e)=>{
+		e.preventDefault()
 
 		if(typeof permisos.Registrar === 'undefined'){
-            Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
-            throw new Error('Permiso denegado.');
-        }
-
-		e.preventDefault()
+			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
+			throw new Error('Permiso denegado.');
+		}
 
 		if(click >= 1) throw new Error('Spam de clicks');
 
@@ -87,10 +80,7 @@ $(document).ready(function(){
 			throw new Error('Error.');
 		}
 
-		$.ajax({
-
-			type: "post",
-			url: '',
+		$.ajax({ type: "post", url: '', dataType : "json",
 			data: {
 				rif : $("#rif").val(),
 				razon : $("#razon").val(),
@@ -104,26 +94,24 @@ $(document).ready(function(){
 					$("#error").text(data.error);
 					$("#rif").attr("style","border-color: red;")
 					$("#rif").attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
-					vrif = false;
-				}else{
-					vrif = true;
+					throw new Error('Rif inválido');
 				}
 
-				if(vrif && vnombre && vdireccion && vtelefono){
+				if(data.resultado != "ok"){
+					Toast.fire({ icon: 'error', title: data.msg });
+					throw new Error(data.msg);
+				}
 
-					mostrar.destroy(); 
-					rellenar(); 
-					$('#agregarform').trigger('reset'); 
-					$('.cerrar').click(); 
-					Toast.fire({ icon: 'success', title: 'Laboratorio registrado' }) 
-
-				}   
-
+				mostrar.destroy(); 
+				rellenar(); 
+				$('#agregarform').trigger('reset'); 
+				$('.cerrar').click(); 
+				Toast.fire({ icon: 'success', title: 'Laboratorio registrado' }) 
 			},
 			error(e){
-                Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
-                throw new Error('Error al mostrar listado: '+e);
-            }
+				Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+				throw new Error('Error al mostrar listado: '+e);
+			}
 
 		})
 		click++;
@@ -133,11 +121,7 @@ $(document).ready(function(){
 
     $(document).on('click', '.editar', function() {
         id = this.id; 
-       		$.ajax({
-       			method: "post",
-       			url: "",
-       			dataType: "json",
-		        data: {select: "labs", id}, // id : id
+       		$.ajax({ method: "post",url: "", dataType: "json", data: {select: "labs", id},
 		        success(data){
 		        	$("#rifEdit").val(data[0].rif);
 		        	$("#razonEdit").val(data[0].razon_social);
@@ -156,9 +140,7 @@ $(document).ready(function(){
 
 
 	$("#rifEdit").keyup(()=> {  let valid = validarCedula($("#rifEdit"),$("#errorEdit") ,"Error de RIF,") 
-		if(valid){
-			validarRif($("#rifEdit"), $("#errorEdit"));
-		}
+		if(valid)	validarRif($("#rifEdit"), $("#errorEdit"), id);
 	});
 	$("#razonEdit").keyup(()=> {  validarNombre($("#razonEdit"),$("#errorEdit") , "Error de nombre,") });
 	$("#direccionEdit").keyup(()=> {  validarDireccion($("#direccionEdit"),$("#errorEdit") , "Error de direccion,") });
@@ -166,14 +148,12 @@ $(document).ready(function(){
 
 
 	$("#editar").click((e)=>{
+		e.preventDefault();
 
 		if(typeof permisos.Editar === 'undefined'){
             Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
             throw new Error('Permiso denegado.');
         }
-
-
-		e.preventDefault();
 
 		if(click >= 1) throw new Error('spaaam');
 
@@ -183,10 +163,7 @@ $(document).ready(function(){
 		vdireccion = validarDireccion($("#direccionEdit"),$("#errorEdit") , "Error de direccion,");
 		vtelefono = validarTelefono($("#telefonoEdit"),$("#errorEdit") ,"Error de telefono,");
 
-		$.ajax({
-
-			type: "post",
-			url: '',
+		$.ajax({ type: "post", url: '', dataType: "json",
 			data: {
 				rifEdit : $("#rifEdit").val(),
 				razonEdit : $("#razonEdit").val(),
@@ -195,23 +172,25 @@ $(document).ready(function(){
 				contactoEdit : $("#contactoEdit").val(),
 				id
 			},
-			success(r){
-				let data = JSON.parse(r);
+			success(data){
 				if(data.resultado === "Error de rif"){
-					$("#errorEdit").text(data.error);
+					$("#errorEdit").text(data.msg);
 					$("#rifEdit").attr("style","border-color: red;")
 					$("#rifEdit").attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
 					throw new Error('Rif ya registrado.');
-				}else{
-					vrif = true;
 				}
-				if(vrif ==true && vnombre ==true && vdireccion ==true && vtelefono ==true){					
-					mostrar.destroy();
-					rellenar(); 
-					$('#editarform').trigger('reset');
-					$('.cerrar').click();
-					Toast.fire({ icon: 'success', title: 'Laboratorio modificado' })
+
+				if(data.resultado != "ok"){
+					Toast.fire({ icon: 'error', title: data.msg });
+					throw new Error(data.msg);
 				}
+
+				mostrar.destroy();
+				rellenar(); 
+				$('#editarform').trigger('reset');
+				$('.cerrar').click();
+				Toast.fire({ icon: 'success', title: 'Laboratorio modificado' })
+
 			},
 			error(e){
                 Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
@@ -232,10 +211,7 @@ $(document).ready(function(){
 		$('#errorEdit').text('');
 	});
 
-	$(document).on('click', '.borrar', function() {
-		id = this.id;
-	});
-
+	$(document).on('click', '.borrar', function(){ id = this.id });
 
 	$('#borrar').click(()=>{
 		if(typeof permisos.Eliminar === 'undefined'){
@@ -244,12 +220,12 @@ $(document).ready(function(){
         }
 
 		if(click >= 1) throw new Error('spaaam');
-		$.ajax({
-			type : 'post',
-			url : '',
-			data : {eliminar : 'asd', id},
+		$.ajax({ type : 'post', url : '', dataType: "json", data : {eliminar : 'asd', id},
 			success(data){
-				console.log(id)
+				if(data.resultado != "ok"){
+					Toast.fire({ icon: 'error', title: data.msg });
+					throw new Error(data.msg);
+				}
 				mostrar.destroy();
 				$('.cerrar').click();
 				rellenar();

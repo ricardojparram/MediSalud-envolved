@@ -35,6 +35,23 @@ class banco extends DBConnect{
 
 	}
 
+	public function datosBanco(){
+		try{
+			parent::conectarDB();
+			$sql = 'SELECT b.id_banco, b.nombre, b.codigo, b.status FROM banco b WHERE b.status = 1';
+
+			$new = $this->con->prepare($sql);
+			$new->execute();
+			$data = $new->fetchAll(\PDO::FETCH_OBJ);
+			$resultado = ['resultado' => true, $data];
+			//parent::desconectarDB();
+			die(json_encode($resultado));
+
+		}catch(\PDOException $e){
+			die($e);
+		}
+	}
+
 	public function SelecTipoPago(){
 		try{
         	parent::conectarDB();
