@@ -285,24 +285,27 @@
                     
 
                 foreach($this->detalles as $deta){
-                    $new = $this->con->prepare("INSERT INTO `detalle_pago`(`id_detalle_pago`, `id_pago`, `id_tipo_pago`, `id_datos_cobro`, `id_banco_cliente`, `monto_pago`, `id_cambio`, `referencia`) 
-                                                VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)");
-                    $new->bindValue(1, $idPago);
-                    $new->bindValue(2, $deta['tipo']);
-                    $new->bindValue(3, $deta['bancoReceptor']);
-                    $new->bindValue(4, $deta['bancoEmisor']);
-                    $new->bindValue(5, $deta['monto']);
-                    $new->bindValue(6, $deta['cambio']);
-                    $new->bindValue(7, $deta['referencia']);
-                    $new->execute();
+                    try{
+
+                        $new = $this->con->prepare("INSERT INTO detalle_pago(id_pago, id_tipo_pago, id_datos_cobro, id_banco_cliente, monto_pago, id_cambio, referencia) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?)");
+                        $new->bindValue(1, $idPago);
+                        $new->bindValue(2, $deta['tipo']);
+                        $new->bindValue(3, $deta['bancoReceptor']);
+                        $new->bindValue(4, $deta['bancoEmisor']);
+                        $new->bindValue(5, $deta['monto']);
+                        $new->bindValue(6, $deta['cambio']);
+                        $new->bindValue(7, $deta['referencia']);
+                        $new->execute();
+
+                    }catch(\PDOException $e){
+                        die($e);
+                    }
+
                 }
-
-               
-
 
 
                 parent::desconectarDB();
-                die("hola");
                 $resultado = ['resultado' => 'Registrado Entrega'];
                 echo json_encode($resultado);
 
