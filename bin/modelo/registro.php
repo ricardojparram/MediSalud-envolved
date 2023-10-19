@@ -96,6 +96,7 @@
             }else{
               $resultado = ['resultado' => 'Error de email' , 'error' => 'El correo ya está registrado.'];
               echo json_encode($resultado);
+              parent::desconectarDB();
               die();
             }
 
@@ -129,6 +130,7 @@
           $new->bindValue(1, $this->cedula);
           $new->execute();
           $data = $new->fetchAll();
+          parent::desconectarDB();
           if(isset($data[0]['cedula'])){
             $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
             echo json_encode($resultado);
@@ -159,6 +161,7 @@
           $new->bindValue(1, $this->email);
           $new->execute();
           $data = $new->fetchAll();
+          parent::desconectarDB();
           if(isset($data[0]['correo'])){
             $resultado = ['resultado' => 'Error de email' , 'error' => 'El email ya está registrado.'];
             echo json_encode($resultado);

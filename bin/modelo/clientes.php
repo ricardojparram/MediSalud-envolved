@@ -60,9 +60,9 @@ class clientes extends DBConnect{
             $new->bindValue(1, $this->cedula);
             $new->execute();
             $data = $new->fetchAll();
-
+            parent::desconectarDB();
             if(!isset($data[0]["cedula"])){ 
-
+              parent::conectarDB();
               $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,1)");
               $new->bindValue(1, $this->cedula);
               $new->bindValue(2, $this->nombre);

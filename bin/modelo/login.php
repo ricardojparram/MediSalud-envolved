@@ -34,8 +34,7 @@
 		private function loginSistema(){
 
 			try{
-				$this->conectarDB();
-
+				parent::conectarDB();
 				$new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo, u.password, u.img, u.rol as nivel, r.nombre as puesto FROM usuario u 
 					INNER JOIN rol r
 					ON r.id_rol = u.rol
@@ -43,6 +42,7 @@
 				$new->bindValue(1 , $this->cedula);
 				$new->execute();
 				$data = $new->fetchAll();
+				parent::desconectarDB();
 
 				if(!isset($data[0]["password"])){
 					$resultado = ['resultado' => 'Error de cedula', 'error' => 'La cédula no está registrada.'];

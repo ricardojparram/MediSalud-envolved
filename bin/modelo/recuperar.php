@@ -27,6 +27,7 @@
 		}
 
 		protected function recuperarSistema(){
+<<<<<<< HEAD
 
 			try{
 				
@@ -40,6 +41,15 @@
 					$resultado = ['resultado' => 'Error de email' , 'error' => 'El correo no está registrado.'];
 					die(json_encode($resultado));
 				}
+=======
+			parent::conectarDB();
+			$new = $this->con->prepare("SELECT correo, CONCAT(nombre,' ',apellido) AS nombre FROM usuario WHERE status = 1 and correo = ?");
+			$new->bindValue(1 , $this->email);
+			$new->execute();
+			$data = $new->fetchAll();
+			parent::desconectarDB();
+			if(isset($data[0]['correo'])){
+>>>>>>> fbc71644648300284551dfe3c681e35fe5f1a98b
 
 				$nombre = $data[0]['nombre'];
 				$correo = $data[0]['correo'];
@@ -50,6 +60,7 @@
 				$generatedPass = hash('crc32b', $str);
 				$pass = password_hash($generatedPass, PASSWORD_BCRYPT);
 
+<<<<<<< HEAD
 
 				$new = $this->con->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND status = 1");
 				$new->bindValue(1, $pass);
@@ -60,6 +71,25 @@
 					$resultado = ['resultado' => 'Correo enviado'];
 				}else{
 					$resultado = ['resultado' => 'Error al enviar correo'];
+=======
+				try{
+					parent::conectarDB();
+					$new = $this->con->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND status = 1");
+					$new->bindValue(1, $pass);
+					$new->bindValue(2, $this->email);
+					$new->execute();
+					parent::desconectarDB();
+					if($this->enviarEmail($correo, $generatedPass, $nombre)){
+						$resultado = ['resultado' => 'Correo enviado'];
+					}else{
+						$resultado = ['resultado' => 'Error al enviar correo'];
+					}
+					echo json_encode($resultado);
+					die();
+					
+				}catch(exection $error){
+					return $error;
+>>>>>>> fbc71644648300284551dfe3c681e35fe5f1a98b
 				}
 				$this->desconectarDB();
 				die(json_encode($resultado));
