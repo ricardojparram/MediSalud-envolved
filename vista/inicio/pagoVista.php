@@ -44,7 +44,7 @@
 <header class="">
     
   <!-- Barra navegadora -->
-    <?php $Nav->nav(); ?>
+  <?php $tiendaComp->nav(); ?>
 
 </header>
   <main class="main mx-auto pt-5 col-10 row">
@@ -298,7 +298,7 @@
                     <h4 class="m-0">Elija un Metodo a Pagar</h4>
                 </div>
                 <div class="row form-group col-md-12 movil mt-4">
-                    <h6 class="text-center">Datos para Movil</h6>
+                    <h6 class="text-center">Datos para Pago Movil</h6>
                     <div class="col-xl-6 col-md-12">
                         <label for="inputText" class="col-12 col-form-label "><strong>Nombre de Banco</strong></label>
                         <div class="input-group">
@@ -340,7 +340,7 @@
                         <label for="inputText" class="col-12 col-form-label"><strong>Referencia</strong></label>
                         <div class="input-group">
                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Referencia para pago"><i class="bi bi-hash"></i></button> 
-                            <input type="text" id="ReferenciaMovil" class="form-control">
+                            <input type="text" id="referenciaMovil" class="form-control">
                         </div>
                     </div>
                     <div class="col-xl-6 col-md-12">
@@ -389,7 +389,7 @@
                         <label for="inputText" class="col-12 col-form-label"><strong>Referencia</strong></label>
                         <div class="input-group">
                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Referencia para pago"><i class="bi bi-hash"></i></button> 
-                            <input type="text" id="ReferenciaTrans" class="form-control">
+                            <input type="text" id="referenciaTrans" class="form-control">
                         </div>
                     </div>
                     <div class="col-xl-6 col-md-12">

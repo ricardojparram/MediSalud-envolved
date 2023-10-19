@@ -25,12 +25,14 @@ $(document).ready(function() {
 	let tipo
 	let select
 	let memas
+	let cambio
 
 
 	DatosP();
 	precio();
 	empresaEnvio();
 	selectTipoPago();
+	banco();
 
 
 	// Datos Personales
@@ -72,6 +74,7 @@ $(document).ready(function() {
 			data:{mostrarP: "hola"},
 			success(pre){
 				let precioUsd
+				cambio = pre[0].id_cambio
 				if (pre[0].cuenta > 0) {
 					console.log(pre);
 					$("#valorBs").html(parseFloat(pre[0].total).toFixed(2)+" Bs");
@@ -80,6 +83,7 @@ $(document).ready(function() {
 					total = pre[0].total + impuesto;
 					$("#total").html(parseFloat(total).toFixed(2)+" Bs");
 					$("#valorUsd").html(parseFloat(total / pre[0].cambio).toFixed(2)+" $");
+					
 
 				} else {
 					console.log("nada")
@@ -286,7 +290,7 @@ $(document).ready(function() {
 		$(this).closest('tr').remove();
 	});
 
-	
+	let datosTrans, datosMovil
 
 	 //  rellena los select de las filas de tipos
 	 function selectTipoPago(){
@@ -324,7 +328,7 @@ $(document).ready(function() {
 	  }
 
 	  $(".trans, .movil").fadeOut(0);
-
+	  
 	  function tipoPago(tipo){
 		if (tipo == 4 || tipo == 5){
 			let campos
@@ -350,7 +354,7 @@ $(document).ready(function() {
 							data.forEach((row)=>{
 								option += `<option value="${row.id_datos_cobro}">${row.nombre}</option>`
 							})
-							$("#bancTipoM, #bancTipoRM").html("<option selected disabled>Nombre</option>"+option)
+							$("#bancTipoM").html("<option selected disabled>Nombre</option>"+option)
 							$(".movil").fadeIn(300);
 							// $(".trans").fadeOut(0);
 							$("#bancTipoM").on('change', function(){
@@ -360,6 +364,7 @@ $(document).ready(function() {
 								$("#cedBancM").val(resultado.rif_cedula)
 								$("#teleMovil").val(resultado.telefono)
 								$("#codBanc").val(resultado.codigo)
+								datosMovil = resultado.id_datos_cobro
 							})
 							
 							break;
@@ -368,7 +373,7 @@ $(document).ready(function() {
 							data.forEach((row)=>{
 								option += `<option value="${row.id_datos_cobro}">${row.nombre}</option>`
 							})
-							$("#bancTipoT, #bancTipoRT").html("<option selected disabled>Nombre</option>"+option)
+							$("#bancTipoT").html("<option selected disabled>Nombre</option>"+option)
 							$(".trans").fadeIn(300);
 							// $(".movil").fadeOut(0);
 
@@ -377,15 +382,35 @@ $(document).ready(function() {
 								resultado = data.find(item => item.id_datos_cobro == muvi);
 								$("#cedBancT").val(resultado.rif_cedula)
 								$("#numCuen").val(resultado.num_cuenta)
+								datosTrans = resultado.id_datos_cobro
 							})
 						break;
 					
 						default:
 							break;
+
 					}
 				}
 			})
 		}
+	  }
+
+	  function banco() {
+		let opu
+		$.ajax({
+			url: '',
+			method: 'POST',
+			dataType: 'json',
+			data:{
+				mostrarB: "xd"
+			},success(data){
+				data.forEach(row => {
+					opu += `<option value="${row.id_banco}">${row.nombre}</option>`;
+				})
+				$("#bancTipoRT, #bancTipoRM").html("<option selected disabled>Nombre</option>"+opu)
+				
+			}
+		})
 	  }
 
 	// Validicaiones Tercer Step
@@ -521,14 +546,70 @@ $(document).ready(function() {
 
 	$("#tipoP").change(()=> {  validarSelect($("#tipoP"),$("#errorTipoP"), "Error de Tipo,") });
 	$("#bancTipo").change(()=> {  validarSelect($("#bancTipo"),$("#errorBancTipo"), "Error de Banco,") });
+	let direcE
+	
 
 	$("#3").click((e)=>{
 
+		let push = []
 
+
+		if(idGlass == "repartidor"){
+			direcE = $("#calle").val()+" "+$("#numAv").val()+" "+$("#numCasa").val()+" "+$("#ref").val()
+		}else{
+			direcE = ""
+		}
+
+
+
+		let tipVal
+		$('.select-tipo').each(function(i) {
+			tipVal = $(this).closest('tr')
+			switch (tipVal.find("select").val()) {
+				case "4":
+			
+					push[i] = {tipo: tipVal.find("select").val(), monto: tipVal.find(".precio-tipo").val(), bancoReceptor: datosMovil, referencia: $("#referenciaMovil").val(), bancoEmisor: $("#bancTipoRM").val(), cambio: cambio};
+				break;
+				case "5":
+	
+					push[i] = {tipo: tipVal.find("select").val(), monto: tipVal.find(".precio-tipo").val(), bancoReceptor: datosTrans, referencia: $("#referenciaTrans").val(), bancoEmisor: $("#bancTipoRT").val(), cambio: cambio};
+				break;
+			
+				default:
+
+					push[i] = {tipo: tipVal.find("select").val(), monto: tipVal.find(".precio-tipo").val(), bancoReceptor: null, referencia: null, bancoEmisor: null, cambio: cambio};
+					break;
+			}
+	
+			
+			
+		})
+			console.log(push)
+		
+
+		$.ajax({
+			url: '',
+				method: 'POST',
+				dataType: 'json',
+				data:{
+					cedula: memas[0].cedula,
+					nombre: memas[0].nombre,
+					apellido: memas[0].apellido,
+					direccion: $("#direcClien").val(),
+					telefono: $("#teleClien").val(),
+					correo: $("#emailClien").val(),
+
+					sede: $("#sede").val(),
+
+					direccion: direcE,
+					detalles: push
 		
 		
-
-
+				},
+				success(final){
+					console.log(final)
+				}
+		})
 
 
 	})
