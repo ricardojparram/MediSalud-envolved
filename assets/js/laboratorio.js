@@ -1,17 +1,20 @@
 $(document).ready(function(){
 
 	let mostrar
-	let permisos, editarPermiso, eliminarPermiso;
+	let registrarPermiso, editarPermiso, eliminarPermiso;
     $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:''},
-        success(data){ permisos = data; }
+        success(permisos){
+        	registrarPermiso = (typeof permisos.Editar === 'undefined') ? 'disabled' : ''; 
+        	editarPermiso = (typeof permisos.Editar === 'undefined') ? 'disabled' : '';
+        	eliminarPermiso = (typeof permisos.Eliminar === 'undefined') ? 'disabled' : '';
+        }
     }).then(() => rellenar(true));
 
 	function rellenar(bitacora = false){ 
         $.ajax({ type: "post", url: "", dataType: "json", data: {mostrar: "labs", bitacora},
             success(data){
                 let tabla;
-                editarPermiso = (typeof permisos.Editar === 'undefined') ? 'disabled' : '';
-                eliminarPermiso = (typeof permisos.Eliminar === 'undefined') ? 'disabled' : '';
+               
                 data.forEach(row => {
                     tabla += `
                         <tr>
@@ -20,9 +23,11 @@ $(document).ready(function(){
                             <td scope="col">${row.direccion}</td>                      
                             <td scope="col">${row.telefono}</td>
                             <td scope="col">${(row.contacto == null) ? '' : row.contacto}</td>
-                            <td class="d-flex justify-content-center">
-                            	<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.cod_lab}" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
-                            	<button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.cod_lab}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
+                            <td >
+                            	<span class="d-flex justify-content-center">
+                            		<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.cod_lab}" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
+                            		<button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.cod_lab}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
+                            	</span>
                             </td>
                         </tr>`;
                 });
@@ -63,7 +68,7 @@ $(document).ready(function(){
 	$("#registrar").click((e)=>{
 		e.preventDefault()
 
-		if(typeof permisos.Registrar === 'undefined'){
+		if(registrarPermiso === 'undefined'){
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
 			throw new Error('Permiso denegado.');
 		}
@@ -150,7 +155,7 @@ $(document).ready(function(){
 	$("#editar").click((e)=>{
 		e.preventDefault();
 
-		if(typeof permisos.Editar === 'undefined'){
+		if(editarPermiso === 'undefined'){
             Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
             throw new Error('Permiso denegado.');
         }
@@ -214,7 +219,7 @@ $(document).ready(function(){
 	$(document).on('click', '.borrar', function(){ id = this.id });
 
 	$('#borrar').click(()=>{
-		if(typeof permisos.Eliminar === 'undefined'){
+		if(eliminarPermiso === 'undefined'){
             Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
             throw new Error('Permiso denegado.');
         }

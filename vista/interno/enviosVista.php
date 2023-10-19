@@ -60,7 +60,7 @@
             <thead>
 
               <tr>
-                <th scope="col">N° Factura</th>
+                <th scope="col">N° Envío</th>
                 <th scope="col">Cédula cliente</th>
                 <th scope="col">Nombre cliente</th>
                 <th scope="col">Sede de envío</th>
@@ -71,7 +71,7 @@
             </thead>
             <tfoot>
               <tr>
-                <th scope="col">N° Factura</th>
+                <th scope="col">N° Envío</th>
                 <th scope="col">Cédula cliente</th>
                 <th scope="col">Nombre cliente</th>
                 <th scope="col">Sede de envío</th>

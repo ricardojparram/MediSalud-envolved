@@ -51,7 +51,8 @@
           </div>
 
           <div class="col-6 text-end mt-3">
-            <button type="button" id="agregarModal" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#Agregar">Agregar</button>
+            <button type="button" id="agregarModal" <?= $disabled = (isset($permiso['Registrar'])) ? "" : "disabled"?> 
+            class="btn btn-success" data-bs-toggle="modal" data-bs-target="#Agregar">Agregar</button>
           </div>
         </div>
 

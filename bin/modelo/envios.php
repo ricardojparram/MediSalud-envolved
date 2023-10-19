@@ -26,7 +26,7 @@
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 
-				if($bitacora === "true") $this->binnacle("Comprobar pagos",$_SESSION['cedula'],"Consultó listado.");
+				if($bitacora === "true") $this->binnacle("Envios",$_SESSION['cedula'],"Consultó listado.");
 				$this->desconectarDB();
 				die(json_encode($data));
 				
@@ -40,10 +40,10 @@
 			$this->id_envio = $id_envio;
 			$this->estado = $estado;
 
-			$this->comprobarPago();
+			$this->asignarEstadoEnvio();
 		}
 
-		private function comprobarPago(){
+		private function asignarEstadoEnvio(){
 			try{
 				$this->conectarDB();
  				
@@ -61,7 +61,8 @@
 					$resultado = ['resultado' => 'error', 'msg' => 'Ha ocurrido un error en la base de datos.'];
 				}
 
-				$resultado = ['resultado' => 'ok', 'msg' => 'Se ha actualizado el estado del pago.'];
+				$this->binnacle("Envios",$_SESSION['cedula'],"Modificó estado del envío #$this->id_envio.");
+				$resultado = ['resultado' => 'ok', 'msg' => "Se ha actualizado el estado del envio correctamente."];
 				$this->desconectarDB();
 				die(json_encode($resultado));
 

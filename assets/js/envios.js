@@ -23,7 +23,7 @@ $(document).ready(function(){
                 	let fecha_entrega = (row.fecha_entrega == null) ? "" : row.fecha_entrega;
                     tabla += `
                         <tr>
-	                        <td scope="row">${row.num_fact}</td>
+	                        <td scope="row">${row.id_envio}</td>
 	                        <td >${row.cedula}</td>
 	                        <td >${row.nombre_cliente}</td>
 	                        <td title="${row.sede_empresa}">
