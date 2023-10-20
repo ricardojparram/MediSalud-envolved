@@ -42,6 +42,9 @@
 
 		public function getAgregarProducto($producto, $cantidad, $user){
 			$this->id_producto = $producto;
+			if(preg_match_all("/^[0-9]{1,10}$/", $cantidad) != 1){
+				die(json_encode(['error' => 'Id inválida.']));
+			}
 			$this->cantidad = $cantidad;
 			$this->user = $user;
 
@@ -98,6 +101,9 @@
 
 		public function getEditarProd($id_producto, $cantidad, $user){
 			$this->id_producto = $id_producto;
+			if(preg_match_all("/^[0-9]{1,10}$/", $cantidad) != 1){
+				die(json_encode(['error' => 'Id inválida.']));
+			}
 			$this->cantidad = $cantidad;
 			$this->user = $user;
 

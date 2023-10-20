@@ -12,10 +12,7 @@ $(document).ready(function(){
 	}
 
 	async function mostrarCarrito(){
-		await $.ajax({
-			method: 'POST',
-			dataType: 'json',
-			url: '?url=carrito',
+		await $.ajax({method: 'POST',dataType: 'json',url: '?url=carrito',
 			data: {mostrar:'', carrito:''},
 			success(response){
 				let div = '';
@@ -232,7 +229,7 @@ $(document).ready(function(){
 		})
 		validarStock(productos).then(res => {
 			if(!res) return;
-			console.log('go to facturacion')
+			window.location = "?url=pago";
 		});
 	})
 
