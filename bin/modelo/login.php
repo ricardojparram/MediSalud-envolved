@@ -9,10 +9,12 @@
 		private $cedula;
 		private $password;
 
+
 		public function __construct(){
 			parent::__construct();
 		}
-		
+
+	
 		public function getLoginSistema($cedula ,$password){
 			if(preg_match_all("/^[0-9]{7,10}$/", $cedula) == false){
 				$resultado = ['resultado' => 'Error de cedula' , 'error' => 'Cédula inválida.'];
@@ -115,7 +117,9 @@
 
 		private function validarC(){
 			try{
-                parent::conectarDB();
+
+				parent::conectarDB();
+
 				$new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
 				$new->bindValue(1, $this->cedula);
 				$new->execute();

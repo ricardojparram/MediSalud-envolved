@@ -5,29 +5,38 @@
 	use component\menuLateral as menuLateral;
 	use modelo\clase as clase;
 
+	 if(!isset($_SESSION['nivel'])){
+		die('<script> window.location = "?url=login" </script>');
+	}
+
 	$objModel = new clase();
 	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
 	$permiso = $permisos['Clase'];
 
+	 if(!isset($permiso['Consultar'])) die(`<script> window.location = "?url=home" </script>`); 
 
 
-	if(isset($_POST["clase"]) && $permiso->registrar == 1) {
+     if(isset($_POST['getPermisos'])&& $permiso['Consultar'] ==1){
+    	die(json_encode($permiso));
+    }
+
+	if(isset($_POST["clase"]) && $permiso['Registrar'] == 1) {
 		$objModel->getAgregarClase($_POST["clase"]);
 	}
 
-	if(isset($_POST["mostrar"]) && $permiso->status == 1) {
+	if(isset($_POST["mostrar"]) && isset($_POST['bitacora']) && $permiso['Consultar'] == 1) {
 		$objModel->mostrarClase();
 	}
 
-	if(isset($_POST["id"]) && isset($_POST["borrar"]) && $permiso->eliminar == 1){
+	if(isset($_POST["id"]) && isset($_POST["borrar"]) && $permiso['Eliminar'] == 1){
 		$objModel->getEliminar($_POST["id"]);
 	}
 
-	if(isset($_POST["idedit"]) && isset($_POST["item"]) && $permiso->status == 1){
+	if(isset($_POST["idedit"]) && isset($_POST["item"]) && $permiso['Consultar'] == 1){
 		$objModel->getItem($_POST["idedit"]);
 	}
 
-	if(isset($_POST["claseEdit"]) && isset($_POST["idedit"]) && $permiso->editar == 1) {
+	if(isset($_POST["claseEdit"]) && isset($_POST["idedit"]) && $permiso['Editar'] == 1) {
 		$objModel->getEditarClase($_POST["claseEdit"], $_POST["idedit"]);
 	}
 

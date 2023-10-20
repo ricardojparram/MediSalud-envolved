@@ -3,48 +3,47 @@
   use component\initcomponents as initcomponents;
   use component\header as header;
   use component\menuLateral as menuLateral;
-  use modelo\proveedor as proveedor;
+  use modelo\laboratorio as proveedor;
+
+  if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
   $objModel = new proveedor();
   $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
   $permiso = $permisos['Proveedor'];
 
+  if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
 
-  if(isset($_SESSION['nivel'])){
-    if($_SESSION['nivel'] != 1 && $_SESSION['nivel'] != 2){
-      die('<script> window.location = "?url=home" </script>');
-    }
-  }else{
-    die('<script> window.location = "?url=login" </script>');
+  if(isset($_POST['getPermisos'], $permiso["Consultar"])){
+    die(json_encode($permiso));
   }
 
-  if(isset($_POST['mostrar'])){
-    $objModel->mostrarProveedorAjax();
+  if(isset($_POST['mostrar'], $permiso["Consultar"])){
+    $objModel->mostrarProveedorAjax($_POST['bitacora']);
   }
 
-  if(isset($_POST['rif']) && isset($_POST['direccion']) && isset($_POST['razon']) && isset($_POST['telefono'])&& isset($_POST['contacto'])){
-      
-    $respuesta = $objModel->getDatosPro($_POST['rif'],$_POST['razon'], $_POST['direccion'],  $_POST['telefono'], $_POST['contacto']);
+  if(isset($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto'], $permiso["Registrar"])){
+
+    $objModel->getDatosPro($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto']);
 
   }
 
-  if(isset($_POST['select'])){
-    
-    $objModel->getPro($_POST['id']);
+  if(isset($_POST['select'], $permiso["Editar"])){
+    $objModel->getItem($_POST['id']);
   }
 
+  if(isset($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id'], $permiso["Editar"])){
 
-
-  if(isset($_POST['rifEdit']) && isset($_POST['direccionEdit']) && isset($_POST['razonEdit']) && isset($_POST['telefonoEdit'])&& isset($_POST['id'])){
-
-  
-
-    $respuesta = $objModel->getEditar($_POST['rifEdit'], $_POST['razonEdit'], $_POST['direccionEdit'],  $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id']);
+    $objModel->getEditar($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id']);
 
   }
 
-  if(isset($_POST['eliminar'])){
+  if(isset($_POST['eliminar'], $permiso["Eliminar"])){
     $objModel->getEliminar($_POST['id']);
+  }
+
+  if(isset($_POST['rif'], $_POST['validar'])){
+    $resultado = $objModel->getRif($_POST['rif']);
+    die(json_encode($resultado));
   }
   
 
@@ -55,6 +54,8 @@
 
   if(file_exists("vista/interno/productos/proveedorVista.php")){
     require_once("vista/interno/productos/proveedorVista.php");
+  }else{
+    die("La vista no existe.");
   }
-
+  
 ?>
