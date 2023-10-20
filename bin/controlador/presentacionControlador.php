@@ -5,24 +5,20 @@
   use component\menuLateral as menuLateral;
   use modelo\presentacion as presentacion;
 
-  $objModel = new Presentacion();
+  if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
-  if(isset($_SESSION['nivel'])){
-    if($_SESSION['nivel'] != 1 && $_SESSION['nivel'] != 2){
-      die('<script> window.location = "?url=home" </script>');
-    }
-  }else{
-    die('<script> window.location = "?url=login" </script>');
-  }
+  $objModel = new presentacion();
+  $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
+  $permiso = $permisos['Presentacion'];
   
 
-  if(isset($_POST['mostrar'])){
+  if(isset($_POST['mostrar'], $permiso['Consultar'])){
 
     $objModel->mostrarPresentacionAjax();
   }
 
 
-  if(isset($_POST['med'])  && isset($_POST['cant']) && isset($_POST['pes'])){
+  if(isset($_POST['med'])  && isset($_POST['cant']) && isset($_POST['pes']) && isset($permiso['Registrar'])){
 
   	
       
@@ -37,13 +33,13 @@
 
 
 
-  if(isset($_POST['medEdit']) && isset($_POST['cantEdit']) && isset($_POST['pesEdit'])){
+  if(isset($_POST['medEdit']) && isset($_POST['cantEdit']) && isset($_POST['pesEdit']) && isset($permiso['Editar'])){
 
     $respuesta = $objModel->getEditar($_POST['medEdit'], $_POST['cantEdit'], $_POST['pesEdit'], $_POST['id']);
 
   }
 
-  if(isset($_POST['eliminar'])){
+  if(isset($_POST['eliminar'])  && isset($permiso['Eliminar'])){
     $objModel->getEliminar($_POST['id']);
   }
   
@@ -51,7 +47,7 @@
 
   $VarComp = new initcomponents();
   $header = new header();
-  $menu = new menuLateral();
+  $menu = new menuLateral($permisos);
 
   if(file_exists("vista/interno/productos/presentacionVista.php")){
     require_once("vista/interno/productos/presentacionVista.php");
