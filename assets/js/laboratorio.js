@@ -39,8 +39,8 @@ $(document).ready(function(){
 
     }
 
-	function validarRif(input, div){
-		$.post('',{rif : input.val(), validar: "rif"}, function(data){
+	function validarRif(input, div, edit = false){
+		$.post('',{rif : input.val(), validar: "rif", edit}, function(data){
 			let mensaje = JSON.parse(data);
 			if(mensaje.resultado === "Error de rif"){
 				div.text(mensaje.error);
@@ -140,7 +140,7 @@ $(document).ready(function(){
 
 
 	$("#rifEdit").keyup(()=> {  let valid = validarCedula($("#rifEdit"),$("#errorEdit") ,"Error de RIF,") 
-		if(valid)	validarRif($("#rifEdit"), $("#errorEdit"));
+		if(valid)	validarRif($("#rifEdit"), $("#errorEdit"), id);
 	});
 	$("#razonEdit").keyup(()=> {  validarNombre($("#razonEdit"),$("#errorEdit") , "Error de nombre,") });
 	$("#direccionEdit").keyup(()=> {  validarDireccion($("#direccionEdit"),$("#errorEdit") , "Error de direccion,") });

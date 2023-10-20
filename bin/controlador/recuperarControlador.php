@@ -2,7 +2,7 @@
    
     use component\initcomponents as initcomponents;
     use modelo\recuperar as recuperar;
-    use component\nav as nav;
+    use component\tienda as tienda;
 
     $obj_Model = new recuperar();
     
@@ -11,7 +11,7 @@
     }    
 
     $VarComp = new initcomponents();
-    $Nav = new nav();
+    $Nav = new tienda();
 
 
     if(file_exists("vista/sesion/recuperarVista.php")){

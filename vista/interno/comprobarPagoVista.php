@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roles</title>
+  <title>Comprobación de pagos</title>
   <?php $comp->header(); ?>
   <link rel="stylesheet" href="assets/css/estiloInterno.css">
 </head>
@@ -64,7 +64,7 @@
                 <th scope="col">Cédula cliente</th>
                 <th scope="col">Nombre cliente</th>
                 <th scope="col">Estado</th>
-                <!-- <th scope="col">Opciones</th> -->
+                <th scope="col">Opciones</th>
               </tr>
             </thead>
             <tfoot>
@@ -73,7 +73,7 @@
                 <th scope="col">Cédula cliente</th>
                 <th scope="col">Nombre cliente</th>
                 <th scope="col">Estado</th>
-                <!-- <th scope="col">Opciones</th> -->
+                <th scope="col">Opciones</th>
               </tr>
             </tfoot>
             <tbody>
@@ -82,39 +82,75 @@
         </div>
         <!-- End Table with stripped rows -->
 
-        <!-- Modal Ḿódulos y permisos -->
+        <!-- Modal Comprobarpago -->
         <div class="modal fade" id="comprobacion" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
-            <div class="modal-content h-25">
+            <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title"><strong>Estado de la comprobación</strong></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
 
-                <div class="row">
-                  <div class="col-4">
-                    <input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off">
-                    <label class="btn btn-outline-success" for="success-outlined">Aprobado</label>
-                  </div>
-                  <div class="col-4">
-                    <input type="radio" class="btn-check" checked name="options-outlined" id="warning-outlined" autocomplete="off">
-                    <label class="btn btn-outline-warning" for="warning-outlined">En espera</label>
-                  </div>
+                <section class="row justify-content-center asignacionDeEstado">
 
-                  <div class="col-4">
-                    <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off">
+                  <span class="col-4 d-flex justify-content-center">
+                    <input type="radio" value=1 class="btn-check" checked name="options-outlined" id="success-outlined">
+                    <label class="btn btn-outline-success" for="success-outlined">Aprobado</label>
+                  </span>
+                  <span class="col-4 d-flex justify-content-center">
+                    <input type="radio" value=2 class="btn-check" name="options-outlined" id="warning-outlined">
+                    <label class="btn btn-outline-warning" for="warning-outlined">En espera</label>
+                  </span>
+                  <span class="col-4 d-flex justify-content-center">
+                    <input type="radio" value=3 class="btn-check" name="options-outlined" id="danger-outlined">
                     <label class="btn btn-outline-danger" for="danger-outlined">Negado</label>
-                  </div>
-                </div>
+                  </span>
+                  
+                </section>
 
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-success" id="enviarPermisos">Actualizar</button>
+                <button type="submit" class="btn btn-success" id="enviarEstadoDePago">Actualizar</button>
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Modal detalle de pago -->
+
+        <div class="modal fade" id="detallePago" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Detalle de pago <strong>Factura: <span></span></strong></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+
+                <table class="table table-hover " id="tablaDetallePago" width="100%" cellspacing="0">
+                  <thead>
+
+                    <tr>
+                      <th scope="col">Tipo de pago</th>
+                      <th scope="col">Monto</th>
+                      <th scope="col">Cambio</th>
+                      <th scope="col">Banco cobro</th>
+                      <th scope="col">Banco cliente</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
   </main>
 

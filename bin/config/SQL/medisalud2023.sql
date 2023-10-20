@@ -247,7 +247,7 @@ CREATE TABLE venta_producto(
 -- TABLA PARA BANCOS
 CREATE TABLE banco(
     id_banco int AUTO_INCREMENT PRIMARY KEY,
-    nombre varchar(20) NOT NULL,
+    nombre varchar(60) NOT NULL,
     codigo varchar(5),
     status int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
@@ -279,7 +279,7 @@ CREATE TABLE detalle_pago(
     id_tipo_pago int NOT NULL,
     id_datos_cobro int,
     id_banco_cliente int,
-    monto_pago decimal NOT NULL,
+    monto_pago decimal (10,2) NOT NULL,
     id_cambio int NOT NULL,
     FOREIGN KEY (id_banco_cliente) REFERENCES banco(id_banco) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_tipo_pago) REFERENCES tipo_pago(id_tipo_pago) ON DELETE CASCADE ON UPDATE CASCADE,

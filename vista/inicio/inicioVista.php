@@ -14,7 +14,7 @@
   <header class="w-100 h-100">
     
   <!-- Barra navegadora -->
-    <?php $Nav->nav(); ?>
+    <?php $tiendaComp->nav(); ?>
 
   </header>
 
@@ -131,7 +131,7 @@
 
 </footer>
 
-  <?php $Car->car(); ?>
+  <?php $tiendaComp->car(); ?>
 
   <?php $VarComp->js() ?>
   <script src="assets/js/inicio.js"></script>

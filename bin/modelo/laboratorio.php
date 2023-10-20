@@ -93,12 +93,13 @@
 
       }
 
-      public function getRif($rif){
+      public function getRif($rif, $idLab){
 
         if(preg_match_all("/^[0-9]{7,10}$/", $rif) != 1){
           die(json_encode(['resultado' => 'Error de rif','msg' => 'Rif inválido.']));
         }
 
+        $this->idedit = ($idLab === "false") ? false : $idLab;
         $this->rif = $rif;
 
         return $this->validarRif();
@@ -108,8 +109,16 @@
 
         try {
           $this->conectarDB();
-          $new = $this->con->prepare("SELECT rif FROM laboratorio WHERE status = 1 and rif = ?");
-          $new->bindValue(1, $this->rif);
+
+          if($this->idedit === false){
+            $new = $this->con->prepare('SELECT rif FROM laboratorio WHERE status = 1 and rif = ?');
+            $new->bindValue(1, $this->rif);
+          }else{
+            $new = $this->con->prepare('SELECT rif FROM laboratorio WHERE status = 1 and rif = ? AND cod_lab != ?');
+            $new->bindValue(1, $this->rif);
+            $new->bindValue(2, $this->idedit);
+          }
+          
           $new->execute();
           $data = $new->fetchAll();
 
@@ -188,7 +197,7 @@
         $this->idedit = $id;
 
         $validarRif = $this->validarRif();
-        if($validarRif['res'] === true) die(json_encode(["resultado" => "error", "Laboratorio no existe"]));
+        if($validarRif['res'] === false) die(json_encode(["resultado" => "error", "msg" => "Rif ya registrado"]));
 
         $this->editarLaboratorio();
       }

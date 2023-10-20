@@ -16,7 +16,6 @@
 
 		public function getCarritoUsuario($user){
 			$this->user = $user;
-
 			$this->mostrarCarrito();
 		}
 
@@ -24,6 +23,7 @@
 
 			try {
 
+				$this->conectarDB();
 				$sql = "SELECT * FROM carrito c
 				INNER JOIN producto p ON p.cod_producto = c.cod_producto 
 				WHERE c.cedula = ?;";
@@ -31,7 +31,7 @@
 				$new->bindValue(1, $this->user);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
-
+				$this->desconectarDB();
 				die(json_encode($data));
 
 			} catch (\PDOException $e) {
@@ -53,6 +53,7 @@
 			try {
 
 				$respuesta = [];
+				$this->conectarDB();
 				foreach($this->productos as $producto){
 
 					$sql = 'SELECT stock FROM producto WHERE cod_producto = ?;';
@@ -69,7 +70,7 @@
 						$respuesta[] = ['id_producto' => $producto['id_producto'], 'info' => $resultado];
 					}
 				}
-
+				$this->desconectarDB();
 				die(json_encode($respuesta));
 
 			} catch (\PDOException $e) {
@@ -89,7 +90,7 @@
 		private function editarProducto(){
 
 			try {
-
+				$this->conectarDB();
 				$sql = 'UPDATE carrito SET cantidad = ? 
 						WHERE cod_producto = ? AND cedula = ?';
 				$new = $this->con->prepare($sql);
@@ -110,7 +111,7 @@
 				$resultado;
 
 				$resultado = ['resultado' => true, 'msg' => 'Se ha editado la cantidad correctamente.', 'info' => $info];
-
+				$this->desconectarDB();
 				die(json_encode($resultado));
 
 			} catch (\PDOException $e) {
@@ -129,7 +130,8 @@
 		private function eliminarProd(){
 
 			try {
-				
+
+				$this->conectarDB();
 				$sql = "DELETE FROM carrito WHERE cod_producto = ? AND cedula = ?";
 				$new = $this->con->prepare($sql);
 				$new->bindValue(1, $this->id_producto);
@@ -141,7 +143,7 @@
 				}else{
 					$resultado = ['resultado' => false, 'msg' => 'Ha ocurrido un error.'];
 				}
-
+				$this->desconectarDB();
 				die(json_encode($resultado));
 
 			} catch (\PDOException $e) {
@@ -155,6 +157,7 @@
 
 			try {
 
+				$this->conectarDB();
 				$sql = 'DELETE FROM carrito WHERE cedula = ?';
 				$new = $this->con->prepare($sql);
 				$new->bindValue(1, $this->user);
@@ -165,7 +168,7 @@
 				}else{
 					$resultado = ['resultado' => false, 'msg' => 'Ha ocurrido un error.'];
 				}
-
+				$this->desconectarDB();
 				die(json_encode($resultado));
 				
 			} catch (\PDOException $e) {

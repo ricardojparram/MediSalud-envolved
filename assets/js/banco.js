@@ -23,19 +23,20 @@ $(document).ready(function(){
 				data.forEach(row =>{
                     editarPermiso = (permiso.editar != 1)?  'disable' : '';
                     eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
+                    tipo = (row.telefono == null)? 'Tranferencia' : 'Pago Movil';
 					tabla += `
 					<tr>
 					<td>${row.nombre}</td>
 					<td>${row.rif_cedula}</td>
-					<td>${row.codigo}</td>
+					<td>${tipo}</td>
 					<td class="d-flex justify-content-center">
-					<button type="button" ${editarPermiso} id="${row.id_banco}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
-					<button type="button" ${eliminarPermiso} id="${row.id_banco}" class="btn btn-danger borrar mx-2" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi bi-trash3"></i></button>
+					<button type="button" ${editarPermiso} id="${row.id_datos_cobro}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
+					<button type="button" ${eliminarPermiso} id="${row.id_datos_cobro}" class="btn btn-danger borrar mx-2" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi bi-trash3"></i></button>
 					</td>
 					</tr>
 					`;
 				})
-				$('#tabla #tbody').html(tabla);
+				$('#tbody').html(tabla);
 				mostrar = $('#tabla').DataTable({
 					responsive: true
 				})
@@ -45,30 +46,13 @@ $(document).ready(function(){
 		})
 	}
     
-    selecBanco();
-    function selecBanco(){
-        console.log('HOLA')
-        $.ajax({
-            type: "POST",
-            url: "",
-            dataType: "json",
-            data: {selectBanco: "selectBanco"},
-            success(data){
-                let listo = data
-                let option = "";
-                listo.forEach((row) =>{
-                    option += `<option class="${row.codigo}" value="${row.id_banco}">${row.nombre}</option>`;
-                }) 
-                $('.nombre').each(function(){
-                    if(this.children.length == 1){
-                        $(this).append(option);
-                    }
-                })
-            }
-        })            
+    $(".nombreBanco").select2({
+      theme: 'bootstrap-5',
+      dropdownParent: $('#Agregar .modal-body'),
+  })
 
 
-    }
+    
     
     selecTipoPago();
 
@@ -78,7 +62,7 @@ $(document).ready(function(){
     		let lista = JSON.parse(data);
     		let option = "";
     		lista.forEach((row) =>{
-    			option += `<option value="${row.cod_tipo_pago}">${row.des_tipo_pago}</option>`;
+    			option += `<option value="${row.id_tipo_pago}">${row.des_tipo_pago}</option>`;
     		}) 
     		$('.tipoP').each(function(){
     			if(this.children.length == 1){
@@ -97,12 +81,9 @@ $(document).ready(function(){
     		if (selectedOption == "Pago movil" || selectedOption == "Pago Movil" || selectedOption == "pago movil" || selectedOption ==
              "pago Movil" || selectedOption == "pagomovil") {
     			$('.cuentaBancaria').css("display", "none");
-    			$('.CodigoBanco').css("display", "block");
-
     			$('.telefono').css("display", "block");
     		} else {
     			$('.cuentaBancaria').css("display", "block");
-    			$('.CodigoBanco').css("display", "none");
     			$('.telefono').css("display", "none");
     		}
     	});
@@ -129,7 +110,7 @@ $(document).ready(function(){
     function ValidarDatos(dato ,dato1 , dato2, div , id = null){
 
         return new Promise((resolve, reject) => {
-            $.post('',{tipoP : dato.val(), nombre : dato1.val(), cedulaRif : dato2.val(), id ,validarD: "CedulaRif"},
+            $.post('',{tipoP : dato , tipo : dato1.val(), cedulaRif : dato2.val(), id ,validarD: "CedulaRif"},
                function(data){
                 let mensaje = JSON.parse(data);
                 if(mensaje.resultado === "Error Datos"){
@@ -142,19 +123,21 @@ $(document).ready(function(){
             })
         })
     }
-      let ValidarT;
+
+
+
+      let ValidarT , idNombre;
 
       $('#tipoP').change(function(){
        let valid = validarSelect($("#tipoP"),$("#error1"),"Error elige un tipo");
        if (valid){
-        validarTipoP($("#tipoP"), $("#error1"))
+        validarTipoP($("#tipoP"), $("#error1"))      
        }
       })
-      $('#nombre').keyup(() =>{ validarStringLong($('#nombre'), $('#error2') , "Nombre invalido"); });
+      $('#nombre').change(() =>{ validarSelec2($("#nombre"),$(".select2-selection"),$("#error2"),"Error de Nombre"); });
       $('#cedulaRif').keyup(() =>{ validarCedula($('#cedulaRif') , $('#error3') , "Error de Rif") } );
       $('#cuentaBank').keyup(() =>{ validarBanco($('#cuentaBank'), $('#error4') , "Error de codigo banco") });
-      $('#codBank').keyup(() =>{ validarCodBank($('#codBank'), $('#error5') , "Error de codigo banco") });
-      $('#telefono').keyup(() =>{ validarTelefono($('#telefono'), $('#error6') , "Error de telefono") });
+      $('#telefono').keyup(() =>{ validarTelefono($('#telefono'), $('#error5') , "Error de telefono") });
 
      let click = 0;
      setInterval(() => { click = 0 ;}, 2000);
@@ -164,7 +147,7 @@ $(document).ready(function(){
 
             if(click >=  1) throw new Error('Spam de clicks');
 
-            let tipoP , Nombre , cedulaRif , cuentaBank , codBank , telefono , validar;
+            let tipoP , Nombre , cedulaRif , cuentaBank  , telefono , validar;
 
             let tPago = $('#tipoP').find('option:selected').text();
             let datos = [];
@@ -181,20 +164,17 @@ $(document).ready(function(){
                     case 'Pago movil' || 'Pago Movil' || 'pago movil' || 'pago Movil' || 'pagomovil' :
                 // Validar 
                 tipoP = validarSelect($('#tipoP'), $('#error1'), "Tipo invalido");
-                Nombre = validarStringLong($('#nombre'), $('#error2'), "Nombre invalido");
+                Nombre = validarSelec2($("#nombre"),$(".select2-selection"),$("#error2"),"Error de Nombre")
                 cedulaRif = validarCedula($('#cedulaRif'), $('#error3'), 'Error de Rif');
-                codBank = validarCodBank($('#codBank'), $('#error5'), "Error de codigo banco");
-                telefono = validarTelefono($('#telefono'), $('#error6'), "Error de telefono");
+                telefono = validarTelefono($('#telefono'), $('#error5'), "Error de telefono");
                 
 
-                ValidarDatos($("#tipoP"), $('#nombre'), $('#cedulaRif'), $("#error")).then((validar) => {
-                  if (tipoP && Nombre && cedulaRif && codBank && telefono && validar) {
-                    let pago = $('#tipoP').val();
+                ValidarDatos(tPago , $('#telefono'), $('#cedulaRif'), $("#error")).then((validar) => {
+                  if (tipoP && Nombre && cedulaRif && telefono && validar) {
                     let name = $('#nombre').val();
                     let cRif = $('#cedulaRif').val();
-                    let cBank = $('#codBank').val();
                     let cell = $('#telefono').val();
-                    datos = [pago, name, cRif, cBank, cell];
+                    datos = [tPago, name, cRif, cell];
                     $.ajax({
                         type: "post",
                         url : "" ,
@@ -205,6 +185,7 @@ $(document).ready(function(){
                             mostrar.destroy();
                             rellenar(); 
                             $('#agregarform').trigger('reset'); 
+                            $('.nombreBanco').val(0).trigger('change'); // LIMPIA EL SELECT2
                             $('.cerrar').click(); 
                             Toast.fire({ icon: 'success', title: 'Banco registrado' }) 
                         }
@@ -219,17 +200,16 @@ $(document).ready(function(){
                 default: 
                 // Validar
                 tipoP = validarSelect($('#tipoP'), $('#error1') , "Tipo invalido");
-                Nombre = validarStringLong($('#nombre'), $('#error2') , "Nombre invalido");
+                Nombre = validarSelec2($("#nombre"),$(".select2-selection"),$("#error2"),"Error de Nombre");
                 cedulaRif = validarCedula($('#cedulaRif'), $('#error3') , 'Error de Rif');
                 cuentaBank = validarBanco($('#cuentaBank'), $('#error4') , 'Error de Rif');
                 
-                ValidarDatos($("#tipoP"), $('#nombre'), $('#cedulaRif'), $("#error")).then((validar) => {
+                ValidarDatos(tPago, $('#cuentaBank'), $('#cedulaRif'), $("#error")).then((validar) => {
                   if (tipoP && Nombre && cedulaRif && cuentaBank && validar) {
-                    let pago = $('#tipoP').val();
                     let name = $('#nombre').val();
                     let cRif = $('#cedulaRif').val();
                     let Banco = $('#cuentaBank').val();
-                    datos = [pago, name, cRif, Banco];
+                    datos = [tPago, name, cRif, Banco];
                     $.ajax({
                         type: "post",
                         url : "" ,
@@ -240,6 +220,7 @@ $(document).ready(function(){
                             mostrar.destroy();
                             rellenar(); 
                             $('#agregarform').trigger('reset'); 
+                            $('.nombreBanco').val(0).trigger('change'); // LIMPIA EL SELECT2
                             $('.cerrar').click(); 
                             Toast.fire({ icon: 'success', title: 'Banco registrado' }) 
                         }
@@ -273,24 +254,21 @@ $(document).ready(function(){
                 dataType: "json",
                 data: {clickEdit: "editar Banco", id},
                 success(data){
-                  let tp = data[0].des_tipo_pago;
-                  if (tp  == "Pago movil" || tp  == "Pago Movil" || tp == "pago movil" ||tp  == "pago Movil" || tp  == "pagomovil"){
+                  let tp = data[0].telefono;
+                  if (tp  != null){
                     cuentaBancaria.css("display", "none");
-                    codigoBanco.css("display", "block");
                     telefono.css("display", "block");
-                    $("#tipopEdit").val(data[0].tipo_pago);
-                    $("#nombreEdit").val(data[0].nombre);
-                    $("#cedulaRifEdit").val(data[0].cedulaRif);
-                    $("#codBankEdit").val(data[0].CodBanco);
+                    $("#tipopEdit").val(4);
+                    $("#nombreEdit").val(data[0].id_banco);
+                    $("#cedulaRifEdit").val(data[0].rif_cedula);
                     $("#telefonoEdit").val(data[0].telefono);
                 }else{
                     cuentaBancaria.css("display", "block");
-                    codigoBanco.css("display", "none");
                     telefono.css("display", "none");
-                    $("#tipopEdit").val(data[0].tipo_pago);
-                    $("#nombreEdit").val(data[0].nombre);
-                    $("#cedulaRifEdit").val(data[0].cedulaRif);
-                    $('#cuentaBankEdit').val(data[0].NumCuenta);
+                    $("#tipopEdit").val(5);
+                    $("#nombreEdit").val(data[0].id_banco);
+                    $("#cedulaRifEdit").val(data[0].rif_cedula);
+                    $('#cuentaBankEdit').val(data[0].num_cuenta);
                 }
             }
         });
@@ -309,9 +287,9 @@ $(document).ready(function(){
                     mostrar.destroy();
                     rellenar();
                     $('.cerrar').click();
-                    reject();
+                    reject(false);
                 }else{
-                    resolve();
+                    resolve(true);
                 }
 
             }
@@ -325,10 +303,9 @@ $(document).ready(function(){
         validarTipoP($("#tipopEdit"), $("#errorEdit1"));
        }
       })
-      $('#nombreEdit').keyup(() =>{ validarStringLong($('#nombreEdit'), $('#errorEdit2') , "Nombre invalido"); });
+      $('#nombreEdit').change(() =>{ validarSelect($('#nombreEdit'), $('#errorEdit2') , "Nombre invalido"); });
       $('#cedulaRifEdit').keyup(() =>{ validarCedula($('#cedulaRifEdit') , $('#errorEdit3') , "Error de Rif") } );
       $('#cuentaBankEdit').keyup(() =>{ validarBanco($('#cuentaBankEdit'), $('#errorEdit4') , "Error de codigo banco") });
-      $('#codBankEdit').keyup(() =>{ validarCodBank($('#codBankEdit'), $('#errorEdit5') , "Error de codigo banco") });
       $('#telefonoEdit').keyup(() =>{ validarTelefono($('#telefonoEdit'), $('#errorEdit6') , "Error de telefono") });
 
  
@@ -355,19 +332,17 @@ $(document).ready(function(){
             case 'Pago movil' || 'Pago Movil' || 'pago movil' || 'pago Movil' || 'pagomovil' :
             // Validar 
             tipopEdit = validarSelect($('#tipopEdit'), $('#errorEdit1'), "Tipo invalido");
-            nombreEdit = validarStringLong($('#nombreEdit'), $('#errorEdit2'), "Nombre invalido");
+            nombreEdit = validarSelect($('#nombreEdit'), $('#errorEdit2'), "Nombre invalido");
             cedulaRifEdit = validarCedula($('#cedulaRifEdit'), $('#errorEdit3'), 'Error de Rif');
-            codBankEdit = validarCodBank($('#codBankEdit'), $('#errorEdit5'), "Error de codigo banco");
             telefonoEdit = validarTelefono($('#telefonoEdit'), $('#errorEdit6'), "Error de telefono");
 
-            ValidarDatos($("#tipopEdit"), $('#nombreEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id).then((validarE) => {
-              if (tipopEdit && nombreEdit && cedulaRifEdit && codBankEdit && telefonoEdit && validarE) {
+            ValidarDatos(tPagoEdit , $('#telefonoEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id).then((validarE) => {
+              if (tipopEdit && nombreEdit && cedulaRifEdit && telefonoEdit && validarE) {
                 let pago = $('#tipopEdit').val();
                 let name = $('#nombreEdit').val();
                 let cRif = $('#cedulaRifEdit').val();
-                let cBank = $('#codBankEdit').val();
                 let cell = $('#telefonoEdit').val();
-                datos = [pago, name, cRif, cBank, cell];
+                datos = [tPagoEdit, name, cRif, cell];
                 $.ajax({
                     type: "post",
                     url : "" ,
@@ -392,16 +367,17 @@ $(document).ready(function(){
             default: 
             // Validar
             tipopEdit = validarSelect($('#tipopEdit'), $('#errorEdit1'), "Tipo invalido");
-            nombreEdit = validarStringLong($('#nombreEdit'), $('#errorEdit2'), "Nombre invalido");
+            nombreEdit = validarSelect($('#nombreEdit'), $('#errorEdit2'), "Nombre invalido");
             cedulaRifEdit = validarCedula($('#cedulaRifEdit'), $('#errorEdit3'), 'Error de Rif');
             cuentaBankEdit = validarBanco($('#cuentaBankEdit'), $('#errorEdit4') , 'Error de Rif');
-            ValidarDatos($("#tipopEdit"), $('#nombreEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id).then((validarE) => {
+
+            ValidarDatos(tPagoEdit , $('#cuentaBankEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id).then((validarE) => {
+                
               if (tipopEdit && nombreEdit && cedulaRifEdit && cuentaBankEdit && validarE) {
-                let pago = $('#tipopEdit').val();
                 let name = $('#nombreEdit').val();
                 let cRif = $('#cedulaRifEdit').val();
                 let Banco = $('#cuentaBankEdit').val();
-                datos = [pago, name, cRif, Banco];
+                datos = [tPagoEdit, name, cRif, Banco];
                 $.ajax({
                     type: "post",
                     url : "" ,
