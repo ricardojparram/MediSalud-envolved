@@ -5,6 +5,9 @@
 
 	class compras extends DBConnect{
 
+
+
+
 		private $proveedor;
 		private $orden;
 		private $fecha;
@@ -23,7 +26,10 @@
 		public function mostrarCompras($bitacora = false){
 
 			try {
+
 				parent::conectarDB();
+
+
 				$query = "SELECT c.cod_compra, c.fecha ,c.orden_compra, p.razon_social, c.monto_total , CONCAT(IF(MOD(c.monto_total / cm.cambio, 1) >= 0.5, CEILING(c.monto_total / cm.cambio), FLOOR(c.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM compra c INNER JOIN proveedor p ON c.cod_prove = p.cod_prove INNER JOIN cambio cm ON cm.id_cambio = c.id_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE c.status = 1";
 
 				$new = $this->con->prepare($query);
@@ -31,7 +37,10 @@
 				$data = $new->fetchAll();
 
 				echo json_encode($data);
-				if($bitacora) $this->binnacle("compras",$_SESSION['cedula'],"consultó listado.");
+
+
+				if($bitacora) $this->binnacle("Compras",$_SESSION['cedula'],"Consultó listado.");
+
 				parent::desconectarDB();
 				die();
 
@@ -43,7 +52,9 @@
 
 		public function mostrarProveedor(){
 			try {
+
 				parent::conectarDB();
+
 				$new = $this->con->prepare("SELECT cod_prove, razon_social FROM proveedor WHERE status = 1");
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -134,8 +145,10 @@
 				$new->bindValue(1, $this->orden);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
+
 				parent::desconectarDB();
 
+ 
 				if(isset($data[0]->orden_compra)){
 					die(json_encode(['resultado' => 'Error de orden', 'error' => 'Orden de compra ya registrada.']));
 				}else{
@@ -177,7 +190,10 @@
 		private function registrarCompras(){
 
 			try{
-				parent::conectarDB();
+
+
+                parent::conectarDB();
+
 				$new = $this->con->prepare("SELECT orden_compra FROM compra WHERE status = 1 AND orden_compra = ?;");
 				$new->bindValue(1, $this->orden);
 				$new->execute();
@@ -198,6 +214,8 @@
 				$this->id = $this->con->lastInsertId();
 				echo json_encode(['resultado' => 'Orden registrada.', 'id' => $this->id]);
 				parent::desconectarDB();
+
+
 
 				die();
 
@@ -223,7 +241,8 @@
 
 			try {
 				parent::conectarDB();
-				
+
+
 				$new = $this->con->prepare('INSERT INTO compra_producto (cod_compra, cod_producto, cantidad, precio_compra) 
 											VALUES (?, ?, ?, ?) ');
 				$new->bindValue(1, $this->id);
@@ -265,12 +284,16 @@
 		private function detalleCompra(){
 			try {
 				parent::conectarDB();
+
 				$new = $this->con->prepare('SELECT cp.cantidad, cp.precio_compra, c.orden_compra, p.descripcion FROM compra_producto cp 
 											INNER JOIN producto p 
 											ON p.cod_producto = cp.cod_producto
 											INNER JOIN compra c 
 											ON c.cod_compra = cp.cod_compra
 											WHERE cp.cod_compra = ?');
+
+				$new = $this->con->prepare('SELECT cp.cantidad, cp.precio_compra, c.orden_compra, p.descripcion FROM compra_producto cp INNER JOIN producto p ON p.cod_producto = cp.cod_producto INNER JOIN compra c ON c.cod_compra = cp.cod_compra WHERE cp.cod_compra = ?');
+
 				$new->bindValue(1, $this->id);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -295,7 +318,10 @@
 
 		private function eliminarCompra(){
 			try {
-				parent::conectarDB();	
+		
+	
+				parent::conectarDB();
+
 				$query="SELECT cp.cod_producto AS producto, cp.cantidad, p.stock FROM compra_producto cp
 						INNER JOIN producto p
 						ON cp.cod_producto = p.cod_producto
@@ -324,7 +350,10 @@
 				$new = $this->con->prepare('UPDATE compra SET status = 0 WHERE cod_compra = ?');
 				$new->bindValue(1, $this->id);
 				$new->execute();
-				parent::desconectarDB();
+
+
+                parent::desconectarDB();
+
 				die(json_encode(['resultado' => 'Compra anulada.']));
 
 			} catch (\PDOException $e) {

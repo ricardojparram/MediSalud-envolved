@@ -107,11 +107,13 @@
                       <div class="form-group col-lg-4">
                         <label class="col-form-label"> <strong>Código de barra</strong> </label>
                         <div class="input-group">
-                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-fill"></i></button> 
-                         <input id="descripcion" class="form-control" placeholder="Ingresar código del producto">
+                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=" codigo_producto "><i class="ri-capsule-fill"></i></button> 
+                         <input id="codigo_producto" class="form-control" placeholder="Ingresar código del producto">
                        </div>
                       <p class="error" id="error1" style="color: red"></p>
                      </div>
+
+                
 
                       <div class="form-group col-lg-4">
                         <label class="col-form-label"> <strong>Descripción del Producto</strong> </label>
@@ -168,6 +170,7 @@
                   <option value="Pasillo 1">Pasillo 1</option>
                   <option value="Pasillo 2">Pasillo 2</option>
                   <option value="Pasillo 3">Pasillo 3</option>
+                  <option value="Pasillo 3">Pasillo 4</option>
 
                 </select>
               </div>
@@ -177,7 +180,6 @@
           </div>
         </div>
       </div>
-
 
       <div class="form-group col-md-12">  
         <div class="container-fluid">
@@ -297,6 +299,15 @@
         </div>
         <p class="error" id="error12" style="color: red"></p> 
       </div>
+       <div class="form-group col-lg-6">
+          <label class="col-form-label"> <strong>Imagen</strong> </label>
+          <div class="input-group">
+          <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=" "><i class="ri-capsule-fill"></i></button> 
+          <input id="" type="text" class="form-control" placeholder="">
+          </div>
+          <p class="error" id="error1" style="color: red"></p>
+        </div>
+
 
     </div>
     </div>

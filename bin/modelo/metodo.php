@@ -9,12 +9,10 @@
     	private $metodo;
       private $id;
       private $idedit;
+      private $check;
 
 
 
-    	function __construct(){
-       parent::__construct();
-     }
      
      public function getAgregarMetodo($metodo){
        if(preg_match_all("/[$%&|<>0-9]/", $metodo) == true){
@@ -32,7 +30,8 @@
 
     private function agregarMetodo(){
      try{
-      $new = $this->con->prepare("INSERT INTO `tipo_pago`(`cod_tipo_pago`, `des_tipo_pago`, `status`) VALUES (DEFAULT,?,1)");
+      parent::conectarDB();
+      $new = $this->con->prepare("INSERT INTO `tipo_pago`(`id_tipo_pago`, `des_tipo_pago`, `online`, `status`) VALUES (DEFAULT,?,0,1)");
 
       $new->bindValue(1 , $this->metodo);
       $new->execute();
@@ -40,9 +39,8 @@
       
       $resultado = ["resultado" => "registrado correctamente"];
       echo json_encode($resultado);
+      parent::desconectarDB();
       die();
-
-
 
       
     }catch(\PDOexection $error){
@@ -50,13 +48,15 @@
     }
 
     }
-    public function getMostrarMetodo(){
+    public function getMostrarMetodo($bitacora = false){
 
       try{
-       $new = $this->con->prepare("SELECT des_tipo_pago, CONCAT('<button type=\"button\" class=\"btn btn-success editar\" id=\"',cod_tipo_pago,'\" data-bs-toggle=\"modal\" data-bs-target=\"#editarModal\"><i class=\"bi bi-pencil\"></i></button> <button id=\"',cod_tipo_pago,'\" type=\"button\" class=\"btn btn-danger borrar\" data-bs-toggle=\"modal\" data-bs-target=\"#delModal\"><i class=\"bi bi-trash3\"></i> </button>') AS opciones  FROM `tipo_pago` WHERE status = 1");
+      parent::conectarDB();
+       $new = $this->con->prepare("SELECT * FROM tipo_pago t WHERE t.status = 1");
        $new->execute();
-       $data = $new->fetchAll();
-      echo json_encode($data);
+       $data = $new->fetchAll(\PDO::FETCH_OBJ);
+       echo json_encode($data);
+      parent::desconectarDB();
       die();
 
 
@@ -76,11 +76,13 @@
     private function eliminarMetodo(){
      
      try{
-      $new = $this->con->prepare("UPDATE `tipo_pago` SET `status` = '0' WHERE `tipo_pago`.`cod_tipo_pago` = ?");
+      parent::conectarDB();
+      $new = $this->con->prepare("UPDATE `tipo_pago` SET `status` = '0' WHERE `id_tipo_pago` = ?");
       $new->bindValue(1,$this->id);
       $new->execute();
       $resultado = ['resultado' => 'Eliminado'];
       echo json_encode($resultado);
+      parent::desconectarDB();
       die();
      } 
      catch (\PDOexception $error) {
@@ -88,47 +90,100 @@
      }
 
     }
+
     public function mostrarunicas($unicas){
       $this->id = $unicas;
 
       $this->unicas();
 
   }
-  private function unicas(){
-    try{
-      $new = $this->con->prepare("SELECT `cod_tipo_pago`, `des_tipo_pago`, `status` FROM `tipo_pago` WHERE cod_tipo_pago = ?");
-      $new->bindValue(1, $this->id);
+
+
+   public function editarOnline($check , $id){
+
+      if(preg_match_all("/^[0-9]{1,10}$/", $check) != 1){
+        echo json_encode(['resultado' => 'Error de check','error' => 'check inválida.']);
+        die();
+      }
+
+      if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+        echo json_encode(['resultado' => 'Error de id','error' => 'id inválida.']);
+        die();
+      }
+
+      $this->id = $id;
+      $this->check = $check;
+
+      $this->editOnline();
+
+   }
+
+   private function editOnline(){
+    try {
+      parent::conectarDB();
+      $new = $this->con->prepare("UPDATE tipo_pago t SET t.online = ? WHERE t.id_tipo_pago = ? ");
+      $new->bindValue(1, $this->check);
+      $new->bindValue(2, $this->id);
       $new->execute();
-      $data = $new->fetchAll();
-      echo json_encode($data);
+
+      $resultado = ['resultado'=> 'check editado'];
+
+      echo json_encode($resultado);
+
+      parent::desconectarDB($resultado);
       die();
-    }catch (\PDOexception $error) {
-return $error;
+      
+    } catch (PDOexception $e) {
+      return $e;
     }
 
+   }
+
+
+
+    private function unicas(){
+      try{
+        parent::conectarDB();
+        $new = $this->con->prepare("SELECT `id_tipo_pago`, `des_tipo_pago`, `status` FROM `tipo_pago` WHERE id_tipo_pago = ?");
+        $new->bindValue(1, $this->id);
+        $new->execute();
+        $data = $new->fetchAll(\PDO::FETCH_OBJ);
+        echo json_encode($data);
+        parent::desconectarDB();
+        die();
+      }catch (\PDOexception $error) {
+       return $error;
+      }
+
   }
-  public function getEditarMetodo($metodo, $unicas){
-    if(preg_match_all("/[$%&|<>0-9]/", $metodo) == true){
-            $resultado = ['resultado' => 'Error de metodo' , 'error' => 'metodo inválido.'];
-            echo json_encode($resultado);
-            die();
+    public function getEditarMetodo($metodo, $unicas){
+      if(preg_match_all("/[$%&|<>0-9]/", $metodo) == true){
+              $resultado = ['resultado' => 'Error de metodo' , 'error' => 'metodo inválido.'];
+              echo json_encode($resultado);
+              die();
+    }
+    $this->metodo = $metodo;
+    $this->idedit = $unicas;
+
+        $this->editarMetodo(); 
+
   }
-  $this->metodo = $metodo;
-  $this->idedit = $unicas;
+  private function editarMetodo(){
+    try{
+  parent::conectarDB();
+  $new = $this->con->prepare("UPDATE `tipo_pago` SET `des_tipo_pago`= ? WHERE id_tipo_pago = ?");
+  $new->bindValue(1, $this->metodo);
+  $new->bindValue(2,$this->idedit);
+  $new->execute();
 
-      $this->editarMetodo(); 
+        
+  $resultado = ['resultado'=> 'Editado'];
+  $this->binnacle("Metodo",$_SESSION['cedula'],"Editó un Valor de metodo.");
+  echo json_encode($resultado);
 
-}
-private function editarMetodo(){
-  try{
-$new = $this->con->prepare("UPDATE `tipo_pago` SET `des_tipo_pago`= ? WHERE cod_tipo_pago = ?");
-$new->bindValue(1, $this->metodo);
-$new->bindValue(2,$this->idedit);
-$new->execute();
+  parent::desconectarDB();
+  die();
 
-$resultado = ['resultado'=> 'Editado'];
-echo json_encode($resultado);
-die();
   }catch(\PDOexception $error){
     return$error;
   }

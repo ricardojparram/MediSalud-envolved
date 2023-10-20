@@ -11,9 +11,9 @@
 	}
 
 	$objModel = new compras();
-	$proveedores = $objModel->mostrarProveedor();
 	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
     $permiso = $permisos['Compras'];
+
 
     if(!isset($permiso['Consultar'])) die(`<script> window.location = "?url=home" </script>`); 
 
@@ -25,9 +25,11 @@
     
 	if(isset($_POST['mostrar']) && isset($_POST['bitacora'])){
 		($_POST['bitacora'] == 'true')
-		? $objModel->mostrarCompras(true)
+		? $objModel->mostrarComprar(true)
 		: $objModel->mostrarComprar();
 	}
+
+  
 	if (isset($_POST['selectM'])&& $permiso['Consultar'] == 1) {
 		$objModel->mostrarMoneda();
 	}

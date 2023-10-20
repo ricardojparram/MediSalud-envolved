@@ -13,7 +13,7 @@
 		private $tipo;
 		private $fechaInicio;
 		private $fechaFinal;
-		private $sql;
+		private string $sql;
 		private $reporte;
 		private $lista;
 		private $sheet;
@@ -24,52 +24,44 @@
 		}
 
 		private function obtenerReporte(){
-			switch ($this->tipo) {
-				case 'compra':
-				$this->sql="SELECT c.orden_compra, p.razon_social, SUM(cp.cantidad) as cantidad, c.fecha,
+			$queries = [
+				"compra" => "SELECT c.orden_compra, p.razon_social, SUM(cp.cantidad) as cantidad, c.fecha,
 							CONCAT(IF(MOD(c.monto_total / cm.cambio, 1) >= 0.5, CEILING(c.monto_total / cm.cambio), FLOOR(c.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa', c.monto_total, m.nombre as 'moneda',
 							IF(MOD(c.monto_total / cm.cambio, 1) >= 0.5, CEILING(c.monto_total / cm.cambio), FLOOR(c.monto_total / cm.cambio) + 0.5) as 'divisa_total'
 							FROM compra c 
-							INNER JOIN compra_producto cp
-								ON cp.cod_compra = c.cod_compra
-							INNER JOIN proveedor p 
-								ON c.cod_prove = p.cod_prove
-							INNER JOIN cambio cm 
-								ON cm.id_cambio = c.cod_cambio
-							INNER JOIN moneda m 
-								ON m.id_moneda = cm.moneda
+							INNER JOIN compra_producto cp ON cp.cod_compra = c.cod_compra
+							INNER JOIN proveedor p ON c.cod_prove = p.cod_prove
+							INNER JOIN cambio cm ON cm.id_cambio = c.id_cambio
+							INNER JOIN moneda m ON m.id_moneda = cm.moneda
 							WHERE c.fecha BETWEEN ? AND ? AND c.status = 1
-							GROUP BY cp.cod_compra ORDER BY c.fecha";
-				break;
-				case 'venta':
-				$this->sql="SELECT v.num_fact, c.cedula, CONCAT(c.nombre,' ',c.apellido) as nombre,
-							v.fecha, CONCAT(IF(MOD(v.monto / cm.cambio, 1) >= 0.5, CEILING(v.monto / cm.cambio), FLOOR(v.monto / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' ,v.monto as 'monto_total', m.nombre as 'moneda',
-							IF(MOD(v.monto / cm.cambio, 1) >= 0.5, CEILING(v.monto / cm.cambio), FLOOR(v.monto / cm.cambio) + 0.5) as 'divisa_total'
-							FROM venta v 
-							INNER JOIN cliente c 
-								ON v.cedula_cliente = c.cedula
-							INNER JOIN cambio cm 
-								ON cm.id_cambio = v.cod_cambio
-							INNER JOIN moneda m 
-								ON m.id_moneda = cm.moneda
-							WHERE v.fecha BETWEEN CONCAT(?, ' 00:00:00') AND CONCAT(?, ' 23:59:59') AND c.status = 1
-							ORDER BY v.fecha";
-				break;
-				
-				default:
-				echo json_encode(['Error' => 'Tipo de reporte inválido.']);
-				break;
-			}
+							GROUP BY cp.cod_compra ORDER BY c.fecha;",
 
+				"venta" => "SELECT v.num_fact, c.cedula, CONCAT(c.nombre,' ',c.apellido) as nombre,
+							v.fecha, CONCAT(IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' ,p.monto_total as 'monto_total', m.nombre as 'moneda',
+							IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5) as 'divisa_total'
+							FROM venta v 
+							INNER JOIN cliente c ON v.cedula_cliente = c.cedula
+                            INNER JOIN pago p ON p.num_fact = v.num_fact
+                            INNER JOIN detalle_pago dp ON p.id_pago = dp.id_pago
+							INNER JOIN cambio cm ON cm.id_cambio = dp.id_cambio
+							INNER JOIN moneda m ON m.id_moneda = cm.moneda
+							WHERE v.fecha BETWEEN CONCAT(?, ' 00:00:00') AND CONCAT(?, ' 23:59:59') AND c.status = 1
+							ORDER BY v.fecha",
+				"error" => ["resultado"=>"error", "msg" => "Tipo de reporte inválido."]
+			];
+
+			if(!isset($queries[$this->tipo])) die(json_encode($queries["error"]));
+			$this->sql = $queries[$this->tipo];
 
 			try {
-
+				$this->conectarDB();
 				$new = $this->con->prepare($this->sql);
 				$new->bindValue(1, $this->fechaInicio);
 				$new->bindValue(2, $this->fechaFinal);
 				$new->execute();
 
 				$reporte = $new->fetchAll();
+				$this->desconectarDB();
 				return $reporte;
 
 			} catch (\PDOException $e) {
@@ -87,9 +79,10 @@
 
 		private function mostrarReporte(){
 			$this->reporte = $this->obtenerReporte();	
-			echo json_encode($this->reporte);
+			$this->conectarDB();
 			$this->binnacle("Reporte",$_SESSION['cedula'], "Genero reporte de ".$this->tipo);
-			die();
+			$this->desconectarDB();
+			die(json_encode($this->reporte));
 
 		}
 
@@ -160,9 +153,10 @@
 			$pdf->Output('F',$repositorio);
 			
 			$respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
-			echo json_encode($respuesta);
+			$this->conectarDB();
 			$this->binnacle("Reporte",$_SESSION['cedula'], "Exportó reporte de ".$this->tipo);
-			die();
+			$this->desconectarDB();
+			die(json_encode($respuesta));
 		}
 
 		public function getReporteEstadistico($tipo, $fecha1, $fecha2){
@@ -290,7 +284,7 @@
 			];
 
 			$this->sheet->setCellValue('J5', "Suma total:");
-			$this->sheet->setCellValue('K5', "=SUM(H5:{$lastRow})");
+			$this->sheet->setCellValue('K5', "=SUM(H5:H{$lastRow})");
 			$this->sheet->setCellValue('J6', "Promedio monto total:");
 			$this->sheet->setCellValue('K6', "=AVERAGE(H5:H{$lastRow})");
 

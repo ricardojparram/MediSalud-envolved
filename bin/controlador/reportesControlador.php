@@ -15,18 +15,20 @@
 	$header = new header();
 	$menu = new menuLateral($permisos);
 
-	if(isset($_POST['getPermisos']) && $permiso->status == 1){
+	if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
+
+	if(isset($_POST['getPermisos'], $permiso['Consultar'])){
 		die(json_encode($permiso));
 	}
 
 
-	if(isset($_POST['mostrar'], $_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']) && $permiso->consultar == 1){
+	if(isset($_POST['mostrar'], $_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal'], $permiso["Consultar"])){
 		$objModel->getMostrarReporte($_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']);
 	}
-	if(isset($_POST['exportar'], $_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']) && $permiso->consultar == 1){
+	if(isset($_POST['exportar'], $_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal'], $permiso["Exportar reporte"])){
 		$objModel->getExportar($_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']);
 	}
-	if(isset($_POST['estadistico'], $_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']) && $permiso->consultar == 1){
+	if(isset($_POST['estadistico'], $_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal'], $permiso["Exportar reporte estadistico"])){
 		$objModel->getReporteEstadistico($_POST['tipo'], $_POST['fechaInicio'], $_POST['fechaFinal']);
 	}
 

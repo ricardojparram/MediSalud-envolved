@@ -91,7 +91,9 @@
 
 		private function validarC(){
 			try{
+
 				parent::conectarDB();
+
 				$new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
 				$new->bindValue(1, $this->cedula);
 				$new->execute();

@@ -28,6 +28,7 @@ class clase extends DBConnect{
 
     private function agregarClase(){
     	try {
+            parent::conectarDB();
     		$new = $this->con->prepare("INSERT INTO `clase`(`cod_clase`, `des_clase`, `status`) VALUES (DEFAULT,?,1)");
     		$new->bindValue(1, $this->clase);
             $new->execute();
@@ -35,6 +36,7 @@ class clase extends DBConnect{
 
             $resultado = ['resultado' => 'Registrado correctamente.'];
               echo json_encode($resultado);
+               parent::desconectarDB();
               die();
     	} catch (\PDOException $error) {
     		return $error;
@@ -43,11 +45,13 @@ class clase extends DBConnect{
 
     public function mostrarClase(){
     	try {
-    		$query = "SELECT des_clase, CONCAT('<button type=\"button\" class=\"btn btn-success editar\" id=\"',cod_clase,'\" data-bs-toggle=\"modal\" data-bs-target=\"#editModal\"><i class=\"bi bi-pencil\"></i></button> <button type=\"button\" class=\"btn btn-danger borrar\" id=\"',cod_clase,'\" data-bs-toggle=\"modal\" data-bs-target=\"#delModal\"><i class=\"bi bi-trash3\"></i></button>') AS opciones FROM clase WHERE status = 1";
+            parent::conectarDB();
+    		$query = "SELECT * FROM clase c WHERE c.status = 1";
             $new = $this->con->prepare($query);
             $new->execute();
-            $data = $new->fetchAll();
+            $data = $new->fetchAll(\PDO::FETCH_OBJ);
             echo json_encode($data);
+            parent::desconectarDB();
             die();
     	} catch (\PDOException $error) {
     		return $error;
@@ -63,11 +67,13 @@ class clase extends DBConnect{
 
     private function eliminarClase(){
     	try {
+            parent::conectarDB();
     		$new = $this->con->prepare("UPDATE `clase` SET `status`= 0 WHERE cod_clase = ?"); //
             $new->bindValue(1, $this->id);
             $new->execute();
             $resultado = ['resultado' => 'Eliminado'];
             echo json_encode($resultado);
+            parent::desconectarDB();
             die();
     	} catch (\PDOException $error) {
     		return $error;
@@ -82,11 +88,13 @@ class clase extends DBConnect{
 
     private function item(){
     	try {
+            parent::conectarDB();
     		$new = $this->con->prepare("SELECT * FROM clase WHERE cod_clase = ?");
             $new->bindValue(1, $this->id);
             $new->execute();
             $data = $new->fetchAll(\PDO::FETCH_OBJ);
             echo json_encode($data);
+            parent::desconectarDB();
             die();
     	}catch (\PDOException $error) {
     		return $error;
@@ -108,6 +116,7 @@ class clase extends DBConnect{
 
     private function editarClase(){
     	try {
+            parent::conectarDB();
     		$new = $this->con->prepare("UPDATE `clase` SET `des_clase`= ? WHERE `cod_clase` = ?");
     		$new->bindValue(1, $this->clase);
     		$new->bindValue(2, $this->idEdit);
@@ -116,6 +125,7 @@ class clase extends DBConnect{
 
             $resultado = ['resultado' => 'Editado correctamente.'];
               echo json_encode($resultado);
+              parent::desconectarDB();
               die();
     	} catch (\PDOException $error) {
     		return $error;

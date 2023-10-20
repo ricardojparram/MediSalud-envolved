@@ -15,23 +15,16 @@
 
 	 if(!isset($permiso['Consultar'])) die(`<script> window.location = "?url=home" </script>`); 
 
-     $clase = $objModel->mostrarClase();
 
      if(isset($_POST['getPermisos'])&& $permiso['Consultar'] ==1){
     	die(json_encode($permiso));
     }
-    
-    if(isset($_POST["mostrar"]) && insset($_POST['bitacora'])){
-		($_POST['bitacora'] == 'true')
-		? $objModel->mostrarClase(true)
-		: $objModel->mostrarClase();
-	}
 
 	if(isset($_POST["clase"]) && $permiso['Registrar'] == 1) {
 		$objModel->getAgregarClase($_POST["clase"]);
 	}
 
-	if(isset($_POST["mostrar"]) && $permiso['Consultar'] == 1) {
+	if(isset($_POST["mostrar"]) && isset($_POST['bitacora']) && $permiso['Consultar'] == 1) {
 		$objModel->mostrarClase();
 	}
 

@@ -1,25 +1,49 @@
 $(document).ready(function(){
 
-  let tabla;
-  rellenar();
+    let mostrar;
+    let permiso , editarPermiso , eliminarPermiso, registrarPermiso;
 
-  function rellenar(){
-    $.ajax({
-      type:"POST",
-      url:'',
-      dataType: 'json',
-      data:{mostrar:'xd'},
-      success(sol){
-        console.log(sol);
-        tabla = $("#tabla").DataTable({
-          responsive: true,
-          data:sol
-        });
-      }
+     $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos : "permiso"},
+        success(data){ permiso = data; }
+
+      }).then(function(){
+        rellenar(true);
+        registrarPermiso = (permiso.registrar != 1)? 'disable' : '';
+        $('#agregarModal').attr(registrarPermiso, '');
     })
-  }
-  $("#tipo").keyup(()=> { validarString($("#tipo"),$("#error"),"Error de tipo de pago") });
 
+ 
+  function rellenar(bitacora = false){
+   $.ajax({
+    type: "POST",
+    url: "",
+    dataType: "json",
+    data: {mostrar: "metodo" , bitacora},
+    success(data){
+      let tabla;
+      data.forEach(row =>{
+          editarPermiso = (permiso.editar != 1)?  'disable' : '';
+          eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
+          check = (row.online == 1)? 'checked' : '';
+           
+        tabla += `
+        <tr>
+        <td>${row.des_tipo_pago}</td>
+        <td> <input class="form-check-input boton" type="checkbox" ${check} id="${row.id_tipo_pago}"></td>
+        <td class="d-flex justify-content-center">
+        <button type="button" ${editarPermiso} id="${row.id_tipo_pago}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="bi bi-pencil"></i></button>
+        <button type="button" ${eliminarPermiso} id="${row.id_tipo_pago}" class="btn btn-danger borrar mx-2" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi bi-trash3"></i></button>
+        </td>
+        </tr>
+        `;
+      })
+       $('#tbody').html(tabla);
+        mostrar = $('#tabla').DataTable({
+          resposive : true
+        })
+    }
+   })
+  }
   let ytipo;
   $("#enviar").click((e)=>{
 
@@ -37,9 +61,9 @@ $(document).ready(function(){
           metodo:$("#tipo").val()
         },
         success(data){
-          console.log(ytipo);
-          if (ytipo == true) {
-            tabla.destroy();
+          console.log(data.resultado);
+          if (data.resultado == 'registrado correctamente') {
+            mostrar.destroy();
             $("#close").click();
             Toast.fire({ icon: 'success', title: 'metodo de pago registrado' });
             rellenar();
@@ -67,13 +91,13 @@ $("#cerrarRegis, #cerrar").click(()=>{
       url:'',
       dataType:'json',
       data:{
-        eliminar:'cualquier cosa',
+        eliminar:'eliminar',
         id
       },
       success(elba){
         if (elba.resultado === "Eliminado"){
           $("#closeModal").click();
-          tabla.destroy();
+          mostrar.destroy();
           Toast.fire({icon: 'error', title: 'Tipo de pago eliminado'})
           rellenar();
 
@@ -82,6 +106,31 @@ $("#cerrarRegis, #cerrar").click(()=>{
         }
       }
     })
+  })
+ 
+  let checkbox , value;
+
+  $(document).on('click', '.boton' , function(){
+    
+    checkbox = this.id;
+    isChecked = this.checked;
+
+    check = isChecked ? 1 : 0;
+
+    $.ajax({
+      type: 'POST',
+      url: '',
+      dataType: 'json',
+      data:{check , id: checkbox},
+      success(data){
+        if (data.resultado == 'check editado'){
+          mostrar.destroy();
+          Toast.fire({ icon: 'success', title: 'online editado'});
+          rellenar();
+        }
+      }
+    })
+
   })
 
 
@@ -124,8 +173,8 @@ $("#cerrarRegis, #cerrar").click(()=>{
       },
       success(data){
         console.log(ctipo);
-        if (ctipo == true) {
-          tabla.destroy();
+        if (data.resultado == 'Editado') {
+          mostrar.destroy();
           $("#closeEdit").click();
           Toast.fire({ icon: 'success', title: 'Tipo de cambio registrado'});
           rellenar();

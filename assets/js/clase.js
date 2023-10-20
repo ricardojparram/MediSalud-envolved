@@ -1,6 +1,48 @@
 $(document).ready(function(){
-	rellenar();
-	let mostrar;
+
+		let mostrar;
+	    let permiso , editarPermiso , eliminarPermiso, registrarPermiso;
+
+	     $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos : "permiso"},
+	        success(data){ permiso = data; }
+
+	      }).then(function(){
+	        rellenar(true);
+	        registrarPermiso = (permiso.registrar != 1)? 'disable' : '';
+	        $('.agregarModal').attr(registrarPermiso, '');
+	    })
+
+			function rellenar(bitacora = false){
+			$.ajax({
+				type: "post",
+				url: "",
+				dataType: "json",
+				data: {mostrar: "labs" , bitacora},
+				success(data){
+			      let tabla;
+			      data.forEach(row =>{
+			          editarPermiso = (permiso.editar != 1)?  'disable' : '';
+			          eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
+
+			        tabla += `
+			        <tr>
+			        <td>${row.des_clase}</td>
+			        <td class="d-flex justify-content-center">
+			        <button type="button" ${editarPermiso} id="${row.cod_clase}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
+			        <button type="button" ${eliminarPermiso} id="${row.cod_clase}" class="btn btn-danger borrar mx-2" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi bi-trash3"></i></button>
+			        </td>
+			        </tr>
+			        `;
+			      })
+			       $('#tbody').html(tabla);
+			        mostrar = $('#tabla').DataTable({
+			          resposive : true
+			        })
+				}
+			})
+		}
+
+
 	$("#clase").keyup(()=> {  validarNombre($("#clase"),$("#error"), "Error de clase,") });
 	let vclase
 	$("#enviar").click((e)=>{
@@ -25,21 +67,6 @@ $(document).ready(function(){
 		})
 	}
 	})
-
-	function rellenar(){
-		$.ajax({
-			type: "post",
-			url: "",
-			dataType: "json",
-			data: {mostrar: "labs" },
-			success(list){
-				mostrar = $('#tabla').DataTable({
-					responsive: true,
-					data: list
-				})
-			}
-		})
-	}
 
 	$("#cerrarRegist").click(()=>{
  	$("#basicModal input").attr("style","borde-color:none; backgraund-image: none;");
