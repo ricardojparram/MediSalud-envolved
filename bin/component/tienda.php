@@ -50,7 +50,7 @@
 
               <div class="mx-2 mx-lg-0 sec">
                 <div class="m-0 ">
-                  <a class="text-success icon-car me-4" href="#">
+                  <a class="text-success icon-car me-4" href="?url=carrito">
                     <em class="ocultarlg">Carrito </em>
                     <span class="bi bi-cart4 fs-4"></span>
                     <span id="carrito_badge" class="badge badge-light icon-badge">0</span>

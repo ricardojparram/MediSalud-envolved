@@ -17,13 +17,15 @@
 
   public function mostrarCatalogo(){
   	try {
-  		$query = 'SELECT `cod_producto`,`descripcion` ,`stock`, `p_venta` FROM `producto` WHERE status = 1 and stock != 0 LIMIT 4';
 
+  		$query = 'SELECT `cod_producto`,`descripcion` ,`stock`, `p_venta` FROM `producto` WHERE status = 1 and stock != 0 LIMIT 4';
+        $this->conectarDB();
   		$new = $this->con->prepare($query); 
   		$new->execute();
   		$data = $new->fetchAll(\PDO::FETCH_OBJ);
-  		echo json_encode($data);
-  		die();
+        $this->desconectarDB();
+  		die(json_encode($data));
+
   	} catch (\PDOException $e) {
   		die($e);
   	}
@@ -46,13 +48,13 @@
   private function rellenarD(){
   	try {
   		$query = 'SELECT `cod_producto`,`descripcion` ,`stock`, `p_venta`, `vencimiento` FROM `producto` WHERE status = 1 and stock != 0 and cod_producto = ?';
-
+        $this->conectarDB();
   		$new = $this->con->prepare($query); 
   		$new->bindValue(1,  $this->id_producto);
   		$new->execute();
   		$data = $new->fetchAll(\PDO::FETCH_OBJ);
-  		echo json_encode($data);
-  		die();
+        $this->desconectarDB();
+  		die(json_encode($data));
 
   	} catch (\PDOException $e) {
   		die($e);
@@ -70,11 +72,12 @@
   private function validarStock(){
 
     try {
-        
+        $this->conectarDB();
         $new = $this->con->prepare("SELECT stock FROM producto WHERE cod_producto = ?");
         $new->bindValue(1,  $this->id_producto);
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
+        $this->desconectarDB();
         die(json_encode($data[0]));
 
     } catch (\PDOException $e) {
@@ -94,7 +97,7 @@
   private function agregarAlCarrito(){
 
     try {
-
+        $this->conectarDB();
         $new = $this->con->prepare("SELECT cod_producto FROM carrito WHERE cod_producto = ? AND cedula = ?");
         $new->bindValue(1, $this->id_producto);
         $new->bindValue(2, $this->user);
@@ -121,7 +124,8 @@
         $new->bindValue(3, $this->cantidad);
         $new->bindValue(4, $precio);
         $new->execute();
-
+        
+        $this->desconectarDB();
         $resultado = ['resultado' => true, "msg" => "Se ha agregado el producto al carrito."];
         die(json_encode($resultado));
         

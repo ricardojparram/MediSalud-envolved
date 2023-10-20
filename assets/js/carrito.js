@@ -10,7 +10,7 @@ $(document).ready(function(){
 			confirmarEliminar();
 		})
 	}
-
+	
 	async function mostrarCarrito(){
 		await $.ajax({method: 'POST',dataType: 'json',url: '?url=carrito',
 			data: {mostrar:'', carrito:''},
@@ -68,7 +68,7 @@ $(document).ready(function(){
 			            `
 			            productos.push({id_producto: row.cod_producto, cantidad: row.cantidad});
 					}
-
+					actualizarBadge(productos.length);
 					$('.carrito-container').html(div);
 					$('#precioTotal').html(precioTotal);
 					validarStock(productos);
@@ -179,6 +179,12 @@ $(document).ready(function(){
 			id = $(this).attr('prod');
 		})
 	}
+	
+	function actualizarBadge($cantidad){
+		badge = $('#carrito_badge');
+		badge.html($cantidad)
+	}
+
 
 	$('#delProductFromCar').click(function(){
 		
@@ -198,6 +204,44 @@ $(document).ready(function(){
 		})
 
 	})
+
+	// $('#añadirAlCarrito').click(function(){
+	// 		input = $('#catalogoCantidadInput');
+	// 		cantidad = Number(input.val());
+	// 		error = $('#errorCantidadCatalogo');
+
+	// 		if(validarVC(input, error, 'Error,') != true){
+	// 			error.css({display: 'block'});
+	// 			return
+	// 		}else{
+	// 			error.css({display: 'none'});
+	// 		}
+
+	// 		validarStock(id).then((res) => {
+	// 			if(!res) return;
+
+	// 			$.ajax({ url: '', type: 'post', dataType: 'json',
+	// 				data: {añadirCarrito:'', id, cantidad},
+	// 				success(res){
+	// 					if(res.resultado === true){
+	// 						$('.cerrar').click();
+	// 						carrito.refrescar();
+	// 						Toast.fire({ icon: 'success', title: 'Se ha añadido el producto al carrito.'});
+	// 					}else{
+	// 						$('.cerrar').click();
+	// 						Toast.fire({ icon: 'error', title: res.msg});
+	// 					}
+	// 				},
+	// 				error: (e) => {
+	// 					$('.cerrar').click();
+	// 					Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.'});
+	// 				}
+
+	// 			})
+				
+	// 		})
+
+	// 	})
 
 	$('.vaciar').click(function(e){
 		e.preventDefault();

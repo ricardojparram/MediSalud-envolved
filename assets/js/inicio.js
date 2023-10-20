@@ -3,11 +3,7 @@ $(document).ready(function(){
 	mostrarCatalogo()
 
 	function mostrarCatalogo(){
-		$.ajax({
-			type: 'POST',
-			url: '',
-			dataType: 'json',
-			data: {mostraC: 'XD' },
+		$.ajax({type: 'POST',url: '',dataType: 'json',data:{mostraC: ''},
 			success(data){
 			let mostrar = '';
             data.forEach(row =>{
@@ -56,11 +52,7 @@ $(document).ready(function(){
 	$(document).on('click' , '.mostrarC' , function(){
      id = this.id;
      
-     $.ajax({
-     	type: 'POST',
-     	url: '',
-     	dataType: 'json',
-     	data: {mostraProductos: 'mostrar', id },
+     $.ajax({type: 'POST',url: '',dataType: 'json',data: {mostraProductos: '', id },
      	success(data){
      		producto = data[0];
         	let datos;
