@@ -29,9 +29,7 @@
       : $objModel->mostrarBank();
      }
 
-     if (isset($_POST['selectBanco']) && $permiso['Consultar'] == 1) {
-      $objModel->datosBanco();
-    }
+      $datosBanco = $objModel->datosBanco();
 
      if (isset($_POST['selecTipoPago']) && $permiso['Consultar'] == 1) {
      	$objModel->selecTipoPago();
@@ -41,8 +39,8 @@
       $objModel->validarTipoP($_POST['id']);
      }
 
-     if(isset($_POST['tipoP']) && isset($_POST['nombre']) && isset($_POST['cedulaRif']) && isset($_POST['id']) &&  isset($_POST['validarD']) && $permiso['Consultar'] == 1 ){
-      $objModel->ValidarDatos($_POST['tipoP'] , $_POST['nombre'] , $_POST['cedulaRif'] , $_POST['id']);
+     if(isset($_POST['tipoP']) && isset($_POST['tipo']) && isset($_POST['cedulaRif']) && isset($_POST['id']) &&  isset($_POST['validarD']) && $permiso['Consultar'] == 1 ){
+      $objModel->ValidarDatos($_POST['tipoP'] , $_POST['tipo'] , $_POST['cedulaRif'] , $_POST['id']);
      }
 
      if (isset($_POST['data']) && isset($_POST['registro']) && $permiso['Registrar'] == 1) {
