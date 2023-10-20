@@ -1,11 +1,6 @@
 -- INSERTA LOS NIVELES DE USUARIO 
 INSERT INTO rol(nombre, status) VALUES ('Administrador', '1'), ('Gerente', '1'), ('Empleado', '1'), ('Cliente', '1');
 
--- INSERTA LOS PRODUCTOS
--- INSERT INTO producto (cod_producto, descripcion, composicion, contraindicaciones, ubicacion, posologia, stock, p_venta, vencimiento, status) VALUES
--- (1, 'Paracetamol', 'asdjgjdsag', 'sjdgjadsg', 'jsdgjdsg', 'jsdajdasg', '10', '5', '2023-01-25', 1),
--- (2, 'Acetominafen', 'asdjgjadsg', 'jsadjasdg', 'jsadjadsg', 'sajdadjsg', '8', '6', '2023-01-02', 1),
--- (3, 'Ibuprofeno', 'jadsjadsg', 'asjdjgds', 'jasdjgds', 'jasdgjds', '20', '9', '2023-01-16', 1);
 
 -- INSERTA USUARIO ADMIN
 

@@ -52,7 +52,7 @@
           </div>
 
           <div class="col-6 text-end mt-3">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#basicModal">Agregar</button>
+            <button type="button" class="btn btn-success agregarModal" data-bs-toggle="modal" data-bs-target="#basicModal">Agregar</button>
           </div>
         </div>
 
@@ -150,7 +150,7 @@
             </thead>
 
 
-            <tbody>
+            <tbody id="tbody">
 
             </tbody>
           </table>

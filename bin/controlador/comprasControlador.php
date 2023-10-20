@@ -14,20 +14,22 @@
 	$permisos = $objModel->getPermisosRol($_SESSION['nivel']);
     $permiso = $permisos['Compras'];
 
-     if(!isset($permiso['Consultar'])) die(`<script> window.location = "?url=home" </script>`);
 
-     $proveedores = $objModel->mostrarProveedor();
+    if(!isset($permiso['Consultar'])) die(`<script> window.location = "?url=home" </script>`); 
 
-    if (isset($_POST['getPermisos']) && $permiso['Consultar'] == 1) {
-        die(json_encode($permiso));
-      }
+    $proveedores = $objModel->mostrarProveedor();
+  
+    if(isset($_POST['getPermisos'])&& $permiso['Consultar'] ==1){
+    	die(json_encode($permiso));
+    }
+    
+	if(isset($_POST['mostrar']) && isset($_POST['bitacora'])){
+		($_POST['bitacora'] == 'true')
+		? $objModel->mostrarCompras(true)
+		: $objModel->mostrarCompras();
+	}
 
-      if(isset($_POST['mostrar']) && isset($_POST['bitacora'])){
-      	($_POST['bitacora'] == 'true')
-      	? $objModel->mostrarCompras(true)
-      	: $objModel->mostrarCompras();
-      }
-
+  
 	if (isset($_POST['selectM'])&& $permiso['Consultar'] == 1) {
 		$objModel->mostrarMoneda();
 	}

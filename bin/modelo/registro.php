@@ -125,7 +125,9 @@
 
       private function validarC(){
         try{
+
           parent::conectarDB();
+
           $new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
           $new->bindValue(1, $this->cedula);
           $new->execute();
@@ -134,7 +136,11 @@
           if(isset($data[0]['cedula'])){
             $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
             echo json_encode($resultado);
+
+            parent::desconectarDB();
+
              parent::desconectarDB();
+
             die();
           }
 
