@@ -211,10 +211,10 @@ $(document).ready(function() {
 	// Validicaiones Segundo Step
 
 
-	$("#calle").keyup(()=> {  validarDireccion($("#calle"),$("#errorCalle"), "Error de Calle,") });
-	$("#numAv").keyup(()=> {  validarDireccion($("#numAv"),$("#errorNumAv"), "Error de Avenida,") });
-	$("#numCasa").keyup(()=> {  validarDireccion($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") });
-	$("#ref").keyup(()=> {  validarDireccion($("#ref"),$("#errorRef"), "Error de Referencia,") });
+	$("#calle").keyup(()=> {  validarString($("#calle"),$("#errorCalle"), "Error de Calle,") });
+	$("#numAv").keyup(()=> {  validarString($("#numAv"),$("#errorNumAv"), "Error de Avenida,") });
+	$("#numCasa").keyup(()=> {  validarString($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") });
+	$("#ref").keyup(()=> {  validarString($("#ref"),$("#errorRef"), "Error de Referencia,") });
 	$("#empresa").change(()=> {  validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,") });
 	$("#sede").change(()=> {  validarSelect($("#sede"),$("#errorSede"), "Error de Sede,") });
 
@@ -228,10 +228,10 @@ $(document).ready(function() {
 
 		switch (idGlass) {
 			case "repartidor":
-				calle = validarDireccion($("#calle"),$("#errorCalle"), "Error de Calle,");
-				avenida = validarDireccion($("#numAv"),$("#errorNumAv"), "Error de Avenida,");
-				numCasa = validarDireccion($("#numCasa"),$("#errorNumCasa"), "Error de Casa,");
-				referencia = validarDireccion($("#ref"),$("#errorRef"), "Error de Referencia,");
+				calle = validarString($("#calle"),$("#errorCalle"), "Error de Calle,");
+				avenida = validarString($("#numAv"),$("#errorNumAv"), "Error de Avenida,");
+				numCasa = validarString($("#numCasa"),$("#errorNumCasa"), "Error de Casa,");
+				referencia = validarString($("#ref"),$("#errorRef"), "Error de Referencia,");
 				
 				if (calle && avenida && numCasa && referencia) {
 	 				next_step = true;
@@ -271,7 +271,7 @@ $(document).ready(function() {
 							  <option></option>
 							</select>
 						  </td>
-						  <td width='15%' class=""><input class="select-asd precio-tipo" type="number" placeholder="0,00"></td>
+						  <td width='15%' class="precio"><input class="select-asd precio-tipo" type="number" placeholder="0,00"></td>
 						</tr>`;
 	  
 	// Caracteriticas de la fila Tipo Pago
@@ -279,6 +279,7 @@ $(document).ready(function() {
 		$('#FILL').append(newRowTipo);
 		selectTipoPago();
 		validarRepetido();
+		validarValores();
 	}
 	// Agregar fila para insertar tipo de pago
 	$('.newRowPago').on('click',function(e){
@@ -544,12 +545,110 @@ $(document).ready(function() {
 			
 	// }
 
+	function validarPrecio(input){
+		let valor = input.val();
+		if(valor <= 0 || isNaN(valor)){
+		  $('#error3').text('Precio inválido.');
+		  input.css({'border': 'solid 1px', 'border-color':'red'})
+		  input.attr('valid','false')
+		  return false;
+		}else{
+		  $('#error3').text('');
+		  input.css({'border': 'none'});
+		  input.attr('valid','true');
+		  return true;
+		}
+	  }
+	  validarRepetido();
+	  validarValores();
+	  function validarValores(){
+		$('.precio input').keyup(function(){ validarPrecio($(this)) });
+	  }
+
 	$("#tipoP").change(()=> {  validarSelect($("#tipoP"),$("#errorTipoP"), "Error de Tipo,") });
 	$("#bancTipo").change(()=> {  validarSelect($("#bancTipo"),$("#errorBancTipo"), "Error de Banco,") });
+	
+	$("#bancTipoT").change(()=> {validarSelect($("#bancTipoT"),$("#errorBancTipoT"), "Error de Banco,")});
+	$("#referenciaTrans").change(()=> {validarNumero($("#referenciaTrans"),$("#errorReferenciaTrans"), "Error de Referencia,")});
+	$("#bancTipoRT").change(()=> {validarSelect($("#bancTipoRT"),$("#errorBancTipoRT"), "Error de Banco,")});
+
+	$("#bancTipoM").change(()=> {validarSelect($("#bancTipoM"),$("#errorBancTipo"), "Error de Banco,")})
+	$("#referenciaMovil").change(()=> {validarNumero($("#referenciaMovil"),$("#errorReferenciaMovil"), "Error de Referencia,")})
+	$("#bancTipoRM").change(()=> {validarSelect($("#bancTipoRM"),$("#errorbancTipoRM"), "Error de Banco,")})
 	let direcE
 	
-
+	
 	$("#3").click((e)=>{
+		let valid = false
+		let vtipoPago = true
+		let vprecio = true
+		let empresa, sede, calle, avenida, numCasa, referencia
+
+		let direccion = validarDireccion($("#direcClien"),$("#errorDirec"), "Error de Direccion,") ;
+		let correo = validarCorreo($("#emailClien"),$("#errorEmail"), "Error de Correo,") ;
+		let telefono = validarTelefono($("#teleClien"),$("#errorTele"), "Error de Telefono,") ;
+		let cedula = validarCedula($("#cedClien"),$("#errorCed"), "Error de Cedula,") ;
+	 	let nombre = validarNombre($("#nomClien"),$("#errorNomApe"), "Error de Nombre,") ;
+
+		 switch (idGlass) {
+			case "repartidor":
+				calle = validarString($("#calle"),$("#errorCalle"), "Error de Calle,");
+				avenida = validarString($("#numAv"),$("#errorNumAv"), "Error de Avenida,");
+				numCasa = validarString($("#numCasa"),$("#errorNumCasa"), "Error de Casa,");
+				referencia = validarString($("#ref"),$("#errorRef"), "Error de Referencia,");
+				
+				if (calle && avenida && numCasa && referencia) {
+					valid = true;
+	 			}else{
+					valid = false;
+	 			}
+				$("#empresa, #sede").val(" ")
+				break;
+			case "nacional":
+				empresa = validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,");
+				sede = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+
+				if (empresa && sede) {
+					valid = true;
+				}else{
+					valid = false;
+				}
+				$("#calle, #numAv, #numCasa, #ref").val(" ")	
+				break;
+
+			case "persona":
+
+				valid = true;
+				$("#empresa, #sede").val(" ")
+				$("#calle, #numAv, #numCasa, #ref").val(" ")
+				break;
+				
+			default:
+				valid = false;
+				break;
+		}
+
+		$('#FILL tr').each(function(){
+			let tipoPago = $(this).find('.select-tipo').val();
+			if(tipoPago == "" || tipoPago == null){
+				$(this).attr('style', 'border-color: red;')
+				$(this).attr('valid', 'false');
+				vtipoPago = false;
+				$('#error3').text('No debe haber tipo de pagos vacíos.')
+			}
+		})
+		
+
+		$('.precio input').each(function(){ let valPre = validarPrecio($(this)) 
+			if (!valPre) {
+				vprecio = false
+			}
+		});
+
+
+		
+
+		
 
 		let push = []
 
@@ -563,21 +662,41 @@ $(document).ready(function() {
 
 
 		let tipVal
+		let movil = true
+		let trans = true
+
+		$(".trans input, .trans select").attr('style', 'border-coler: none');
+		$(".movil input, .movil select").attr('style', 'border-coler: none');
+		$(".trans p").text("");
+		$(".movil p").text("");
+
 		$('.select-tipo').each(function(i) {
 			tipVal = $(this).closest('tr')
 			switch (tipVal.find("select").val()) {
 				case "4":
-			
+					let cep = validarSelect($("#bancTipoM"),$("#errorBancTipo"), "Error de Banco,") ;
+					let nao = validarNumero($("#referenciaMovil"),$("#errorReferenciaMovil"), "Error de Referencia,") ;
+					let nin = validarSelect($("#bancTipoRM"),$("#errorbancTipoRM"), "Error de Banco,") ;
+					if(!cep || !nao || !nin){
+						movil = false
+					}
+
 					push[i] = {tipo: tipVal.find("select").val(), monto: tipVal.find(".precio-tipo").val(), bancoReceptor: datosMovil, referencia: $("#referenciaMovil").val(), bancoEmisor: $("#bancTipoRM").val(), cambio: cambio};
 				break;
 				case "5":
-	
+					let poa = validarSelect($("#bancTipoT"),$("#errorBancTipoT"), "Error de Banco,") ;
+					let bro = validarNumero($("#referenciaTrans"),$("#errorReferenciaTrans"), "Error de Referencia,") ;
+					let nen = validarSelect($("#bancTipoRT"),$("#errorBancTipoRT"), "Error de Banco,") ;
+					if(!poa || !bro || !nen){
+						trans = false
+					}
+
 					push[i] = {tipo: tipVal.find("select").val(), monto: tipVal.find(".precio-tipo").val(), bancoReceptor: datosTrans, referencia: $("#referenciaTrans").val(), bancoEmisor: $("#bancTipoRT").val(), cambio: cambio};
 				break;
 			
 				default:
 
-					push[i] = {tipo: tipVal.find("select").val(), monto: tipVal.find(".precio-tipo").val(), bancoReceptor: null, referencia: null, bancoEmisor: null, cambio: cambio};
+					push[i] = {tipo: tipVal.find("select").val(), monto: tipVal.find(".precio-tipo").val(), bancoReceptor: " ", referencia: " ", bancoEmisor: " ", cambio: cambio};
 					break;
 			}
 	
@@ -586,30 +705,45 @@ $(document).ready(function() {
 		})
 			console.log(push)
 		
-
-		$.ajax({
-			url: '',
-				method: 'POST',
-				dataType: 'json',
-				data:{
-					cedula: memas[0].cedula,
-					nombre: memas[0].nombre,
-					apellido: memas[0].apellido,
-					direccion: $("#direcClien").val(),
-					telefono: $("#teleClien").val(),
-					correo: $("#emailClien").val(),
-
-					sede: $("#sede").val(),
-
-					direccion: direcE,
-					detalles: push
-		
-		
-				},
-				success(final){
-					console.log(final)
-				}
-		})
+		if(nombre && direccion && telefono && cedula && correo && movil && trans && valid && vtipoPago && vprecio){
+			$.ajax({
+				url: '',
+					method: 'POST',
+					dataType: 'json',
+					data:{
+						cedula: memas[0].cedula,
+						nombre: memas[0].nombre,
+						apellido: memas[0].apellido,
+						direccion: $("#direcClien").val(),
+						telefono: $("#teleClien").val(),
+						correo: $("#emailClien").val(),
+	
+						sede: $("#sede").val(),
+	
+						direccion: direcE,
+						detalles: push
+			
+			
+					},
+					success(final){
+						if (final.resultado === "Registrado Pedido") {
+							Swal.fire({
+								title: 'Compra Realizada',
+								text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
+								icon: 'success',
+							  })
+							  setTimeout(function(){
+								location = '?url=inico'
+							  }, 2500);
+						} else {
+                			Toast.fire({ icon: 'error', title: 'No fue Posible el Registro' })
+						}
+					}
+			})
+			
+		}else{
+			
+		}
 
 
 	})
