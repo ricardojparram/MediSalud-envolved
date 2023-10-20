@@ -49,7 +49,7 @@ $(document).ready(function(){
 						let hr = (i == response.length - 1) ? '' : '<hr class="my-2">';
 						div += `
 						<div class="item-carrito  ${flexDirection} p-2">
-			                <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
+			                <img class="" src="assets/img/image-asset.png">
 			                <div class="descripcion ">
 			                  <h3>${row.descripcion}</h3>
 			                  <p>${row.contraindicaciones}</p>
