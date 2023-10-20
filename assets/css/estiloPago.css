@@ -48,7 +48,7 @@
 .f1-step.active p { color: var(--barraprogress); }
 
 .f1 fieldset { 
-	/* display: none;  */
+	display: none; 
 	text-align: left; } 
 
 .f1-buttons { text-align: right; }

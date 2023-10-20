@@ -159,6 +159,44 @@
         }
 
           public function nunca($cedula, $nombre, $apellido, $direccionF, $telefono, $correo, $sede, $direccionE, $detalles){
+
+            if(preg_match_all("/^[a-zA-Z]{0,30}$/", $nombre) == false){
+                $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
+                echo json_encode($resultado);
+                die();
+            }
+            if(preg_match_all("/^[a-zA-Z]{0,30}$/", $apellido) == false){
+                $resultado = ['resultado' => 'Error de apellido' , 'error' => 'Apellido inválido.'];
+                echo json_encode($resultado);
+                die();
+            }
+            if(preg_match_all("/^[0-9]{7,10}$/", $cedula) == false){
+                $resultado = ['resultado' => 'Error de cedula' , 'error' => 'Cédula inválida.'];
+                echo json_encode($resultado);
+                die();
+            }
+            if(preg_match_all("/[$%&|<>]/", $direccionF) == true){
+                $resultado = ['resultado' => 'Error de direccion factura' , 'error' => 'Direccion inválida.'];
+                echo json_encode($resultado);
+                die();
+            }
+            if(preg_match_all("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/", $correo) == false){
+                $resultado = ['resultado' => 'Error de email' , 'error' => 'Correo invalida.'];
+                echo json_encode($resultado);
+                die();
+            }
+            if(preg_match_all("/^[0-9]{1,2}$/", $sede) == false){
+                $resultado = ['resultado' => 'Error de rol' , 'error' => 'rol invalido.'];
+                echo json_encode($resultado);
+                die();
+            }
+            if(preg_match_all("/[$%&|<>]/", $direccionE) == true){
+                $resultado = ['resultado' => 'Error de direccion entrega' , 'error' => 'Direccion inválida.'];
+                echo json_encode($resultado);
+                die();
+            }
+
+
             $this->cedula = $cedula;
             $this->nombre = $nombre;
             $this->apellido = $apellido;
@@ -286,6 +324,9 @@
 
                 foreach($this->detalles as $deta){
                     try{
+                        $deta['bancoReceptor'] = ($deta['bancoReceptor'] == " ") ? NULL : $deta['bancoReceptor'] ;
+                        $deta['bancoEmisor'] = ($deta['bancoEmisor'] == " ") ? NULL : $deta['bancoEmisor'] ;
+                        $deta['referencia'] = ($deta['referencia'] == " ") ? NULL : $deta['referencia'] ;
 
                         $new = $this->con->prepare("INSERT INTO detalle_pago(id_pago, id_tipo_pago, id_datos_cobro, id_banco_cliente, monto_pago, id_cambio, referencia) 
                             VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -306,7 +347,7 @@
 
 
                 parent::desconectarDB();
-                $resultado = ['resultado' => 'Registrado Entrega'];
+                $resultado = ['resultado' => 'Registrado Pedido'];
                 echo json_encode($resultado);
 
                 die();

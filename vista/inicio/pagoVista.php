@@ -240,7 +240,7 @@
                                                     <option></option>
                                                 </select>
                                                 </td>
-                                                <td width='15%' class=""><input class="select-asd precio-tipo" type="number" placeholder="0,00"></td>
+                                                <td width='15%' class="precio"><input class="select-asd precio-tipo" type="number" placeholder="0,00"></td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -342,6 +342,7 @@
                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Referencia para pago"><i class="bi bi-hash"></i></button> 
                             <input type="text" id="referenciaMovil" class="form-control">
                         </div>
+                        <p class="m-0" id="errorReferenciaMovil" style="color:#ff0000;text-align: center;"></p>
                     </div>
                     <div class="col-xl-6 col-md-12">
                         <label for="inputText" class="col-12 col-form-label "><strong>Nombre de Banco</strong></label>
@@ -351,7 +352,7 @@
                                 <option selected disabled>Nombre</option>
                             </select>
                         </div>
-                        <p class="m-0" id="" style="color:#ff0000;text-align: center;"></p>
+                        <p class="m-0" id="errorbancTipoRM" style="color:#ff0000;text-align: center;"></p>
                     </div>
                 </div>
                 <div class="row form-group col-md-12 trans mt-4">
@@ -364,7 +365,7 @@
                                 <option selected disabled>Nombre</option>
                             </select>
                         </div>
-                        <p class="m-0" id="errorBancTipo" style="color:#ff0000;text-align: center;"></p>
+                        <p class="m-0" id="errorBancTipoT" style="color:#ff0000;text-align: center;"></p>
                     </div>
                     <div class="col-xl-6 col-md-12 trans">
                         <label for="inputText" class="col-12 col-form-label"><strong>Cedula/Rif</strong></label>
@@ -391,6 +392,7 @@
                             <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Numero de Referencia para pago"><i class="bi bi-hash"></i></button> 
                             <input type="text" id="referenciaTrans" class="form-control">
                         </div>
+                        <p class="m-0" id="errorReferenciaTrans" style="color:#ff0000;text-align: center;"></p>
                     </div>
                     <div class="col-xl-6 col-md-12">
                         <label for="inputText" class="col-12 col-form-label "><strong>Nombre de Banco</strong></label>
@@ -400,7 +402,7 @@
                                 <option selected disabled>Nombre</option>
                             </select>
                         </div>
-                        <p class="m-0" id="" style="color:#ff0000;text-align: center;"></p>
+                        <p class="m-0" id="errorBancTipoRT" style="color:#ff0000;text-align: center;"></p>
                     </div>
                 </div>
             </form>
