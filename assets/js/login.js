@@ -1,19 +1,20 @@
 $(document).ready(function(){
 
+  let timeoutId;
   $("#cedula").keyup(()=>{ 
     let valid = validarCedula($("#cedula"),$("#error") ,"Error de cedula,");
-    if(valid){ validarC(); }  
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(function() {
+      if(valid) validarCedulaBD();
+    }, 700);
   })
+
 
   $("#boton").click((e)=>{
     e.preventDefault()
-    $.ajax({
-
-      type: "post",
-      url: '',
-      dataType: 'json',
+    $.ajax({ type: "post", url: '', dataType: 'json',
       data: {
-        a: 'si',
+        login: '',
         cedula: $("#cedula").val(),
         password: $("#pass").val()
       },
@@ -60,7 +61,7 @@ $(document).ready(function(){
     
   })
 
-  function validarC(){
+  function validarCedulaBD(){
     $.getJSON('',{cedula: $("#cedula").val(),validar: 'xd'},
       function(data){
         if(data.resultado === "Error de cedula"){

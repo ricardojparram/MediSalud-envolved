@@ -6,11 +6,13 @@
     $obj_Model = new registro();
 
     if(isset($_GET['cedula']) && isset($_GET['validar'])){
-      $obj_Model->getValidarC($_GET['cedula']);
+      $res = $obj_Model->getValidarCedula($_GET['cedula']);
+      die(json_encode($res));
     }
 
     if(isset($_GET['email']) && isset($_GET['validar'])){
-      $obj_Model->getValidarE($_GET['email']);
+      $res = $obj_Model->getValidarEmail($_GET['email']);
+      die(json_encode($res));
     }
 
     if(isset($_POST['cedula']) && isset($_POST['name']) && isset($_POST['apellido']) && isset($_POST['email']) && isset ($_POST['password']) && isset($_POST['repass'])){
