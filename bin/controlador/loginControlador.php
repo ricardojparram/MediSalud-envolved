@@ -11,7 +11,8 @@
   }
 
   if(isset($_GET['cedula'], $_GET['validar'])){
-    $objModel->getValidarCedula($_GET['cedula']);
+    $res = $objModel->getValidarCedula($_GET['cedula']);
+    die(json_encode($res));
   }
 
 

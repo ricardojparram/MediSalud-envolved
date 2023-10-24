@@ -80,7 +80,7 @@
 			}
 			$this->cedula = $cedula;
 
-			$this->validarCedula();
+			return $this->validarCedula();
 		}
 
 		private function validarCedula(){

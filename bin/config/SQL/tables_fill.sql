@@ -70,8 +70,8 @@ INSERT INTO `estados_venezuela` (`id_estado`, `nombre`) VALUES
 (19, 'Trujillo'),(20, 'Yaracuy'),(21, 'Zulia'),(22, 'Delta Amacuro'),(23, 'Miranda'),(24, 'La Guaira');
 
 
-INSERT INTO empresa_envio (rif, nombre, contacto, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
-INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
+-- INSERT INTO empresa_envio (rif, nombre, contacto,id_estado, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
+-- INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
 
 INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (1 , 'Banco Central de Venezuela', '0001', 1);
 INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (2 , 'Banco de Venezuela (BDV)', '0102', 1);
