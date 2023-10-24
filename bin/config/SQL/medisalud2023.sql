@@ -203,13 +203,24 @@ CREATE TABLE empresa_envio(
     status int NOT NULL    
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
+-- TABLA PARA ESTADOS DE VENEZUELA
+
+CREATE TABLE estados_venezuela(
+    id_estado int AUTO_INCREMENT PRIMARY KEY,
+    nombre varchar(50) NOT NULl
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+
 -- TABLA PARA SEDE EMVIO
    
 CREATE TABLE sede_envio(
     id_sede int AUTO_INCREMENT PRIMARY KEY,
+    nombre varchar(50) NOT NULL,
     ubicacion varchar(100) NOT NULL,
+    id_estado int NOT NULL,
     id_empresa int NOT NULL,
     status int NOT NULL,
+    FOREIGN KEY (id_estado) REFERENCES estados_venezuela (id_estado) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_empresa) REFERENCES empresa_envio (id_empresa) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
