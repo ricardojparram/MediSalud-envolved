@@ -73,6 +73,50 @@
 
 		}
 
+		public function calcularPrecioEnvio(){
+			$url = "http://agencias.com.ve/sys/ajax.php";
+
+			$body = [
+				"courier" => "MRW", 
+				"cmd" => "calculo_tarifa", 
+				"origen" => "",
+				"destino" => "",
+				"formapago" => "enorigen",
+				"tipoenvio" => "age",
+				"peso" => "1",
+				"size_x" => "10",
+				"size_y" => "10",
+				"size_z" => "5",
+				"valorseguro" => ""
+			];
+
+			$options = [
+				'http' => [
+					'method'  => 'POST',
+					'header'  => "Content-Type: application/x-www-form-urlencoded;charset=UTF-8",
+					'content' => http_build_query($body),
+				]
+			];
+
+			$context = stream_context_create($options);
+
+			$response = file_get_contents($url, false, $context);
+
+
+			$dom = new DOMDocument();
+			$dom->loadHTML($response);
+
+			$total_envio =	$dom->getElementsByTagName('tbody')
+								->item(0)->lastChild
+								->childNodes->item(2)->textContent;
+
+			$precio = floatval(str_replace('Bs. ', '', $total_envio));
+
+			$resultado = ['precio_solo' => $precio, 'precio_bs' => "$total_envio"];
+			die(json_encode($resultado));
+
+		}
+
 	}
 
 ?>

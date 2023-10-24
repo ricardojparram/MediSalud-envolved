@@ -13,6 +13,53 @@
 			parent::__construct();    
 		}
 
+		public function registrarSedes(){
+			try {
+				
+				// $opts = [
+				// 	"ssl" => [
+				// 		"verify_peer"=>false,
+				// 		"verify_peer_name"=>false,
+				// 	],
+				// ];
+
+				// $context = stream_context_create($opts);
+
+				// $url = "https://api.mrwve.com/maps/buscar_agencia.php?id=*&id=*";
+				// $response = file_get_contents($url, false, $context);
+				// ['agencias' => $data] = json_decode($response, true);
+				// echo "<pre>";
+				// print_r($data);
+				// echo "<pre>";
+				// die();
+				// $this->conectarDB();
+				// $sql = "INSERT INTO sede_envio(ubicacion, id_estado, id_empresa, status, nombre) VALUES (?, ?, 1, 1, ?)";
+				// $this->conectarDB();
+				// foreach ($data as $agencia) {
+				// 	$estado = $agencia['ID_ESTADO'];
+				// 	$nombre = ucwords(mb_strtolower($agencia['NOMBRE']));
+				// 	$direccion = $agencia['DIRECCION'];
+
+				// 	$new = $this->con->prepare($sql);
+				// 	$new->bindValue(1, $direccion);
+				// 	$new->bindValue(2, $estado);
+				// 	$new->bindValue(3, $nombre);
+				// 	$new->execute();
+				// }
+				// die('lito');
+				// die(json_encode($response));
+
+
+
+				// $this->desconectarDB();
+
+
+
+			} catch (\PDOException $e) {
+				die($e);
+			}
+		}
+
 		public function mostrarSedes($bitacora = false){
 			try{
 				$this->conectarDB();
