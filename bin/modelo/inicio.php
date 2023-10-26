@@ -18,7 +18,7 @@
   public function mostrarCatalogo(){
   	try {
 
-  		$query = 'SELECT `cod_producto`,`descripcion` ,`stock`, `p_venta` FROM `producto` WHERE status = 1 and stock != 0 LIMIT 4';
+  		$query = 'SELECT cod_producto, nombre, descripcion ,stock, p_venta FROM producto WHERE status = 1 and stock != 0 LIMIT 4';
         $this->conectarDB();
   		$new = $this->con->prepare($query); 
   		$new->execute();
@@ -47,7 +47,7 @@
 
   private function rellenarD(){
   	try {
-  		$query = 'SELECT `cod_producto`,`descripcion` ,`stock`, `p_venta`, `vencimiento` FROM `producto` WHERE status = 1 and stock != 0 and cod_producto = ?';
+  		$query = 'SELECT cod_producto,descripcion ,stock, p_venta, vencimiento FROM producto WHERE status = 1 and stock != 0 and cod_producto = ?';
         $this->conectarDB();
   		$new = $this->con->prepare($query); 
   		$new->bindValue(1,  $this->id_producto);

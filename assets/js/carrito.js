@@ -1,6 +1,60 @@
 let carrito = {};
 $(document).ready(function(){
 	
+	let sesion;
+	async function consultarSesion(){
+		await $.getJSON('?url=carrito&user=',(res) => sesion = res)
+		.fail(() => {
+			Toast.fire({ icon: 'error', title: 'Ha ocurrido un error al consultar sesion.' });
+			throw new Error("Ha ocurrido un error al consultar sesion.");
+		});
+	}
+	const setCar = (prods) => localStorage.setItem('carrito', JSON.stringify(prods));
+	const getCar = () => JSON.parse(localStorage.getItem('carrito'));
+
+	let productosCarrito = "";
+	const localStorageCar = () => {
+		if('carrito' in localStorage){
+			productosCarrito=	(localStorage.getItem('carrito') !== "")
+								? getCar() : "";
+			return;
+		}
+		localStorage.setItem('carrito', []);
+	}
+	localStorageCar();
+
+	consultarSesion().then(function(){
+
+
+	})
+	consultarCarrito();
+	async function consultarCarrito(){
+		let res;
+		await $.ajax({method: 'POST',dataType: 'json',url: '?url=carrito',
+			data: {mostrar:'', carrito:''},
+			success(response){
+				if(response.resultado != 'ok') throw new Error(response.msg);
+
+				if(productosCarrito.length > 0){
+					let prods = [];
+					productosCarrito.forEach((prodCarrito) =>{
+						response.carrito.forEach((prod) => {
+							if(prodCarrito.cod_producto === prod.cod_producto){
+								prodCarrito.cantidad += prod.cantidad;
+							}
+						})
+					})
+					console.log(productosCarrito);
+				}
+
+				if(productosCarrito.length === 0){
+					setCar(response.carrito);
+					productosCarrito = getCar();
+				}
+			}
+		})
+	}
+
 	refrescarCarrito()
 	carrito.refrescar = () => refrescarCarrito();
 
@@ -14,9 +68,10 @@ $(document).ready(function(){
 	async function mostrarCarrito(){
 		await $.ajax({method: 'POST',dataType: 'json',url: '?url=carrito',
 			data: {mostrar:'', carrito:''},
-			success(response){
+			success(res){
+				carrito = res.carrito;
 				let div = '';
-				if(typeof response.error != 'undefined'){
+				if(typeof res.error != 'undefined'){
 					div = `<div class="alert alert-secondary w-75" role="alert">
 				                <h3>Necesita iniciar sesión para agregar productos al carrito.</h3>
 				                <div>
@@ -28,7 +83,7 @@ $(document).ready(function(){
 					$('.cardTotal').hide();
 					$('.vaciar').hide();
 				}
-				if(response.length == 0){
+				if(carrito.length == 0){
 					div = `<div class="alert alert-secondary w-75" role="alert">
 								<h3>Su carrito está vacío.</h3>
 				            </div>`;
@@ -38,15 +93,15 @@ $(document).ready(function(){
 					$('.cardTotal').hide();
 					$('.vaciar').hide();
 				}
-				if(response.length > 0){
+				if(carrito.length > 0){
 					let productos = [];
 					let precioTotal = 0;
 					let flexDirection = ($('.carrito-container').width() < 400) ? 'item-carrito-tienda' : '';
-					for(let i = 0; i < response.length; i++){
-						let row = response[i];
+					for(let i = 0; i < carrito.length; i++){
+						let row = carrito[i];
 						let precioUnidadTotal = row.precioActual * row.cantidad;
 						precioTotal += precioUnidadTotal;
-						let hr = (i == response.length - 1) ? '' : '<hr class="my-2">';
+						let hr = (i == carrito.length - 1) ? '' : '<hr class="my-2">';
 						div += `
 						<div class="item-carrito  ${flexDirection} p-2">
 			                <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
@@ -71,7 +126,7 @@ $(document).ready(function(){
 					actualizarBadge(productos.length);
 					$('.carrito-container').html(div);
 					$('#precioTotal').html(precioTotal);
-					validarStock(productos);
+					// validarStock(productos);
 				}
 
 			}

@@ -24,15 +24,16 @@
 			try {
 
 				$this->conectarDB();
-				$sql = "SELECT * FROM carrito c
-				INNER JOIN producto p ON p.cod_producto = c.cod_producto 
-				WHERE c.cedula = ?;";
+				$sql = "SELECT c.cod_producto, p.nombre, p.descripcion, c.cantidad, p.img FROM carrito c
+						INNER JOIN producto p ON p.cod_producto = c.cod_producto 
+						WHERE c.cedula = '123123123';";
 				$new = $this->con->prepare($sql);
 				$new->bindValue(1, $this->user);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 				$this->desconectarDB();
-				die(json_encode($data));
+				$resultado = ['resultado' => 'ok', 'carrito' => $data];
+				die(json_encode($resultado));
 
 			} catch (\PDOException $e) {
 				die($e);

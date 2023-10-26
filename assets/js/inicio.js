@@ -5,28 +5,30 @@ $(document).ready(function(){
 	function mostrarCatalogo(){
 		$.ajax({type: 'POST',url: '',dataType: 'json',data:{mostraC: ''},
 			success(data){
-			let mostrar = '';
-            data.forEach(row =>{
-             	mostrar += `
-	            <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-	              <div class="card">
-	                <div class="text-center m-3">
-	                  <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-	                </div>
-	                <div class="card-body d-flex flex-column justify-content-between">
-	                  <div class="d-flex justify-content-between">
-	                    <p class="card-title align-self-center">${row.descripcion}</p>
-	                    <buttom class="btn btn-success align-self-center mostrarC" id='${row.cod_producto}' data-bs-toggle="modal" data-bs-target="#AñadirCarrito"><i class="bi bi-cart4"></i></buttom>
-	                  </div>
-	                  <div class="m-0 d-flex flex-column">
-	                    <p class="card-text align-self-left">Precio: ${row.p_venta}</p>
-	                  </div>
-	                </div>
-	              </div>
-	            </div>
-             	`;
-             })
-             $('#catalogo').html(mostrar);
+				// console.log(data);
+	            localStorage.setItem('productos', JSON.stringify(data));
+				let mostrar = '';
+	            data.forEach(row =>{
+	             	mostrar += `
+		            <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+		              <div class="card">
+		                <div class="text-center m-3">
+		                  <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
+		                </div>
+		                <div class="card-body d-flex flex-column justify-content-between">
+		                  <div class="d-flex justify-content-between">
+		                    <p class="card-title align-self-center">${row.descripcion}</p>
+		                    <buttom class="btn btn-success align-self-center mostrarC" id='${row.cod_producto}' data-bs-toggle="modal" data-bs-target="#AñadirCarrito"><i class="bi bi-cart4"></i></buttom>
+		                  </div>
+		                  <div class="m-0 d-flex flex-column">
+		                    <p class="card-text align-self-left">Precio: ${row.p_venta}</p>
+		                  </div>
+		                </div>
+		              </div>
+		            </div>
+	             	`;
+	            })
+	            $('#catalogo').html(mostrar);
 
 			}
 		})
