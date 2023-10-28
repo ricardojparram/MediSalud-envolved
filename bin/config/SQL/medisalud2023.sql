@@ -188,7 +188,6 @@ CREATE TABLE carrito(
     cedula int NOT NULL,
     cod_producto int NOT NULL,
     cantidad varchar(10) NOT NULL,
-    precioActual varchar(10) NOT NULL,
     FOREIGN KEY (cedula) REFERENCES usuario (cedula) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (cod_producto) REFERENCES producto (cod_producto) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
