@@ -6,15 +6,15 @@
 
 	$model = new carrito();
 
-	if(isset($_GET['user'])){
-		if(!isset($_SESSION['nivel'])){
-			die(json_encode(['resultado' => 'error', 'msg' => 'No ha iniciado sesión.']));
-		}else{
-			die(json_encode(['resultado' => 'ok', 'msg' => 'Ha iniciado sesión.']));
-		}
-	}
+	// if(isset($_GET['user'])){
+	// 	if(!isset($_SESSION['nivel'])){
+	// 		die(json_encode(['resultado' => 'error', 'msg' => 'No ha iniciado sesión.']));
+	// 	}else{
+	// 		die(json_encode(['resultado' => 'ok', 'msg' => 'Ha iniciado sesión.']));
+	// 	}
+	// }
 
-	if(isset($_POST['mostrar'], $_POST['carrito'], $_SESSION['cedula'])){
+	if(isset($_POST['consultarCarrito'])){
 		if(!isset($_SESSION['nivel'])){
 			die(json_encode(['resultado' => 'error', 'msg' => 'No ha iniciado sesión.']));
 		}

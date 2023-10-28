@@ -24,7 +24,7 @@
 			try {
 
 				$this->conectarDB();
-				$sql = "SELECT c.cod_producto, p.nombre, p.descripcion, c.cantidad, p.img FROM carrito c
+				$sql = "SELECT c.cod_producto, p.nombre, p.descripcion, c.cantidad, p.img, p.p_venta FROM carrito c
 						INNER JOIN producto p ON p.cod_producto = c.cod_producto 
 						WHERE c.cedula = '123123123';";
 				$new = $this->con->prepare($sql);
@@ -152,15 +152,16 @@
 				$new->bindValue(3, $this->user);
 				$new->execute();
 
-				$query = 'SELECT cantidad, precioActual FROM carrito
-						WHERE cedula = ? AND cod_producto = ?';
+				$query='SELECT c.cantidad, p.p_venta FROM carrito c
+						INNER JOIN producto p ON c.cod_producto = p.cod_producto
+						WHERE c.cedula = 123123123 AND c.cod_producto = 3;';
 				$new = $this->con->prepare($query);
 				$new->bindValue(1, $this->user);
 				$new->bindValue(2, $this->id_producto);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 
-				$info = ['cantidad' => $data[0]->cantidad, 'precioActual' => $data[0]->precioActual];
+				$info = ['cantidad' => $data[0]->cantidad, 'precioActual' => $data[0]->p_venta];
 				$resultado;
 
 				$resultado = ['resultado' => true, 'msg' => 'Se ha editado la cantidad correctamente.', 'info' => $info];

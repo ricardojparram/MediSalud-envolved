@@ -1,136 +1,137 @@
 let carrito = {};
 $(document).ready(function(){
-	
-	let sesion;
-	async function consultarSesion(){
-		await $.getJSON('?url=carrito&user=',(res) => sesion = res)
-		.fail(() => {
-			Toast.fire({ icon: 'error', title: 'Ha ocurrido un error al consultar sesion.' });
-			throw new Error("Ha ocurrido un error al consultar sesion.");
-		});
-	}
-	const setCar = (prods) => localStorage.setItem('carrito', JSON.stringify(prods));
-	const getCar = () => JSON.parse(localStorage.getItem('carrito'));
 
+	const setCar = (prods) => localStorage.setItem('carrito', JSON.stringify(prods));
+	const getCar = () => {
+		return (localStorage.getItem('carrito') === "") ? "" : JSON.parse(localStorage.getItem('carrito'));
+	};
+	const getOneProd = (id) => {let car = getCar(); return car[`${id}`] }
+	const updateProd = (id, cantidad) => {
+		car = getCar();
+		car[`${id}`].cantidad = cantidad;
+		setCar(car);
+	}
+	const deleteProd = (id) => {
+		let car = getCar(); 
+		delete car[`${id}`];
+		setCar(car);
+	}
+	const deleteCar = () => localStorage.setItem('carrito', []);
+
+	let session = true;
 	let productosCarrito = "";
-	const localStorageCar = () => {
-		if('carrito' in localStorage){
-			productosCarrito=	(localStorage.getItem('carrito') !== "")
-								? getCar() : "";
-			return;
-		}
+
+	if('carrito' in localStorage){
+		productosCarrito = (localStorage.getItem('carrito') !== "")
+		? getCar() : "";
+	}else{
 		localStorage.setItem('carrito', []);
 	}
-	localStorageCar();
-
-	consultarSesion().then(function(){
 
 
+	consultarCarrito().then((res) =>{
+		if(res != true) session = false;
+
+		mostrarCarrito();
+		editarCantidad();
+		confirmarEliminar();
 	})
-	consultarCarrito();
 	async function consultarCarrito(){
 		let res;
 		await $.ajax({method: 'POST',dataType: 'json',url: '?url=carrito',
-			data: {mostrar:'', carrito:''},
+			data: {consultarCarrito:''},
 			success(response){
-				if(response.resultado != 'ok') throw new Error(response.msg);
+				if(response.resultado != 'ok') res = false; return;
 
-				if(productosCarrito.length > 0){
-					let prods = [];
-					productosCarrito.forEach((prodCarrito) =>{
-						response.carrito.forEach((prod) => {
-							if(prodCarrito.cod_producto === prod.cod_producto){
-								prodCarrito.cantidad += prod.cantidad;
-							}
-						})
-					})
-					console.log(productosCarrito);
-				}
+				res = true;
+				let carritoBD = response.carrito.reduce((acc, curr) => {
+					acc[curr.cod_producto] = curr;
+					return acc;
+				}, {});
 
 				if(productosCarrito.length === 0){
-					setCar(response.carrito);
+					setCar(carritoBD);
 					productosCarrito = getCar();
 				}
+
+				if(JSON.stringify(productosCarrito) === JSON.stringify(carritoBD)) return;
+
+				if(Object.keys(productosCarrito).length >= 1){
+					Object.entries(carritoBD).forEach((prod) => {
+						if (productosCarrito[prod[1].cod_producto]) {
+							if(productosCarrito[prod[1].cod_producto].cantidad !== prod[1].cantidad){
+								productosCarrito[prod[1].cod_producto].cantidad = parseInt(productosCarrito[prod[1].cod_producto].cantidad) + parseInt(prod[1].cantidad);
+							}
+							productosCarrito[prod[1].cod_producto].p_venta = prod[1].p_venta; 
+						} else {
+							console.log(prod);
+							productosCarrito[prod[1].cod_producto] = prod;
+						}
+					});
+					setCar(productosCarrito);
+				}
+			},
+			error(res){
+				Toast.fire({ icon: 'error', title: 'Ha ocurrido un error al consultar carrito.' });
+				res = false;
+				throw new Error("Ha ocurrido un error al consultar carrito.");
 			}
 		})
-	}
-
-	refrescarCarrito()
-	carrito.refrescar = () => refrescarCarrito();
-
-	function refrescarCarrito(){
-		mostrarCarrito().then(() => {
-			editarCantidad();
-			confirmarEliminar();
-		})
+		return res;
 	}
 	
-	async function mostrarCarrito(){
-		await $.ajax({method: 'POST',dataType: 'json',url: '?url=carrito',
-			data: {mostrar:'', carrito:''},
-			success(res){
-				carrito = res.carrito;
-				let div = '';
-				if(typeof res.error != 'undefined'){
-					div = `<div class="alert alert-secondary w-75" role="alert">
-				                <h3>Necesita iniciar sesión para agregar productos al carrito.</h3>
-				                <div>
-				                  <a class="text-center col-6" href=""><u>Iniciar sesión</u></a> | 
-				                  <a class="text-center col-6" href=""><u>Registrarse</u></a>
-				                </div>
-				            </div>`;
-					$('.carrito-container').html(div);
-					$('.cardTotal').hide();
-					$('.vaciar').hide();
-				}
-				if(carrito.length == 0){
-					div = `<div class="alert alert-secondary w-75" role="alert">
-								<h3>Su carrito está vacío.</h3>
-				            </div>`;
-				    $('.carrito-container').html(div);
-				    $('.carrito-container').css({width:'500px'})
-				    $('.regresar').parent().toggleClass('col-6')
-					$('.cardTotal').hide();
-					$('.vaciar').hide();
-				}
-				if(carrito.length > 0){
-					let productos = [];
-					let precioTotal = 0;
-					let flexDirection = ($('.carrito-container').width() < 400) ? 'item-carrito-tienda' : '';
-					for(let i = 0; i < carrito.length; i++){
-						let row = carrito[i];
-						let precioUnidadTotal = row.precioActual * row.cantidad;
-						precioTotal += precioUnidadTotal;
-						let hr = (i == carrito.length - 1) ? '' : '<hr class="my-2">';
-						div += `
-						<div class="item-carrito  ${flexDirection} p-2">
-			                <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-			                <div class="descripcion ">
-			                  <h3>${row.descripcion}</h3>
-			                  <p>${row.contraindicaciones}</p>
-			                  <div class="opciones position-relative">
-			                    <input type="number" id="${row.cod_producto}" value="${row.cantidad}" class="form-control cantidad" placeholder="Cant.">
-			                    <a class="eliminar" prod="${row.cod_producto}" >Eliminar</a>
-			                    <div class="invalid-tooltip">Cantidad no disponible.</div>
-			                  </div>
-			                </div>
-			                <div class="precio">
-			                  <h6>Unidad: <span class="precioUnidad">${row.precioActual}</span>$</h6>
-			                  <h6 class="fs-5">Total: <span class="precioUnidadTotal">${precioUnidadTotal}</span>$</h6>
-			                </div>
-			            </div>
-			            ${hr}
-			            `
-			            productos.push({id_producto: row.cod_producto, cantidad: row.cantidad});
-					}
-					actualizarBadge(productos.length);
-					$('.carrito-container').html(div);
-					$('#precioTotal').html(precioTotal);
-					// validarStock(productos);
-				}
+	function mostrarCarrito(){
+		carrito = Object.entries(getCar());
+		let div = '';
+		if(carrito.length === 0){
+			div = `<div class="alert alert-secondary w-75" role="alert">
+						<h3>Su carrito está vacío.</h3>
+		            </div>`;
+		    $('.carrito-container').html(div);
+		    $('.regresar').parent().toggleClass('col-6')
+			$('.cardTotal').hide();
+			$('.vaciar').hide();
+		}
 
-			}
-		})
+		if(carrito.length > 0){
+			let productos = [];
+			let precioTotal = 0;
+			let flexDirection = ($('.carrito-container').width() < 400) ? 'item-carrito-tienda' : '';
+			carrito.forEach((row, i) => {
+				let prod = row[1];
+				let precioUnidadTotal = parseFloat(prod.p_venta) * parseFloat(prod.cantidad);
+				precioTotal += precioUnidadTotal;
+				let hr = (i == carrito.length - 1) ? '' : '<hr class="my-2">';
+				let img = (prod.img == null) ? '' : prod.img;
+
+				div += `
+				<div class="item-carrito  ${flexDirection} p-2">
+	                <img class="" src="${img}">
+	                <div class="descripcion ">
+	                  <h3>${prod.nombre}</h3>
+	                  <p>${prod.descripcion}</p>
+	                  <div class="opciones position-relative">
+	                    <input type="number" id="${prod.cod_producto}" value="${prod.cantidad}" class="form-control cantidad" placeholder="Cant.">
+	                    <a class="eliminar" prod="${prod.cod_producto}" >Eliminar</a>
+	                    <div class="invalid-tooltip">Cantidad no disponible.</div>
+	                  </div>
+	                </div>
+	                <div class="precio">
+	                  <h6>Unidad: <span class="precioUnidad">${prod.p_venta}</span>$</h6>
+	                  <h6 class="fs-5">Total: <span class="precioUnidadTotal">${precioUnidadTotal}</span>$</h6>
+	                </div>
+	            </div>
+	            ${hr}
+	            `
+	            productos.push({id_producto: prod.cod_producto, cantidad: prod.cantidad});		
+			})
+
+			actualizarBadge(productos.length);
+			$('.carrito-container').html(div);
+			$('#precioTotal').html(precioTotal);
+			validarStock(productos);
+		}
+
 	}
 
 	function validarInputCantidad(input){
@@ -193,34 +194,56 @@ $(document).ready(function(){
 
 	let precioUnidad, cantidadProducto, precioUnidadTotal, input;
 	function editarCantidad(){
-		$('.opciones .cantidad').on('keyup change', function(){
+		let timeoutId;
+		$('.opciones .cantidad').on('keyup change',function(){
+			clearTimeout(timeoutId);
 			input = $(this);
 			let {id: id_producto, value: cantidad} = this;
-			let productos = [{id_producto, cantidad}];
-			if(validarInputCantidad(input) != true) return;
-			validarStock(productos).then((res) => {
-				if(!res) return;
+			let productoEditado = [{id_producto, cantidad}];
+			timeoutId = setTimeout(function() {
+				if(validarInputCantidad(input) != true) return;
+				validarStock(productoEditado).then((res) => {
+					if(!res) return;
 
-				$.post('?url=carrito',{editar:'', id_producto, cantidad}, function(response){
-					let result = JSON.parse(response);
-
-					if(!result.resultado){
-						Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
-					}else{
-						precioUnidad = Number(result.info.precioActual);
-						cantidadProducto = Number(result.info.cantidad);
+					if(session === false){
+						updateProd(id_producto, cantidad);
+						prod = getOneProd(id_producto);
+						precioUnidad = parseFloat(prod.p_venta);
+						cantidadProducto = parseInt(prod.cantidad);
 						precioUnidadTotal = precioUnidad * cantidadProducto;
-
-						input.closest('.item-carrito').find('.precioUnidadTotal')
-						.html(precioUnidadTotal);
-						input.closest('.item-carrito').find('.precioUnidad')
-						.html(precioUnidad);
+						input.closest('.item-carrito').find('.precioUnidadTotal').html(precioUnidadTotal);
+						input.closest('.item-carrito').find('.precioUnidad').html(precioUnidad);
 						actualizarTotalCarrito()
+						return;
 					}
-				})
 
-			})
+					$.post('?url=carrito',{editar:'', id_producto, cantidad}, function(response){
+						let result = JSON.parse(response);
+
+						if(!result.resultado){
+							Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
+						}else{
+							updateProd(id_producto, cantidad);
+							precioUnidad = Number(result.info.precioActual);
+							cantidadProducto = Number(result.info.cantidad);
+							precioUnidadTotal = precioUnidad * cantidadProducto;
+							input.closest('.item-carrito').find('.precioUnidadTotal').html(precioUnidadTotal);
+							input.closest('.item-carrito').find('.precioUnidad').html(precioUnidad);
+							actualizarTotalCarrito()
+						}
+					}).fail(()=>{
+						Toast.fire({ icon: 'error', title: 'Ha ocurrido un error al editar la cantidad.' });
+						throw new Error("Ha ocurrido un error al editar la cantidad.");
+					})
+
+				})
+			}, 700);
 		})
+	}
+
+	function actualizarBadge($cantidad){
+		badge = $('#carrito_badge');
+		badge.html($cantidad)
 	}
 
 	let id;
@@ -235,26 +258,35 @@ $(document).ready(function(){
 		})
 	}
 	
-	function actualizarBadge($cantidad){
-		badge = $('#carrito_badge');
-		badge.html($cantidad)
-	}
 
 
 	$('#delProductFromCar').click(function(){
-		
+		console.log(session)
+		if(session === false){
+			deleteProd(id);
+			Toast.fire({ icon: 'success', title: 'Producto eliminado del carrito.' })
+			$('.carrito-container').empty();
+			$('#delModal').modal('hide');
+			mostrarCarrito();
+			return;
+		}
+
 		$.ajax({type : 'post', url : '?url=carrito', data : {eliminar:'', id}, dataType: 'json',
 			success(data){
-					console.log(data);
 				if(data.resultado === true){
+					deleteProd(id);
 					Toast.fire({ icon: 'success', title: 'Producto eliminado del carrito.' })
 					$('.carrito-container').empty();
 					$('#delModal').modal('hide');
-					refrescarCarrito();
+					mostrarCarrito();
 				}else{
 					Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' })
 					$('#delModal').modal('hide');
 				}
+			},
+			error(){
+				Toast.fire({ icon: 'error', title: 'Ha ocurrido un error al eliminar producto.' });
+				throw new Error("Ha ocurrido un error al eliminar producto.");
 			}
 		})
 
@@ -304,19 +336,31 @@ $(document).ready(function(){
 	})
 
 	$('#vaciarCarritoConfirm').click(() => {
+
+		if(session === false){
+			deleteCar();
+			$('#vaciarCarritoModal').modal('hide');
+			$('.carrito-container').empty();
+			Toast.fire({ icon: 'success', title: 'Se ha vaciado su carrito, correctamente.'});
+			mostrarCarrito();
+			return;
+		}
+
 		$.post('?url=carrito', {vaciarCarrito: ''}, function(response){
 			let res = JSON.parse(response);
 			if(res.resultado){
+				deleteCar();
 				$('#vaciarCarritoModal').modal('hide');
 				$('.carrito-container').empty();
-				refrescarCarrito();
 				Toast.fire({ icon: 'success', title: 'Se ha vaciado su carrito, correctamente.'});
+				mostrarCarrito();
 			}else{
 				$('#vaciarCarritoModal').modal('hide');
 				Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.'});
 			}
 		})
 	})
+
 
 	$('#realizarFacturacion').click(function(){
 		let productos = [];
