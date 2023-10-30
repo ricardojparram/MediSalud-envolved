@@ -89,7 +89,8 @@
 
 .item-carrito .descripcion p {
     margin: 0;
-    font-size: 16px;
+    font-size: 13px;
+    max-width: 500px;
 }
 
 .item-carrito .precio {
@@ -279,4 +280,35 @@
 }
 .link:hover{
   color: #9ba958 !important;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] { -moz-appearance:textfield; }
+
+.invalid-tooltip-prod{
+    z-index: 5;
+    display: none;
+    max-width: 200px;
+    padding: .25rem .5rem;
+    margin-top: .1rem;
+    font-size: .875rem;
+    color: #fff;
+    background-color: rgba(220,53,69,.9);
+    border-radius: .375rem;
+}
+
+.product-container{
+    width: 300px;
+}
+
+.card-product{
+    transition: all 0.2s ease-out;
+}
+.card-product:hover{
+    transform: scale(1.04);
 }
