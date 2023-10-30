@@ -24,9 +24,7 @@
 			try {
 
 				$this->conectarDB();
-				$sql = "SELECT c.cod_producto, p.nombre, p.descripcion, c.cantidad, p.img, p.p_venta FROM carrito c
-						INNER JOIN producto p ON p.cod_producto = c.cod_producto 
-						WHERE c.cedula = '123123123';";
+				$sql = "SELECT cod_producto, cantidad FROM carrito WHERE cedula = ?;";
 				$new = $this->con->prepare($sql);
 				$new->bindValue(1, $this->user);
 				$new->execute();
@@ -41,13 +39,9 @@
 
 		}
 
-		public function getAgregarProducto($cedula, $id, $cantidad){
-			if(preg_match_all("/^[0-9]{1,10}$/", $cantidad) != 1){
-				die(json_encode(['error' => 'Id inválida.']));
-			}
-			$this->id_producto = $id;
-			$this->cantidad = $cantidad;
+		public function getAgregarProducto($cedula, array $productos){
 			$this->user = $cedula;
+			$this->productos = $productos;
 
 			$this->agregarAlCarrito();
 		}
@@ -56,37 +50,24 @@
 
 			try {
 
-				$new = $this->con->prepare("SELECT cod_producto FROM carrito WHERE cod_producto = ? AND cedula = ?");
-				$new->bindValue(1, $this->id_producto);
-				$new->bindValue(2, $this->user);
-				$new->execute();
-				$res = $new->fetchAll(\PDO::FETCH_OBJ);
-				$resultado;
-				if(isset($res[0]->cod_producto)){
-					$resultado = ['resultado' => false, 'msg' => 'Este producto ya estaba agregado en el carrito.'];
-					die(json_encode($resultado));
-				}
-
-				$new = $this->con->prepare("SELECT p_venta FROM producto WHERE cod_producto = ?");
-				$new->bindValue(1,  $this->id_producto);
-				$new->execute();
-				[0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
-
-				$precio = floatval($data->p_venta) * $this->cantidad;
-
-				$sql = "INSERT INTO carrito(cedula, cod_producto, cantidad, precioActual)
-				VALUES(?, ?, ?, ?)";
-				$new = $this->con->prepare($sql);
+				$this->conectarDB();
+				$new = $this->con->prepare("DELETE FROM carrito WHERE cedula = ?");
 				$new->bindValue(1, $this->user);
-				$new->bindValue(2, $this->id_producto);
-				$new->bindValue(3, $this->cantidad);
-				$new->bindValue(4, $precio);
 				$new->execute();
 
+				foreach($this->productos as $producto){
+					$new = $this->con->prepare("INSERT INTO carrito(cedula, cod_producto, cantidad)
+												VALUES(?, ?, ?)");
+					$new->bindValue(1,  $this->user);
+					$new->bindValue(2,  $producto['cod_producto']);
+					$new->bindValue(3,  $producto['cantidad']);
+					$new->execute();
+				}
+				$this->desconectarDB();
 				$resultado = ['resultado' => true, "msg" => "Se ha agregado el producto al carrito."];
 				die(json_encode($resultado));
 
-			} catch (\PDOException $e) {
+			}catch(\PDOException $e){
 				die($e);
 			}
 
@@ -154,7 +135,7 @@
 
 				$query='SELECT c.cantidad, p.p_venta FROM carrito c
 						INNER JOIN producto p ON c.cod_producto = p.cod_producto
-						WHERE c.cedula = 123123123 AND c.cod_producto = 3;';
+						WHERE c.cedula = ? AND c.cod_producto = ?;';
 				$new = $this->con->prepare($query);
 				$new->bindValue(1, $this->user);
 				$new->bindValue(2, $this->id_producto);

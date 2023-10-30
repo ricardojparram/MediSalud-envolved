@@ -6,14 +6,6 @@
 
 	$model = new carrito();
 
-	// if(isset($_GET['user'])){
-	// 	if(!isset($_SESSION['nivel'])){
-	// 		die(json_encode(['resultado' => 'error', 'msg' => 'No ha iniciado sesión.']));
-	// 	}else{
-	// 		die(json_encode(['resultado' => 'ok', 'msg' => 'Ha iniciado sesión.']));
-	// 	}
-	// }
-
 	if(isset($_POST['consultarCarrito'])){
 		if(!isset($_SESSION['nivel'])){
 			die(json_encode(['resultado' => 'error', 'msg' => 'No ha iniciado sesión.']));
@@ -21,12 +13,8 @@
 		$model->getCarritoUsuario($_SESSION['cedula']);
 	}
 
-	if(isset($_POST['añadirCarrito'], $_POST['id'], $_POST['cantidad'])){
-		if(!isset($_SESSION['cedula'])){
-			$res = ['resultado' => false, 'msg' => 'Necesita iniciar sesión para agregar productos al carrito.'];
-			die(json_encode($res));
-		}
-		$model->getAgregarProducto($_SESSION['cedula'], $_POST['id'], $_POST['cantidad']);
+	if(isset($_POST['añadirCarrito'], $_POST['productos'])){
+		$model->getAgregarProducto($_SESSION['cedula'], $_POST['productos']);
 	}
 
 

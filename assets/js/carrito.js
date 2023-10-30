@@ -1,13 +1,20 @@
-let carrito = {};
 $(document).ready(function(){
+
+	const getProductos = () => JSON.parse(localStorage.getItem('productos'));
+	const getProdDetalle = (id) => {let prod = getProductos(); return prod[`${id}`] }
 
 	const setCar = (prods) => localStorage.setItem('carrito', JSON.stringify(prods));
 	const getCar = () => {
 		return (localStorage.getItem('carrito') === "") ? "" : JSON.parse(localStorage.getItem('carrito'));
 	};
 	const getOneProd = (id) => {let car = getCar(); return car[`${id}`] }
+	const insertIntoCar = (id,prod) => {
+		let car = getCar();
+		car[`${id}`] = prod;
+		setCar(car);
+	}
 	const updateProd = (id, cantidad) => {
-		car = getCar();
+		let car = getCar();
 		car[`${id}`].cantidad = cantidad;
 		setCar(car);
 	}
@@ -36,40 +43,48 @@ $(document).ready(function(){
 		editarCantidad();
 		confirmarEliminar();
 	})
+
+	function mergeCarts(carrito, carritoStorage){
+
+		if(Object.keys(carritoStorage).length === 0){
+			setCar(carrito);
+			carritoStorage = getCar();
+		}
+
+		if(JSON.stringify(carritoStorage) === JSON.stringify(carrito)) return;
+
+		if(Object.keys(carritoStorage).length >= 1){
+			Object.entries(carrito).forEach((prod) => {
+				if (carritoStorage[prod[1].cod_producto]) {
+					if(carritoStorage[prod[1].cod_producto].cantidad !== prod[1].cantidad){
+						carritoStorage[prod[1].cod_producto].cantidad = parseInt(carritoStorage[prod[1].cod_producto].cantidad) + parseInt(prod[1].cantidad);
+					}
+					// carritoStorage[prod[1].cod_producto].p_venta = prod[1].p_venta; 
+				} else {
+					carritoStorage[prod[1].cod_producto] = prod[1];
+				}
+			});
+			setCar(carritoStorage);
+		}
+	}
 	async function consultarCarrito(){
 		let res;
 		await $.ajax({method: 'POST',dataType: 'json',url: '?url=carrito',
 			data: {consultarCarrito:''},
 			success(response){
-				if(response.resultado != 'ok') res = false; return;
+				if(response.resultado != 'ok'){
+					res = false;
+					return;
+				}
 
 				res = true;
+
 				let carritoBD = response.carrito.reduce((acc, curr) => {
 					acc[curr.cod_producto] = curr;
 					return acc;
 				}, {});
 
-				if(productosCarrito.length === 0){
-					setCar(carritoBD);
-					productosCarrito = getCar();
-				}
-
-				if(JSON.stringify(productosCarrito) === JSON.stringify(carritoBD)) return;
-
-				if(Object.keys(productosCarrito).length >= 1){
-					Object.entries(carritoBD).forEach((prod) => {
-						if (productosCarrito[prod[1].cod_producto]) {
-							if(productosCarrito[prod[1].cod_producto].cantidad !== prod[1].cantidad){
-								productosCarrito[prod[1].cod_producto].cantidad = parseInt(productosCarrito[prod[1].cod_producto].cantidad) + parseInt(prod[1].cantidad);
-							}
-							productosCarrito[prod[1].cod_producto].p_venta = prod[1].p_venta; 
-						} else {
-							console.log(prod);
-							productosCarrito[prod[1].cod_producto] = prod;
-						}
-					});
-					setCar(productosCarrito);
-				}
+				mergeCarts(carritoBD, productosCarrito);
 			},
 			error(res){
 				Toast.fire({ icon: 'error', title: 'Ha ocurrido un error al consultar carrito.' });
@@ -98,7 +113,8 @@ $(document).ready(function(){
 			let precioTotal = 0;
 			let flexDirection = ($('.carrito-container').width() < 400) ? 'item-carrito-tienda' : '';
 			carrito.forEach((row, i) => {
-				let prod = row[1];
+				let prod = getProdDetalle(row[1].cod_producto);
+					prod.cantidad = row[1].cantidad;
 				let precioUnidadTotal = parseFloat(prod.p_venta) * parseFloat(prod.cantidad);
 				precioTotal += precioUnidadTotal;
 				let hr = (i == carrito.length - 1) ? '' : '<hr class="my-2">';
@@ -134,39 +150,14 @@ $(document).ready(function(){
 
 	}
 
-	function validarInputCantidad(input){
-		parametro = input.val();
-		let valid = /^([0-9]+\.+[0-9]|[0-9])+$/.test(parametro)
-		let tooltip = input.closest('.opciones').find('.invalid-tooltip');
-		if (parametro == null || parametro =="" || parametro == 0) {
-			tooltip.text("Debe introducir datos.");
-			tooltip.show();	
-			input.attr("style","border-color: red;")
-			return false
-		}else if (isNaN(parametro)) {
-			tooltip.text("Debe ser solo números.");
-			tooltip.show();	
-			input.attr("style","border-color: red;")
-			return false
-		}else if(!valid){
-			tooltip.text("Debe ser positivo.");
-			tooltip.show();	
-			input.attr("style","border-color: red;")
-		}else{
-			tooltip.hide();
-			input.attr("style","border-color: none;")
-			return true 
-		}			             
-	}
-
-	async function validarStock(productos){
+	async function validarStock(productos, tooltipClass = '.invalid-tooltip'){
 		let res;
 		await $.ajax({ method: 'POST', url: '?url=carrito', dataType: 'json',
 			data: {validar:'', productos},
 			success(response){ 
 				let resultado = [];
 				response.forEach(row => {
-					let tooltip = $(`#${row.id_producto}`).closest('.opciones').find('.invalid-tooltip');
+					let tooltip = $(`#${row.id_producto}`).closest('.opciones').find(tooltipClass);
 					if(row.info.resultado){
 						$(`#${row.id_producto}`).attr("style","border-color: none;")
 						tooltip.hide();
@@ -201,7 +192,7 @@ $(document).ready(function(){
 			let {id: id_producto, value: cantidad} = this;
 			let productoEditado = [{id_producto, cantidad}];
 			timeoutId = setTimeout(function() {
-				if(validarInputCantidad(input) != true) return;
+				if(validarInputCantidadCarrito(input) != true) return;
 				validarStock(productoEditado).then((res) => {
 					if(!res) return;
 
@@ -261,7 +252,6 @@ $(document).ready(function(){
 
 
 	$('#delProductFromCar').click(function(){
-		console.log(session)
 		if(session === false){
 			deleteProd(id);
 			Toast.fire({ icon: 'success', title: 'Producto eliminado del carrito.' })
@@ -292,43 +282,96 @@ $(document).ready(function(){
 
 	})
 
-	// $('#añadirAlCarrito').click(function(){
-	// 		input = $('#catalogoCantidadInput');
-	// 		cantidad = Number(input.val());
-	// 		error = $('#errorCantidadCatalogo');
+	let validCantidad;
+	$('.cantidad_producto button').click(function(){
+		let input = $('#cantidad_añadir_producto');
+		let cantidad = Number(input.val());
+		if($(this).hasClass('mas')) cantidad++;
+		if($(this).hasClass('menos')) cantidad--;
+		cantidad = (cantidad < 1) ? 1 : cantidad;
+		input.val(cantidad);
+		validCantidad = validarInputCantidadCarrito(input, '.invalid-tooltip-prod');
+	})
+	$('#cantidad_añadir_producto').on('keyup', function(){
+		validCantidad = validarInputCantidadCarrito($(this), '.invalid-tooltip-prod');
+	})
 
-	// 		if(validarVC(input, error, 'Error,') != true){
-	// 			error.css({display: 'block'});
-	// 			return
-	// 		}else{
-	// 			error.css({display: 'none'});
-	// 		}
 
-	// 		validarStock(id).then((res) => {
-	// 			if(!res) return;
+	$(document).on('click','.mostrarCatalogo', function(){id = this.attributes.id_prod.value;})
 
-	// 			$.ajax({ url: '', type: 'post', dataType: 'json',
-	// 				data: {añadirCarrito:'', id, cantidad},
-	// 				success(res){
-	// 					if(res.resultado === true){
-	// 						$('.cerrar').click();
-	// 						carrito.refrescar();
-	// 						Toast.fire({ icon: 'success', title: 'Se ha añadido el producto al carrito.'});
-	// 					}else{
-	// 						$('.cerrar').click();
-	// 						Toast.fire({ icon: 'error', title: res.msg});
-	// 					}
-	// 				},
-	// 				error: (e) => {
-	// 					$('.cerrar').click();
-	// 					Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.'});
-	// 				}
+	function añadirCarrito(productsAdded){
 
-	// 			})
+		let carrito = productsAdded.reduce((acc, curr) => {
+			let prodDetalle = getProdDetalle(curr.id_producto);
+			acc[curr.id_producto] = {
+				cod_producto: curr.id_producto,
+				cantidad: curr.cantidad,
+			};
+			return acc;
+		}, {});
+
+		let carritoStorage = getCar();	
+		mergeCarts(carrito, carritoStorage);
+
+		if(session === true){
+			carrito = getCar();
+			$.ajax({ url:'?url=carrito', type: 'post', dataType: 'json',
+				data: {añadirCarrito:'', productos: carrito},
+				success(res){
+					console.log(res);
+					// if(res.resultado === true){
+					// 	$('.cerrar').click();
+					// 	carrito.refrescar();
+					// 	Toast.fire({ icon: 'success', title: 'Se ha añadido el producto al carrito.'});
+					// }else{
+					// 	$('.cerrar').click();
+					// 	Toast.fire({ icon: 'error', title: res.msg});
+					// }
+				},
+				error: (e) => {
+					$('.cerrar').click();
+					Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.'});
+				}
+
+			})
+		}
+
+	}
+
+	$('#añadir_al_carrito').click(function(){
+			input = $('#cantidad_añadir_producto');
+			cantidad = Number(input.val());
+
+			if(validarInputCantidadCarrito(input, '.invalid-tooltip-prod') != true) return;
+
+			let prod = [{id_producto: id, cantidad}]
+			validarStock(prod, '.invalid-tooltip-prod').then((res) => {
+				if(!res) return;
+
+				añadirCarrito(prod);
+
+				// $.ajax({ url:'?url=carrito', type: 'post', dataType: 'json',
+				// 	data: {añadirCarrito:'', prod},
+				// 	success(res){
+				// 		if(res.resultado === true){
+				// 			$('.cerrar').click();
+				// 			carrito.refrescar();
+				// 			Toast.fire({ icon: 'success', title: 'Se ha añadido el producto al carrito.'});
+				// 		}else{
+				// 			$('.cerrar').click();
+				// 			Toast.fire({ icon: 'error', title: res.msg});
+				// 		}
+				// 	},
+				// 	error: (e) => {
+				// 		$('.cerrar').click();
+				// 		Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.'});
+				// 	}
+
+				// })
 				
-	// 		})
+			})
 
-	// 	})
+		})
 
 	$('.vaciar').click(function(e){
 		e.preventDefault();
@@ -366,7 +409,7 @@ $(document).ready(function(){
 		let productos = [];
 		$('.cantidad').each(function(){
 			let input = $(this);
-			if(validarInputCantidad(input) != true) throw new Error('Input inválido.');
+			if(validarInputCantidadCarrito(input) != true) throw new Error('Input inválido.');
 			let {id: id_producto, value: cantidad} = this;
 			productos.push({id_producto, cantidad});
 		})
