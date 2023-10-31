@@ -112,4 +112,9 @@ $(document).ready(function(){
       })
     }
 
+    if('carrito' in localStorage != false){
+      let car = (localStorage.getItem('carrito') === '') ? '' : JSON.parse(localStorage.getItem('carrito'));
+      let cantidad = Object.keys(car).length;
+      $('#carrito_badge').html(cantidad);
+    };
 })
