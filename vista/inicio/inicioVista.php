@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="assets/css/tienda.css">
 </head>
 
-<body class="body" id="body">
+<body id="body">
 
   <header class="w-100 h-100">
     
@@ -124,10 +124,7 @@
 
     </main>
 
-<footer>
-   <?php $footer->footer(); ?>
-
-</footer>
+  <?php $footer->footer(); ?>
 
   <?php $tiendaComp->car(); ?>
 
@@ -174,7 +171,7 @@
     <div class="modal-content">
       <div class="modal-body p-8">
         <div class="position-absolute top-0 end-0 me-3 mt-3">
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close cerrar" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="row">
           <div class="col-lg-6 row justify-content-center align-items-center">
@@ -195,7 +192,7 @@
                   <i class="bi bi-star-half"></i></small><a href="#" class="ms-2"></a>
               </div>
               <div class="fs-4 precios">
-                <span class="fw-bold text-dark precio_bs">Bs. 120.00</span>
+                <span class="fw-bold text-dark ">Bs. <span class="precio_bs">120.00</span></span>
                 <span class="text-muted precio_dolar" >$4.00</span>
               </div>
               <hr class="my-6">

@@ -54,7 +54,7 @@ $(document).ready(function(){
 		$('.tipo_medicamento').html(producto.des_tipo);
 		$('.nombre_medicamento').html(producto.nombre);
 		$('.descripcion_medicamento').html(producto.descripcion);
-		$('.precio_bs').html('Bs. '+producto.p_venta);
+		$('.precio_bs').html(producto.p_venta);
 		$('.codigo_producto').html(producto.cod_producto);
 		$('.tipo_producto').html(producto.des_tipo);
 		$('.contraindicaciones').html(producto.contraindicaciones);
