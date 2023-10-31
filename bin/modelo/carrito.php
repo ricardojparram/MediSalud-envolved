@@ -7,7 +7,7 @@
 
 		private $user;
 		private $productos;
-		private $id_producto;
+		private $cod_producto;
 		private $cantidad;
 
 		public function __construct(){
@@ -89,16 +89,16 @@
 
 					$sql = 'SELECT stock FROM producto WHERE cod_producto = ?;';
 					$new = $this->con->prepare($sql);
-					$new->bindValue(1, $producto['id_producto']);
+					$new->bindValue(1, $producto['cod_producto']);
 					$new->execute();
 					$data = $new->fetchAll(\PDO::FETCH_OBJ);
 
 					if($data[0]->stock >= $producto['cantidad']){
 						$resultado = ['resultado' => true, 'msg' => 'Cantidad disponible.'];
-						$respuesta[] = ['id_producto' => $producto['id_producto'], 'info' => $resultado];
+						$respuesta[] = ['cod_producto' => $producto['cod_producto'], 'info' => $resultado];
 					}else{
 						$resultado = ['resultado' => false, 'msg' => 'Cantidad no disponible.'];
-						$respuesta[] = ['id_producto' => $producto['id_producto'], 'info' => $resultado];
+						$respuesta[] = ['cod_producto' => $producto['cod_producto'], 'info' => $resultado];
 					}
 				}
 				$this->desconectarDB();
@@ -110,8 +110,8 @@
 
 		}
 
-		public function getEditarProd($id_producto, $cantidad, $user){
-			$this->id_producto = $id_producto;
+		public function getEditarProd($cod_producto, $cantidad, $user){
+			$this->cod_producto = $cod_producto;
 			if(preg_match_all("/^[0-9]{1,10}$/", $cantidad) != 1){
 				die(json_encode(['error' => 'Id inválida.']));
 			}
@@ -129,7 +129,7 @@
 						WHERE cod_producto = ? AND cedula = ?';
 				$new = $this->con->prepare($sql);
 				$new->bindValue(1, $this->cantidad);
-				$new->bindValue(2, $this->id_producto);
+				$new->bindValue(2, $this->cod_producto);
 				$new->bindValue(3, $this->user);
 				$new->execute();
 
@@ -138,7 +138,7 @@
 						WHERE c.cedula = ? AND c.cod_producto = ?;';
 				$new = $this->con->prepare($query);
 				$new->bindValue(1, $this->user);
-				$new->bindValue(2, $this->id_producto);
+				$new->bindValue(2, $this->cod_producto);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 
@@ -155,8 +155,8 @@
 
 		}
 
-		public function getEliminarProd($id_producto, $user){
-			$this->id_producto = $id_producto;
+		public function getEliminarProd($cod_producto, $user){
+			$this->cod_producto = $cod_producto;
 			$this->user = $user;
 
 			$this->eliminarProd();
@@ -169,7 +169,7 @@
 				$this->conectarDB();
 				$sql = "DELETE FROM carrito WHERE cod_producto = ? AND cedula = ?";
 				$new = $this->con->prepare($sql);
-				$new->bindValue(1, $this->id_producto);
+				$new->bindValue(1, $this->cod_producto);
 				$new->bindValue(2, $this->user);
 				$resultado = [];
 

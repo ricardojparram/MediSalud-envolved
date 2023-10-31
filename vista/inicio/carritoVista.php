@@ -60,9 +60,7 @@
 
   </main>
 
-  <footer class="h-25 w-100">
-    <h1>FOOTER</h1>
-  </footer>
+  <?php $footer->footer(); ?>
 
 
   <?php $VarComp->js() ?>
