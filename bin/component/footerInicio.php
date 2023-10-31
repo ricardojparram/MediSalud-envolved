@@ -7,7 +7,7 @@ class footerInicio{
 	
 	public function footer(){
 		$footer = '
-	       <footer class="py-0 pt-5 footer">
+	       <footer class="py-0 pt-5 footer mt-auto py-3">
 	          <!-- <section> begin ============================-->
 
 	        <div class="container">

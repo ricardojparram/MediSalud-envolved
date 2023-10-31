@@ -61,7 +61,9 @@
 
             </div>
           </div>
-        </nav>';
+        </nav>
+
+        ';
         echo $nav;
       }
 
