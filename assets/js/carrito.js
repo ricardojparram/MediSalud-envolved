@@ -137,7 +137,7 @@ $(document).ready(function(){
 				let img = (prod.img == null) ? '' : prod.img;
 
 				div += `
-				<div class="item-carrito p-2">
+				<div class="item-carrito ${flexDirection} p-2">
 	                <img class="" src="${img}">
 	                <div class="descripcion ">
 	                  <h3>${prod.nombre}</h3>
