@@ -45,8 +45,6 @@ $(document).ready(function(){
 		if(res != true) session = false;
 
 		mostrarCarrito();
-		editarCantidad();
-		confirmarEliminar();
 	})
 
 	/* Fusiona el carrito entregado con el carritoStorage */
@@ -129,6 +127,7 @@ $(document).ready(function(){
 		if(carrito.length > 0){
 			let productos = [];
 			let precioTotal = 0;
+			let flexDirection = ($('.carrito-container').width() < 400) ? 'item-carrito-tienda' : '';
 			carrito.forEach((row, i) => {
 				let prod = getProdDetalle(row[1].cod_producto);
 					prod.cantidad = row[1].cantidad;
@@ -163,6 +162,8 @@ $(document).ready(function(){
 			$('.carrito-container').html(div);
 			$('#precioTotal').html(precioTotal);
 			validarStock(productos);
+			editarCantidad();
+			confirmarEliminar();
 		}
 
 	}

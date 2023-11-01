@@ -68,6 +68,12 @@
     display: flex;
     align-items: center;
 }
+.item-carrito-tienda{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    justify-self: center;
+}
 .item-carrito img {
     width: 120px;
     height: 120px;
