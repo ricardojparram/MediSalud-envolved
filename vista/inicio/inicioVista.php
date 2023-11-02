@@ -9,44 +9,37 @@
   <link rel="stylesheet" href="assets/css/tienda.css">
 </head>
 
-<body id="body">
+<body>
 
   <header class="w-100 h-100">
     
   <!-- Barra navegadora -->
     <?php $tiendaComp->nav(); ?>
 
-  </header>
 
-   <main class="w-100"> 
-   <div id="carrusel" class=" d-flex justify-content-center align-items-center mb-3">
-          <div id="carouselExampleCaptions" class="carousel">
-            <div class="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active bg-black" aria-current="true" aria-label="Slide 1"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2" class="bg-black"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3" class="bg-black"></button>
-            </div>
-            <div class="carousel-inner ">
-              <div class="carousel-item active">
-                <img src="assets/img/tera.jpg" class="d-block w-100" alt="...">
-              </div>
-              <div class="carousel-item">
-                <img src="assets/img/rixigal.jpg" class="d-block w-100" alt="...">
-              </div>
-              <div class="carousel-item">
-                <img src="assets/img/inmukids.jpg" class="d-block w-100" alt="...">
-              </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
+  </header>
+  <section class="presentacion d-flex justify-content-center align-items-center">
+    <div class="container container-md row text-white">
+      <div class="col-12 col-md-6 row align-items-center">
+        <div >
+          <h1 class="fw-bold">Farmacia MediSalud C.A</h1>
+          <p class="fs-6">Lorem ipsum, dolor sit amet consectetur adipisicing, elit. Fugit at deleniti quod ipsum debitis odit minima iure aperiam, est quo ullam adipisci, velit corrupti atque dignissimos, rerum deserunt iusto, sapiente?</p>
+          <span>
+            <button class="btn btn-lg btn-light">Más informacion</button>
+            <button class="btn btn-lg btn-success"><b>Compra ya!</b></button>
+          </span>
+          
         </div>
+      </div>
+      <div class="col-12 col-md-6 row align-items-center justify-content-center pt-5">
+        <img class="img-fluid " src="assets/img/presentacion-imagen.svg" alt="Imagen vectorizada de farmacia">
+      </div>
+      
+    </div>
+  </section>
+
+  <main class="w-100"> 
+
 
 
         <!-- ======= Services Section ======= -->
@@ -131,16 +124,7 @@
   <?php $VarComp->js() ?>
   <script src="assets/js/inicio.js"></script>
   <script src="assets/js/carrito.js"></script>
-  <script>
-    
-    const myCarouselElement = document.querySelector('#carouselExampleCaptions')
 
-    const carousel = new bootstrap.Carousel(myCarouselElement, {
-      interval: 1000,
-       touch: false
-    })
-
-  </script>
 </body>
 
 </html>
