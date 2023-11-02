@@ -21,12 +21,12 @@
   <section class="presentacion d-flex justify-content-center align-items-center">
     <div class="container container-md row text-white">
       <div class="col-12 col-md-6 row align-items-center">
-        <div >
+        <div>
           <h1 class="fw-bold">Farmacia MediSalud C.A</h1>
-          <p class="fs-6">Lorem ipsum, dolor sit amet consectetur adipisicing, elit. Fugit at deleniti quod ipsum debitis odit minima iure aperiam, est quo ullam adipisci, velit corrupti atque dignissimos, rerum deserunt iusto, sapiente?</p>
-          <span>
-            <button class="btn btn-lg btn-light">Más informacion</button>
-            <button class="btn btn-lg btn-success"><b>Compra ya!</b></button>
+          <p class="fs-6" style="text-align: justify;">Nuestra farmacia en línea ofrece una amplia variedad de medicamentos y productos de salud para satisfacer todas sus necesidades. Ofrecemos envíos a todo el país para que pueda recibir sus productos directamente en la comodidad de su hogar.</p>
+          <span class="row gap-4 align-items-center justify-content-center">
+            <button class="btn btn-light col-6">Más informacion</button>
+            <button class="btn btn-success col-5"><b>¡Compra ya!</b></button>
           </span>
           
         </div>
@@ -41,62 +41,62 @@
   <main class="w-100"> 
 
 
+    <!-- ======= Services Section ======= -->
+            
+        <section class="row gap-4 servicios mt-5">
+          <header>
+            <h2 class="text-center fs-2 fw-bold titulos">Servicios</h2>
+            <p class="text-center fs-5">Ofrecemos una amplia gama de productos, incluyendo las siguientes presentaciones.</p>
+          </header>
 
-        <!-- ======= Services Section ======= -->
-        <section id="services" class="services my-5">
-          <div class="container">
+          <div class="row">
 
-            <div class="section-title">
-              <h2 class="text-center">Servicios</h2>
-              <p class="fs-4 text-center">Nuestra farmacia ofrece una amplia gama de productos que incluyen , entre otros, la venta de medicamentos en las siguientes presentaciones: </p>
+            <div class="col-xl-4 text-center">
+              <img src="assets/img/servicios-img.svg" class="img-fluid p-4" alt="">
             </div>
 
+            <div class="col-xl-8 d-flex content">
+              <div class="row align-self-center gy-4">
 
-            <div class="row">
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div id="services_1" class="icon-box">
-                  <div class="icon text-center mb-4 mt-4 ">
-                    <i class="ri-capsule-fill"></i>
+                <div class="col-md-6 icon-box" data-aos="fade-up">
+                  <i class="ri-capsule-fill"></i>
+                  <div>
+                    <h4>Tabletas y Cápsulas</h4>
+                    <p>Son formas sólidas de administración de medicamentos que contienen una dosis precisa de ingredientes activos</p>
                   </div>
-                  <h4 class="title text-center"><a>Tabletas y Cápsulas</a></h4>
-                  <p class="description text-justify fs-7">Son formas sólidas de administración de medicamentos que contienen una dosis precisa de ingredientes activos</p>
                 </div>
-              </div>
 
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div id="services_2" class="icon-box" data-aos="fade-up" data-aos-delay="100">
-                  <div class="icon text-center mb-4 mt-4">
-                    <i class="ri-medicine-bottle-fill"></i>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+                  <i class="ri-medicine-bottle-fill"></i>
+                  <div>
+                    <h4>Jarabes</h4>
+                    <p>Son formas líquidas de administración de medicamentos que contienen una solución de ingredientes activos en una base de agua y azúcar</p>
                   </div>
-                  <h4 class="title text-center"><a>Jarabes</a></h4>
-                  <p class="description text-justify fs-7">Son formas líquidas de administración de medicamentos que contienen una solución de ingredientes activos en una base de agua y azúcar</p>
                 </div>
-              </div>
 
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div id="services_3" class="icon-box" data-aos="fade-up" data-aos-delay="200">
-                  <div class="icon text-center mb-4 mt-4">
-                    <i class="ri-syringe-fill"></i>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+                  <i class="ri-syringe-fill"></i>
+                  <div>
+                    <h4>Inyecciones</h4>
+                    <p>Son formas de administración de medicamentos que se aplican directamente en el cuerpo a través de una aguja y una jeringa</p>
                   </div>
-                  <h4 class="title text-center"><a>Inyecciones</a></h4>
-                  <p class="description text-justify fs-7">Son formas de administración de medicamentos que se aplican directamente en el cuerpo a través de una aguja y una jeringa</p>
                 </div>
-              </div>
 
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div id="services_4" class="icon-box" data-aos="fade-up" data-aos-delay="300">
-                  <div class="icon text-center mb-4 mt-4">
-                    <i class="ri-hand-sanitizer-fill"></i>
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
+                  <i class="ri-hand-sanitizer-fill"></i>
+                  <div>
+                    <h4>Loción</h4>
+                    <p>Es una forma líquida de administración de medicamentos que se aplica tópicamente en la piel para tratar afecciones dermatológicas</p>
                   </div>
-                  <h4 class="title text-center"><a>Loción</a></h4>
-                  <p class="description text-justify fs-7">Es una forma líquida de administración de medicamentos que se aplica tópicamente en la piel para tratar afecciones dermatológicas</p>
                 </div>
-              </div>
 
+              </div>
             </div>
 
           </div>
-        </section><!-- End Services Section -->
+
+        </section>
+    <!-- ====== Service section end -->        
 
         <section id="productos" class="productos my-4">
           <div class="container my-2">
@@ -111,7 +111,7 @@
             </div>
 
           </div>
-        </section>
+        </section> -->
 
 
 

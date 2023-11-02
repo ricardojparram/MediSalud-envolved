@@ -1,5 +1,6 @@
 body{
-    background-color: white
+    background-color: white !important;
+    --color-titulo: #50643c;
 }
 
 .presentacion{
@@ -44,6 +45,43 @@ body{
         display: flex;
     }
 }
+.titulos{
+    color: var(--color-titulo);
+}
+
+.servicios .content {
+  padding: 0 50px;
+}
+
+.servicios .content .icon-box {
+  display: flex;
+}
+
+.servicios .content .icon-box h4 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color:  var(--color-titulo);
+}
+
+.servicios .content .icon-box i {
+  font-size: 44px;
+  line-height: 44px;
+  color: #9ba958;
+  margin-right: 15px;
+}
+
+.servicios .content .icon-box p {
+  font-size: 15px;
+  color: #848484;
+}
+@media (max-width: 1000px){
+    .servicios .content{
+        padding: 0 100px;   
+    }
+
+}
+
 
 #carRight{
     color: white;
@@ -59,7 +97,7 @@ body{
 }
 
 #tituloNav{
-    color: #50643c;
+    color: var(--color-titulo);
 }
 
 .icon-car{
