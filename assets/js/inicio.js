@@ -16,22 +16,30 @@ $(document).ready(function(){
 	            data.forEach(row =>{
 	             	mostrar += `
 		            <div class="product-container">
-		              <div class="card card-product">
+		              <div class="card-product position-relative">
 		                <div class="card-body">
-		                  <div class="text-center">
-		                    <img src="assets/img/productos/producto_imagen.png" alt="Imagen del producto" class="mb-3 img-fluid">
+		                  <div class="text-center position-relative">
+		                    <img src="${row.img}" alt="Imagen del producto" class="mb-3 img-fluid">
+		                    <small class="text-warning position-absolute bottom-0 end-0">
+		                      <i class="bi bi-star-fill"></i>
+		                      <i class="bi bi-star-fill"></i>
+		                      <i class="bi bi-star-fill"></i>
+		                      <i class="bi bi-star-fill"></i>
+		                      <i class="bi bi-star-half"></i>
+		                    </small>
 		                  </div>
 		                  <div class="text-small mb-1">
 		                    <a href="#!" class="text-decoration-none text-muted" tabindex="0"><small>${row.des_tipo}</small></a>
 		                  </div>
 		                  <h2 class="fs-6">${row.nombre}</h2>
 		                  <!-- rating -->
+
 		                  <div class="d-flex justify-content-between align-items-center mt-3">
 		                    <div>
-		                    	<span class="text-dark">Bs. ${row.p_venta}</span><span class="text-muted"> $5</span>
+		                      <span class="text-dark">Bs. ${row.p_venta}</span><span class="text-muted"> $5</span>
 		                    </div>
 		                    <!-- btn -->
-		                    <button id_prod="${row.cod_producto}" class="btn btn-success text-white mostrarCatalogo" data-bs-toggle="modal" data-bs-target="#AñadirCarritoModal">
+		                    <button id_prod="${row.cod_producto}" class="btn btn-sm btn-success text-white mostrarCatalogo" data-bs-toggle="modal" data-bs-target="#AñadirCarritoModal">
 		                      <strong>Comprar </strong><i class="fs-7 text-white bi bi-cart-plus-fill"></i> 
 		                    </button>
 		                  </div>
