@@ -7,7 +7,9 @@
       public function Nav(){
 
         $adminDashboard = "";
+        $misCompras = "";
         if(isset($_SESSION['nivel'])){
+          $misCompras = '<li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=miscompras">Mis compras</a></li>';
           $adminDashboard = ($_SESSION['nivel'] != "4") 
             ? '<li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=home">Admin</a></li>' : '';
         }
@@ -46,7 +48,7 @@
                 <li class="nav-item px-2"><a class="nav-link fw-medium" href="#">Nosotros</a></li>
                 <li class="nav-item px-2"><a class="nav-link fw-medium" href="#">Catálogo</a></li>
                 <li class="nav-item px-2"><a class="nav-link fw-medium" href="#">Contactos</a></li>
-                <li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=miscompras">Mis compras</a></li>
+                '.$misCompras.'
                 '.$adminDashboard.'
               </ul>
 

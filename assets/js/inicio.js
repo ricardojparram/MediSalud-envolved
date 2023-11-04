@@ -58,11 +58,12 @@ $(document).ready(function(){
 	$(document).on('click' , '.mostrarCatalogo' , function(){
 		id = this.attributes.id_prod.value;
 		let producto = getProdDetalle(id);
-
+		 console.log(producto)
 		$('.tipo_medicamento').html(producto.des_tipo);
 		$('.nombre_medicamento').html(producto.nombre);
 		$('.descripcion_medicamento').html(producto.descripcion);
 		$('.precio_bs').html(producto.p_venta);
+		$('.producto_imagen_modal').attr('src', producto.img);
 		$('.codigo_producto').html(producto.cod_producto);
 		$('.tipo_producto').html(producto.des_tipo);
 		$('.contraindicaciones').html(producto.contraindicaciones);

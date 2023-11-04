@@ -23,7 +23,7 @@
       <div class="col-12 col-md-6 row align-items-center">
         <div>
           <h1 class="fw-bold">Farmacia MediSalud C.A</h1>
-          <p class="fs-6" style="text-align: justify;">Nuestra farmacia en línea ofrece una amplia variedad de medicamentos y productos de salud para satisfacer todas sus necesidades. Ofrecemos envíos a todo el país para que pueda recibir sus productos directamente en la comodidad de su hogar.</p>
+          <p class="fs-6" style="text-align: justify;"><strong>Nuestra farmacia en línea ofrece una amplia variedad de medicamentos y productos de salud para satisfacer todas sus necesidades. Ofrecemos envíos a todo el país para que pueda recibir sus productos directamente en la comodidad de su hogar.</strong></p>
           <span class="row gap-4 align-items-center justify-content-center">
             <button class="btn btn-light col-6">Más informacion</button>
             <button class="btn btn-success col-5"><b>¡Compra ya!</b></button>
@@ -298,7 +298,7 @@
         <div class="row">
           <div class="col-lg-6 row justify-content-center align-items-center">
             <!-- img slide -->
-              <img class=".img-fluid" src="assets/img/productos/producto_imagen.png" alt="producto_imagen">
+              <img class=".img-fluid producto_imagen_modal" src="assets/img/productos/producto_imagen.png" alt="producto_imagen">
           </div>
           <div class="col-lg-6">
             <div class="ps-lg-8 mt-6 mt-lg-0">
