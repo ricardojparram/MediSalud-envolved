@@ -298,5 +298,37 @@ class moneda extends DBConnect{
      }
   }
 
+  // public function  actualizarMoneda(){
+    
+  //   $ch = curl_init();
+ 
+ 
+  //   $array = [
+
+  //              'coins' => 'PTR',
+  //              'fiats' =>  'BS'
+
+  //            ];
+
+  //   $data = http_build_query($array);
+
+  //   curl_setopt($ch, CURLOPT_URL, 'https://petroapp-price.petro.gob.ve/price/');
+  //   curl_setopt($ch, CURLOPT_POST, true);
+  //   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  //   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+  //   $response = curl_exec($ch);
+
+
+  //   if (curl_error($ch)) echo curl_error($ch);
+  //   else $decoded = json_decode($response, true);
+
+  //   foreach ($decoded as $index => $value) {
+  //       echo "$index: $value <br>";
+  //   }
+
+  //   curl_close($ch);
+  // }
+
 }
 ?>

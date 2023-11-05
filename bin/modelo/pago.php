@@ -54,21 +54,20 @@
 
                 if(isset($data[0]["cedula"])){ 
                     echo json_encode($data);
-                    parent::desconectarDB();
-                    die();
                 }elseif (!isset($data[0]["cedula"])) {
                     $new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo FROM usuario u WHERE u.cedula = ?");
                     $new->bindValue(1, $cedula);
                     $new->execute();
                     $data = $new->fetchAll();
                     echo json_encode($data);
-                    parent::desconectarDB();
-                    die();
+                    
+                    
                 }
-                
+                parent::desconectarDB();
+                die();
                 
             } catch(\PDOexection $error){
-                return $error;
+                die($error);
             }
         }
 
@@ -158,7 +157,7 @@
              }   
         }
 
-          public function nunca($cedula, $nombre, $apellido, $direccionF, $telefono, $correo, $sede, $direccionE, $detalles){
+        public function getRegistar($cedula, $nombre, $apellido, $direccionF, $telefono, $correo, $sede, $direccionE, $detalles){
 
             if(preg_match_all("/^[a-zA-Z]{0,30}$/", $nombre) == false){
                 $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
@@ -185,11 +184,6 @@
                 echo json_encode($resultado);
                 die();
             }
-            if(preg_match_all("/^[0-9]{1,2}$/", $sede) == false){
-                $resultado = ['resultado' => 'Error de rol' , 'error' => 'rol invalido.'];
-                echo json_encode($resultado);
-                die();
-            }
             if(preg_match_all("/[$%&|<>]/", $direccionE) == true){
                 $resultado = ['resultado' => 'Error de direccion entrega' , 'error' => 'Direccion inválida.'];
                 echo json_encode($resultado);
@@ -206,13 +200,13 @@
             $this->sede = $sede;
             $this->direccionE = $direccionE;
             $this->detalles = $detalles;
-            $this->hola2();
+            $this->registar();
           }
 
-          private function hola2(){
+          private function registrar(){
             try {
                 parent::conectarDB();
-                $new = $this->con->prepare("SELECT cedula FROM cliente WHERE status = 1 and cedula = ?");
+                $new = $this->con->prepare("SELECT cedula FROM cliente WHERE cedula = ?");
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll();
@@ -352,8 +346,82 @@
 
                 die();
             } catch (\PDOException $error) {
-                return $error;
+                die($error);
             }
           }
+
+        public function validarCarrito($cedula){
+            try {
+                parent::conectarDB();
+                $new = $this->con->prepare("SELECT COUNT(*) as cuenta FROM carrito WHERE cedula = ?");
+                $new->bindValue(1, $cedula);
+                $new->execute();
+                $data = $new->fetchAll();
+                echo json_encode($data);
+                parent::desconectarDB();
+                die();
+            } catch (\PDOException $e) {
+                die($e);
+            }
+        }
+
+        public function getDatosCar($cedula){
+            if(preg_match_all("/^[0-9]{7,10}$/", $cedula) == false){
+                $resultado = ['resultado' => 'Error de cedula' , 'error' => 'Cédula inválida.'];
+                echo json_encode($resultado);
+                die();
+            }
+
+            $this->cedula = $cedula;
+            $this->datosCar();
+        }
+
+        private function datosCar(){
+            try {
+                parent::conectarDB();
+                $new = $this->con->prepare("SELECT cedula FROM cliente WHERE cedula = ?");
+                $new->bindValue(1, $this->cedula);
+                $new->execute();
+                $data = $new->fetchAll();
+                parent::desconectarDB();
+                if(isset($data[0]["cedula"])){ 
+                    
+                    parent::conectarDB();
+                    $new = $this->con->prepare("UPDATE cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula SET c.status = 2 WHERE c.cedula = ?");
+                    $new->bindValue(1, $this->cedula);
+                    $new->execute();
+                    parent::desconectarDB();
+                    // $resultado = ['resultado' => 'Editado'];
+                    // echo json_encode($resultado);
+                    // die();
+                }else {
+                    parent::conectarDB();
+                    $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,2)");
+                    $new->bindValue(1, $this->cedula);
+                    $new->bindValue(2, "admin");
+                    $new->bindValue(3, "admin");
+                    $new->bindValue(4, "admin");
+                    $new->execute();
+
+                    $new = $this->con->prepare("INSERT INTO contacto_cliente(cedula) VALUES (?)");
+                    $new->bindValue(1, $this->cedula);
+                    $new->execute();
+                    // $resultado = ['resultado' => 'Registrado correctamente.'];
+                    // echo json_encode($resultado);
+                    // die();
+                    parent::desconectarDB();
+                }
+                parent::conectarDB();
+                $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
+                                                VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 2)");
+                $new->bindValue(1, $this->cedula);
+                $new->execute();
+                parent::desconectarDB();
+                echo json_encode("Registra");
+                die();
+            } catch (\PDOException $e) {
+                die($e);
+            }
+        }
     }
 ?>

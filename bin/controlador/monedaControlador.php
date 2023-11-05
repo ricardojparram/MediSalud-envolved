@@ -9,6 +9,8 @@
   $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
   $permiso = $permisos['Moneda'];
 
+  // $objModel->actualizarMoneda();
+
   if(!isset($_SESSION['nivel'])){
     die('<script> window.location = "?url=login" </script>');
   }

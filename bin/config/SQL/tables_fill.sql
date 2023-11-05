@@ -67,8 +67,15 @@ INSERT INTO cambio(id_cambio, cambio, fecha, moneda, status) VALUES(1, '35', DEF
 
 INSERT INTO cambio(cambio, fecha, moneda, status) VALUES('35', DEFAULT, 1, 1), ('40', DEFAULT, 2, 1);
 
-INSERT INTO empresa_envio (rif, nombre, contacto, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
-INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
+INSERT INTO `estados_venezuela` (`id_estado`, `nombre`) VALUES
+(1, 'Distrito Capital'),(2, 'Amazonas'),(3, 'Anzoategui'),(4, 'Apure'),(5, 'Aragua'),(6, 'Barinas'),
+(7, 'Bolivar'),(8, 'Carabobo'),(9, 'Cojedes'),(10, 'Falcon'),(11, 'Guarico'),(12, 'Lara'),
+(13, 'Merida'),(14, 'Monagas'),(15, 'Nueva Esparta'),(16, 'Portuguesa'),(17, 'Sucre'),(18, 'Tachira'),
+(19, 'Trujillo'),(20, 'Yaracuy'),(21, 'Zulia'),(22, 'Delta Amacuro'),(23, 'Miranda'),(24, 'La Guaira');
+
+
+-- INSERT INTO empresa_envio (rif, nombre, contacto,id_estado, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
+-- INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
 
 INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Central de Venezuela', '0001', 1);
 INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco de Venezuela (BDV)', '0102', 1);

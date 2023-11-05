@@ -5,9 +5,14 @@
   use modelo\pago as pago;
   
   $objModel = new pago();
+
   
   if(!isset($_SESSION['cedula'])){
     die('<script>window.location = "?url=login" </script>');
+  }
+  
+  if (isset($_POST['datosCar'])){
+    $objModel->getDatosCar($_SESSION['cedula']);
   }
 
   if (isset($_POST['datos']) && isset($_SESSION['cedula'])) {
@@ -35,16 +40,22 @@
   }
 
   if (isset($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles'])) {
-    $objModel->nunca($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles']);
+    $objModel->getRegistar($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles']);
   }
 
   if (isset($_POST['mostrarB'])){
     $objModel->banco();
   }
 
+  if (isset($_POST['carrito'], $_SESSION['cedula'])){
+    $objModel->validarCarrito($_SESSION['cedula']);
+  }
+
+  
   $VarComp = new initcomponents();
   $tiendaComp = new tienda();
-
+  
   require_once("vista/inicio/pagoVista.php");
-
+  
+  //$objModel->conexion();
 ?>

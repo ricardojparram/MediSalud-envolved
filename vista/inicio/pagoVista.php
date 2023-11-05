@@ -250,6 +250,7 @@
                                 </div>
                             </div>
                             <p class="mt-2" id="error3" style="color:#ff0000;text-align: center;"></p>
+                            <p class="mt-2" id="errorMonto" style="color:#ff0000;text-align: center;"></p>
                             <div class="f1-buttons mt-3">
                                 <button type="button" class="btn btn-secondary btn-previous">Atrás</button>
                                 <button type="button" class="btn btn-success enviar" id="3">Registar Datos</button>

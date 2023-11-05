@@ -33,7 +33,21 @@ $(document).ready(function() {
 	empresaEnvio();
 	selectTipoPago();
 	banco();
+	validarCarrito().then(()=>{
+		$.ajax({
+			type: "post",
+            url: "",
+            dataType: "json",
+            data:{datosCar: 'xd'},
+            success(data) {
+				console.log()
+			}
+		})
+	})
 
+	$(window).on('beforeunload', function(){
+		return
+	})
 
 	// Datos Personales
 	function DatosP() {
@@ -54,19 +68,11 @@ $(document).ready(function() {
 		});
 	}
 	
-	function imprimirMemas() {
-  		console.log(memas[0].nombre); // Imprime los datos cuando se hayan asignado a memas
-	}
-
-
 	
-	
-	
-
+	let impuesto
+	let total
 	// Precio y Cambio
 	function precio(){
-		let impuesto
-		let total
 		$.ajax({
 			type: "post",
             url: "",
@@ -458,13 +464,12 @@ $(document).ready(function() {
 			
 			$('.select-tipo').each(function() {
 				// $(this).attr('valid', 'true');
-  				var valor = $(this).val(); // Obtén el valor de cada elemento select
-  				valores.push(valor); // Agrega el valor al array
+  				var valor = $(this).val(); 
+  				valores.push(valor); 
 				if($(this).val() == 4 && $(this).val() == 4){
 					tipoPago($(this).val())
 				}
 			});
-			console.log(valores); // Muestra los valores en la consola
 
 			for (var i = 0; i < valores.length; i++) {
   				var contador = 0;
@@ -472,7 +477,7 @@ $(document).ready(function() {
 				for (var j = 0; j < valores.length; j++) {
 					if (valores[i] === valores[j]) {
 					contador++;
-					ola();
+					cuenta();
 					}
 					
 				}
@@ -480,8 +485,7 @@ $(document).ready(function() {
 			}
 			
 
-			console.log(contador);
-			function ola() {
+			function cuenta() {
 				
 				if (contador >= 2) {
 					selects.closest('tr').attr('style', 'border-color: red;')
@@ -548,22 +552,26 @@ $(document).ready(function() {
 	function validarPrecio(input){
 		let valor = input.val();
 		if(valor <= 0 || isNaN(valor)){
-		  $('#error3').text('Precio inválido.');
+		  $('#errorMonto').text('Precio inválido.');
 		  input.css({'border': 'solid 1px', 'border-color':'red'})
 		  input.attr('valid','false')
 		  return false;
+		// }else if (valor == null || valor == '') {
+		// 	$('#errorMonto').text('Rellene los campos vacios.');
+		//   	input.css({'border': 'solid 1px', 'border-color':'red'})
+		//   	input.attr('valid','false')
 		}else{
-		  $('#error3').text('');
+		  $('#errorMonto').text('');
 		  input.css({'border': 'none'});
 		  input.attr('valid','true');
 		  return true;
 		}
-	  }
-	  validarRepetido();
-	  validarValores();
-	  function validarValores(){
+	}
+	validarRepetido();
+	validarValores();
+	function validarValores(){
 		$('.precio input').keyup(function(){ validarPrecio($(this)) });
-	  }
+	}
 
 	$("#tipoP").change(()=> {  validarSelect($("#tipoP"),$("#errorTipoP"), "Error de Tipo,") });
 	$("#bancTipo").change(()=> {  validarSelect($("#bancTipo"),$("#errorBancTipo"), "Error de Banco,") });
@@ -579,6 +587,8 @@ $(document).ready(function() {
 	
 	
 	$("#3").click((e)=>{
+		let vmonto
+		let monto = 0
 		let valid = false
 		let vtipoPago = true
 		let vprecio = true
@@ -590,7 +600,7 @@ $(document).ready(function() {
 		let cedula = validarCedula($("#cedClien"),$("#errorCed"), "Error de Cedula,") ;
 	 	let nombre = validarNombre($("#nomClien"),$("#errorNomApe"), "Error de Nombre,") ;
 
-		 switch (idGlass) {
+		switch (idGlass) {
 			case "repartidor":
 				calle = validarString($("#calle"),$("#errorCalle"), "Error de Calle,");
 				avenida = validarString($("#numAv"),$("#errorNumAv"), "Error de Avenida,");
@@ -637,21 +647,42 @@ $(document).ready(function() {
 				$('#error3').text('No debe haber tipo de pagos vacíos.')
 			}
 		})
-		
-
-		$('.precio input').each(function(){ let valPre = validarPrecio($(this)) 
+		let value = 0
+		$('.precio input').each(function(){ 
+			let valPre = validarPrecio($(this)) 
+			value = parseFloat($(this).val());
+				if (!isNaN(value)) {
+					monto = parseFloat(monto + value)
+				}
+			
 			if (!valPre) {
 				vprecio = false
 			}
+
 		});
 
+		// monto = (typeof monto === 'undefined') ? 0 : monto;
 
-		
+		if (monto == total) {
+			vmonto = true;
+			$("#errorMonto").text('')
+		}else if(monto > total){
+			vmonto = false;
+			$("#errorMonto").text('Error en el monto, la Cantidad es Mayor')
+			$('.precio input').css({'border': 'solid 1px', 'border-color':'red'})
+		}else if(monto < total){
+			vmonto = false;
+			$("#errorMonto").text('Error en el monto, la Cantidad es Menor')
+			$('.precio input').css({'border': 'solid 1px', 'border-color':'red'})
+		}else{
+			vmonto = false;
+			$("#errorMonto").text('Error en el monto, la Cantidad es Invalida')
+		}
+		console.log(total)
+		console.log(monto)
 
-		
 
 		let push = []
-
 
 		if(idGlass == "repartidor"){
 			direcE = $("#calle").val()+" "+$("#numAv").val()+" "+$("#numCasa").val()+" "+$("#ref").val()
@@ -703,11 +734,14 @@ $(document).ready(function() {
 			
 			
 		})
-			console.log(push)
+
 		
-		if(nombre && direccion && telefono && cedula && correo && movil && trans && valid && vtipoPago && vprecio){
-			$.ajax({
-				url: '',
+		
+		if(nombre && direccion && telefono && cedula && correo && movil && trans && valid && vtipoPago && vprecio && vmonto){
+			validarCarrito().then(() => {
+
+				$.ajax({
+					url: '',
 					method: 'POST',
 					dataType: 'json',
 					data:{
@@ -717,13 +751,13 @@ $(document).ready(function() {
 						direccion: $("#direcClien").val(),
 						telefono: $("#teleClien").val(),
 						correo: $("#emailClien").val(),
-	
+						
 						sede: $("#sede").val(),
-	
+						
 						direccion: direcE,
 						detalles: push
-			
-			
+						
+						
 					},
 					success(final){
 						if (final.resultado === "Registrado Pedido") {
@@ -731,14 +765,15 @@ $(document).ready(function() {
 								title: 'Compra Realizada',
 								text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
 								icon: 'success',
-							  })
-							  setTimeout(function(){
-								location = '?url=inico'
-							  }, 2500);
+							})
+							// setTimeout(function(){
+							// 	location = '?url=inico'
+							// }, 2500);
 						} else {
-                			Toast.fire({ icon: 'error', title: 'No fue Posible el Registro' })
+							Toast.fire({ icon: 'error', title: 'No fue Posible Realizar la Compra' })
 						}
 					}
+				})
 			})
 			
 		}else{
@@ -762,20 +797,6 @@ $(document).ready(function() {
     	// navigation steps / progress steps
     	var current_active_step = $(this).parents('.f1').find('.f1-step.active');
     	var progress_line = $(this).parents('.f1').find('.f1-progress-line');
-    	
-    	// fields validation
-
-    	// parent_fieldset.find('input[type="text"], input[type="password"], textarea').each(function() {
-    	// if( $(this).val() == "" ) {
-    	// 	$(this).attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");
-    	// 	next_step = false;
-    	// }
-    	// else {
-    	// 	$(this).removeClass('input-error');
-    	// }
-    	// });
-
-    	// fields validation
     	
     	if( next_step ) {
     		parent_fieldset.fadeOut(400, function() {
@@ -809,6 +830,33 @@ $(document).ready(function() {
 			scroll_to_class( $('.f1'), 20 );
     	});
     });
+
+	function validarCarrito() {
+		return new Promise((resolve, reject)=>{
+			$.ajax({
+				method: 'post',
+				url: '',
+				dataType: 'JSON',
+				data:{
+					carrito:'carrito'
+				},success(data){
+					if (data[0].cuenta >= 0) {
+						return resolve(true)
+					} else {
+						Swal.fire({
+							title: 'Productos Agotados!',
+							text: 'Los Productos Selecionados estan agotados en nuestro almacen',
+							icon: 'error',
+						  })
+						//   setTimeout(function(){
+						// 	location = '?url=home'
+						//   }, 1600);
+						return reject(false)
+					}
+				}
+			})
+		})
+	}
     
     
     
