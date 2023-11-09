@@ -95,7 +95,7 @@
         public function mostrarEmpresa(){
             try {
                 parent::conectarDB();
-                $new = $this->con->prepare('SELECT * FROM `empresa_envio` WHERE status = 1;');
+                $new = $this->con->prepare('SELECT * FROM empresa_envio WHERE status = 1;');
                 $new->execute();
                 $data = $new->fetchAll();
                 echo json_encode($data);
@@ -126,7 +126,7 @@
         public function getMostrarMetodo(){
             try{
               parent::conectarDB();
-              $new = $this->con->prepare("SELECT * FROM `tipo_pago` WHERE status = 1 and online = 1");
+              $new = $this->con->prepare("SELECT * FROM tipo_pago WHERE status = 1 and online = 1");
               $new->execute();
               $data = $new->fetchAll(\PDO::FETCH_OBJ);
               echo json_encode($data);
@@ -143,7 +143,7 @@
         public function banco(){
             try{
                 parent::conectarDB();
-                $new = $this->con->prepare("SELECT * FROM `banco` WHERE status = 1");
+                $new = $this->con->prepare("SELECT * FROM banco WHERE status = 1");
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
                 echo json_encode($data);
@@ -251,11 +251,11 @@
                 parent::conectarDB();
                 if($this->sede != "" || $this->sede != NULL){
 
-                    $new = $this->con->prepare("INSERT INTO `envio`(`id_envio`, `id_sede`, `status`) VALUES (DEFAULT, ?, 3)");
+                    $new = $this->con->prepare("INSERT INTO envio(id_envio, id_sede, status) VALUES (DEFAULT, ?, 3)");
                     $new->bindValue(1, $this->sede);
                     $new->execute();
 
-                    $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
+                    $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
                                                 VALUES (DEFAULT, DEFAULT, ?, NULL, ?, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->sede);
@@ -264,7 +264,7 @@
                     // echo json_encode($resultado);
                 }elseif ($this->direccionE != NULL || $this->direccionE != "") {
 
-                    $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
+                    $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
                                                 VALUES (DEFAULT, DEFAULT, ?, ?, NULL, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->direccionE);
@@ -274,7 +274,7 @@
                     // echo json_encode($resultado);
                 }else{
 
-                    $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
+                    $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
                                                 VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
@@ -289,7 +289,7 @@
                 $data = $new->fetchAll();
 
                 foreach ($data as $dato) {
-                    $new = $this->con->prepare("INSERT INTO `venta_producto`(`num_fact`, `cod_producto`, `cantidad`, `precio_actual`) 
+                    $new = $this->con->prepare("INSERT INTO venta_producto(num_fact, cod_producto, cantidad, precio_actual) 
                                                 VALUES (?, ?, ?, ?)");
                     $new->bindValue(1, $numFactura);
                     $new->bindValue(2, $dato['cod_producto']);
@@ -306,7 +306,7 @@
                 $totalMonto = array_sum($monto);
                 
 
-                    $new = $this->con->prepare("INSERT INTO `pago`(`id_pago`, `monto_total`, `num_fact`, `status`) 
+                    $new = $this->con->prepare("INSERT INTO pago(id_pago, monto_total, num_fact, status) 
                                             VALUES (DEFAULT, ?, ?, 1)");
                     $new->bindValue(1, $totalMonto);
                     $new->bindValue(2, $numFactura);
@@ -350,22 +350,24 @@
             }
           }
 
-        public function validarCarrito($cedula){
+
+        private function validarCarrito($cedula){
             try {
                 parent::conectarDB();
                 $new = $this->con->prepare("SELECT COUNT(*) as cuenta FROM carrito WHERE cedula = ?");
                 $new->bindValue(1, $cedula);
                 $new->execute();
-                $data = $new->fetchAll();
-                echo json_encode($data);
+                $data = $new->fetchAll(\PDO::FETCH_OBJ);
                 parent::desconectarDB();
-                die();
+                if(isset($data[0])) return ($data[0]->cuenta > 1);
+                return false;
+
             } catch (\PDOException $e) {
                 die($e);
             }
         }
 
-        public function getDatosCar($cedula){
+        public function getComprobarEstadoPago($cedula){
             if(preg_match_all("/^[0-9]{7,10}$/", $cedula) == false){
                 $resultado = ['resultado' => 'Error de cedula' , 'error' => 'Cédula inválida.'];
                 echo json_encode($resultado);
@@ -373,55 +375,124 @@
             }
 
             $this->cedula = $cedula;
-            $this->datosCar();
+            $this->nombre = $_SESSION['nombre'];
+            $this->apellido = $_SESSION['apellido'];
+
+            if($this->validarCarrito($this->cedula) != true){
+                die("<script> window.location = '?url=carrito' </script>");
+            }
+
+            $this->comprobarEstadoPago();
         }
 
-        private function datosCar(){
-            try {
+        private function comprobarEstadoPago(){
+            try{
                 parent::conectarDB();
                 $new = $this->con->prepare("SELECT cedula FROM cliente WHERE cedula = ?");
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
-                $data = $new->fetchAll();
-                parent::desconectarDB();
-                if(isset($data[0]["cedula"])){ 
-                    
-                    parent::conectarDB();
-                    $new = $this->con->prepare("UPDATE cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula SET c.status = 2 WHERE c.cedula = ?");
+                [0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
+
+                if(!isset($data->cedula)){
+                    $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,1)");
                     $new->bindValue(1, $this->cedula);
-                    $new->execute();
-                    parent::desconectarDB();
-                    // $resultado = ['resultado' => 'Editado'];
-                    // echo json_encode($resultado);
-                    // die();
-                }else {
-                    parent::conectarDB();
-                    $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,2)");
-                    $new->bindValue(1, $this->cedula);
-                    $new->bindValue(2, "admin");
-                    $new->bindValue(3, "admin");
-                    $new->bindValue(4, "admin");
+                    $new->bindValue(2, $this->nombre);
+                    $new->bindValue(3, $this->apellido);
+                    $new->bindValue(4, "");
                     $new->execute();
 
                     $new = $this->con->prepare("INSERT INTO contacto_cliente(cedula) VALUES (?)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
-                    // $resultado = ['resultado' => 'Registrado correctamente.'];
-                    // echo json_encode($resultado);
-                    // die();
-                    parent::desconectarDB();
                 }
-                parent::conectarDB();
-                $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
-                                                VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 2)");
+
+                $new = $this->con->prepare("SELECT status FROM venta WHERE cedula_cliente = ? AND online = 1 AND status = 2");
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
-                parent::desconectarDB();
-                echo json_encode("Registra");
-                die();
+                $data = $new->fetchAll(\PDO::FETCH_OBJ);
+
+                if(!isset($data[0]->status)){
+                    $new = $this->con->prepare("SELECT c.cod_producto, c.cantidad, p.p_venta FROM carrito c
+                                                INNER JOIN producto p ON p.cod_producto = c.cod_producto
+                                                WHERE cedula = ?");
+                    $new->bindValue(1, $this->cedula);
+                    $new->execute();
+                    $carrito = $new->fetchAll(\PDO::FETCH_OBJ);
+
+                    $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
+                        VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 2)");
+                    $new->bindValue(1, $this->cedula);
+                    $new->execute();
+                    $num_fact = $new->lastInsertId();
+
+                    foreach($carrito as $producto){
+                        $new = $this->con->prepare("INSERT INTO venta_producto(num_fact, cod_producto, cantidad, precio_actual) 
+                            VALUES (?,?,?,?)");
+                        $new->bindValue(1, $num_fact);
+                        $new->bindValue(2, $producto->cod_producto);
+                        $new->bindValue(3, $producto->cantidad);
+                        $new->bindValue(4, $producto->p_venta);
+                        $new->execute();
+                        $this->actualizarStockProducto($producto->cod_producto , $producto->$cantidad, "restar");
+                    }
+
+                }
+
+            }catch(\PDOException $e) {
+                die($e);
+            }
+        }
+
+        public function comprobarTiempoDePago($cedula){
+            try {
+                
+                $this->conectarDB();
+
+                $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual FROM venta WHERE online = 1 AND status = 2;");
+                $new->execute();
+                $ventas = $new->fetchAll(\PDO::FETCH_OBJ);
+                foreach($ventas as $venta){
+                    $hora_limite = strtotime($venta->fecha_venta) + 3600; // 3600 = 1hora en segundos
+                    $hora_actual = strtotime($venta->fecha_actual);
+                    if($hora_actual > $hora_limite){
+                        $new = $this->con->prepare("SELECT cantidad, cod_producto FROM venta_producto WHERE num_fact = ?");
+                        $new->bindValue(1, $venta->num_fact);
+                        $new->execute();
+                        $productos = $new->fetchAll(\PDO::FETCH_OBJ);
+                        foreach($productos as $producto){
+                            $this->actualizarStockProducto($producto->cod_producto, $producto->cantidad, "sumar");
+                        }
+                        $new = $this->con->prepare("DELETE FROM venta WHERE num_fact = ?");
+                        $new->bindValue(1, $venta->num_fact);
+                        $new->execute();
+                    }
+                }
+                $this->desconectarDB();
+
             } catch (\PDOException $e) {
                 die($e);
             }
         }
+
+        private function actualizarStockProducto($cod_producto , $cantidad, $accion){
+            try{
+
+                $new = $this->con->prepare("SELECT stock FROM producto WHERE cod_producto = ? and status = 1");
+                $new->bindValue(1, $cod_producto);
+                $new->execute();
+                [0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
+
+                $stock = ($accion === "sumar") ? $data->stock + $cantidad : $data->stock - $cantidad;
+
+                $new = $this->con->prepare("UPDATE producto SET stock = ? WHERE cod_producto = ? and status = 1");
+                $new->bindValue(1, $stock);
+                $new->bindValue(2, $cod_producto);
+                $new->execute();
+
+            }catch(\PDOexection $error){
+                die($error);
+            }
+        }
+
     }
 ?>

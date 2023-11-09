@@ -10,10 +10,11 @@
   if(!isset($_SESSION['cedula'])){
     die('<script>window.location = "?url=login" </script>');
   }
-  
-  if (isset($_POST['datosCar'])){
-    $objModel->getDatosCar($_SESSION['cedula']);
+  if(isset($_POST['comprobarLimitePago'], $_POST['url_param'])){
+    $cedula = ($_POST['url_param'] === "pago") ? $_SESSION['cedula'] : "";
+    $objModel->comprobarTiempoDePago($cedula);
   }
+  // $objModel->getComprobarEstadoPago($_SESSION['cedula']);
 
   if (isset($_POST['datos']) && isset($_SESSION['cedula'])) {
     $objModel->mostrarDatosP($_SESSION['cedula']);
@@ -46,16 +47,10 @@
   if (isset($_POST['mostrarB'])){
     $objModel->banco();
   }
-
-  if (isset($_POST['carrito'], $_SESSION['cedula'])){
-    $objModel->validarCarrito($_SESSION['cedula']);
-  }
-
   
   $VarComp = new initcomponents();
   $tiendaComp = new tienda();
   
   require_once("vista/inicio/pagoVista.php");
   
-  //$objModel->conexion();
 ?>
