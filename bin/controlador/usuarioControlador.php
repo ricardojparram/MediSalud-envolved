@@ -21,7 +21,7 @@
 		die(json_encode($permiso));
 	}
 
-	if(isset($_GET['cedula']) && isset($_GET['validar'])){
+	if(isset($_GET['cedula'], $_GET['validar'])){
 		$objModel->getValidarC($_GET['cedula']);
 	}
 

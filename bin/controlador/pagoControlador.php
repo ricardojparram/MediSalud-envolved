@@ -6,15 +6,16 @@
   
   $objModel = new pago();
 
-  
   if(!isset($_SESSION['cedula'])){
     die('<script>window.location = "?url=login" </script>');
   }
+  
+  $objModel->getComprobarEstadoPago($_SESSION['cedula']);
+
   if(isset($_POST['comprobarLimitePago'], $_POST['url_param'])){
-    $cedula = ($_POST['url_param'] === "pago") ? $_SESSION['cedula'] : "";
+    $cedula = ($_POST['url_param'] === "pago") ? $_SESSION['cedula'] : NULL;
     $objModel->comprobarTiempoDePago($cedula);
   }
-  // $objModel->getComprobarEstadoPago($_SESSION['cedula']);
 
   if (isset($_POST['datos']) && isset($_SESSION['cedula'])) {
     $objModel->mostrarDatosP($_SESSION['cedula']);

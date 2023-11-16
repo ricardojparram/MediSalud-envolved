@@ -392,8 +392,10 @@
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 [0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
+                parent::desconectarDB();
 
                 if(!isset($data->cedula)){
+                    parent::conectarDB();
                     $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,1)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->nombre);
@@ -404,14 +406,17 @@
                     $new = $this->con->prepare("INSERT INTO contacto_cliente(cedula) VALUES (?)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
+                    parent::desconectarDB();
                 }
-
+                parent::conectarDB();
                 $new = $this->con->prepare("SELECT status FROM venta WHERE cedula_cliente = ? AND online = 1 AND status = 2");
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
+                parent::desconectarDB();
 
                 if(!isset($data[0]->status)){
+                    parent::conectarDB();
                     $new = $this->con->prepare("SELECT c.cod_producto, c.cantidad, p.p_venta FROM carrito c
                                                 INNER JOIN producto p ON p.cod_producto = c.cod_producto
                                                 WHERE cedula = ?");
@@ -423,9 +428,10 @@
                         VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 2)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
-                    $num_fact = $new->lastInsertId();
-
+                    $num_fact = $this->con->lastInsertId();
+                    parent::desconectarDB();
                     foreach($carrito as $producto){
+                        parent::conectarDB();
                         $new = $this->con->prepare("INSERT INTO venta_producto(num_fact, cod_producto, cantidad, precio_actual) 
                             VALUES (?,?,?,?)");
                         $new->bindValue(1, $num_fact);
@@ -433,10 +439,13 @@
                         $new->bindValue(3, $producto->cantidad);
                         $new->bindValue(4, $producto->p_venta);
                         $new->execute();
-                        $this->actualizarStockProducto($producto->cod_producto , $producto->$cantidad, "restar");
+                        parent::desconectarDB();
+                       
+                        $this->actualizarStockProducto($producto->cod_producto , $producto->cantidad, "restar");
                     }
 
                 }
+
 
             }catch(\PDOException $e) {
                 die($e);
@@ -444,30 +453,54 @@
         }
 
         public function comprobarTiempoDePago($cedula){
+            
+            
             try {
-                
-                $this->conectarDB();
+                if($cedula === NULL){
+                    parent::conectarDB();
+                    $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual 
+                                            FROM venta WHERE online = 1 AND status = 2;");
+                    $new->execute();
+                    $ventas = $new->fetchAll(\PDO::FETCH_OBJ);
+                    parent::desconectarDB();
+                }else {
+                    parent::conectarDB();
+                    $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual 
+                                            FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
+                    $new->bindValue(1, $cedula);
+                    $new->execute();
+                    $ventas = $new->fetchAll(\PDO::FETCH_OBJ);
+                    parent::desconectarDB();
+                }
 
-                $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual FROM venta WHERE online = 1 AND status = 2;");
-                $new->execute();
-                $ventas = $new->fetchAll(\PDO::FETCH_OBJ);
                 foreach($ventas as $venta){
                     $hora_limite = strtotime($venta->fecha_venta) + 3600; // 3600 = 1hora en segundos
                     $hora_actual = strtotime($venta->fecha_actual);
                     if($hora_actual > $hora_limite){
+                        parent::conectarDB();
                         $new = $this->con->prepare("SELECT cantidad, cod_producto FROM venta_producto WHERE num_fact = ?");
                         $new->bindValue(1, $venta->num_fact);
                         $new->execute();
                         $productos = $new->fetchAll(\PDO::FETCH_OBJ);
+                        parent::desconectarDB();
                         foreach($productos as $producto){
                             $this->actualizarStockProducto($producto->cod_producto, $producto->cantidad, "sumar");
                         }
+                        parent::conectarDB();
                         $new = $this->con->prepare("DELETE FROM venta WHERE num_fact = ?");
                         $new->bindValue(1, $venta->num_fact);
                         $new->execute();
+                        parent::desconectarDB();
+                        
+                        if($cedula != NULL) {
+                            $resultado = ['resultado' => 'Eliminado correctamente.'];
+                            echo json_encode($resultado);
+                        }
                     }
+                    
                 }
-                $this->desconectarDB();
+                die();
+
 
             } catch (\PDOException $e) {
                 die($e);
@@ -476,19 +509,20 @@
 
         private function actualizarStockProducto($cod_producto , $cantidad, $accion){
             try{
-
+                parent::conectarDB();
                 $new = $this->con->prepare("SELECT stock FROM producto WHERE cod_producto = ? and status = 1");
                 $new->bindValue(1, $cod_producto);
                 $new->execute();
+                parent::desconectarDB();
                 [0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
 
                 $stock = ($accion === "sumar") ? $data->stock + $cantidad : $data->stock - $cantidad;
-
+                parent::conectarDB();
                 $new = $this->con->prepare("UPDATE producto SET stock = ? WHERE cod_producto = ? and status = 1");
                 $new->bindValue(1, $stock);
                 $new->bindValue(2, $cod_producto);
                 $new->execute();
-
+                parent::desconectarDB();
             }catch(\PDOexection $error){
                 die($error);
             }

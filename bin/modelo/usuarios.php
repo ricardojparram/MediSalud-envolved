@@ -44,11 +44,7 @@ class usuarios extends DBConnect{
       echo json_encode($resultado);
       die();
     }
-    if(preg_match_all("/^[0-9]{1,2}$/", $tipoUsuario) == false){
-      $resultado = ['resultado' => 'Error de rol' , 'error' => 'rol invalido.'];
-      echo json_encode($resultado);
-      die();
-    }
+
 
     $this->cedula = $cedula;
     $this->name = $name;
@@ -63,48 +59,53 @@ class usuarios extends DBConnect{
   private function agregarUsuario(){
    try{
     parent::conectarDB();
-    $new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
+    $new = $this->con->prepare("SELECT `cedula`, `status` FROM `usuario` WHERE `cedula` = ?");
     $new->bindValue(1, $this->cedula);
     $new->execute();
     $data = $new->fetchAll();
+    parent::desconectarDB();
+    if(!isset($data[0]['status'])){
 
-    if(!isset($data[0]["cedula"])){
+      parent::conectarDB();
+      $this->password = password_hash($this->password, PASSWORD_BCRYPT);
 
-      $new = $this->con->prepare("SELECT `correo` FROM `usuario` WHERE `status` = 1 and `correo` = ?");
-      $new->bindValue(1, $this->email);
+      $new = $this->con->prepare("INSERT INTO `usuario`(`cedula`, `nombre`, `apellido`, `correo`, `password`, `rol`, `status`) VALUES (?,?,?,?,?,?,1)");
+      $new->bindValue(1, $this->cedula);
+      $new->bindValue(2, $this->name); 
+      $new->bindValue(3, $this->apellido);
+      $new->bindValue(4, $this->email);
+      $new->bindValue(5, $this->password);
+      $new->bindValue(6, $this->rol);
       $new->execute();
-      $data = $new->fetchAll();
-
-      if(!isset($data[0]["correo"])){
-
-        $this->password = password_hash($this->password, PASSWORD_BCRYPT);
-
-        $new = $this->con->prepare("INSERT INTO `usuario`(`cedula`, `nombre`, `apellido`, `correo`, `password`, `rol`, `status`) VALUES (?,?,?,?,?,?,1)");
-        $new->bindValue(1, $this->cedula);
-        $new->bindValue(2, $this->name); 
-        $new->bindValue(3, $this->apellido);
-        $new->bindValue(4, $this->email);
-        $new->bindValue(5, $this->password);
-        $new->bindValue(6, $this->rol);
-        $new->execute();
-        $resultado = ['resultado' => 'Registrado correctamente.'];
-        echo json_encode($resultado);
-        $this->binnacle("Usuario",$_SESSION['cedula'],"Registró un usuario");
-        parent::desconectarDB();
-        die();
-
-      }else{
-        $resultado = ['resultado' => 'Error de email' , 'error' => 'El correo ya está registrado.'];
-        echo json_encode($resultado);
-        die();
-      }
-
-    }else{
-      $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
+      $resultado = ['resultado' => 'Registrado correctamente.'];
       echo json_encode($resultado);
+      $this->binnacle("Usuario",$_SESSION['cedula'],"Registró un usuario");
+      parent::desconectarDB();
+      die();
+
+    }elseif ($data[0]['status'] == 0) {
+
+      parent::conectarDB();
+      $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+
+      $new = $this->con->prepare("UPDATE `usuario` SET `nombre`= ? ,`apellido`= ? ,`correo`= ? ,`password`= ? ,`rol`= ? ,`status`= 1  WHERE `cedula` = ?");
+      $new->bindValue(1, $this->name); 
+      $new->bindValue(2, $this->apellido);
+      $new->bindValue(3, $this->email);
+      $new->bindValue(4, $this->password);
+      $new->bindValue(5, $this->rol);
+      $new->bindValue(6, $this->cedula);
+      $new->execute();
+      $resultado = ['resultado' => 'Registrado correctamente.'];
+      echo json_encode($resultado);
+      $this->binnacle("Usuario",$_SESSION['cedula'],"Registró un usuario");
+      parent::desconectarDB();
       die();
     }
 
+
+
+    
   }catch(exection $error){
    return $error;
  }
@@ -154,9 +155,10 @@ public function getEliminar($cedula){
 }
 
 private function eliminarUsuario(){
-  try {
+  try { 
+
         parent::conectarDB();
-        $new = $this->con->prepare("DELETE FROM `usuario` WHERE `usuario`.`cedula` = ?"); //"UPDATE `usuario` SET `status` = '0' WHERE `usuario`.`cedula` = ?"
+        $new = $this->con->prepare("UPDATE `usuario` SET `status` = '0' WHERE `usuario`.`cedula` = ?"); //"DELETE FROM `usuario` WHERE `usuario`.`cedula` = ?"
         $new->bindValue(1, $this->cedula);
         $new->execute();
         $resultado = ['resultado' => 'Eliminado'];

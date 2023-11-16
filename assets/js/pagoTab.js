@@ -49,6 +49,23 @@ $(document).ready(function() {
 		return
 	})
 
+	// setTimeout(devolucionStock, 3602000);
+
+	// function devolucionStock() {
+	// 	const url_param = (window.location.search === "?url=pago") ? "pago" : "";
+		
+	// 	$.ajax({
+	// 		type: "post",
+    //         url: "",
+    //         dataType: "json",
+    //         data:{comprobarLimitePago:'', url_param},
+	// 		success(data){
+				
+	// 		}
+	// 	})
+		
+	// }
+
 	// Datos Personales
 	function DatosP() {
 		$.ajax({

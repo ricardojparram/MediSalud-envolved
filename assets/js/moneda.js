@@ -13,7 +13,7 @@ $(document).ready(function(){
       	eliminarPermiso = (typeof permisos.Eliminar === 'undefined')? 'disabled' : '';
 		$('#agregarMoneda, #agregarCambio').attr(registrarPermiso, '');
 	});
-
+let cambio, fecha
 	function mostrar(bitacora = false){
 		$.ajax({
 			type: "POST",
@@ -22,10 +22,16 @@ $(document).ready(function(){
 			data: {datos: 'Moneda', bitacora},
 			success(data){
 				data.forEach(row => {
+					cambio = (row.cambio == null)? "" : row.cambio
+					fecha = (row.fecha == null)? "" : row.fecha
 					tabla2+=`
+					
 						<tr>
 							<td>${row.nombre} </td>
+							<td>${cambio} </td>
+							<td>${fecha} </td>
 							<td class="d-flex justify-content-center">
+							<button type="button" ${editarPermiso} class="btn btn-primary history mx-2" id="${row.nombre}" data-bs-toggle="modal" data-bs-target="#editHistory"><i class="bi bi-clock-history"></i></button>
 							<button type="button" ${editarPermiso} class="btn btn-success update mx-2" id="${row.id_moneda}" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
 							<button type="button" ${eliminarPermiso} class="btn btn-danger delete mx-2" id="${row.id_moneda}" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash3"></i></button>
 								</td>
@@ -35,6 +41,7 @@ $(document).ready(function(){
 				tabla2 = $('#tabla2').DataTable({
 					responsive: true,
 				});
+				
 			}
 		})
 	}
@@ -123,6 +130,7 @@ $(document).ready(function(){
 		id = this.id;
 	})
 
+
 	$('#eliminar').click((e)=>{
 		if(typeof permisos.Eliminar === 'undefined'){
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
@@ -149,35 +157,49 @@ $(document).ready(function(){
 
 
 	let tabla
-	rellenar();
-
-	function rellenar(){
+	let idHistory
+	
+	$(document).on('click', '.history', function(){
+		idHistory = this.id;
+		$("#nomMoneda").text(idHistory)
+		
+		rellenar(idHistory)
+		tabla.destroy();
+	})	
+		
+	function rellenar(idHistory) {
+		
 		$.ajax({
 			type: "POST",
 			url: '',
 			dataType: 'json',
-			data:{mostrar: 'xd'},
+			data:{mostrar: 'xd', idHistory},
 			success(angeles){
 				console.log(angeles)
 				angeles.forEach(row => {
 					tabla+=`
-						<tr>
-							<td>${row.nombre} </td>
-							<td>${row.cambio} </td>
-							<td>${row.fecha} </td>
-							<td class="d-flex justify-content-center">
+					<tr>
+					<td>${row.cambio} </td>
+					<td>${row.fecha} </td>
+					<td class="d-flex justify-content-center">
 							<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.id_cambio}" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="bi bi-pencil"></i></button>
 							<button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.id_cambio}" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
-								</td>
+							</td>
 						</tr>`;  
 				});
 				$('#tbody').html(tabla);
 				tabla = $("#tabla").DataTable({
 					responsive: true,
+					"order": [[ 1, "desc" ]]
 				});
 			}
 		})
+		// mostrar()
+		
+
 	}
+	
+				
 	
 	selectMoneda();
 
@@ -231,10 +253,11 @@ $(document).ready(function(){
 				},
 				success(data){
 					tabla.destroy();
+					tabla2.destroy();
 					$("#close").click();
 					Toast.fire({ icon: 'success', title: 'Tipo de cambio registrado'})
-					rellenar();
-
+					mostrar()
+					rellenar(idHistory)
 				}
 			})
 		}
@@ -259,12 +282,14 @@ $(document).ready(function(){
 				borrar:'cualquier cosita',
 				id
 			},
-			success(yeli){
+			success(consul){
+				tabla2.destroy();
 				tabla.destroy();
 				$("#closeDel").click();
 				Toast.fire({icon: 'error', title:'Tipo de moneda eliminado'})
-				rellenar();
-
+				mostrar()
+				rellenar(idHistory)
+				
 			}
 		})
 
@@ -288,7 +313,7 @@ $(document).ready(function(){
 			success(uni){
 				$("#monedaEdit").val(uni[0].moneda);
 				$("#cambioEdit").val(uni[0].cambio);
-
+				
 			}
 
 		})
@@ -321,14 +346,19 @@ $(document).ready(function(){
 
 			},
 			success(data){
+				tabla.destroy()
+				tabla2.destroy();
 				if (etipo == true && ecambio == true) {
-					tabla.destroy();
+					
 					$("#closeEdit").click();
 					Toast.fire({ icon: 'success', title: 'Tipo de cambio registrado'})
-					rellenar();
+					// rellenar();
+					
 				}else{
 					e.preventDefault()
 				}
+				mostrar()
+				rellenar(idHistory)
 
 			}
 		})

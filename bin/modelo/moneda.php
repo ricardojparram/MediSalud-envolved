@@ -12,9 +12,7 @@ class moneda extends DBConnect{
   private $idedit;
 
 
-	function __construct(){
-	parent::__construct();
-    }
+
    
    public function getAgregarCambio($alcambio,$tipo){
 
@@ -48,15 +46,16 @@ class moneda extends DBConnect{
       die();
 
      }catch(\PDOexection $error){
-    	return $error;
+    	die($error);
       }
 
    }
-   public function getMostrarCambio(){
+   public function getMostrarCambio($nombreMon){
    	try{
         parent::conectarDB();
        $new = $this->con->prepare("
-        SELECT m.nombre,c.cambio,c.fecha, c.id_cambio FROM moneda m INNER JOIN cambio c ON c.moneda = m.id_moneda WHERE c.status = 1 AND m.status = 1");
+        SELECT m.nombre,c.cambio,c.fecha, c.id_cambio FROM moneda m INNER JOIN cambio c ON c.moneda = m.id_moneda WHERE c.status = 1 AND m.status = 1 AND m.nombre = ?");
+        $new->bindValue(1, $nombreMon);
        $new->execute();
        $data = $new->fetchAll();
        echo json_encode($data);
@@ -167,10 +166,9 @@ class moneda extends DBConnect{
       $new->bindValue(4, $this->idedit);
       $new->execute();
       $data = $new->fetchAll();
-      parent::desconectarDB();
-      
       $resultado = ['resultado' => 'Editado'];
       $this->binnacle("Moneda",$_SESSION['cedula'],"Editó un Valor de Moneda.");
+      parent::desconectarDB();
       echo json_encode($resultado);      
       die();
 
@@ -183,7 +181,14 @@ class moneda extends DBConnect{
    public function getMoneda($bitacora = false){
       try{
         parent::conectarDB();
-       $new = $this->con->prepare("SELECT * FROM `moneda` WHERE status = 1");
+       $new = $this->con->prepare("SELECT m.id_moneda, m.nombre, tabla_cambio.cambio, tabla_cambio.fecha FROM moneda m 
+                                    LEFT JOIN (
+                                        SELECT c.cambio, c.fecha, c.moneda FROM cambio c 
+                                        WHERE c.status = 1
+                                        ORDER BY c.fecha ASC LIMIT 99999
+                                    ) as tabla_cambio ON tabla_cambio.moneda = m.id_moneda
+                                    WHERE m.status = 1
+                                    GROUP BY m.id_moneda;");
        $new->execute();
        $data = $new->fetchAll();
        echo json_encode($data);
