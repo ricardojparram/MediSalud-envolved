@@ -74,6 +74,7 @@
 		}
 
 		public function calcularPrecioEnvio(){
+
 			$url = "http://agencias.com.ve/sys/ajax.php";
 
 			$body = [
@@ -84,33 +85,36 @@
 				"formapago" => "enorigen",
 				"tipoenvio" => "age",
 				"peso" => "1",
-				"size_x" => "10",
-				"size_y" => "10",
+				"size_x" => "15",
+				"size_y" => "15",
 				"size_z" => "5",
 				"valorseguro" => ""
 			];
 
-			$options = [
-				'http' => [
-					'method'  => 'POST',
-					'header'  => "Content-Type: application/x-www-form-urlencoded;charset=UTF-8",
-					'content' => http_build_query($body),
-				]
-			];
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($body));
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded;charset=UTF-8'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-			$context = stream_context_create($options);
+			$response = curl_exec($ch);
 
-			$response = file_get_contents($url, false, $context);
+			if($response === false) {
+				$resultado = ['resultado' => 'error', 'msg' => "No se ha podido conseguir el precio de envío."];
+				die(json_encode($resultado));
+			}
 
+			curl_close($ch);
 
-			$dom = new DOMDocument();
+			$dom = new  \DOMDocument();
 			$dom->loadHTML($response);
 
 			$total_envio =	$dom->getElementsByTagName('tbody')
 								->item(0)->lastChild
 								->childNodes->item(2)->textContent;
 
-			$precio = floatval(str_replace('Bs. ', '', $total_envio));
+			$precio = number_format(floatval(str_replace('Bs. ', '', $total_envio)), 2);
 
 			$resultado = ['precio_solo' => $precio, 'precio_bs' => "$total_envio"];
 			die(json_encode($resultado));
