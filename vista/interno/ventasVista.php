@@ -253,7 +253,7 @@
         
         <div class="row">
 
-          <div class="form-group col-md-5 h-75">  
+          <div class="form-group col-md-5 h-75 my-3">  
             <div class="container-fluid">
               <div class="row">
                 <div class="table table-body-tipo form-group col-12">
@@ -286,7 +286,7 @@
 
           </div>
 
-        <div class="form-group col-md-7">  
+        <div class="form-group col-md-7 my-3">  
           <div class="container-fluid">
             <div class="row">
               <div class="table table-body form-group col-12">
@@ -318,7 +318,7 @@
                   </tbody>
                 </table>
                 <a class="newRow a-asd" href="#"><i class="bi bi-plus-circle-fill"></i> Nueva fila</a> <br>
-                <div class="text-end">
+                <div class="text-end pt-4">
                   <p class="text-end" id="montos"></p>
                   <p class="text-end" id="montos2"></p>
                   <p class="text-end"id="cambio"></p>
@@ -331,7 +331,7 @@
 
       </div>
 
-      <p class="error" style="color:#ff0000;text-align: center;" id="error"></p>
+      <p id="pValid" class="error" style="color:#ff0000;text-align: center;"></p>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary cerrar" id="cerrar" data-bs-dismiss="modal">Cancelar</button>

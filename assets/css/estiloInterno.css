@@ -38,6 +38,31 @@ body{
 .sidebar-nav .nav-content a{
     color: var(--color-letra);
 }
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 575px) {
+  .notifications {
+    max-height: 125vw;
+    overflow-y: auto;
+  }
+}
+
+/* Estilos para tabletas */
+@media (min-width: 576px) and (max-width: 991px) {
+  .notifications {
+    max-height: 60vw;
+    overflow-y: auto;
+  }
+}
+
+/* Estilos para computadoras de escritorio */
+@media (min-width: 992px) {
+  .notifications {
+    max-height: 40vw;
+    overflow-y: auto;
+  }
+}
+
 .page-link{
     color: #198754;
 }
@@ -123,3 +148,4 @@ body{
     background-color: #a7b754 !important;
     color: #ffffff !important;
 }
+

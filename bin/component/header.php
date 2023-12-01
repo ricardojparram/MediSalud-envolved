@@ -20,6 +20,37 @@
 <nav class="header-nav ms-auto">
   <ul class="d-flex align-items-center">
 
+        <li class="nav-item dropdown">
+
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            <span class="badge iconos badge-number contador"></span>
+          </a><!-- End Notification Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+            <li class="dropdown-header text-center">
+              Usted tiene <span class="numNoti"></span> nuevas notificaciones
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li class="item list-group">
+              
+            </li>
+
+
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li class="dropdown-footer">
+              <a href="#">Show all notifications</a>
+            </li>
+
+          </ul><!-- End Notification Dropdown Items -->
+
+        </li><!-- End Notification Nav -->
+
     <li class="nav-item dropdown pe-3">
 
     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">

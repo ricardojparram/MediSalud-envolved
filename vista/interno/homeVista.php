@@ -245,6 +245,7 @@
 
 </body>
 <?php $VarComp->js();?>
+<script type="text/javascript" src="assets/js/notificaciones.js"></script>
 <script src="assets/js/chart.min.js"></script>
 <script type="text/javascript" src="assets/js/home.js"></script>
 </html>

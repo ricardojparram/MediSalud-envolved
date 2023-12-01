@@ -100,6 +100,42 @@
 
     }
 
+    public function getNotificacion(){
+
+      $this->notificaciones();
+    }
+
+    private function notificaciones(){
+      try {
+        $this->conectarDB();
+
+        // consulta de productos por vencer 
+        $new = $this->con->prepare("SELECT p.cod_producto, p.nombre, DATEDIFF(p.vencimiento, NOW()) AS dias_restantes, TIMEDIFF(DATE_FORMAT(p.vencimiento, '%Y-%m-%d %H:%i:%s'), NOW()) AS horas_restantes FROM producto p WHERE p.vencimiento BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)");
+
+        $new->execute();
+        $data = $new->fetchAll(\PDO::FETCH_OBJ);
+
+        // consulta de productos vencidos  
+        $new1 = $this->con->prepare("SELECT p.cod_producto, p.nombre, DATEDIFF(p.vencimiento, NOW()) AS dias_vencidos, TIMEDIFF(DATE_FORMAT(p.vencimiento, '%Y-%m-%d %H:%i:%s'), NOW()) AS horas_vencidas FROM producto p WHERE p.vencimiento BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()");
+        $new1->execute();
+        $data1 = $new1->fetchAll(\PDO::FETCH_OBJ);
+
+        $new2 = $this->con->prepare("SELECT p.descripcion, YEAR(v.fecha) AS Year , MONTH(v.fecha) AS Month , AVG(vp.cantidad) AS AvgCantidad FROM venta v INNER JOIN venta_producto vp ON v.num_fact = vp.num_fact INNER JOIN producto p ON p.cod_producto = vp.cod_producto WHERE v.status = 1 GROUP BY p.descripcion, YEAR(v.fecha), MONTH(v.fecha)");
+
+        $resultado = ['PorVencer' => $data , 'vencidos' => $data1]; 
+
+        echo json_encode($resultado);
+        die();
+        
+      } catch (\PDOException $e) {
+        print "¡Error!: " . $e->getMessage() . "<br/>";
+        die();
+      }
+
+
+    }
+
+
   }
 
 
