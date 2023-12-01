@@ -2,7 +2,12 @@
 
 if(isset($_SESSION['cedula'])){
 	session_destroy();
-	die('<script> window.location = "?url=login" </script>');
+	$script = '
+		<script>
+			localStorage.clear();
+			window.location = "?url=login"
+		</script>';
+	die($script);
 	
 }
 

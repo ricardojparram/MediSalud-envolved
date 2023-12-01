@@ -34,11 +34,11 @@
   }
 
   if (isset($_POST['mostrarE'])) {
-    $objModel->mostrarEmpresa();
+    $objModel->mostrarEstados();
   }
 
-  if (isset($_POST['mostrarS']) && isset($_POST['nomEmpre'])) {
-    $objModel->mostrarSede($_POST['nomEmpre']);
+  if (isset($_POST['mostrarS']) && isset($_POST['nomEstado'])) {
+    $objModel->mostrarSede($_POST['nomEstado']);
   }
 
   if (isset($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles'])) {

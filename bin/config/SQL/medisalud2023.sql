@@ -136,11 +136,11 @@ CREATE TABLE presentacion(
 CREATE TABLE producto( 
     cod_producto int AUTO_INCREMENT PRIMARY KEY,
     nombre varchar(30) NOT NULL,
-    descripcion varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
-    ubicacion varchar(50)COLLATE utf8_spanish2_ci NOT NULL,
-    composicion varchar(80) COLLATE utf8_spanish2_ci NOT NULL,
-    contraindicaciones varchar(80) COLLATE utf8_spanish2_ci NOT NULL,
-    posologia varchar(40) COLLATE utf8_spanish2_ci NOT NULL,
+    descripcion varchar(200) COLLATE utf8_spanish2_ci NOT NULL,
+    ubicacion varchar(100)COLLATE utf8_spanish2_ci NOT NULL,
+    composicion varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
+    contraindicaciones varchar(400) COLLATE utf8_spanish2_ci NOT NULL,
+    posologia varchar(400) COLLATE utf8_spanish2_ci NOT NULL,
     vencimiento date NOT NULL,
     p_venta varchar(10) COLLATE utf8_spanish2_ci NOT NULL,
     stock varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
@@ -188,7 +188,6 @@ CREATE TABLE carrito(
     cedula int NOT NULL,
     cod_producto int NOT NULL,
     cantidad varchar(10) NOT NULL,
-    precioActual varchar(10) NOT NULL,
     FOREIGN KEY (cedula) REFERENCES usuario (cedula) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (cod_producto) REFERENCES producto (cod_producto) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
@@ -203,13 +202,24 @@ CREATE TABLE empresa_envio(
     status int NOT NULL    
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
+-- TABLA PARA ESTADOS DE VENEZUELA
+
+CREATE TABLE estados_venezuela(
+    id_estado int AUTO_INCREMENT PRIMARY KEY,
+    nombre varchar(50) NOT NULl
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+
 -- TABLA PARA SEDE EMVIO
    
 CREATE TABLE sede_envio(
     id_sede int AUTO_INCREMENT PRIMARY KEY,
+    nombre varchar(50) NOT NULL,
     ubicacion varchar(100) NOT NULL,
+    id_estado int NOT NULL,
     id_empresa int NOT NULL,
     status int NOT NULL,
+    FOREIGN KEY (id_estado) REFERENCES estados_venezuela (id_estado) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_empresa) REFERENCES empresa_envio (id_empresa) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
@@ -250,7 +260,7 @@ CREATE TABLE venta_producto(
 -- TABLA PARA BANCOS
 CREATE TABLE banco(
     id_banco int AUTO_INCREMENT PRIMARY KEY,
-    nombre varchar(20) NOT NULL,
+    nombre varchar(60) NOT NULL,
     codigo varchar(5),
     status int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
@@ -282,7 +292,7 @@ CREATE TABLE detalle_pago(
     id_tipo_pago int NOT NULL,
     id_datos_cobro int,
     id_banco_cliente int,
-    monto_pago decimal NOT NULL,
+    monto_pago decimal (10,2) NOT NULL,
     id_cambio int NOT NULL,
     FOREIGN KEY (id_banco_cliente) REFERENCES banco(id_banco) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_tipo_pago) REFERENCES tipo_pago(id_tipo_pago) ON DELETE CASCADE ON UPDATE CASCADE,

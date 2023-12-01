@@ -8,11 +8,11 @@
 	$model = new inicio();
 
 	if (isset($_POST['mostraC'])) {
-	 $model->mostrarCatalogo();
+	 	$model->mostrarCatalogo();
 	}
 
 	if (isset($_POST['mostraProductos']) && isset($_POST['id'])) {
-	 $model->rellenarDatos($_POST['id']);
+		$model->rellenarDatos($_POST['id']);
 	}
 
 	if(isset($_POST['validarStock'], $_POST['id'])){

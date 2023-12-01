@@ -1,11 +1,6 @@
 -- INSERTA LOS NIVELES DE USUARIO 
 INSERT INTO rol(nombre, status) VALUES ('Administrador', '1'), ('Gerente', '1'), ('Empleado', '1'), ('Cliente', '1');
 
--- INSERTA LOS PRODUCTOS
--- INSERT INTO producto (cod_producto, descripcion, composicion, contraindicaciones, ubicacion, posologia, stock, p_venta, vencimiento, status) VALUES
--- (1, 'Paracetamol', 'asdjgjdsag', 'sjdgjadsg', 'jsdgjdsg', 'jsdajdasg', '10', '5', '2023-01-25', 1),
--- (2, 'Acetominafen', 'asdjgjadsg', 'jsadjasdg', 'jsadjadsg', 'sajdadjsg', '8', '6', '2023-01-02', 1),
--- (3, 'Ibuprofeno', 'jadsjadsg', 'asjdjgds', 'jasdjgds', 'jasdgjds', '20', '9', '2023-01-16', 1);
 
 -- INSERTA USUARIO ADMIN
 
@@ -55,11 +50,18 @@ INSERT INTO tipo(des_tipo, status) VALUES
 -- INSERTA LAS CLASE
 INSERT INTO clase(des_clase, status) VALUES ('NO ASIGNADO',1);
 
+INSERT INTO producto (cod_producto, nombre, descripcion, ubicacion, composicion, contraindicaciones, posologia, vencimiento, p_venta, stock, img, cod_lab, cod_tipo, cod_clase, cod_pres, status) VALUES 
+('1', 'Acetaminofén', 'Medicamento que reduce el dolor y la fiebre (pero no la inflamación).', 'Pasillo 2', 'C8H9NO2', 'Los efectos secundarios más comunes son náuseas y salpullido. Las dosis altas de acetaminofén pueden causar daños hepáticos y renales.', 'Adultos: La dosis habitual es de 325 mg a 650 mg. Tómelo con una frecuencia de 4 a 6 horas, según sea necesario, hasta 4 veces en un período de 24 horas. La dosis máxima puede variar entre 3,000 mg y 4,000 mg, pero no tome más de 4,000 mg en un período de 24 horas. Siga todas las instrucciones de la etiqueta.', '2023-10-17', '12', '25', "https://farmaclickadonay.com/wp-content/uploads/2022/05/acetaminofen-650mg-x10.png", NULL, '1', '1', '1', '1'),
+('2', 'Ibuprofeno', 'Su acción consiste en detener la producción del cuerpo de una sustancia que causa dolor, fiebre e inflamación.', 'Pasillo 1', 'C13H18O2', 'Historia de asma grave, urticaria o reacción alérgica a ácido acetilsalicílico u otros AINE. Pacientes con la tríada asma/rinitis con o sin poliposis nasal e intolerancia al ácido acetilsalicílico.', 'En adultos y adolescentes de 14 a 18 años se toma un comprimido (600 mg) cada 6 a 8 horas, dependiendo de la intensidad del cuadro y de la respuesta al tratamiento. En adultos la dosis máxima diaria es de 2.400 mg mientras que en adolescentes de 12 a 18 años es de 1.600 mg.', '2023-10-17', '12', '25', "https://www.belgochilena.cl/wp-content/uploads/2023/05/ibuprofeno600mgx20com1494.png", NULL, '1', '1', '1', '1'),
+('3', 'Omeprazol', 'Medicamento que impide la secreción de ácido del estómago.', 'Pasillo 3', 'C17H19N3O3S', 'sarpullido, urticaria, picazón, hinchazón de los ojos, cara, labios, boca, garganta o lengua; dificultad para respirar o tragar o ronquera. ritmo cardíaco irregular, rápido o fuerte; espasmos musculares; temblores incontrolables de una parte del cuerpo; cansancio excesivo; aturdimiento; mareos; o convulsiones.', 'En algunos pacientes puede ser suficiente una dosis diaria de 10 mg. En caso de fracaso del tratamiento, se puede aumentar la dosis a 40 mg. La dosis recomendada es de 20 mg de omeprazol una vez al día.', '2023-10-17', '12', '25', "https://www.farmatotal.cl/wp-content/uploads/2022/07/Omeprazol_20_mg_30_capsulas.png", NULL, '1', '1', '1', '1'),
+('4', 'Cetirizina', 'Su función consiste en bloquear la acción de la histamina, una sustancia en el cuerpo que causa los síntomas de la alergia.', 'Pasillo 5', 'C21H25N2ClO', 'Hipersensibilidad a la cetirizina, hidroxicina u otro derivado piperazínico.\r\nPacientes con insuficiencia renal grave con un aclaramiento renal inferior a 10 ml/min.\r\n', 'Niños de 6 a 12 años: 5 mg dos veces al día (medio comprimido dos veces al día). Adultos y adolescentes mayores de 12 años: 10 mg una vez al día (un comprimido). Pacientes de edad avanzada: Los datos no sugieren que se necesite reducir la dosis en pacientes de edad avanzada en los que la función renal es normal.', '2023-11-24', '13.00', '423', 'https://farmaclickadonay.com/wp-content/uploads/2023/02/Cetirizina-10mg-X10-Tab-Caplin.png', NULL, '2', '1', '5', '1');
+
 INSERT INTO tipo_pago(id_tipo_pago, des_tipo_pago, online, status) VALUES 
 (1,'Tarjeta de credito',0,1),
 (2,'Efectivo',0,1),
 (3,'Divisa',0,1),
-(4,'Pago movil',1,1);
+(4,'Pago movil',1,1),
+(5,'Transferencia',1,1);
 
 INSERT INTO moneda(id_moneda, nombre, status) VALUES(1, 'Dolar', 1), (2, 'Euro', 1);
 
@@ -67,7 +69,7 @@ INSERT INTO cambio(id_cambio, cambio, fecha, moneda, status) VALUES(1, '35', DEF
 
 INSERT INTO cambio(cambio, fecha, moneda, status) VALUES('35', DEFAULT, 1, 1), ('40', DEFAULT, 2, 1);
 
-INSERT INTO `estados_venezuela` (`id_estado`, `nombre`) VALUES
+INSERT INTO estados_venezuela (id_estado, nombre) VALUES
 (1, 'Distrito Capital'),(2, 'Amazonas'),(3, 'Anzoategui'),(4, 'Apure'),(5, 'Aragua'),(6, 'Barinas'),
 (7, 'Bolivar'),(8, 'Carabobo'),(9, 'Cojedes'),(10, 'Falcon'),(11, 'Guarico'),(12, 'Lara'),
 (13, 'Merida'),(14, 'Monagas'),(15, 'Nueva Esparta'),(16, 'Portuguesa'),(17, 'Sucre'),(18, 'Tachira'),
@@ -77,31 +79,31 @@ INSERT INTO `estados_venezuela` (`id_estado`, `nombre`) VALUES
 -- INSERT INTO empresa_envio (rif, nombre, contacto,id_estado, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
 -- INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
 
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Central de Venezuela', '0001', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco de Venezuela (BDV)', '0102', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Venezolano de Crédito (BVC)', '0104', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Mercantil', '0105', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Provincial (BBVA)', '0108', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bancaribe', '0114', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Exterior', '0115', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Caroní', '0128', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banesco Banco Universal', '0134', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Sofitasa', '0137', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Plaza', '0138', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bangente', '0146', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Fondo Común (BFC)', '0151', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , '100% Banco', '0156', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Del Sur Banco Universal', '0157', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco del Tesoro', '0163', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Agrícola de Venezuela', '0166', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bancrecer', '0168', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Mi Banco, Banco Microfinanciero C.A', '0169', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Activo', '0171', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Bancamiga', '0172', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banplus', '0174', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Bicentenario del Pueblo', '0175', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco de la Fuerza Armada Nacional Bolivariana (BANFANB)', '0177', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (DEFAULT , 'Banco Nacional de Crédito (BNC)', '0191', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (1 , 'Banco Central de Venezuela', '0001', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (2 , 'Banco de Venezuela (BDV)', '0102', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (3 , 'Banco Venezolano de Credito (BVC)', '0104', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (4 , 'Banco Mercantil', '0105', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (5 , 'Banco Provincial (BBVA)', '0108', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (6 , 'Bancaribe', '0114', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (7 , 'Banco Exterior', '0115', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (8 , 'Banco Caroni', '0128', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (9 , 'Banesco Banco Universal', '0134', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (10 , 'Sofitasa', '0137', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (11 , 'Banco Plaza', '0138', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (12 , 'Bangente', '0146', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (13 , 'Banco Fondo Comun (BFC)', '0151', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (14 , '100% Banco', '0156', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (15 , 'Del Sur Banco Universal', '0157', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (16 , 'Banco del Tesoro', '0163', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (17 , 'Banco Agricola de Venezuela', '0166', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (18 , 'Bancrecer', '0168', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (19 , 'Mi Banco, Banco Microfinanciero C.A', '0169', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (20 , 'Banco Activo', '0171', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (21 , 'Bancamiga', '0172', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (22 , 'Banplus', '0174', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (23 , 'Banco Bicentenario del Pueblo', '0175', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (24 , 'Banco de la Fuerza Armada Nacional Bolivariana (BANFANB)', '0177', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (25 , 'Banco Nacional de Credito (BNC)', '0191', 1);
 
 INSERT INTO modulos(id_modulo, nombre, status) VALUES
 (1, 'Clientes',1),

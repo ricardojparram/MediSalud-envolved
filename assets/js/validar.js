@@ -522,6 +522,31 @@
 		}			             
 	}
 
+	function validarInputCantidadCarrito(input, tooltipClass = '.invalid-tooltip'){
+		parametro = input.val();
+		let valid = /^([0-9]+\.+[0-9]|[0-9])+$/.test(parametro)
+		let tooltip = input.closest('.opciones').find(tooltipClass);
+		if (parametro == null || parametro =="" || parametro == 0) {
+			tooltip.text("Debe introducir datos.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+			return false
+		}else if (isNaN(parametro)) {
+			tooltip.text("Debe ser solo números.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+			return false
+		}else if(!valid){
+			tooltip.text("Debe ser positivo.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+		}else{
+			tooltip.hide();
+			input.attr("style","border-color: none;")
+			return true 
+		}			             
+	}
+
 		// Alertas personalizadas.
 
 	const Toast = Swal.mixin({ 

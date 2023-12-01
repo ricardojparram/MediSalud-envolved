@@ -59,6 +59,9 @@
 		}
 
 		public function getPermisos($id){
+			if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+				die(json_encode(['error' => 'Id inválida.']));
+			}
 			$this->id_rol = $id;
 
 			$this->mostrarPermisos();
@@ -108,6 +111,9 @@
 
 		public function getDatosPermisos($datos, $id){
 			$this->permisos = $datos;
+			if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+				die(json_encode(['error' => 'Id inválida.']));
+			}
 			$this->id_rol = $id;
 
 			$this->actualizarPermisos();

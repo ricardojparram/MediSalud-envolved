@@ -20,7 +20,7 @@ $(document).ready(function() {
 			method: "post",
 			url: "",
 			dataType: "json",
-			data: {mostrar: "compras", bitacora},
+			data: {mostrar: "compras" , bitacora},
 			success(data){
             let tabla;
             data.forEach(row =>{
@@ -34,6 +34,7 @@ $(document).ready(function() {
             	<td>${row.total_divisa}</td>
             	<td>${row.monto_total}</td>
             	<td class="d-flex justify-content-center">
+            	
             	<button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.cod_compra}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
             	</td>
             	</tr>

@@ -26,13 +26,15 @@ $(document).ready(function() {
 	let select
 	let memas
 	let cambio
-
+	var pTarifas = 0
 
 	DatosP();
 	precio();
-	empresaEnvio();
 	selectTipoPago();
 	banco();
+	tarifa();
+
+
 	validarCarrito().then(()=>{
 		$.ajax({
 			type: "post",
@@ -40,7 +42,6 @@ $(document).ready(function() {
             dataType: "json",
             data:{datosCar: 'xd'},
             success(data) {
-				console.log()
 			}
 		})
 	})
@@ -49,22 +50,6 @@ $(document).ready(function() {
 		return
 	})
 
-	// setTimeout(devolucionStock, 3602000);
-
-	// function devolucionStock() {
-	// 	const url_param = (window.location.search === "?url=pago") ? "pago" : "";
-		
-	// 	$.ajax({
-	// 		type: "post",
-    //         url: "",
-    //         dataType: "json",
-    //         data:{comprobarLimitePago:'', url_param},
-	// 		success(data){
-				
-	// 		}
-	// 	})
-		
-	// }
 
 	// Datos Personales
 	function DatosP() {
@@ -88,6 +73,7 @@ $(document).ready(function() {
 	
 	let impuesto
 	let total
+	var precioUsd
 	// Precio y Cambio
 	function precio(){
 		$.ajax({
@@ -96,20 +82,20 @@ $(document).ready(function() {
             dataType: "json",
 			data:{mostrarP: "hola"},
 			success(pre){
-				let precioUsd
+				precioUsd = pre[0].cambio
 				cambio = pre[0].id_cambio
 				if (pre[0].cuenta > 0) {
-					console.log(pre);
 					$("#valorBs").html(parseFloat(pre[0].total).toFixed(2)+" Bs");
 					impuesto = pre[0].total * 0.16;
 					$("#impuesto").html(parseFloat(impuesto).toFixed(2)+" Bs");
-					total = pre[0].total + impuesto;
+					$('#pEnvio').html(parseFloat(pTarifas).toFixed(2)+" Bs");
+					total = pre[0].total + impuesto + pTarifas;
 					$("#total").html(parseFloat(total).toFixed(2)+" Bs");
 					$("#valorUsd").html(parseFloat(total / pre[0].cambio).toFixed(2)+" $");
 					
+					
 
 				} else {
-					console.log("nada")
 					let div=`
 						<div class="col-8 mx-auto text-center">
                     		<h3>Su Carrito Esta Vacio</h3>
@@ -120,59 +106,74 @@ $(document).ready(function() {
 		})
 	}
 
-	// Mostrar Empresa y Sede de Envio
-
-	function empresaEnvio(){
+	// Mostrar Estado y Sede de Envio
+	estado();
+	function estado(){
 		let selEm
 		$.ajax({
 			type: "post",
             url: "",
             dataType: "json",
-			data:{mostrarE: "empre"},
+			data:{mostrarE: "est"},
 			success(empre){
-				var empresas = empre
-				empresas.forEach(row => {
+				var estados = empre
+				estados.forEach(row => {
 					selEm+=`
-					<option value="${row.id_empresa}">${row.nombre}</option>
+					<option value="${row.id_estado}">${row.nombre}</option>
 					`;
 				})
-				$('#empresa').html('<option selected disabled>Nombre</option>' + selEm);
+				$('#estado').html('<option selected disabled>Nombre</option>' + selEm);
 			}
 		});
 		
 
 	};
+	var valorT
+	function tarifa() {
+		$.ajax({
+			type: "post",
+			url:'?url=envios',
+			dataType: 'JSON',
+			data:{
+				precio_envio: "ss"
+			},
+			success(data){
+				valorT = parseFloat(data.precio_solo)
+			}
+		})
+	}
 	
-	let nomEmpre
-		$("#empresa").change(()=> {
+	let nomEstado, sede, sedes, sedeU
+		$("#estado").change(()=> {
 			let selEnvi
-			nomEmpre = $("#empresa").val();
+			nomEstado = $("#estado").val();
 			
 			$.ajax({
 				type: "post",
 				url: "",
 				dataType: "json",
-				data:{mostrarS: "empre", nomEmpre},
+				data:{mostrarS: "xd", nomEstado},
 				success(sed){
-					console.log(sed);
-					var sede = sed
-					sede.forEach(row => {
+					sedes = sed
+					sed.forEach(row => {
 						selEnvi+=`
-						<option value="${row.id_sede}">${row.ubicacion}</option>
+						<option value="${row.id_sede}">${row.nombre}</option>
 						`;
 					})
-					$('#sede').html('<option selected disabled>Ubicacion</option>' + selEnvi);
+					$('#sede').html('<option selected disabled>Nombre</option>' + selEnvi);
+					
 				}
 			});
 		})
-	
+		
+		$("#sede").change(()=> {
+			sede = $("#sede").val()
+			sedeU = sedes.find(item => item.id_sede == sede)
+			$("#ubicacion").val(sedeU.ubicacion);
+			console.log(sedes)
+			console.log(sedes.find(item => item.id_sede == sede))
+		})
     
-    $('#top-navbar-1').on('shown.bs.collapse', function(){
-    	$.backstretch("resize");
-    });
-    $('#top-navbar-1').on('hidden.bs.collapse', function(){
-    	$.backstretch("resize");
-    });
     
     /*
         Form
@@ -208,22 +209,24 @@ $(document).ready(function() {
 		$("#errorBot").text("");
 		idGlass = this.id;
 		next_step = false;
-		
 		switch (idGlass) {
 			case "repartidor":
-				console.log("deli");
 				$(".glass").fadeOut(0);
 				$("#delivery").fadeIn(300);
+				pTarifas = precioUsd * 1
+				precio()
 				break;
 			case "nacional":
-				console.log("perso");
 				$(".glass").fadeOut(0);
 				$("#envio").fadeIn(300);
+				pTarifas = valorT
+				precio();
 				break;
 			case "persona":
-				console.log("perso");
 				$(".glass").fadeOut(0);
 				$("#retirar").fadeIn(300);
+				pTarifas = 0
+				precio();
 				break;
 		
 			default:
@@ -238,11 +241,11 @@ $(document).ready(function() {
 	$("#numAv").keyup(()=> {  validarString($("#numAv"),$("#errorNumAv"), "Error de Avenida,") });
 	$("#numCasa").keyup(()=> {  validarString($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") });
 	$("#ref").keyup(()=> {  validarString($("#ref"),$("#errorRef"), "Error de Referencia,") });
-	$("#empresa").change(()=> {  validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,") });
+	$("#estado").change(()=> {  validarSelect($("#estado"),$("#errorEstado"), "Error de Estado,") });
 	$("#sede").change(()=> {  validarSelect($("#sede"),$("#errorSede"), "Error de Sede,") });
 
 	$("#2").click((e)=>{
-		let empresa, sede, calle, avenida, numCasa, referencia
+		let estado, sedeV, calle, avenida, numCasa, referencia
 		if(typeof idGlass == 'undefined'){
 			$("#errorBot").text("Elija una Opcion de Entrega");
 		}else{
@@ -263,9 +266,9 @@ $(document).ready(function() {
 	 			}	
 				break;
 			case "nacional":
-				empresa = validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,");
-				sede = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
-				if (empresa && sede) {
+				estado = validarSelect($("#estado"),$("#errorEstado"), "Error de Estado,");
+				sedeV = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+				if (estado && sedeV) {
 					next_step = true;
 				}else{
 					next_step = false;
@@ -309,9 +312,15 @@ $(document).ready(function() {
 		filaTipoN();
 	});
 
-		// ELiminar fila Tipo de Pago
+	// Caracteriticas de la fila Tipo Pago
+	function borrarFilaTipoN(){
+		validarRepetidoB();
+		//validarPrecio($(this));
+	}
+	// ELiminar fila Tipo de Pago
 	$('body').on('click','.removeRowPagoTipo', function(e){
 		$(this).closest('tr').remove();
+		borrarFilaTipoN();
 	});
 
 	let datosTrans, datosMovil
@@ -369,7 +378,6 @@ $(document).ready(function() {
 					mostrarT: 'xd', tipo
 				},
 				success(data){
-					console.log(data)
 					  data 
 					let option = ""
 					switch (tipo) {
@@ -446,16 +454,12 @@ $(document).ready(function() {
 	// 		$(".select-tipo").each(function () {
 	// 			tipo = $(this).val()
 	// 			let count = 0;
-	// 			console.log('tipo = '+tipo)
 
 	// 			$(".select-tipo").each(function() {
 	// 				if(tipo != ''){
-	// 					console.log('segundo = '+$(this).val())
 
 	// 					if(tipo == $(this).val()){
-	// 						console.log(tipo == $(this).val())
 	// 					  count++
-	// 					  console.log(count)
 
 	// 					  if(count >=2){
 	// 						$(this).closest('tr').attr('style', 'border-color: red;')
@@ -475,7 +479,7 @@ $(document).ready(function() {
 	function validarRepetido(){
 		let selects
 		$(".select-tipo").change(function(){
-			var valores = [];
+			let valores = [];
 			let repetidos = false
 			selects = $(this)
 			
@@ -526,6 +530,52 @@ $(document).ready(function() {
 		})
 	}
 
+	function validarRepetidoB() {
+		let valores = [];
+		selects = $(this)
+		$('.select-tipo').each(function() {
+			// $(this).attr('valid', 'true');
+			var valor = $(this).val(); 
+			valores.push(valor); 
+		});
+
+		for (var i = 0; i < valores.length; i++) {
+			  var contador = 0;
+
+			for (var j = 0; j < valores.length; j++) {
+				if (valores[i] === valores[j]) {
+				contador++;
+				cuentaB();
+				}
+				
+			}
+			
+		}
+		
+
+		function cuentaB() {
+			
+			if (contador >= 2) {
+				selects.closest('tr').attr('style', 'border-color: red;')
+				selects.attr('valid', 'false');
+				$('#error3').text('No pueden haber tipos de pagos repetidos');
+			} else {
+				selects.attr('valid', 'true');
+				selects.closest('tr').attr('style', 'border-color: none;')
+			}
+		}
+			
+		$('.select-tipo').each(function(){
+			if($(this).is('[valid="true"]')){
+				$(this).closest('tr').attr('style', 'border-color: none;');
+			}
+			if(!$('.select-tipo').is('[valid="false"]')){
+				$('#error3').text('');
+			}
+			
+		})
+	}
+
 	// function validarRepetido() {
 		
 			
@@ -538,7 +588,6 @@ $(document).ready(function() {
 	// 			// Verificar que el valor no se repita en otros selectores
 	// 			$(".select-tipo").each(function() {
 	// 				if ($(this).val() === valorSeleccionado) {
-	// 					console.log("El número seleccionado ya está duplicado en otro selector.");
 
 	// 					$(this).closest('tr').attr('style', 'border-color: red;')
 
@@ -609,7 +658,7 @@ $(document).ready(function() {
 		let valid = false
 		let vtipoPago = true
 		let vprecio = true
-		let empresa, sede, calle, avenida, numCasa, referencia
+		let estado, sede, calle, avenida, numCasa, referencia
 
 		let direccion = validarDireccion($("#direcClien"),$("#errorDirec"), "Error de Direccion,") ;
 		let correo = validarCorreo($("#emailClien"),$("#errorEmail"), "Error de Correo,") ;
@@ -629,13 +678,13 @@ $(document).ready(function() {
 	 			}else{
 					valid = false;
 	 			}
-				$("#empresa, #sede").val(" ")
+				$("#estado, #sede").val(" ")
 				break;
 			case "nacional":
-				empresa = validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,");
-				sede = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+				estado = validarSelect($("#estado"),$("#errorEstado"), "Error de Estado,");
+				sedeV = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
 
-				if (empresa && sede) {
+				if (estado && sedeV) {
 					valid = true;
 				}else{
 					valid = false;
@@ -646,7 +695,7 @@ $(document).ready(function() {
 			case "persona":
 
 				valid = true;
-				$("#empresa, #sede").val(" ")
+				$("#estado, #sede").val(" ")
 				$("#calle, #numAv, #numCasa, #ref").val(" ")
 				break;
 				
@@ -695,8 +744,6 @@ $(document).ready(function() {
 			vmonto = false;
 			$("#errorMonto").text('Error en el monto, la Cantidad es Invalida')
 		}
-		console.log(total)
-		console.log(monto)
 
 
 		let push = []

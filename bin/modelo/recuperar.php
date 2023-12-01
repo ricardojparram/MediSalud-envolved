@@ -60,11 +60,12 @@
 					$resultado = ['resultado' => 'Correo enviado'];
 				}else{
 					$resultado = ['resultado' => 'Error al enviar correo'];
-
+				}
+				
 				$this->desconectarDB();
 				die(json_encode($resultado));
 
-			}catch(exection $error){
+			}catch(\PDOException $error){
 				return $error;
 			}
 

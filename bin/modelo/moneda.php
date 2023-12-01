@@ -303,37 +303,30 @@ class moneda extends DBConnect{
      }
   }
 
-  // public function  actualizarMoneda(){
-    
-  //   $ch = curl_init();
- 
- 
-  //   $array = [
-
-  //              'coins' => 'PTR',
-  //              'fiats' =>  'BS'
-
-  //            ];
-
-  //   $data = http_build_query($array);
-
-  //   curl_setopt($ch, CURLOPT_URL, 'https://petroapp-price.petro.gob.ve/price/');
-  //   curl_setopt($ch, CURLOPT_POST, true);
-  //   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  //   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-  //   $response = curl_exec($ch);
-
-
-  //   if (curl_error($ch)) echo curl_error($ch);
-  //   else $decoded = json_decode($response, true);
-
-  //   foreach ($decoded as $index => $value) {
-  //       echo "$index: $value <br>";
-  //   }
-
-  //   curl_close($ch);
+  public function  actualizarMoneda(){
+  //   if (extension_loaded('openssl')) {
+  //     echo 'OpenSSL está habilitado en tu servidor.';
+  // } else {
+  //     echo 'OpenSSL no está habilitado en tu servidor.';
   // }
+  // die();
+    
+    // Obtener el contenido HTML de una página web a través de su URL
+    $html = file_get_contents('https://www.bcv.org.ve/');
+
+    // Crear un objeto DOMDocument
+    $dom = new DOMDocument();
+
+    // Cargar el contenido HTML desde la variable
+    $dom->loadHTML($html);
+
+    // Crear un nuevo elemento y añadirlo al DOM
+    $newElement = $dom->createElement('p', 'Nuevo párrafo');
+    $dom->getElementsById('euro')->item(0)->appendChild($newElement);
+
+    echo $newElement;
+    die();
+  }
 
 }
 ?>

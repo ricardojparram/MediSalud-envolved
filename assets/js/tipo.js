@@ -1,18 +1,42 @@
 $(document).ready(function(){
-let tabla
-rellenar();
+	let mostrar;
+	let permiso , editarPermiso , eliminarPermiso, registrarPermiso;
 
-function rellenar(){
+	 $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos : "permiso"},
+	  success(data){ permiso = data; }
+
+	 }).then(function(){
+	  rellenar(true);
+	  registrarPermiso = (permiso.registrar != 1)? 'disable' : '';
+	  $('.agregarModal').attr(registrarPermiso, '');
+	 })
+
+function rellenar(bitacora = false){
 	 $.ajax({
       type: "POST",
       url: '',
       dataType: 'json',
-      data:{mostrar: 'xd'},
-      success(tipoa){
-        tabla = $("#tabla").DataTable({
-          responsive: true,
-          data: tipoa
-        });
+      data:{mostrar: 'xd' , bitacora},
+      success(data){
+      	let tabla;
+	    data.forEach(row =>{
+		editarPermiso = (permiso.editar != 1)?  'disable' : '';
+		eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
+
+		tabla += `
+		<tr>
+		<td>${row.des_tipo}</td>
+		<td class="d-flex justify-content-center">
+		<button type="button" ${editarPermiso} id="${row.cod_tipo}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="bi bi-pencil"></i></button>
+		<button type="button" ${eliminarPermiso} id="${row.cod_tipo}" class="btn btn-danger borrar mx-2" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi bi-trash3"></i></button>
+		</td>
+		</tr>
+		`;
+		})
+		$('#tbody').html(tabla);
+		mostrar = $('#tabla').DataTable({
+		resposive : true
+		})
       }
     })
 }
@@ -38,7 +62,7 @@ $("#enviar").click((e)=>{
  	success(data){
  		console.log(ytipo)
  		if(ytipo == true){
- 			tabla.destroy()
+ 			mostrar.destroy()
  		
  		$("#closeAg").click();
  		Toast.fire({ icon: 'success', title:' Tipo de Producto registrado'})
@@ -78,7 +102,7 @@ $("#delete").click(()=>{
 		},
 		success(tipoE){
 			if (tipoE.resultado === "Eliminado"){
-				tabla.destroy();
+				mostrar.destroy();
 				$("#cerrar").click();
 				Toast.fire({icon: 'error', title:'tipo de Producto eliminado'})
 				rellenar();
@@ -113,8 +137,9 @@ $("#tipNomEdit").keyup(()=>{  validarNombre($("#tipNomEdit"),$("#error2"),"Error
 
 let jtipo;
 $("#enviarEditar").click((e)=>{
+	console.log('hola')
 jtipo = validarNombre($("#tipNomEdit"),$("#error2"),"Error de Tipo de Producto");
-if(ytipo){
+if(jtipo){
 $.ajax({
 	type:"POST",
 	url:"",
@@ -124,7 +149,7 @@ $.ajax({
 		tipoedit
 	},success(){
 		if (jtipo) {
-        tabla.destroy();
+        mostrar.destroy();
         $("#closeEditar").click();
         Toast.fire({ icon: 'success', title: 'Tipo de cambio registrado'})
         rellenar();

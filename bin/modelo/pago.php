@@ -75,7 +75,7 @@
             try {
                 parent::conectarDB();
                 $new = $this->con->prepare('SELECT
-                    (SELECT SUM(round(car.cantidad*car.precioActual)) FROM carrito car WHERE car.cedula = ?) AS total,
+                    (SELECT SUM(round(car.cantidad*p.p_venta)) FROM carrito car INNER JOIN producto p ON car.cod_producto = p.cod_producto WHERE car.cedula = ?) AS total,
                     (SELECT COUNT(*) FROM carrito car WHERE car.cedula = ?) AS cuenta,
                     (SELECT c.cambio FROM cambio c INNER JOIN moneda m ON c.moneda = m.id_moneda  WHERE c.status = 1 AND m.nombre = "Dolar" or m.nombre = "dolar"ORDER BY c.fecha DESC LIMIT 1) AS cambio,
                     (SELECT c.id_cambio FROM cambio c INNER JOIN moneda m ON c.moneda = m.id_moneda  WHERE c.status = 1 AND m.nombre = "Dolar" or m.nombre = "dolar"ORDER BY c.fecha DESC LIMIT 1) AS id_cambio');
@@ -92,10 +92,10 @@
             }
         }
 
-        public function mostrarEmpresa(){
+        public function mostrarEstados(){
             try {
                 parent::conectarDB();
-                $new = $this->con->prepare('SELECT * FROM empresa_envio WHERE status = 1;');
+                $new = $this->con->prepare('SELECT * FROM `estados_venezuela` ORDER BY nombre ASC');
                 $new->execute();
                 $data = $new->fetchAll();
                 echo json_encode($data);
@@ -107,11 +107,11 @@
             }
         }
 
-        public function mostrarSede($sede){
+        public function mostrarSede($estado){
             try {
                 parent::conectarDB();
-                $new = $this->con->prepare('SELECT * FROM sede_envio WHERE id_empresa =  ? and status = 1');
-                $new->bindValue(1, $sede);
+                $new = $this->con->prepare('SELECT * FROM sede_envio WHERE id_estado = ? and status = 1');
+                $new->bindValue(1, $estado);
                 $new->execute();
                 $data = $new->fetchAll();
                 echo json_encode($data);
@@ -359,7 +359,7 @@
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
                 parent::desconectarDB();
-                if(isset($data[0])) return ($data[0]->cuenta > 1);
+                if(isset($data[0])) return ($data[0]->cuenta >= 1);
                 return false;
 
             } catch (\PDOException $e) {

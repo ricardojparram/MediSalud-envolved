@@ -7,7 +7,7 @@ class footerInicio{
 	
 	public function footer(){
 		$footer = '
-	       <footer class="py-0 pt-5 footer">
+	       <footer class="footer fw-bold">
 	          <!-- <section> begin ============================-->
 
 	        <div class="container">
@@ -18,7 +18,7 @@ class footerInicio{
 	                <li class="lh-lg"><a class="text-white link" href="?url=inicio">Inicio</a></li>
 	                <li class="lh-lg"><a class="text-white link" href="#!">Nosotros</a></li>
 	                <li class="lh-lg"><a class="text-white link" href="#!">Catalogo</a></li>
-	                 <li class="lh-lg"><a class="text-white link" href="#!">contactos</a></li>
+	                 <li class="lh-lg"><a class="text-white link" href="#!">Contactos</a></li>
 	              </ul>
 	            </div>
 	            <div class="col-6 col-lg-2 mb-3">

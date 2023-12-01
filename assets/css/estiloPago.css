@@ -120,3 +120,24 @@ only screen and (                min-resolution: 2dppx) {
     border: none;
     width: 100%;
 }
+
+.main{
+	margin-top: 76px;
+}
+
+#fade{
+	display: none;
+} 
+
+.form-switch {
+	padding-left: 3.5em;
+}
+.botEntre{
+	height: 52px;
+	border-radius: 24px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+.table-responsive {
+	overflow: visible;
+}
