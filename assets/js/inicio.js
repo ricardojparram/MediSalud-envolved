@@ -29,7 +29,7 @@ $(document).ready(function(){
 		                    </small>
 		                  </div>
 		                  <div class="text-small mb-1">
-		                    <a href="#!" class="text-decoration-none text-muted" tabindex="0"><small>${row.des_tipo}</small></a>
+		                    <a href="#!" class="text-decoration-none text-muted" tabindex="0"><small>${row.des_clase}</small></a>
 		                  </div>
 		                  <h2 class="fs-6">${row.nombre}</h2>
 		                  <!-- rating -->
@@ -59,13 +59,13 @@ $(document).ready(function(){
 		id = this.attributes.id_prod.value;
 		let producto = getProdDetalle(id);
 		 console.log(producto)
-		$('.tipo_medicamento').html(producto.des_tipo);
+		$('.tipo_medicamento').html(producto.des_clase);
 		$('.nombre_medicamento').html(producto.nombre);
 		$('.descripcion_medicamento').html(producto.descripcion);
 		$('.precio_bs').html(producto.p_venta);
 		$('.producto_imagen_modal').attr('src', producto.img);
 		$('.codigo_producto').html(producto.cod_producto);
-		$('.tipo_producto').html(producto.des_tipo);
+		$('.tipo_producto').html(producto.des_clase);
 		$('.contraindicaciones').html(producto.contraindicaciones);
 
 	})

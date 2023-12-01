@@ -11,7 +11,9 @@ $(document).ready(function(){
 			})
 	}
 
-	if('productos' in localStorage === false) getProductosBD();
+	let params = new URLSearchParams(document.location.search);
+	if(params.get("url") === "carrito") getProductosBD();
+	
 
 	/* Para la manipulacion de los detalles del producto en localStorage */
 	const getProductos = () => JSON.parse(localStorage.getItem('productos'));
@@ -123,9 +125,9 @@ $(document).ready(function(){
 			$('.cardTotal').hide();
 			$('.vaciar').hide();
 		}
+		let productos = [];
 
 		if(carrito.length > 0){
-			let productos = [];
 			let precioTotal = 0;
 			let flexDirection = ($('.carrito-container').width() < 400) ? 'item-carrito-tienda' : '';
 			carrito.forEach((row, i) => {
@@ -157,7 +159,7 @@ $(document).ready(function(){
 	            `
 	            productos.push({cod_producto: prod.cod_producto, cantidad: prod.cantidad});		
 			})
-
+			
 			actualizarBadge(productos.length);
 			$('.carrito-container').html(div);
 			$('#precioTotal').html(precioTotal);
