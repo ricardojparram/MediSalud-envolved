@@ -38,7 +38,7 @@ $(document).ready(function(){
 					</span>
 					`
 				})
-				$('.categorias').html(categorias);
+				$('.categorias_catalogo').html(categorias);
 			}
 		})
 	}

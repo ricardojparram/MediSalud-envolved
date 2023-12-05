@@ -18,15 +18,27 @@
 
   </header>
 
-  <main class="row justify-content-center" style="margin-top: 76px; min-height: 500px;"> 
-    <section class="col-12">
-      <header>
-        <h1></h1>
-      </header>
-      <div class="categorias">
+  <main class="parent" style="margin-top: 76px; min-height: 500px;"> 
+    <!-- <section class="col-12 p-5"> -->
+      <!-- <header>
+        <h1>Catálogo</h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Catálogo</li>
+            <li class="breadcrumb-item active" aria-current="page">Analgésicos</li>
+          </ol>
+        </nav>
+      </header> -->
+    <!-- </section> -->
+    <nav class="filtros px-5 py-4">
+      <div class="row">
+        <h5 class="w-auto">Categorías: </h5>
+        <div class="categorias_catalogo col-12 col-md-10">
 
+        </div>
       </div>
-    </section>
+    </nav>
     <section class="col-12">
       <div class="row mx-auto align-items-center catalogoProductos" style="padding: 0 25px">
 
