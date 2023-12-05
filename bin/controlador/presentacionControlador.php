@@ -21,6 +21,10 @@
     $objModel->mostrarPresentacionAjax();
   }
 
+  if(isset($_POST['notificacion'])) {
+    $objModel->getNotificacion();
+  }
+
 
   if(isset($_POST['med'])  && isset($_POST['cant']) && isset($_POST['pes'])){
 

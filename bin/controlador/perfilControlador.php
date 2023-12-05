@@ -15,6 +15,10 @@
     die('<script> window.location = "?url=login" </script>');
   }
 
+  if(isset($_POST['notificacion'])) {
+    $objModel->getNotificacion();
+  }
+
   if(isset($_SESSION['cedula']) && isset($_POST['mostrar'])) {
     $objModel->mostrarDatos($_SESSION['cedula']);
   }

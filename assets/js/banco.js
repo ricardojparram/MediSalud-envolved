@@ -378,7 +378,7 @@ $(document).ready(function(){
         });
             break;
 
-            case 'Transferencia' || 'transferencia' || 'tranferencia' || 'Tranferencia' :  
+            case 'Transferencia' || 'transferencia' || 'tranferencia' || 'Tranferencia' : 
             // Validar
             tipopEdit = validarSelect($('#tipopEdit'), $('#errorEdit1'), "Tipo invalido");
             nombreEdit = validarSelect($('#nombreEdit'), $('#errorEdit2'), "Nombre invalido");
@@ -415,16 +415,15 @@ $(document).ready(function(){
             
             break;
 
-            default : 
-            $('#error1').text("Solo se permite Transferencia o Pago movil") 
-            $('#tipoP').attr("style","border-color: red;")
-            $('#tipoP').attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");                         
+            default:
+            $('#errorEdit').text("Solo se permite Transferencia o Pago movil") 
+            $('#tipopEdit').attr("style","border-color: red;")
+            $('#tipopEdit').attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");                         
 
-            break;
+            break; 
         }
 
       
-
     }).catch(() =>{
        throw new Error('No exite.');
    })

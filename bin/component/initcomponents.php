@@ -117,7 +117,8 @@
 
               <!-- Page level custom scripts -->
               <script src="'._URL_.'assets/js/datatables-demo.js"></script>
-              <script src="'._URL_.'assets/js/validar.js"></script> ';
+              <script src="'._URL_.'assets/js/validar.js"></script> 
+              <script src="'._URL_.'assets/js/notificaciones.js"></script>';
       echo $varJs;
 
     }

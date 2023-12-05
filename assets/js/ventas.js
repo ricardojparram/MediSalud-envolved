@@ -640,7 +640,6 @@
       $('.table-body tbody tr').each(function(){
         let producto = $(this).find('.select-productos').val();
         if(producto == "" || producto == null){
-          console.log('OKi');
          vproductos = false;
          $('#pValid').text('No debe haber productos vacíos.')
        }

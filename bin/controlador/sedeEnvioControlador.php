@@ -13,6 +13,10 @@
 
 	if($permiso->status != 1) die('<script> window.location = "?url=home" </script>');
 
+	if(isset($_POST['notificacion'])) {
+    $objModel->getNotificacion();
+  }
+
 	$selectEmpresa = $model->selectEmpresas();
 
 	if(isset($_POST['getPermisos']) && $permiso->status == 1){
