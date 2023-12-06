@@ -33,10 +33,14 @@
     <!-- </section> -->
     <nav class="filtros px-5 py-4">
       <div class="row">
-        <h5 class="w-auto">Categorías: </h5>
-        <div class="categorias_catalogo col-12 col-md-10">
-
+        <div class="col-12 col-md-10 d-flex row">
+          <h5 class="w-auto col-12 col-md-2">Categorías: </h5>
+          <div class="categorias_catalogo col-12 col-md-10"></div>
         </div>
+        <div class="col-12 col-md-2">
+          <input type="search" class="form-control buscarProducto" placeholder="Buscar...">
+        </div>
+
       </div>
     </nav>
     <section class="col-12">
