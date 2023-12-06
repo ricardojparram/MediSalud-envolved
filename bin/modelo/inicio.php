@@ -35,6 +35,26 @@
 
     }
 
+    public function mostrarCategorias(){
+      try {
+
+        $query='SELECT c.des_clase, p.img FROM clase c
+                INNER JOIN producto p ON p.cod_clase = c.cod_clase
+                WHERE c.status = 1 AND c.des_clase != "NO ASIGNADO"
+                GROUP BY c.cod_clase;';
+        $this->conectarDB();
+        $new = $this->con->prepare($query); 
+        $new->execute();
+        $data = $new->fetchAll(\PDO::FETCH_OBJ);
+        $this->desconectarDB();
+        die(json_encode($data));
+
+      } catch (\PDOException $e) {
+        die($e);
+      }
+
+    }
+
 
   }
   

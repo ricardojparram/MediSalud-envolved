@@ -109,110 +109,7 @@
           <div id="categoriaSlider" class="carousel slide carousel-fade">
             <div class="carousel-inner">
 
-              <!-- Slide -->
-              <div class="carousel-item active pt-2 pb-2">
-                  <div class="categoria-item">
-                    <div class="card-body">
-                      <a href="#" class="text-dark">
-                        <div class="mt-1 mb-0">
-                          <img src="https://boticaportugal.com/cdn/shop/products/9342018120_152e3f51-7a5f-4175-818b-e667a7ca4f47.png?v=1648745401" alt="Imagen del producto" class="img-fluid">
-                        </div>
-                        <h2 class="text-center fw-bold">Antiinflamatorio</h2>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="categoria-item">
-                    <div class="card-body">
-                      <a href="#" class="text-dark">
-                        <div class="mt-1 mb-0">
-                          <img src="https://eqf.com.mx/wp-content/uploads/2022/08/AMS148.png" alt="Imagen del producto" class="img-fluid">
-                        </div>
-                        <h2 class="text-center fw-bold">Antidepresivo</h2>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="categoria-item">
-                    <div class="card-body">
-                      <a href="#" class="text-dark">
-                        <div class="mt-1 mb-0">
-                          <img src="https://drogueriascomfenalco.com/image/cache/catalog/FOTOS/LINEA%20GENERICA(VENTA%20LIBRE)/GENFAR/losartan_5105-0323-300x300.PNG" alt="Imagen del producto" class="img-fluid">
-                        </div>
-                        <h2 class="text-center fw-bold">Antihipertensivos</h2>
-                      </a>
-                    </div>
-                  </div>
-              </div>
-              <!-- Slide end -->
-
-              <!-- Slide -->
-              <div class="carousel-item pt-2 pb-2">
-                  <div class="categoria-item">
-                    <div class="card-body">
-                      <a href="#" class="text-dark">
-                        <div class="mt-1 mb-0">
-                          <img src="https://boticaportugal.com/cdn/shop/products/9342018120_152e3f51-7a5f-4175-818b-e667a7ca4f47.png?v=1648745401" alt="Imagen del producto" class="img-fluid">
-                        </div>
-                        <h2 class="text-center fw-bold">Antiinflamatorio</h2>
-                      </a>
-                    </div>
-                  </div>
-                   <div class="categoria-item">
-                    <div class="card-body">
-                      <a href="#" class="text-dark">
-                        <div class="mt-1 mb-0">
-                          <img src="https://eqf.com.mx/wp-content/uploads/2022/08/AMS148.png" alt="Imagen del producto" class="img-fluid">
-                        </div>
-                        <h2 class="text-center fw-bold">Antidepresivo</h2>
-                      </a>
-                    </div>
-                  </div>
-                   <div class="categoria-item">
-                    <div class="card-body">
-                      <a href="#" class="text-dark">
-                        <div class="mt-1 mb-0">
-                          <img src="https://drogueriascomfenalco.com/image/cache/catalog/FOTOS/LINEA%20GENERICA(VENTA%20LIBRE)/GENFAR/losartan_5105-0323-300x300.PNG" alt="Imagen del producto" class="img-fluid">
-                        </div>
-                        <h2 class="text-center fw-bold">Antihipertensivos</h2>
-                      </a>
-                    </div>
-                  </div>
-              </div>
-              <!-- Slide end -->
-
-              <!-- Slide -->
-              <div class="carousel-item pt-2 pb-2">
-                   <div class="categoria-item">
-                    <div class="card-body">
-                      <a href="#" class="text-dark">
-                        <div class="mt-1 mb-0">
-                          <img src="https://drogueriascomfenalco.com/image/cache/catalog/FOTOS/LINEA%20GENERICA(VENTA%20LIBRE)/GENFAR/losartan_5105-0323-300x300.PNG" alt="Imagen del producto" class="img-fluid">
-                        </div>
-                        <h2 class="text-center fw-bold">Antihipertensivos</h2>
-                      </a>
-                    </div>
-                  </div>
-                   <div class="categoria-item">
-                    <div class="card-body">
-                      <a href="#" class="text-dark">
-                        <div class="mt-1 mb-0">
-                          <img src="https://eqf.com.mx/wp-content/uploads/2022/08/AMS148.png" alt="Imagen del producto" class="img-fluid">
-                        </div>
-                        <h2 class="text-center fw-bold">Antidepresivo</h2>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="categoria-item">
-                    <div class="card-body">
-                      <a href="#" class="text-dark">
-                        <div class="mt-1 mb-0">
-                          <img src="https://boticaportugal.com/cdn/shop/products/9342018120_152e3f51-7a5f-4175-818b-e667a7ca4f47.png?v=1648745401" alt="Imagen del producto" class="img-fluid">
-                        </div>
-                        <h2 class="text-center fw-bold">Antiinflamatorio</h2>
-                      </a>
-                    </div>
-                  </div>
-              </div>
-              <!-- Slide end -->
+              
 
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#categoriaSlider" data-bs-slide="prev">
@@ -254,14 +151,6 @@
   <?php $VarComp->js() ?>
   <script src="assets/js/inicio.js"></script>
   <script src="assets/js/carrito.js"></script>
-  <script>
-    const myCarouselElement = document.querySelector('#carouselExampleRide')
-
-    const carousel = new bootstrap.Carousel(myCarouselElement, {
-      interval: 2000,
-      touch: false
-    })
-  </script>
 
 </body>
 

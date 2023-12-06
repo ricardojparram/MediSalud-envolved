@@ -70,4 +70,43 @@ $(document).ready(function(){
 
 	})
 
+	$.ajax({type: 'POST',url: '',dataType: 'json',data:{ mostrarCategorias:''},
+		success(res){
+			let mostrar = "";
+			let contador = 1;
+			res.forEach((row, i) => {
+				let active = (i === 0) ? 'active' : "";
+				let principioSlide = (contador === 1) ? `<div class="carousel-item ${active} pt-2 pb-2">` : "";
+				let finalSlide = (contador === 3) ? "</div>" : "";
+				mostrar += `
+				${principioSlide}
+					<div class="categoria-item">
+	                    <div class="card-body">
+	                      <a href="?url=catalogo&filtro=${row.des_clase}" class="text-dark">
+	                        <div class="mt-1 mb-0">
+	                          <img src="${row.img}" alt='Imagen de un producto tipo "${row.des_clase}"' class="img-fluid">
+	                        </div>
+	                        <h2 class="text-center fw-bold">${row.des_clase}</h2>
+	                      </a>
+	                    </div>
+	                </div>
+				${finalSlide}
+				`
+				if(contador % 3 === 0) contador = 0; 
+				contador++
+			})
+			$('#categoriaSlider .carousel-inner').html(mostrar);
+			const myCarouselElement = document.querySelector('#categoriaSlider')
+
+			const carousel = new bootstrap.Carousel(myCarouselElement, {
+				interval: 2000,
+				touch: false
+			})
+		}
+	})
+	// function mostrarCategorias(){
+	// }
+
+
+
 })
