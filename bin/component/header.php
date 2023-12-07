@@ -34,17 +34,29 @@
             <li>
               <hr class="dropdown-divider">
             </li>
+            <li class="dropdown-header text-start">
+              Nuevas
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
 
             <li class="item list-group">
               
             </li>
 
+            <li class="dropdown-footer text-start">
+              Anteriores
+            </li>
+             <li class="itemVisto list-group">
+              
+            </li>
 
             <li>
               <hr class="dropdown-divider">
             </li>
             <li class="dropdown-footer">
-              <a href="#">Show all notifications</a>
+              <a href="#">Marcar todo como leido</a>
             </li>
 
           </ul><!-- End Notification Dropdown Items -->

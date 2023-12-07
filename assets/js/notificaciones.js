@@ -3,6 +3,8 @@ $(document).ready(function(){
   let tiempoNotificacion = 1800000; 
   let tiempoDelete = 1740000;
 
+  localStorage.clear()
+
   function redondear(numero) {
     const parteEntera = Math.floor(numero);
     const parteDecimal = numero - parteEntera;
@@ -27,13 +29,10 @@ $(document).ready(function(){
 
     mostrarNotificaciones(porVencidoGuardado , vencidosGuardados, diaDeInventarioGuardado);
 
-   }else{
-
-     notificaciones();
-     
    }
 
- 
+  notificaciones();
+     
   function notificaciones(){
     $.ajax({
       type: 'POST',
@@ -85,14 +84,30 @@ $(document).ready(function(){
       };
       setInterval(actualizaMinutos, tiempoMinutos);
       mostrar += `
-        <li class="notification-item w-100">
-          <i class="bi bi-exclamation-circle text-warning"></i>
-          <div>
-            <h4>Productos por expirar</h4>
-            <p>Faltan ${row.dias_restantes} dias para el expire el producto: ${row.nombre} </p>
-            <p class='tiempo'>tiempo activo: ${minutos} minutos</p>
+      <li class="notification-item notificacion w-100">
+      <div class="row">
+       <div class="col-md-12">
+        <div class="d-flex justify-content-between">
+          <div class="text-center mt-3">
+            <i class="bi bi-exclamation-circle text-warning"></i>
           </div>
-        </li>
+          <div class="mx-2">
+            <h4>Productos por expirar</h4>
+            <p>Faltan ${row.dias_restantes} días para que expire el producto: ${row.nombre}</p>
+            <p class='tiempo'>Tiempo activo: ${minutos} minutos</p>
+          </div>
+          </div>
+        </div>
+        <div class="col fs-5 text-end NotiButton">
+          <a class="leido btn-sm" href="#">Marcar como leido</a>
+        </div>
+      </div>
+      </li>
+
+      <li class='divisor'>
+        <hr class="dropdown-divider">
+      </li>
+
       `;
       contador++;
     });
@@ -106,13 +121,28 @@ $(document).ready(function(){
       };
       setInterval(actualizaMinutos, tiempoMinutos);
       mostrar1 += `
-        <li class="notification-item w-100">
-          <i class="bi bi-x-circle text-danger"></i>
-          <div>
-            <h4>Productos vencidos</h4>
-            <p>El producto: ${row.nombre} expiro hace ${Math.abs(row.dias_vencidos)} dias</p>
-            <p class='tiempo'>tiempo activo: ${minutos} minutos</p>
+      <li class="notification-item notificacion w-100">
+        <div class="row">
+          <div class="col-md-12">
+          <div class="d-flex justify-content-between">
+            <div class="text-center mt-3">
+              <i class="bi bi-x-circle text-danger"></i>
+             </div>
+            <div>
+              <h4>Productos vencidos</h4>
+              <p>El producto: ${row.nombre} expiro hace ${Math.abs(row.dias_vencidos)} dias</p>
+              <p class='tiempo'>tiempo activo: ${minutos} minutos</p>
+            </div>
+           </div>
           </div>
+          <div class="col fs-5 text-end NotiButton">
+            <a class="leido btn-sm" href="#">Marcar como leido</a>
+          </div>
+          </div>
+        </li>
+
+        <li class='divisor'>
+          <hr class="dropdown-divider">
         </li>
       `;
       contador1++;
@@ -127,14 +157,30 @@ $(document).ready(function(){
       };
       setInterval(actualizaMinutos, tiempoMinutos);
       mostrar2 += `
-          <li class="notification-item w-100">
-          <i class="bi bi-exclamation-circle text-warning"></i>
-          <div>
-            <h4>Dia de Inventario: ${redondear(row.dia_inventario).toFixed(2)}</h4>
-            <p>Stock Producto: ${row.stock}</p>
-            <p>Quedan ${ (row.stock / row.dia_inventario).toFixed(0) } dias de inventario del producto: <strong>${row.descripcion}</strong> </p>
-            <p class='tiempo'>tiempo activo: ${minutos} minutos</p>
+      <li class="notification-item notificacion w-100">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-between">
+              <div class="text-center mt-3">
+                <i class="bi bi-exclamation-circle text-warning"></i>
+              </div>
+              <div>
+                <h4>Dia de Inventario: ${Number(row.dia_inventario).toFixed(2)}</h4>
+                <p>Stock Producto: ${row.stock}</p>
+                <p>Quedan ${ (row.stock / row.dia_inventario).toFixed(0) } dias de inventario del producto: <strong>${row.descripcion}</strong> </p>
+                <p class='tiempo'>tiempo activo: ${minutos} minutos</p>
+              </div>
+            </div>
           </div>
+          <div class="col fs-5 text-end NotiButton">
+           <a class="leido btn-sm" href="#">Marcar como leido</a>
+          </div>
+        </div>
+
+      </li>
+
+        <li class='divisor'>
+           <hr class="dropdown-divider">
         </li>
       `;
       contador2++;
@@ -154,5 +200,19 @@ $(document).ready(function(){
 
   }
 
+  $(document).on('click' , '.leido' , function(e){
+    e.preventDefault()
+    console.log('hola');
 
+    const selectedNotification = $(this).closest('.notification-item');
+    let divisor = selectedNotification.next('.divisor');
+
+    selectedNotification.removeClass('notificacion').addClass('notificacion-visto');
+    selectedNotification.find('.leido').remove();
+    divisor.remove()
+    $('.itemVisto').prepend(selectedNotification);
+    $('.itemVisto').prepend('<li class="divisor"><hr class="dropdown-divider"></li>');
+  })
+
+  
 })

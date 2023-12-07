@@ -149,3 +149,39 @@ body{
     color: #ffffff !important;
 }
 
+.NotiButton a {
+    color: #198754;
+}
+
+@media only screen and (max-width: 375px) {
+  .NotiButton a {
+    font-size: 4vw;
+  }
+}
+
+
+@media only screen and (max-width: 600px) {
+  .NotiButton a {
+    font-size: 4vw;
+  }
+}
+
+/* For medium devices (tablets) */
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+  .NotiButton a {
+    font-size: 1.8vw;
+  }
+}
+
+/* For large devices (laptops, desktops) */
+@media only screen and (min-width: 1025px) {
+  .NotiButton a {
+    font-size: 1.2vw;
+  }
+}
+
+.NotiButton a:hover {
+    transition: all 0.5s;
+    color: #28d787 !important;
+    text-decoration: underline;
+}
