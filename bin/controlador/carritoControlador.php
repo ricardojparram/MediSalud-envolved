@@ -14,6 +14,10 @@
 		$model->getCarritoUsuario($_SESSION['cedula']);
 	}
 
+	if(isset($_POST['precioDolar'])){
+		$model->getPrecioDolar();
+	}
+
 	if(isset($_POST['añadirCarrito'], $_POST['productos'], $_SESSION['cedula'])){
 		$model->getAgregarProducto($_SESSION['cedula'], $_POST['productos']);
 	}

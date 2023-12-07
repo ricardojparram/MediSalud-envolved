@@ -135,7 +135,7 @@
 
       <!--- Botón de ir al catálogo -->
         <div class="w-100 mt-4 mb-5 d-flex justify-content-center"> 
-          <a class="btn btn-lg btn-outline-success ir_catalogo" href="#!"><strong>Ir al catálogo </strong><span><i class="bi bi-arrow-right"></i></span></a>
+          <a class="btn btn-lg btn-outline-success ir_catalogo" href="?url=catalogo"><strong>Ir al catálogo </strong><span><i class="bi bi-arrow-right"></i></span></a>
         </div>
       <!--- Botón de ir al catálogo end -->
 
@@ -204,7 +204,8 @@
               </div>
               <div class="fs-4 precios">
                 <span class="fw-bold text-dark ">Bs. <span class="precio_bs">120.00</span></span>
-                <span class="text-muted precio_dolar" >$4.00</span>
+                &nbsp;&nbsp;
+                <span class="text-muted" ><span class="precio_dolar"></span>$</span>
               </div>
               <hr class="my-6">
               <div class="opciones row">

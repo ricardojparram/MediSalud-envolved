@@ -39,6 +39,22 @@
 
 		}
 
+		public function getPrecioDolar(){
+			try {
+				
+				$this->conectarDB();
+				$new = $this->con->prepare("SELECT cambio FROM cambio c
+										    WHERE c.moneda = 1
+										    ORDER BY c.fecha DESC LIMIT 1");
+				$new->execute();
+				$data = $new->fetchAll(\PDO::FETCH_OBJ);
+				die(json_encode($data));
+
+			} catch (\PDOException $e) {
+				die($e);
+			}
+		}
+
 		public function getAgregarProducto($cedula, array $productos){
 			$this->user = $cedula;
 			$this->productos = $productos;

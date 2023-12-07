@@ -4,6 +4,8 @@ $(document).ready(function(){
 	const getProductos = () => JSON.parse(localStorage.getItem('productos'));
 	const getProdDetalle = (id) => {let prod = getProductos(); return prod[`${id}`] }
 
+	const getDolar = () => Number(localStorage.getItem('dolar'))
+
 	function mostrarCatalogo(){
 		$.ajax({type: 'POST',url: '',dataType: 'json',data:{mostraC: ''},
 			success(data){
@@ -14,6 +16,7 @@ $(document).ready(function(){
 	            localStorage.setItem('productos', JSON.stringify(productos));
 				let mostrar = '';
 	            data.forEach(row =>{
+	            	let precio_dolar = (Number(row.p_venta) / getDolar()).toFixed(2);
 	             	mostrar += `
 		            <div class="product-container">
 		              <div class="card-product position-relative">
@@ -36,7 +39,7 @@ $(document).ready(function(){
 
 		                  <div class="d-flex justify-content-between align-items-center mt-3">
 		                    <div>
-		                      <span class="text-dark">Bs. ${row.p_venta}</span><span class="text-muted"> $5</span>
+		                      <span class="text-dark">Bs. ${row.p_venta}</span>&nbsp;&nbsp;<span class="text-muted"> ${precio_dolar}$ </span>
 		                    </div>
 		                    <!-- btn -->
 		                    <button id_prod="${row.cod_producto}" class="btn btn-sm btn-success text-white mostrarCatalogo" data-bs-toggle="modal" data-bs-target="#AñadirCarritoModal">
@@ -58,14 +61,16 @@ $(document).ready(function(){
 	$(document).on('click' , '.mostrarCatalogo' , function(){
 		id = this.attributes.id_prod.value;
 		let producto = getProdDetalle(id);
-		 console.log(producto)
-		$('.tipo_medicamento').html(producto.des_clase);
+		let precio_dolar = (Number(producto.p_venta) / getDolar()).toFixed(2);
+
+		$('.tipo_medicamento').html(producto.des_tipo);
 		$('.nombre_medicamento').html(producto.nombre);
 		$('.descripcion_medicamento').html(producto.descripcion);
 		$('.precio_bs').html(producto.p_venta);
+		$('.precio_dolar').html(precio_dolar);
 		$('.producto_imagen_modal').attr('src', producto.img);
 		$('.codigo_producto').html(producto.cod_producto);
-		$('.tipo_producto').html(producto.des_clase);
+		$('.tipo_producto').html(producto.des_tipo);
 		$('.contraindicaciones').html(producto.contraindicaciones);
 
 	})
@@ -104,9 +109,6 @@ $(document).ready(function(){
 			})
 		}
 	})
-	// function mostrarCategorias(){
-	// }
-
 
 
 })

@@ -10,7 +10,9 @@ $(document).ready(function(){
 			})
 	}
 	const getProductos = () => JSON.parse(localStorage.getItem('productos'));
-	const getProdDetalle = (id) => {let prod = getProductos(); return prod[`${id}`] }
+	const getProdDetalle = (id) => {let prod = getProductos(); return prod[`${id}`] }	
+
+	const getDolar = () => Number(localStorage.getItem('dolar'))
 
 	getProductosBD().then(() => {
 		mostrarCategorias().then(() => {
@@ -52,42 +54,43 @@ $(document).ready(function(){
 			$('.catalogoProductos').html(mostrar);
 			return;
 		}
-        for(let i in products){
-         	mostrar += `
-            <div class="product-container">
-              <div class="card-product position-relative">
-                <div class="card-body">
-                  <div class="text-center position-relative">
-                    <img src="${products[i].img}" alt="Imagen del producto" class="mb-3 img-fluid">
-                    <small class="text-warning position-absolute bottom-0 end-0">
-                      <i class="bi bi-star-fill"></i>
-                      <i class="bi bi-star-fill"></i>
-                      <i class="bi bi-star-fill"></i>
-                      <i class="bi bi-star-fill"></i>
-                      <i class="bi bi-star-half"></i>
-                    </small>
-                  </div>
-                  <div class="text-small mb-1">
-                    <a href="#!" class="text-decoration-none text-muted" tabindex="0"><small>${products[i].des_clase}</small></a>
-                  </div>
-                  <h2 class="fs-6">${products[i].nombre}</h2>
-                  <!-- rating -->
+    for(let i in products){
+    	let precio_dolar = (Number(products[i].p_venta) / getDolar()).toFixed(2);
+     	mostrar += `
+        <div class="product-container">
+          <div class="card-product position-relative">
+            <div class="card-body">
+              <div class="text-center position-relative">
+                <img src="${products[i].img}" alt="Imagen del producto" class="mb-3 img-fluid">
+                <small class="text-warning position-absolute bottom-0 end-0">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-half"></i>
+                </small>
+              </div>
+              <div class="text-small mb-1">
+                <a href="#!" class="text-decoration-none text-muted" tabindex="0"><small>${products[i].des_clase}</small></a>
+              </div>
+              <h2 class="fs-6">${products[i].nombre}</h2>
+              <!-- rating -->
 
-                  <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <span class="text-dark">Bs. ${products[i].p_venta}</span><span class="text-muted"> $5</span>
-                    </div>
-                    <!-- btn -->
-                    <button id_prod="${products[i].cod_producto}" class="btn btn-sm btn-success text-white mostrarCatalogo" data-bs-toggle="modal" data-bs-target="#AñadirCarritoModal">
-                      <strong>Comprar </strong><i class="fs-7 text-white bi bi-cart-plus-fill"></i> 
-                    </button>
-                  </div>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                  <span class="text-dark">Bs. ${products[i].p_venta}</span><span class="text-muted"> ${precio_dolar}$</span>
                 </div>
+                <!-- btn -->
+                <button id_prod="${products[i].cod_producto}" class="btn btn-sm btn-success text-white mostrarCatalogo" data-bs-toggle="modal" data-bs-target="#AñadirCarritoModal">
+                  <strong>Comprar </strong><i class="fs-7 text-white bi bi-cart-plus-fill"></i> 
+                </button>
               </div>
             </div>
-         	`;
-        }
-        $('.catalogoProductos').html(mostrar);
+          </div>
+        </div>
+     	`;
+    }
+    $('.catalogoProductos').html(mostrar);
 	}
 
 
@@ -96,11 +99,13 @@ $(document).ready(function(){
 	$(document).on('click' , '.mostrarCatalogo' , function(){
 		id = this.attributes.id_prod.value;
 		let producto = getProdDetalle(id);
+		let precio_dolar = (Number(producto.p_venta) / getDolar()).toFixed(2);
 
 		$('.tipo_medicamento').html(producto.des_tipo);
 		$('.nombre_medicamento').html(producto.nombre);
 		$('.descripcion_medicamento').html(producto.descripcion);
 		$('.precio_bs').html(producto.p_venta);
+		$('.precio_dolar').html(precio_dolar);
 		$('.producto_imagen_modal').attr('src', producto.img);
 		$('.codigo_producto').html(producto.cod_producto);
 		$('.tipo_producto').html(producto.des_tipo);
