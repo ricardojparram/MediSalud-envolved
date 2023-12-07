@@ -46,7 +46,9 @@ $(document).ready(function(){
         "Modificar acciones" : '<i class="bi bi-pencil-fill"></i>',
         "Modificar acceso" : '<i class="bi bi-eye-slash-fill"></i>',
         "Exportar reporte" : '<i class="bi bi-file-pdf"></i>',
-        "Exportar reporte estadistico" : '<i class="bi bi-file-spreadsheet"></i>'
+        "Exportar reporte estadistico" : '<i class="bi bi-file-spreadsheet"></i>',
+        "Comprobar pago" : '<i class="bi bi-journal-check"></i>',
+        "Asignar estado" : '<i class="bi bi-journal-check"></i>'
     }
 
     let id 
