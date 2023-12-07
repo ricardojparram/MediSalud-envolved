@@ -175,7 +175,7 @@
 
 	        </div>
 
-	        <p style="color:#ff0000;text-align: center;" id="error"><?php echo (isset($respuesta)) ? $respuesta : " "; ?></p>
+	        <p class="error" style="color:#ff0000;text-align: center;" id="error"><?php echo (isset($respuesta)) ? $respuesta : " "; ?></p>
 	        
 	        <div class="modal-footer">
 	          <button type="button" id="cancelar" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>

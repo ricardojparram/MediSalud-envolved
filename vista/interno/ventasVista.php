@@ -281,7 +281,6 @@
                   </table>
 
                    <p class="filaTipoPago error" style="color:#ff0000;text-align: center;"></p>
-
                   <a class="newRowPago a-asd" href="#"><i class="bi bi-plus-circle-fill"></i> Nueva fila</a> <br>
 
                 </div>
@@ -339,7 +338,6 @@
       </div>
 
       <p id="pValid" class="error" style="color:#ff0000;text-align: center;"></p>
-      <p class="hola" style="color:#ff0000;text-align: center;" ></p>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary cerrar" id="cerrar" data-bs-dismiss="modal">Cancelar</button>
         <button type="submit" class="btn btn-success " id="registrar">Registrar</button>
