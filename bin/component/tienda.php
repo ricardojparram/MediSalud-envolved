@@ -30,7 +30,7 @@
         $inicioLi = ($_GET["url"] === "inicio") ? '<li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="?url=inicio">Inicio</a></li>' : '<li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=inicio">Inicio</a></li>';
         $nosotrosLi = ($_GET['url'] === 'nosotros') ? '<li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="?url=nosotros">Nosotros</a></li>' : '<li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=nosotros">Nosotros</a></li>';
         $catalogoLi = ($_GET['url'] === 'catalogo') ? '<li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="?url=catalogo">Catálogo</a></li>' : '<li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=catalogo">Catálogo</a></li>';
-        $contactanosLi = ($_GET['url'] === 'contactanos') ? '<li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="?url=contactanos">Contactanos</a></li>' : '<li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=contactanos">Contactanos</a></li>';
+        // $contactanosLi = ($_GET['url'] === 'contactanos') ? '<li class="nav-item px-2"><a class="nav-link fw-medium active" aria-current="page" href="?url=contactanos">Contactanos</a></li>' : '<li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=contactanos">Contactanos</a></li>';
         $nav = '
         <nav class="navbar navbar-expand-lg navbar-light fixed-top d-block" id="navbar">
           <div class="container">
@@ -50,7 +50,6 @@
                 '.$inicioLi.'
                 '.$nosotrosLi.'
                 '.$catalogoLi.'
-                '.$contactanosLi.'
                 '.$misCompras.'
                 '.$adminDashboard.'
               </ul>
