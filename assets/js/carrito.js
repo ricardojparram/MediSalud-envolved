@@ -171,7 +171,7 @@ $(document).ready(function(){
 			
 			actualizarBadge(productos.length);
 			$('.carrito-container').html(div);
-			$('#precioTotal').html(precioTotal);
+			actualizarTotalCarrito();
 			validarStock(productos);
 			editarCantidad();
 			confirmarEliminar();
@@ -319,7 +319,9 @@ $(document).ready(function(){
 			let precio = Number($(this).text());
 			total += precio;
 		})
+		let total_dolar = (Number(total) / getDolar()).toFixed(2);
 		$('#precioTotal').html(total);
+		$('#precioDolar').html(total_dolar);
 	}
 
 	/* Edita la cantidad de los productos ya agregados al carrito */
