@@ -17,7 +17,7 @@ CREATE TABLE cliente(
 
 -- TABLA PARA LABORATORIOS 
 CREATE TABLE laboratorio(
-    cod_lab int AUTO_INCREMENT PRIMARY KEY,
+    cod_lab varchar(10) PRIMARY KEY,
     rif varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
     direccion varchar(200) COLLATE utf8_spanish2_ci NOT NULL,
     razon_social varchar(200) COLLATE utf8_spanish2_ci,
@@ -96,7 +96,7 @@ CREATE TABLE contacto_lab(
     id_contacto_lab int AUTO_INCREMENT PRIMARY KEY,
     telefono varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
     contacto varchar(20) COLLATE utf8_spanish2_ci ,
-    cod_lab int NOT NULL,
+    cod_lab varchar(11) NOT NULL,
     FOREIGN KEY (cod_lab) REFERENCES laboratorio(cod_lab) ON DELETE CASCADE ON UPDATE CASCADE  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
@@ -145,7 +145,7 @@ CREATE TABLE producto(
     p_venta varchar(10) COLLATE utf8_spanish2_ci NOT NULL,
     stock varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
     img varchar(100),
-    cod_lab int,
+    cod_lab varchar(10),
     cod_tipo int NOT NULL,
     cod_clase int NOT NULL,
     cod_pres int NOT NULL,

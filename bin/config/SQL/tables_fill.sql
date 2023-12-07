@@ -17,14 +17,14 @@ INSERT INTO contacto_cliente (celular, correo, cedula) VALUES
 ('04163889393', 'enmanuel551@email.es', '30233547');
 
 -- INSERTA LOS LABORATORIOS
-INSERT INTO laboratorio(rif, direccion, razon_social, status) VALUES 
-(0000000,'ninguno','NO ASIGNADO',1),
-(1234567,'Av. Venezuela','MedicalCare',1),
-(7788564,'Pueblo Nuevo','Bayer',1),
-(2394739,'Pueblo Nuevo','Geven',1);
+INSERT INTO laboratorio(cod_lab, rif, direccion, razon_social, status) VALUES 
+('4f6190a911', 0000000,'ninguno','NO ASIGNADO',1),
+('8fcfd29ec4', 1234567,'Av. Venezuela','MedicalCare',1),
+('8b30f37b1e', 7788564,'Pueblo Nuevo','Bayer',1),
+('f4babfcd83', 2394739,'Pueblo Nuevo','Geven',1);
 
 INSERT INTO contacto_lab (telefono, contacto, cod_lab) VALUES 
-('0251939333', NULL, '2'), ('04128883131', NULL, '4'), ('02510503132', NULL, '3');
+('0251939333', NULL, '8fcfd29ec4'), ('04128883131', NULL, '8b30f37b1e'), ('02510503132', NULL, 'f4babfcd83');
 
 -- INSERTA LAS PROVEEDOR
 INSERT INTO proveedor(rif, direccion, razon_social, status) VALUES 
