@@ -21,8 +21,10 @@ $(document).ready(function(){
                 data.forEach(row => {
                     tabla += `
                         <tr>
-                            <td>${row.nombre}</td>
+                            <td>${row.empresa}</td>
+                            <td>${row.sede}</td>
                             <td>${row.ubicacion}</td>
+                            <td>${row.estado}</td>
                             <td>
                                 <span class="d-flex justify-content-center">
                                 <button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.id_sede}" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
@@ -55,12 +57,14 @@ $(document).ready(function(){
 
     	if(click >= 1) throw new Error('Spam de clicks');
 
-    	let vselect, vdireccion;
-    	vselect = validarSelect($('#empresa_envio'), $('#error1'), 'Empresa de envío,');
-    	vdireccion = validarDireccion($('#ubicacion'),$('#error2'), 'Sede de envío,');
+    	let vselectEmpresa, vdireccion, vnombre, vselectEstado;
+    	vselectEmpresa = validarSelect($('#empresa_envio'), $('#error1'), 'Empresa de envío,');
+        vselectEstado = validarSelect($('#estado_sede'), $('#error2'), 'Estado,');
+    	vnombre = validarDireccion($('#nombre_sede'),$('#error3'), 'Nombre,');
+        vdireccion = validarDireccion($('#ubicacion'),$('#error4'), 'Sede de envío,');
 
-    	if(!vselect || !vdireccion){
-    		throw new Error('Error.');
+    	if(!vselectEmpresa || !vselectEstado || !vnombre || !vdireccion){
+    		throw new Error('Error en las entradas de los inputs.');
     	}
 
     	$.post('', {validar:'', empresa : $('#empresa_envio').val()},
@@ -72,7 +76,9 @@ $(document).ready(function(){
     			}
     			$.ajax({type: "post",dataType: "json",url: '',
     				data: {
-    					ubicacion : $("#ubicacion").val(),
+                        ubicacion : $("#ubicacion").val(),
+    					estado : $("#estado_sede").val(),
+                        nombre : $("#nombre_sede").val(),
     					empresa : $("#empresa_envio").val(),
     					registrar : ''
     				},
@@ -99,12 +105,12 @@ $(document).ready(function(){
     	id = this.id; 
     	$.ajax({method: "post",url: "",dataType: "json",data: {select: "", id},
             success(data){
-                if(data.status){
-                    $('#empresa_envioEdit').val(data.id_empresa);
-                    $('#ubicacionEdit').val(data.ubicacion);
-                }else{
-                    Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' }); 
-                }
+
+                $('#empresa_envioEdit').val(data.id_empresa);
+                $('#ubicacionEdit').val(data.ubicacion);
+                $("#estado_sedeEdit").val(data.id_estado);
+                $("#nombre_sedeEdit").val(data.nombre);
+
             }
 
         })
@@ -120,13 +126,15 @@ $(document).ready(function(){
 
     	if(click >= 1) throw new Error('Spam de clicks');
 
-    	let vselect, vdireccion;
-    	vselect = validarSelect($('#empresa_envioEdit'), $('#error3'), 'Empresa de envío,');
-    	vdireccion = validarDireccion($('#ubicacionEdit'),$('#error4'), 'Sede de envío,');
+    	let vselectEmpresa, vdireccion, vnombre, vselectEstado;
+        vselectEmpresa = validarSelect($('#empresa_envioEdit'), $('#error1'), 'Empresa de envío,');
+        vselectEstado = validarSelect($('#estado_sedeEdit'), $('#error2'), 'Estado,');
+        vnombre = validarDireccion($('#nombre_sedeEdit'),$('#error3'), 'Nombre,');
+        vdireccion = validarDireccion($('#ubicacionEdit'),$('#error4'), 'Sede de envío,');
 
-    	if(!vselect || !vdireccion){
-    		throw new Error('Error.');
-    	}
+    	if(!vselectEmpresa || !vselectEstado || !vnombre || !vdireccion){
+            throw new Error('Error en las entradas de los inputs.');
+        }
 
     	$.post('', {validar:'', empresa : $('#empresa_envioEdit').val()},
     		function(response){
@@ -139,7 +147,9 @@ $(document).ready(function(){
                     data: {
     					id,
     					ubicacion : $("#ubicacionEdit").val(),
-    					empresa : $("#empresa_envioEdit").val(),
+                        estado : $("#estado_sedeEdit").val(),
+                        nombre : $("#nombre_sedeEdit").val(),
+                        empresa : $("#empresa_envioEdit").val(),
     					editar : ''
     				},
     				success(data){

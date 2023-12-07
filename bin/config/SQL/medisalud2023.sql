@@ -213,7 +213,7 @@ CREATE TABLE estados_venezuela(
 -- TABLA PARA SEDE EMVIO
    
 CREATE TABLE sede_envio(
-    id_sede int AUTO_INCREMENT PRIMARY KEY,
+    id_sede varchar(10) PRIMARY KEY,
     nombre varchar(50) NOT NULL,
     ubicacion varchar(100) NOT NULL,
     id_estado int NOT NULL,
@@ -226,7 +226,7 @@ CREATE TABLE sede_envio(
 -- TABLA PARA ENVIOS
 CREATE TABLE envio(
     id_envio int AUTO_INCREMENT PRIMARY KEY,
-    id_sede int NOT NULL,
+    id_sede varchar(10) NOT NULL,
     fecha_envio datetime,
     fecha_entrega datetime,
     monto_envio decimal(10,2),
