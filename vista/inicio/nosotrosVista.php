@@ -18,21 +18,18 @@
 
 
   </header>
-  <section class="presentacion d-flex justify-content-center align-items-center">
-    <div class="container container-md row text-white">
+  <section class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container container-md row">
       <div class="col-12 col-md-6 row align-items-center">
-        <div>
-          <h1 class="fw-bold">Farmacia MediSalud C.A</h1>
-          <p class="fs-6" style="text-align: justify;"><strong>Nuestra farmacia en línea ofrece una amplia variedad de medicamentos y productos de salud para satisfacer todas sus necesidades. Ofrecemos envíos a todo el país para que pueda recibir sus productos directamente en la comodidad de su hogar.</strong></p>
-          <span class="row gap-4 align-items-center justify-content-center">
-            <button class="btn btn-light col-6">Más informacion</button>
-            <button class="btn btn-success col-5"><b>¡Compra ya!</b></button>
-          </span>
+        <div class="w-100">
+          <h1 class="fw-bold fs-3 titulos text-justify">En Farmacia Medisalud C.A, tu salud es nuestra prioridad.</h1>
+          <p class="fw-semibold" style="font-size:16px">Llevamos más de 16 años enfocándonos en brindar una experiencia de compra personalizada, garantizando la calidad, seguridad y eficiencia operativa de nuestros productos. Nuestro equipo está capacitado para ofrecer asesoría farmacéutica y un trato personalizado a cada cliente. Te invitamos a visitarnos y experimentar la diferencia en nuestro enfoque hacia la atención al paciente y la promoción del bienestar en la comunidad.
+          </p>
           
         </div>
       </div>
-      <div class="col-12 col-md-6 row align-items-center justify-content-center pt-5">
-        <img class="img-fluid " src="assets/img/presentacion-imagen.svg" alt="Imagen vectorizada de farmacia">
+      <div class="col-12 col-md-6 row align-items-center justify-content-center">
+        <img class="img-fluid" src="assets/img/nosotros_svg_1.svg" alt="Imagen vectorizada de farmacia">
       </div>
       
     </div>
@@ -42,7 +39,25 @@
 
 
     <!-- ======= Services Section ======= -->
-            
+        <section class="d-flex justify-content-center align-items-center vh-100">
+          <div class="container container-md row">
+
+            <div class="col-12 col-md-6 row align-items-center justify-content-center">
+              <img class="img-fluid" src="assets/img/nosotros_svg_2.svg" alt="Imagen vectorizada de farmacia">
+            </div>
+
+            <div class="col-12 col-md-6 row align-items-center">
+              <div class="w-100">
+                <h1 class="fw-bold fs-3 titulos text-justify">Nuestra misión y visión.</h1>
+                <p class="fw-semibold" style="font-size:16px">Tenemos como misión ser reconocidos por la alta calidad en la comercialización y distribución de productos farmacéuticos, ofreciendo los mejores precios y una de las mejores variedades de productos para el bienestar de la salud de todos los que lo requieran. Además, nos comprometemos a brindar una buena atención al cliente, asesoría farmacéutica, mejoramiento continuo, crecimiento del personal y estabilidad de la empresa. También nos enfocamos en fomentar el crecimiento y desarrollo de nuevas fuentes de empleo para los ciudadanos de la comunidad, y en ofrecer servicios de salud y farmacéuticos personalizados para satisfacer las necesidades de la comunidad.
+                </p>
+
+              </div>
+            </div>
+
+          </div>
+
+        </section>
         <section class="row gap-4 servicios mt-5">
           <header>
             <h2 class="text-center fs-2 fw-bold titulos">Servicios</h2>
@@ -58,7 +73,7 @@
             <div class="col-xl-8 d-flex content">
               <div class="row align-self-center gy-4">
 
-                <div class="col-md-6 icon-box" data-aos="fade-up">
+                <div class="col-md-6 icon-box">
                   <i class="ri-capsule-fill"></i>
                   <div>
                     <h4>Tabletas y Cápsulas</h4>
