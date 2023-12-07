@@ -6,7 +6,7 @@
 		cedula: /^[0-9]{7,10}$/,
 		fecha: /^([0-9]{4}\-[0-9]{2}\-[0-9]{2})$/,
 		numero: /^([0-9]+\.+[0-9]|[0-9])+$/,
-		string: /^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/,
+		string: /^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9/#\s,.-]){3,50}$/,
 		cuentaBank: /^(?=.*[0-9])(?=.*[-])[0-9-]{1,25}$/
 	}
 
@@ -519,6 +519,31 @@
 			div.text(" ");
 			input.attr("style","border-color: none;")
 			return true
+		}			             
+	}
+
+	function validarInputCantidadCarrito(input, tooltipClass = '.invalid-tooltip'){
+		parametro = input.val();
+		let valid = /^([0-9]+\.+[0-9]|[0-9])+$/.test(parametro)
+		let tooltip = input.closest('.opciones').find(tooltipClass);
+		if (parametro == null || parametro =="" || parametro == 0) {
+			tooltip.text("Debe introducir datos.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+			return false
+		}else if (isNaN(parametro)) {
+			tooltip.text("Debe ser solo números.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+			return false
+		}else if(!valid){
+			tooltip.text("Debe ser positivo.");
+			tooltip.show();	
+			input.attr("style","border-color: red;")
+		}else{
+			tooltip.hide();
+			input.attr("style","border-color: none;")
+			return true 
 		}			             
 	}
 

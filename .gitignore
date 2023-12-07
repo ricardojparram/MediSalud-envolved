@@ -1,1 +1,5 @@
 /bin/config/componentes/configSistema.php
+/assets/reportes/*.pdf
+/assets/reportes/*.xlsx
+/assets/tickets/*.pdf
+/assets/img/perfil/*.png

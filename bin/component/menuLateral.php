@@ -16,11 +16,14 @@
     $clientes = ($_GET['url'] == 'clientes')? "": "collapsed";
     $ventas = ($_GET['url'] == 'ventas')? "" : "collapsed";
     $compras = ($_GET['url'] == 'compras')? ""  : "collapsed" ;
-    $configuracionesA = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda' || $_GET['url'] == 'banco' || $_GET['url'] == 'empresaEnvio')? "" : "collapsed";
-    $configuracionesB = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda' || $_GET['url'] == 'banco' || $_GET['url'] == 'empresaEnvio')? "show" : "collapse" ;
+    $configuracionesA = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda' || $_GET['url'] == 'banco' || $_GET['url'] == 'empresaEnvio'|| $_GET['url'] == "sedeEnvio" || $_GET['url'] == "envios" || $_GET['url'] == "comprobarPago")? "" : "collapsed";
+    $configuracionesB = ($_GET['url'] == 'metodo' || $_GET['url'] == 'moneda' || $_GET['url'] == 'banco' || $_GET['url'] == 'empresaEnvio'|| $_GET['url'] == "sedeEnvio" || $_GET['url'] == "envios" || $_GET['url'] == "comprobarPago")? "show" : "collapse" ;
     $moneda = ($_GET['url'] == 'moneda')? "active"  : "" ;
     $banco = ($_GET['url'] == 'banco')? "active" : "" ;
     $empresaEnvio = ($_GET['url'] == 'empresaEnvio')? "active"  : "" ;
+    $sedeEnvio = ($_GET['url'] == 'sedeEnvio')? "active"  : "" ;
+    $comprobarPago = ($_GET['url'] == 'comprobarPago')? "active"  : "" ;
+    $envios = ($_GET['url'] == 'envios')? "active"  : "" ;
     $metodo = ($_GET['url'] == 'metodo')? "active"  : "" ;
     $productosA = ($_GET['url'] == 'producto' || $_GET['url'] == 'laboratorio' || $_GET['url'] == 'proveedor' || $_GET['url'] == 'presentacion' || $_GET['url'] == 'clase' || $_GET['url'] == 'tipo')?  ""  : "collapsed" ;
     $productosB = ($_GET['url'] == 'producto' || $_GET['url'] == 'laboratorio' || $_GET['url'] == 'proveedor' || $_GET['url'] == 'presentacion' || $_GET['url'] == 'clase' || $_GET['url'] == 'tipo')? "show" : "collapse" ;
@@ -88,8 +91,28 @@
           <i class="bi bi-circle-fill "></i><span>Empresa envio</span>
         </a>
     </li>' : '';
+    $sedeEnvioLi = (isset($this->permisos['Sedes de Envio']["Consultar"])) ?
+    '<li>
+        <a href="?url=sedeEnvio" class="'.$sedeEnvio.'">
+          <i class="bi bi-circle-fill "></i><span>Sedes de envío</span>
+        </a>
+    </li>' : '';
+    $comprobarPagoLi = (isset($this->permisos['Comprobar pago']["Consultar"])) ?
+    '<li>
+        <a href="?url=comprobarPago" class="'.$comprobarPago.'">
+          <i class="bi bi-circle-fill "></i><span>Comprobar pago</span>
+        </a>
+    </li>' : '';
+    $enviosLi = (isset($this->permisos['Envios']["Consultar"])) ?
+    '<li>
+        <a href="?url=envios" class="'.$envios.'">
+          <i class="bi bi-circle-fill "></i><span>Envios</span>
+        </a>
+    </li>' : '';
+    
 
-    $configuracionesLi = (isset($this->permisos['Metodo pago']["Consultar"]) || isset($this->permisos['Moneda']["Consultar"]) || isset($this->permisos['Bancos']["Consultar"]) || isset($this->permisos['Empresa de Envio'])) ?
+
+    $configuracionesLi = (isset($this->permisos['Metodo pago']["Consultar"]) || isset($this->permisos['Moneda']["Consultar"]) || isset($this->permisos['Bancos']["Consultar"]) || isset($this->permisos['Empresa de Envio']['Consultar']) || isset($this->permisos['Sedes de Envio']['Consultar']) || isset($this->permisos['Comprobar pago']['Consultar']) || isset($this->permisos['Envios']['Consultar'])) ?
     '<li class="nav-item">
         <a class="nav-link '.$configuracionesA.'" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
           <i class="bi bi-gear-fill"></i><span>Configuraciones</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -103,6 +126,12 @@
             '.$bancoLi.'
 
             '.$empresaEnvioLi.'
+
+            '.$sedeEnvioLi.'
+
+            '.$comprobarPagoLi.'
+
+            '.$enviosLi.'
 
         </ul>
     </li>' : '';

@@ -8,10 +8,12 @@
 	if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
 	$model = new sedeEnvio();
+	// $model->registrarSedes();
+
 	$permisos = $model->getPermisosRol($_SESSION['nivel']);
 	$permiso = $permisos['Sedes de Envio'];
 
-	if($permiso->status != 1) die('<script> window.location = "?url=home" </script>');
+	if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
 
 	if(isset($_POST['notificacion'])) {
     $objModel->getNotificacion();
@@ -19,35 +21,33 @@
 
 	$selectEmpresa = $model->selectEmpresas();
 
-	if(isset($_POST['getPermisos']) && $permiso->status == 1){
+	if(isset($_POST['getPermisos'], $permiso['Consultar'])){
 		die(json_encode($permiso));
 	}
 
 	if(isset($_POST['mostrar'], $_POST['bitacora'])){
-		($_POST['bitacora'] == 'true')
-		? $model->mostrarSedes(true)
-		: $model->mostrarSedes();
+		$model->mostrarSedes($_POST['bitacora']);
 	}
 
-	if(isset($_POST['validar'], $_POST['empresa'])){
+	if(isset($_POST['validar'], $_POST['empresa'], $permiso['Consultar'])){
 		$validar = $model->validarEmpresa($_POST['empresa']);
 		die(json_encode(['resultado' => $validar]));
 	}
 
-	if(isset($_POST['registrar'], $_POST['empresa'], $_POST['ubicacion'])  && $permiso->registrar == 1){
+	if(isset($_POST['registrar'], $_POST['empresa'], $_POST['ubicacion'], $permiso['Registrar'])){
 		$model->getRegistrarSede($_POST['empresa'], $_POST['ubicacion']);
 	}
 
-	if(isset($_POST['select'], $_POST['id']) && $permiso->editar == 1){
+	if(isset($_POST['select'], $_POST['id'], $permiso['Editar'])){
 		$respuesta = $model->getSede($_POST['id']);
 		die(json_encode($respuesta));
 	}
 
-	if(isset($_POST['editar'], $_POST['empresa'], $_POST['ubicacion'], $_POST['id'])  && $permiso->editar == 1){
+	if(isset($_POST['editar'], $_POST['empresa'], $_POST['ubicacion'], $_POST['id'], $permiso['Editar'])){
 		$model->getEditarSede($_POST['empresa'], $_POST['ubicacion'], $_POST['id']);
 	}
 
-	if(isset($_POST['eliminar'], $_POST['id']) && $permiso->eliminar == 1){
+	if(isset($_POST['eliminar'], $_POST['id'], $permiso['Eliminar'])){
 		$model->getEliminarSede($_POST['id']);
 	}
 

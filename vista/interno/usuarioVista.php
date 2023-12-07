@@ -147,7 +147,7 @@
                           <?php if(isset($mostrarN)){
                               foreach($mostrarN as $datas){
                               ?> 
-                            <option value="<?php echo $datas->cod_nivel; ?>" class="opcion"><?php echo $datas->nombre; ?></option>
+                            <option value="<?php echo $datas->id_rol; ?>" class="opcion"><?php echo $datas->nombre; ?></option>
                         <?php
                               }
                             }else{"";}?>
@@ -226,7 +226,7 @@
                           <?php if(isset($mostrarN)){
                               foreach($mostrarN as $datas){
                               ?> 
-                            <option value="<?php echo $datas->cod_nivel; ?>" class="opcion"><?php echo $datas->nombre; ?></option>
+                            <option value="<?php echo $datas->id_rol; ?>" class="opcion"><?php echo $datas->nombre; ?></option>
                         <?php
                               }
                             }else{"";}?>

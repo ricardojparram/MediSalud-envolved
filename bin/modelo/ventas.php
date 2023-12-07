@@ -551,7 +551,8 @@
     public function getMostrarMoneda(){
      try{
       parent::conectarDB();
-      $new = $this->con->prepare("SELECT * FROM( SELECT c.id_cambio, m.nombre, c.cambio FROM cambio c INNER JOIN moneda m ON c.moneda = m.id_moneda WHERE c.status = 1 ORDER BY c.fecha DESC LIMIT 9999999) as tabla GROUP BY tabla.nombre");
+      $new = $this->con->prepare("SELECT * FROM( 
+        SELECT c.id_cambio, m.nombre, c.cambio FROM cambio c INNER JOIN moneda m ON c.moneda = m.id_moneda WHERE c.status = 1 ORDER BY c.fecha DESC LIMIT 9999999) as tabla GROUP BY tabla.nombre");
       $new->execute();
       $data = $new->fetchAll(\PDO::FETCH_OBJ);
 

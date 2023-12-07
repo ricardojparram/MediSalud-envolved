@@ -17,7 +17,7 @@
 <header class="w-100 h-100">
     
   <!-- Barra navegadora -->
-  <?php $Nav->nav(); ?>
+  <?php $tiendaComp->nav(); ?>
 
   </header>
 

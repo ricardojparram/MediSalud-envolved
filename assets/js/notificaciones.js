@@ -1,10 +1,19 @@
 $(document).ready(function(){
 
- // let tiempoNotificacion = 1800000; 
- // let tiempoDelete = 1740000;
- 
- let tiempoNotificacion = 180000
- let tiempoDelete = 120000
+  let tiempoNotificacion = 1800000; 
+  let tiempoDelete = 1740000;
+
+  function redondear(numero) {
+    const parteEntera = Math.floor(numero);
+    const parteDecimal = numero - parteEntera;
+
+    if (parteDecimal === 0.5) {
+      return parteEntera + 1;
+    }
+
+    const redondeo = Math.round(numero);
+    return redondeo === 0 ? 1 : redondeo;
+  }
 
   if(localStorage.getItem('porVencer') && localStorage.getItem('vencidos') && localStorage.getItem('diaDeInventario')){
     let porVencidoGuardado = JSON.parse(localStorage.getItem('porVencer'));
@@ -19,7 +28,9 @@ $(document).ready(function(){
     mostrarNotificaciones(porVencidoGuardado , vencidosGuardados, diaDeInventarioGuardado);
 
    }else{
+
      notificaciones();
+     
    }
 
  
@@ -99,7 +110,7 @@ $(document).ready(function(){
           <i class="bi bi-x-circle text-danger"></i>
           <div>
             <h4>Productos vencidos</h4>
-            <p>Van ${row.dias_vencidos} dias expirado el producto: ${row.nombre} </p>
+            <p>El producto: ${row.nombre} expiro hace ${Math.abs(row.dias_vencidos)} dias</p>
             <p class='tiempo'>tiempo activo: ${minutos} minutos</p>
           </div>
         </li>
@@ -119,7 +130,7 @@ $(document).ready(function(){
           <li class="notification-item w-100">
           <i class="bi bi-exclamation-circle text-warning"></i>
           <div>
-            <h4>Dia de Inventario: ${Number(row.dia_inventario).toFixed(2)}</h4>
+            <h4>Dia de Inventario: ${redondear(row.dia_inventario).toFixed(2)}</h4>
             <p>Stock Producto: ${row.stock}</p>
             <p>Quedan ${ (row.stock / row.dia_inventario).toFixed(0) } dias de inventario del producto: <strong>${row.descripcion}</strong> </p>
             <p class='tiempo'>tiempo activo: ${minutos} minutos</p>

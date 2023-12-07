@@ -294,6 +294,8 @@
         selectTipoPago();
         validarRepetidoTipoPago();
         validarValores();
+        selectMultifila($('.select-tipo'), $('.filaTipoPago'), '.table-body-tipo' ,'No debe haber tipo pago vacíos.');
+        validarFila($('#FILL') ,$('.filaTipoPago'));
       }
  
 
@@ -316,28 +318,32 @@
       $('#ASD').append(newRow);
       selectOptions();
       cambio();
-      validarRepetido()
+      validarRepetido();
+      selectMultifila($('.select-productos'), $('.filaProductos'),'.table-body' ,'No debe haber productos vacíos.');;     
+      validarFila($('#ASD') ,$('.filaProductos'));
     }
 
     // Agregar fila para insertar producto
      $('.newRow').on('click',function(e){
-       filaN();
+       filaN();       
      });
 
      // Agregar fila para insertar tipo de pago
      $('.newRowPago').on('click',function(e){
-       filaTipoN();
+       filaTipoN();    
      });
 
     // ELiminar fila
      $('body').on('click','.removeRow', function(e){
         $(this).closest('tr').remove();
+        validarFila($('#ASD') ,$('.filaProductos'));
         calculate()
      });
 
      // ELiminar fila Tipo de Pago
      $('body').on('click','.removeRowPagoTipo', function(e){
         $(this).closest('tr').remove();
+        validarFila($('#FILL') ,$('.filaTipoPago'));
      });
 
      //Calcular Cantidad por tipo de pago
@@ -585,15 +591,42 @@
         })
       })
     }
+
+    function validarFila(filas , error){
+      let filaExiste = false;
+      $(filas).each(function(){
+        let fila = $(this).find('tr');
+        if(fila.length > 0){
+          filaExiste = true;
+          $(error).text('');
+          return false
+        }
+      })
+      if(!filaExiste){
+        $(error).text('No debe haber filas vacias.');
+      }
+      return filaExiste;
+    }
+
+      function selectMultifila(select , error , table , mensaje){
+       $(select).change(()=>{
+       $(`${table} tbody tr`).each(function(){
+          let selectFila = $(this).find(select).val();
+          if(selectFila == "" || selectFila == null){
+           $(error).text(mensaje);
+         }else{
+          $(error).text('');
+        }
+       }) 
+      })
+     }
     
 
      // REGISTRAR VENTA
-    let vmetodo, vmoneda;
+    let vmoneda;
 
 
-    $('#moneda').change(function(){
-      vmoneda =  validarSelect($('#moneda'),$("#error5"),"Error de moneda")
-    })
+     $('#moneda').change(()=>{ vmoneda =  validarSelect($('#moneda'),$("#error5"),"Error de moneda")  })
      $('.iva').keyup(()=> {validarNumero($(".iva"),$("#error4"),"Error de iva") });
 
      $('.select2').change(function(){
@@ -602,6 +635,10 @@
        validarCedula($(".select2"),$(".select2-selection") ,$("#error1"));
       }
      })
+
+
+     selectMultifila($('.select-tipo'), $('.filaTipoPago'), '.table-body-tipo' ,'No debe haber tipo pago vacíos.');
+     selectMultifila($('.select-productos'), $('.filaProductos'),'.table-body' ,'No debe haber productos vacíos.');
 
      let click = 0;
      setInterval(()=>{click = 0}, 2000);
@@ -614,8 +651,14 @@
 
      let cedula = validarSelec2($(".select2"),$(".select2-selection"),$("#error1"),"Error de Cedula");
 
+
       if(cedula) validarCedula($(".select2"),$(".select2-selection") ,$("#error1")).then(()=>{
 
+        let filaProductos;
+        let filaTipoPago;
+
+       filaProductos = validarFila($('#ASD') ,$('.filaProductos'));
+       filaTipoPago = validarFila($('#FILL') ,$('.filaTipoPago'));
 
       $('.select2').change(function(){
        let select2 = $(this).val() 
@@ -637,23 +680,28 @@
       let totalTipo = true
 
    //Validar Productos
-      $('.table-body tbody tr').each(function(){
-        let producto = $(this).find('.select-productos').val();
-        if(producto == "" || producto == null){
-         vproductos = false;
-         $('#pValid').text('No debe haber productos vacíos.')
-       }
-     })
+         $('.table-body tbody tr').each(function(){
+          let producto = $(this).find('.select-productos').val();
+          if(producto == "" || producto == null){
+           vproductos = false;
+           $('.filaProductos').text('No debe haber productos vacíos.')
+         }else{
+          $('.filaProductos').text('');
+          vproductos = true;
+        }
+      })
      
      //Validar Tipo Producto
-      $('.table-body-tipo tbody tr').each(function(){
+       $('.table-body-tipo tbody tr').each(function(){
         let tipoPago = $(this).find('.select-tipo').val();
         if(tipoPago == "" || tipoPago == null){
-         $('#pValid').text('No debe haber tipo pago vacíos.');
-         vtipoPago = false;
-
-       }
-     })
+         vtipoPago = false; 
+         $('.filaTipoPago').text('No debe haber tipo pago vacíos.');
+       }else{
+        $('.filaTipoPago').text('');
+        vtipoPago = true;
+      }
+    })
 
       $('.precioPorTipo input').each(function(){ validarPrecio($(this)) });
 
@@ -692,14 +740,12 @@
         $('#pValid').text('Cantidad inválida.')
       }else if($('.stock').val() == "" || $('.stock').val() === '0'){
         vstock = false
-        $('#pValid').text('Seleccione un producto');
+        $('#pValid').text('Cantidad inválida.');
       } 
 
 
 
-      if(cedula && vmoneda && montoT && vproductos && vtipoPago && vstock && vprecio && totalTipo && iva && repetidos && repetidosTipoPago){
-
-       console.log("Enviando ...");
+      if(cedula && vmoneda && montoT && vproductos && vtipoPago && vstock && vprecio && totalTipo && iva && repetidos && repetidosTipoPago && filaProductos && filaTipoPago){
 
        $.post('',{
         cedula: $('#cedula').val()

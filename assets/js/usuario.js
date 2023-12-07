@@ -106,9 +106,10 @@ $(document).ready(function(){
 	})
 
 
-	let cedulaDel;
+	var cedulaDel;
 	$(document).on('click', '.eliminar', function() {
 		cedulaDel = this.id;
+		
 	});
 
 	$("#delete").click(() =>{
@@ -118,7 +119,7 @@ $(document).ready(function(){
 			throw new Error('Permiso denegado.');
 		}
 
-		validarC($(cedulaDel),$("#errorNo") ,"Error de cédula,").then(() => {
+		validarC(cedulaDel,$("#errorNo") ,"Error de cédula,").then(() => {
 			$("#errorDel").html("Error de Cedula, Cedula no Registrada")
 		  }).catch(()=>{
 			$.ajax({
@@ -236,8 +237,9 @@ $(document).ready(function(){
 	
 
 	function validarC(input, div, mensaje){
-		return new Promise((resolve , reject)=>{
-			$.getJSON('',{cedula: input.val(),validar: 'lalo'},
+		return new Promise((resolve , reject)=>{console.log(input.val());
+			$.getJSON('',{cedula: input.val(),validar: 'lola'},
+			
 				function(data){
 					if(data.resultado === "Error de cedula"){
 						div.text(mensaje+" "+data.error);

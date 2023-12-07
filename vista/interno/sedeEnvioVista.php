@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorio</title>
+    <title>Sedes de envío</title>
    <?php $VarComp->header(); ?>
     <link rel="stylesheet" href="assets/css/estiloInterno.css">
     <link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap5.min.css">
@@ -51,7 +51,8 @@
           </div>
 
           <div class="col-6 text-end mt-3">
-            <button type="button" id="agregarModal" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#Agregar">Agregar</button>
+            <button type="button" id="agregarModal" <?= $disabled = (isset($permiso['Registrar'])) ? "" : "disabled"?> 
+            class="btn btn-success" data-bs-toggle="modal" data-bs-target="#Agregar">Agregar</button>
           </div>
         </div>
 

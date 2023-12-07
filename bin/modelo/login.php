@@ -30,14 +30,15 @@
 			$this->cedula = $cedula;
 			$this->password = $password;
 			
+			$validCedula = $this->validarCedula();
+			if($validCedula['res'] != true) die(json_encode($validCedula));
+
 			$this->loginSistema();
 		}
 
 		private function loginSistema(){
 
 			try{
-
-				parent::conectarDB();
 
 				$this->conectarDB();
 
@@ -49,38 +50,6 @@
 				$new->execute();
 				$data = $new->fetchAll();
 
-
-				if(isset($data[0]["password"])){
-					if(password_verify($this->password, $data[0]['password'])){
-
-						$_SESSION['cedula'] = $data[0]['cedula'];
-						$_SESSION['nombre'] = $data[0]['nombre'];
-						$_SESSION['apellido'] = $data[0]['apellido'];
-						$_SESSION['correo'] = $data[0]['correo'];
-						$_SESSION['nivel'] = $data[0]['nivel'];
-						$_SESSION['puesto'] = $data[0]['puesto'];
-						$_SESSION['fotoPerfil'] = (isset($data[0]['img'])) ? $data[0]['img'] : 'assets/img/profile_photo.jpg';
-
-						
-						$resultado = ['resultado' => 'Logueado'];
-						echo json_encode($_SESSION);
-						parent::desconectarDB();
-						die();
-
-						
-					}else{
-						$resultado = ['resultado' => 'Error de contraseña' , 'error' => 'Contraseña incorrecta.'];
-						echo json_encode($resultado);
-						die();
-					}
-				}else{
-
-				if(!isset($data[0]["password"])){
-
-					$resultado = ['resultado' => 'Error de cedula', 'error' => 'La cédula no está registrada.'];
-					$this->desconectarDB();
-					die(json_encode($resultado));
-				}
 				if(!password_verify($this->password, $data[0]['password'])){
 					$resultado = ['resultado' => 'Error de contraseña' , 'error' => 'Contraseña incorrecta.'];
 					$this->desconectarDB();
@@ -98,24 +67,23 @@
 				$this->desconectarDB();
 				$resultado = ['resultado' => 'Logueado'];
 				die(json_encode($resultado));
-              }
+            
 			}catch(PDOException $error){
-				return $error;
+				die($error);
 			}
 		}
 
-		public function getValidarC($cedula){
+		public function getValidarCedula($cedula){
 			if(preg_match_all("/^[0-9]{7,10}$/", $cedula) == false){
 				$resultado = ['resultado' => 'Error de cedula' , 'error' => 'Cédula inválida.'];
-				echo json_encode($resultado);
-				die();
+				die(json_encode($resultado));
 			}
 			$this->cedula = $cedula;
 
-			$this->validarC();
+			return $this->validarCedula();
 		}
 
-		private function validarC(){
+		private function validarCedula(){
 			try{
 
 				parent::conectarDB();
@@ -125,14 +93,16 @@
 				$new->execute();
 				$data = $new->fetchAll();
 				parent::desconectarDB();
+				$resultado;
 				if(!isset($data[0]['cedula'])){
-					$resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula no está registrada.'];
-					echo json_encode($resultado);
-					die();
+					$resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula no está registrada.', 'res' => false];
+				}else{
+					$resultado = ['resultado' => 'ok' , 'msg' => 'La cédula es válida.', 'res' => true];
 				}
+				return $resultado;
 
 			}catch(\PDOException $error){
-				return $error;
+				die($error);
 			}
 		}
 

@@ -56,42 +56,53 @@ class clientes extends DBConnect{
 
         try {
             parent::conectarDB();
-            $new = $this->con->prepare("SELECT cedula FROM cliente WHERE status = 1 and cedula = ?");
+            $new = $this->con->prepare("SELECT * FROM cliente WHERE cedula = ?");
             $new->bindValue(1, $this->cedula);
             $new->execute();
             $data = $new->fetchAll();
 
+            parent::desconectarDB();
             if(!isset($data[0]["cedula"])){ 
+                parent::conectarDB();
+                $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,1)");
+                $new->bindValue(1, $this->cedula);
+                $new->bindValue(2, $this->nombre);
+                $new->bindValue(3, $this->apellido);
+                $new->bindValue(4, $this->direccion);
+                $new->execute();
 
-              $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,1)");
-              $new->bindValue(1, $this->cedula);
-              $new->bindValue(2, $this->nombre);
-              $new->bindValue(3, $this->apellido);
-              $new->bindValue(4, $this->direccion);
-              $new->execute();
+                $new = $this->con->prepare("INSERT INTO contacto_cliente(id_contacto, celular, correo, cedula) VALUES (DEFAULT,?,?,?)");
+                $new->bindValue(1, $this->telefono);
+                $new->bindValue(2, $this->correo); 
+                $new->bindValue(3, $this->cedula);
+                $new->execute();
+                $resultado = ['resultado' => 'Registrado correctamente.'];
+                echo json_encode($resultado);
+                $this->binnacle("Cliente",$_SESSION['cedula'],"Registró un cliente");
+                parent::desconectarDB();
 
-              $new = $this->con->prepare("INSERT INTO contacto_cliente(id_contacto, celular, correo, cedula) VALUES (DEFAULT,?,?,?)");
-              $new->bindValue(1, $this->telefono);
-              $new->bindValue(2, $this->correo); 
-              $new->bindValue(3, $this->cedula);
-              $new->execute();
-              $resultado = ['resultado' => 'Registrado correctamente.'];
-              echo json_encode($resultado);
-              $this->binnacle("Cliente",$_SESSION['cedula'],"Registró un cliente");
-              parent::desconectarDB();
-              die();
-
-
-
-          }else{
-            $resultado = ['resultado' => 'Error de cedula' , 'error' => 'La cédula ya está registrada.'];
-            echo json_encode($resultado);
+            }elseif ($data[0]["status"] == 0) {
+                parent::conectarDB();
+                $new = $this->con->prepare("UPDATE cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula SET c.nombre = ?, c.apellido = ?, c.direccion = ?, cc.celular= ?, cc.correo = ?, c.status = 1 WHERE c.cedula = ?");
+                $new->bindValue(1, $this->nombre);
+                $new->bindValue(2, $this->apellido);
+                $new->bindValue(3, $this->direccion);
+                $new->bindValue(4, $this->telefono);
+                $new->bindValue(5, $this->correo);
+                $new->bindValue(6, $this->cedula);
+                $new->execute();
+                $resultado = ['resultado' => 'Registrado correctamente.', 'res' => 'cliente en status 0'];
+                echo json_encode($resultado);
+                $this->binnacle("Cliente",$_SESSION['cedula'],"Registró un cliente");
+                parent::desconectarDB();
+            }else {
+                $resultado = ['resultado' => 'Error de Registro' , 'error' => 'El Cliente No Pudo Ser Registrado.'];
+                echo json_encode($resultado);
+            }
             die();
+        }catch(\PDOException $error){
+            die($error);
         }
-
-    }catch(PDOException $error){
-        return $error;
-    }
 
     }
 
@@ -104,7 +115,7 @@ class clientes extends DBConnect{
     private function eliminar(){
         try{
             parent::conectarDB();
-            $new = $this->con->prepare("DELETE FROM `cliente` WHERE cedula = ?"); //"UPDATE `cliente` SET `status`= 0 WHERE cedula = ?"
+            $new = $this->con->prepare("UPDATE `cliente` SET `status`= 0 WHERE cedula = ?"); // "DELETE FROM `cliente` WHERE cedula = ?"
             $new->bindValue(1, $this->id);
             $new->execute();
             $resultado = ['resultado' => 'Eliminado'];

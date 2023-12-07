@@ -37,7 +37,7 @@
 							GROUP BY cp.cod_compra ORDER BY c.fecha;",
 
 				"venta" => "SELECT v.num_fact, c.cedula, CONCAT(c.nombre,' ',c.apellido) as nombre,
-							v.fecha, CONCAT(IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' ,p.monto_total as 'monto_total', m.nombre as 'moneda',
+							DATE_FORMAT(v.fecha, '%d/%m/%Y') as fecha, CONCAT(IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' ,p.monto_total as 'monto_total', m.nombre as 'moneda',
 							IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5) as 'divisa_total'
 							FROM venta v 
 							INNER JOIN cliente c ON v.cedula_cliente = c.cedula
@@ -45,7 +45,7 @@
                             INNER JOIN detalle_pago dp ON p.id_pago = dp.id_pago
 							INNER JOIN cambio cm ON cm.id_cambio = dp.id_cambio
 							INNER JOIN moneda m ON m.id_moneda = cm.moneda
-							WHERE v.fecha BETWEEN CONCAT(?, ' 00:00:00') AND CONCAT(?, ' 23:59:59') AND c.status = 1
+							WHERE v.fecha BETWEEN CONCAT(?, ' 00:00:00') AND CONCAT(?, ' 23:59:59')
 							ORDER BY v.fecha",
 				"error" => ["resultado"=>"error", "msg" => "Tipo de reporte inválido."]
 			];
@@ -172,8 +172,8 @@
 			$reporte = $this->obtenerReporte();
 			if(empty($reporte)) die(json_encode(['Error' => 'Reporte vacío.']));
 
-			$fechaI = date('d-m-Y', strtotime($this->fechaInicio));
-			$fechaF = date('d-m-Y', strtotime($this->fechaFinal));
+			$fechaI = $this->fechaInicio;
+			$fechaF = $this->fechaFinal;
 			$nombre = ($this->tipo == 'compra')
 				? 'estadisticas_compras_'.$fechaI.'_'.$fechaF 
 				: 'estadisticas_ventas_'.$fechaI.'_'.$fechaF;
@@ -289,28 +289,123 @@
 			$this->sheet->setCellValue('K6', "=AVERAGE(H5:H{$lastRow})");
 
 			if($this->tipo == "venta"){
+				$datos_venta = $this->estadisticasVentas();
+
 				$this->sheet->setCellValue('J7', "Cliente más frecuente:");
 				$this->sheet->setCellValue('K7', "=MODE.SNGL(C5:C{$lastRow})");
 				$this->sheet->setCellValue('J8', "Fecha con más ventas:");
-				$this->sheet->setCellValue('K8', "=MODE.SNGL(E5:E{$lastRow})");
+				$this->sheet->setCellValue('K8', $datos_venta["fecha_mas_ventas"]->fecha);
+				$this->sheet->setCellValue('J9', "Número de ventas esa fecha: ");
+				$this->sheet->setCellValue('K9', "{$datos_venta["fecha_mas_ventas"]->ventas_del_dia}");
+				$this->sheet->setCellValue('J9', "Número de ventas online: ");
+				$this->sheet->setCellValue('K9', "{$datos_venta["count_ventas"]->ventas_online}");
+				$this->sheet->setCellValue('J10', "Número de ventas presenciales: ");
+				$this->sheet->setCellValue('K10', "{$datos_venta["count_ventas"]->ventas_presencial}");
 				
 			}
 
 			if($this->tipo == "compra"){
+				$datos_compra = $this->estadisticasCompras();
+
+				$this->sheet->setCellValue('J7', "Mayor proveedor:");
+				$this->sheet->setCellValue('K7', $datos_compra['count_proveedor']->proveedor_mas);
+				$this->sheet->setCellValue('J8', "Produto más comprado:");
+				$this->sheet->setCellValue('K8', $datos_compra["producto_mas_ventas"]->descripcion);
+				$this->sheet->setCellValue('J9', "Cantidad comprada de ese producto: ");
+				$this->sheet->setCellValue('K9', "{$datos_compra["producto_mas_ventas"]->cantidad}");
 
 			}
 		}
 
-		private function estadisticasDatos(){
+		private function estadisticasVentas(){
+			try {
 
-			$tipoReporte = [
-				'venta' => '',
-				'compra' => ''
-			];
+				$queries = [
+					"count_ventas" => "
+						SELECT COUNT(IF(online = 1, 1, NULL)) as ventas_online,COUNT(IF(online != 1, 1, NULL)) as ventas_presencial 
+						FROM venta
+						WHERE fecha BETWEEN CONCAT(?, ' 00:00:00') AND CONCAT(?, ' 23:59:59');
+					",
+					"fecha_mas_ventas" =>"
+						SELECT num_fact,DATE_FORMAT(fecha, '%d/%m/%Y') as fecha, COUNT(*) as ventas_del_dia FROM venta
+						WHERE fecha BETWEEN CONCAT(?, ' 00:00:00') AND CONCAT(?, ' 23:59:59')
+						GROUP BY fecha
+						ORDER BY COUNT(*) DESC LIMIT 1;
+					"
+				];
 
+				$this->conectarDB();
+				$new = $this->con->prepare($queries["count_ventas"]);
+				$new->bindValue(1, $this->fechaInicio);
+				$new->bindValue(2, $this->fechaFinal);
+				$new->execute();
+				$count_ventas = $new->fetchAll(\PDO::FETCH_OBJ);
+
+				$new = $this->con->prepare($queries["fecha_mas_ventas"]);
+				$new->bindValue(1, $this->fechaInicio);
+				$new->bindValue(2, $this->fechaFinal);
+				$new->execute();
+				$fecha_mas_ventas = $new->fetchAll(\PDO::FETCH_OBJ);
+
+				$data = ["count_ventas" => $count_ventas[0], "fecha_mas_ventas" => $fecha_mas_ventas[0]];
+
+				$this->desconectarDB();
+				return $data;
+				
+			} catch (\PDOException $e) {
+				die($e);
+			}
 		}
 
+		private function estadisticasCompras(){
+			try {
+
+				$queries = [
+					"count_proveedor" => "
+						SELECT COUNT(*) as proveedor_mas FROM compra c
+						INNER JOIN proveedor p ON c.cod_prove = p.cod_prove
+						WHERE fecha BETWEEN ? AND ?
+						GROUP BY p.cod_prove
+						ORDER BY COUNT(*) DESC LIMIT 1;
+					",
+					"producto_mas_ventas" => "
+						SELECT p.descripcion, SUM(cp.cantidad) as cantidad FROM compra c 
+						INNER JOIN compra_producto cp ON cp.cod_compra = c.cod_compra
+						INNER JOIN producto p ON p.cod_producto = cp.cod_producto
+						WHERE c.fecha BETWEEN ? AND ?
+						GROUP BY p.cod_producto
+						ORDER BY COUNT(*) DESC LIMIT 1;
+					"
+				];
+
+				$this->conectarDB();
+				$new = $this->con->prepare($queries["count_proveedor"]);
+				$new->bindValue(1, $this->fechaInicio);
+				$new->bindValue(2, $this->fechaFinal);
+				$new->execute();
+				$count_proveedor = $new->fetchAll(\PDO::FETCH_OBJ);
+
+				$new = $this->con->prepare($queries["producto_mas_ventas"]);
+				$new->bindValue(1, $this->fechaInicio);
+				$new->bindValue(2, $this->fechaFinal);
+				$new->execute();
+				$producto_mas_ventas = $new->fetchAll(\PDO::FETCH_OBJ);
+
+				$data = ["count_proveedor" => $count_proveedor[0], "producto_mas_ventas" => $producto_mas_ventas[0]];
+
+				$this->desconectarDB();
+				return $data;
+				
+			} catch (\PDOException $e) {
+				die($e);
+			}
+		}
+
+
 	}
+
+	
+
 
 
 ?>

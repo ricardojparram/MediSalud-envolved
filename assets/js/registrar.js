@@ -1,17 +1,24 @@
 $(document).ready(function(){
 
-  $("#cedula").keyup(()=> {  let valid = validarCedula($("#cedula"),$("#error") ,"Error de cédula,") 
-    if(valid){
-      validarC();
-    }
-  });
+  let timeoutId;
+  $("#cedula").keyup(()=>{ 
+    let valid = validarCedula($("#cedula"),$("#error") ,"Error de cedula,");
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(function() {
+      if(valid) validarCedulaBD();
+    }, 700);
+  })
+
+  $("#email").keyup(()=>{ 
+    let valid = validarCorreo($("#email"),$("#error") , "Error de correo,")
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(function() {
+      if(valid) validarEmailBD();
+    }, 700);
+  })
+
   $("#name").keyup(()=> {  validarNombre($("#name"),$("#error") , "Error de nombre,") });
   $("#apellido").keyup(()=> {  validarNombre($("#apellido"),$("#error") , "Error de apellido,") });
-  $("#email").keyup(()=> {  let valid = validarCorreo($("#email"),$("#error") , "Error de correo,")
-    if(valid){
-      validarE();
-    }
-   });
   $("#password").keyup(()=> {  validarContraseña($("#password"),$("#error") , "Error de contraseña,") });
   $("#repass").keyup(()=> {  validarRepContraseña($("#repass"),$("#error") , $("#password")) });
 
@@ -83,7 +90,7 @@ $(document).ready(function(){
 
   })
 
-    function validarC(){
+    function validarCedulaBD(){
       $.getJSON('',{cedula: $("#cedula").val(),validar: 'xd'},
         function(data){
           if(data.resultado === "Error de cedula"){
@@ -94,7 +101,7 @@ $(document).ready(function(){
       })
     }
 
-    function validarE(){
+    function validarEmailBD(){
       $.getJSON('',{email: $("#email").val(),validar: 'xd'},
         function(data){
           if(data.resultado === "Error de email"){
@@ -105,4 +112,9 @@ $(document).ready(function(){
       })
     }
 
+    if('carrito' in localStorage != false){
+      let car = (localStorage.getItem('carrito') === '') ? '' : JSON.parse(localStorage.getItem('carrito'));
+      let cantidad = Object.keys(car).length;
+      $('#carrito_badge').html(cantidad);
+    };
 })

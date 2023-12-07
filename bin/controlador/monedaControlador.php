@@ -9,6 +9,8 @@
   $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
   $permiso = $permisos['Moneda'];
 
+  //$objModel->actualizarMoneda();
+
   if(!isset($_SESSION['nivel'])){
     die('<script> window.location = "?url=login" </script>');
   }
@@ -45,8 +47,8 @@
     $objModel->getEliminarM($_POST['id']);
   }
 
-  if (isset($_POST["mostrar"]) && isset($permiso['Consultar'])) {
-    $objModel->getMostrarCambio();
+  if (isset($_POST["mostrar"], $_POST['idHistory'],$permiso['Consultar'])) {
+    $objModel->getMostrarCambio($_POST['idHistory']);
   }
 
   if (isset($_POST['select'])) {
@@ -55,7 +57,8 @@
 
   if(isset($_POST["cambio"]) && isset($_POST["tipo"])&& isset($permiso['Registrar'])) {
 
-    $objModel->getAgregarCambio($_POST["cambio"], $_POST["tipo"]);  
+    $objModel->getAgregarCambio($_POST["cambio"], $_POST["tipo"]);
+    die("1");
   } 
 
 
@@ -73,16 +76,8 @@
    if(isset($_POST["cambioEdit"]) && isset($_POST["tipoEdit"]) && isset($_POST["unico"]) && isset($permiso['Editar'])) {
 
     $objModel->getEditarCambio($_POST["cambioEdit"], $_POST["tipoEdit"], $_POST["unico"]);  
+    die("2");
   } 
-
-
-
-
-
-
-
-
-
 
   $VarComp = new initcomponents();
   $header = new header();

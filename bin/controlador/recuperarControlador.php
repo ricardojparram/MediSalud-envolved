@@ -2,7 +2,7 @@
    
     use component\initcomponents as initcomponents;
     use modelo\recuperar as recuperar;
-    use component\tienda as tienda;
+    use component\tienda;
 
     $obj_Model = new recuperar();
     

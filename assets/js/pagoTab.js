@@ -21,17 +21,35 @@ function bar_progress(progress_line_object, direction) {
 
 $(document).ready(function() {
 	var data 
-	var next_step = true;
+	var next_step = false;
 	let tipo
 	let select
 	let memas
-
+	let cambio
+	var pTarifas = 0
 
 	DatosP();
 	precio();
-	empresaEnvio();
+	selectTipoPago();
+	banco();
+	tarifa();
 
-	$("#aliasInp").fadeOut(0);
+
+	validarCarrito().then(()=>{
+		$.ajax({
+			type: "post",
+            url: "",
+            dataType: "json",
+            data:{datosCar: 'xd'},
+            success(data) {
+			}
+		})
+	})
+
+	$(window).on('beforeunload', function(){
+		return
+	})
+
 
 	// Datos Personales
 	function DatosP() {
@@ -52,88 +70,32 @@ $(document).ready(function() {
 		});
 	}
 	
-	function imprimirMemas() {
-  		console.log(memas[0].nombre); // Imprime los datos cuando se hayan asignado a memas
-	}
-
-
-	//Metodo de Pago
-	$("#tipoP").change(() => {
-		
-		tipo = $("#tipoP").val();
-		select = "";
-		tipoPago();	
-	});
-
-	$("#fade").fadeIn(400);
-	$(".trans, .movil").fadeOut(0);
-	let cedula
-	let resultado
-	$("#bancTipo").change(() => {
-		cedula = $("#bancTipo").val();
-		resultado = data.find(item => item.cedulaRif === cedula);
-		console.log(resultado.cedulaRif);
-		switch (tipo) {
-			case '4':
-				$(".trans").fadeOut(0);
-				$(".movil").fadeIn(300);
-				$("#cedBancM").val(resultado.cedulaRif);
-				$("#teleMovil").val(resultado.telefono);
-				$("#codBanc").val(resultado.CodBanco);
-				break;
-			case '5':
-				$(".movil").fadeOut(0);
-				$(".trans").fadeIn(300);
-				$("#cedBanc").val(resultado.cedulaRif);
-				$("#numCuen").val(resultado.NumCuenta);
-				break;
-			default: console.log("nada");
-				break;
-		}	
-	});
 	
-	// Relleno de select
-	function tipoPago() {
-		$.ajax({
-			type: "post",
-            url: "",
-            dataType: "json",
-			data:{mostrarT: 'xd', tipo},
-            success(list) {
-				
-				data = list
-				data.forEach(row => {
-					select+=`
-					<option value="${row.cedulaRif}">${row.nombre}</option>`;
-				})
-				$('#bancTipo').html('<option selected disabled>Nombre</option>' + select);
-			}
-		});
-	}
-	// Fin Metodo de Pago
-
+	let impuesto
+	let total
+	var precioUsd
 	// Precio y Cambio
 	function precio(){
-		let impuesto
-		let total
 		$.ajax({
 			type: "post",
             url: "",
             dataType: "json",
 			data:{mostrarP: "hola"},
 			success(pre){
-				let precioUsd
+				precioUsd = pre[0].cambio
+				cambio = pre[0].id_cambio
 				if (pre[0].cuenta > 0) {
-					console.log(pre);
 					$("#valorBs").html(parseFloat(pre[0].total).toFixed(2)+" Bs");
 					impuesto = pre[0].total * 0.16;
 					$("#impuesto").html(parseFloat(impuesto).toFixed(2)+" Bs");
-					total = pre[0].total + impuesto;
+					$('#pEnvio').html(parseFloat(pTarifas).toFixed(2)+" Bs");
+					total = pre[0].total + impuesto + pTarifas;
 					$("#total").html(parseFloat(total).toFixed(2)+" Bs");
 					$("#valorUsd").html(parseFloat(total / pre[0].cambio).toFixed(2)+" $");
+					
+					
 
 				} else {
-					console.log("nada")
 					let div=`
 						<div class="col-8 mx-auto text-center">
                     		<h3>Su Carrito Esta Vacio</h3>
@@ -144,69 +106,74 @@ $(document).ready(function() {
 		})
 	}
 
-	// Mostrar Empresa y Sede de Envio
-
-	function empresaEnvio(){
+	// Mostrar Estado y Sede de Envio
+	estado();
+	function estado(){
 		let selEm
 		$.ajax({
 			type: "post",
             url: "",
             dataType: "json",
-			data:{mostrarE: "empre"},
+			data:{mostrarE: "est"},
 			success(empre){
-				var empresas = empre
-				empresas.forEach(row => {
+				var estados = empre
+				estados.forEach(row => {
 					selEm+=`
-					<option value="${row.id_empresa}">${row.nombre}</option>
+					<option value="${row.id_estado}">${row.nombre}</option>
 					`;
 				})
-				$('#empresa').html('<option selected disabled>Nombre</option>' + selEm);
+				$('#estado').html('<option selected disabled>Nombre</option>' + selEm);
 			}
 		});
 		
 
 	};
+	var valorT
+	function tarifa() {
+		$.ajax({
+			type: "post",
+			url:'?url=envios',
+			dataType: 'JSON',
+			data:{
+				precio_envio: "ss"
+			},
+			success(data){
+				valorT = parseFloat(data.precio_solo)
+			}
+		})
+	}
 	
-	let nomEmpre
-		$("#empresa").change(()=> {
+	let nomEstado, sede, sedes, sedeU
+		$("#estado").change(()=> {
 			let selEnvi
-			nomEmpre = $("#empresa").val();
+			nomEstado = $("#estado").val();
 			
 			$.ajax({
 				type: "post",
 				url: "",
 				dataType: "json",
-				data:{mostrarS: "empre", nomEmpre},
+				data:{mostrarS: "xd", nomEstado},
 				success(sed){
-					console.log(sed);
-					var sede = sed
-					sede.forEach(row => {
+					sedes = sed
+					sed.forEach(row => {
 						selEnvi+=`
-						<option value="${row.id_sede}">${row.ubicacion}</option>
+						<option value="${row.id_sede}">${row.nombre}</option>
 						`;
 					})
-					$('#sede').html('<option selected disabled>Ubicacion</option>' + selEnvi);
+					$('#sede').html('<option selected disabled>Nombre</option>' + selEnvi);
+					
 				}
 			});
 		})
-
-	// Ocultar y Mostrar Input Alias 
-	$("#checkAlias").on('change', function() {
-		if( $(this).is(':checked') ){
-			$("#aliasInp").fadeIn(300);
-		}else{
-			$("#aliasInp").fadeOut(300);
-		}
-	})
-	
-	
+		
+		$("#sede").change(()=> {
+			sede = $("#sede").val()
+			sedeU = sedes.find(item => item.id_sede == sede)
+			$("#ubicacion").val(sedeU.ubicacion);
+			console.log(sedes)
+			console.log(sedes.find(item => item.id_sede == sede))
+		})
     
-    $('#top-navbar-1').on('shown.bs.collapse', function(){
-    	$.backstretch("resize");
-    });
-    $('#top-navbar-1').on('hidden.bs.collapse', function(){
-    	$.backstretch("resize");
-    });
     
     /*
         Form
@@ -229,67 +196,663 @@ $(document).ready(function() {
 		let cedula = validarCedula($("#cedClien"),$("#errorCed"), "Error de Cedula,") ;
 	 	let nombre = validarNombre($("#nomClien"),$("#errorNomApe"), "Error de Nombre,") ;
 
-	 	// if (nombre && direccion && telefono && cedula && correo) {
-	 	// 	next_step = true;
-	 	// }else{
-	 	// 	next_step = false;
-	 	// }	
+	 	if (nombre && direccion && telefono && cedula && correo) {
+	 		next_step = true;
+	 	}else{
+	 		next_step = false;
+	 	}	
 	});
+	let idGlass
+	$(".glass").fadeOut(0);
+
+	$(".botEntre").on('click', function() {
+		$("#errorBot").text("");
+		idGlass = this.id;
+		next_step = false;
+		switch (idGlass) {
+			case "repartidor":
+				$(".glass").fadeOut(0);
+				$("#delivery").fadeIn(300);
+				pTarifas = precioUsd * 1
+				precio()
+				break;
+			case "nacional":
+				$(".glass").fadeOut(0);
+				$("#envio").fadeIn(300);
+				pTarifas = valorT
+				precio();
+				break;
+			case "persona":
+				$(".glass").fadeOut(0);
+				$("#retirar").fadeIn(300);
+				pTarifas = 0
+				precio();
+				break;
+		
+			default:
+				break;
+		}
+	})
 
 	// Validicaiones Segundo Step
 
-	$("#estado").keyup(()=> {  validarNombre($("#estado"),$("#errorEstado"), "Error de Estado,") });
-	$("#municipio").keyup(()=> {  validarNombre($("#municipio"),$("#errorMun"), "Error de Municipio,") });
-	$("#direc").keyup(()=> {  validarDireccion($("#direc"),$("#errorDirecEntre"), "Error de Direccion,") });
-	$("#numCasa").keyup(()=> {  validarDireccion($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") });
-	$("#inputAlias").keyup(()=> {  if($("#checkAlias").is(':checked')) { validarStringLong($("#inputAlias"),$("#errorAlias"), "Error de Alias,") } });
-	$("#codPostal").keyup(()=> {  validarPostal($("#codPostal"),$("#errorCodPostal"), "Error de Direccion,") });
-	$("#empresa").change(()=> {  validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,") });
+
+	$("#calle").keyup(()=> {  validarString($("#calle"),$("#errorCalle"), "Error de Calle,") });
+	$("#numAv").keyup(()=> {  validarString($("#numAv"),$("#errorNumAv"), "Error de Avenida,") });
+	$("#numCasa").keyup(()=> {  validarString($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") });
+	$("#ref").keyup(()=> {  validarString($("#ref"),$("#errorRef"), "Error de Referencia,") });
+	$("#estado").change(()=> {  validarSelect($("#estado"),$("#errorEstado"), "Error de Estado,") });
 	$("#sede").change(()=> {  validarSelect($("#sede"),$("#errorSede"), "Error de Sede,") });
 
 	$("#2").click((e)=>{
+		let estado, sedeV, calle, avenida, numCasa, referencia
+		if(typeof idGlass == 'undefined'){
+			$("#errorBot").text("Elija una Opcion de Entrega");
+		}else{
+			$("#errorBot").text("");
+		}
 
-		let estado = validarNombre($("#estado"),$("#errorEstado"), "Error de Estado,") ;
-		let municipio = validarNombre($("#municipio"),$("#errorMun"), "Error de Municipio,") ;
-		let direcEntre = validarDireccion($("#direc"),$("#errorDirecEntre"), "Error de Direccion,") ;
-		let numCasa = validarDireccion($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") ;
-		let alias 
-		if($("#checkAlias").is(':checked')) { alias = validarStringLong($("#inputAlias"),$("#errorAlias"), "Error de Alias,") ;}
-		let codPostal = validarPostal($("#codPostal"),$("#errorCodPostal"), "Error de Direccion,") ;
-		let empresa = validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,");
-		let sede = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+		switch (idGlass) {
+			case "repartidor":
+				calle = validarString($("#calle"),$("#errorCalle"), "Error de Calle,");
+				avenida = validarString($("#numAv"),$("#errorNumAv"), "Error de Avenida,");
+				numCasa = validarString($("#numCasa"),$("#errorNumCasa"), "Error de Casa,");
+				referencia = validarString($("#ref"),$("#errorRef"), "Error de Referencia,");
+				
+				if (calle && avenida && numCasa && referencia) {
+	 				next_step = true;
+	 			}else{
+	 				next_step = false;
+	 			}	
+				break;
+			case "nacional":
+				estado = validarSelect($("#estado"),$("#errorEstado"), "Error de Estado,");
+				sedeV = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+				if (estado && sedeV) {
+					next_step = true;
+				}else{
+					next_step = false;
+				}	
+				break;
+			case "persona":
 
-		console.log($("#direc").val().length)
+				next_step = true;
+				break;
+				
+			default:
+				next_step = false;
+				break;
+		}
 
-	 	// if (estado && municipio && direcEntre && numCasa && codPostal && empresa && sede) {
-	 	// 	next_step = true;
-	 	// }else{
-	 	// 	next_step = false;
-	 	// }	
 	});
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	fechaHoy($('#fecha'));
 
+	  // fila de tipo pago
+	  let newRowTipo = ` <tr>
+						  <td width="1%"><a class="removeRowPagoTipo a-asd" ><i class="bi bi-trash-fill"></i></a></td>
+						  <td width='30%'> 
+							<select class="select-tipo select-asd" name="TipoPago">
+							  <option></option>
+							</select>
+						  </td>
+						  <td width='15%' class="precio"><input class="select-asd precio-tipo" type="number" placeholder="0,00"></td>
+						</tr>`;
+	  
+	// Caracteriticas de la fila Tipo Pago
+	function filaTipoN(){
+		$('#FILL').append(newRowTipo);
+		selectTipoPago();
+		validarRepetido();
+		validarValores();
+	}
+	// Agregar fila para insertar tipo de pago
+	$('.newRowPago').on('click',function(e){
+		filaTipoN();
+	});
+
+	// Caracteriticas de la fila Tipo Pago
+	function borrarFilaTipoN(){
+		validarRepetidoB();
+		//validarPrecio($(this));
+	}
+	// ELiminar fila Tipo de Pago
+	$('body').on('click','.removeRowPagoTipo', function(e){
+		$(this).closest('tr').remove();
+		borrarFilaTipoN();
+	});
+
+	let datosTrans, datosMovil
+
+	 //  rellena los select de las filas de tipos
+	 function selectTipoPago(){
+		$.ajax({
+		  url: '',
+		  method: 'POST',
+		  dataType: 'json',
+		  data: {
+			selectTipo: "tipo de pago"
+		  },
+		  success(data){
+			let option = ""
+			data.forEach((row)=>{
+			  option += `<option value="${row.id_tipo_pago}">${row.des_tipo_pago}</option>`
+			})
+			$('.select-tipo').each(function(){
+			   if(this.children.length == 1){
+				 $(this).append(option);
+				 $(this).chosen({
+				  width: '25vw',
+				  placeholder_text_single: "Selecciona un tipo de pago",
+				  search_contains: true,
+				  allow_single_deselect: true,
+				  });
+			   }
+			})
+  
+		  }
+		})
+		let move
+		$(".select-tipo").on('change', function(){
+			move = $(this).val()
+			tipoPago(move);
+		})
+	  }
+
+	  $(".trans, .movil").fadeOut(0);
+	  
+	  function tipoPago(tipo){
+		if (tipo == 4 || tipo == 5){
+			let campos
+			let resultado
+			let muvi 
+			$("#fade").fadeIn(400);
+			
+			$("#fade input").val('');
+			$.ajax({
+				url: '',
+				method: 'POST',
+				dataType: 'json',
+				data:{
+					mostrarT: 'xd', tipo
+				},
+				success(data){
+					  data 
+					let option = ""
+					switch (tipo) {
+						case '4':
+							option = ""
+							data.forEach((row)=>{
+								option += `<option value="${row.id_datos_cobro}">${row.nombre}</option>`
+							})
+							$("#bancTipoM").html("<option selected disabled>Nombre</option>"+option)
+							$(".movil").fadeIn(300);
+							// $(".trans").fadeOut(0);
+							$("#bancTipoM").on('change', function(){
+								
+								muvi = $("#bancTipoM").val()
+								resultado = data.find(item => item.id_datos_cobro == muvi);
+								$("#cedBancM").val(resultado.rif_cedula)
+								$("#teleMovil").val(resultado.telefono)
+								$("#codBanc").val(resultado.codigo)
+								datosMovil = resultado.id_datos_cobro
+							})
+							
+							break;
+						case '5':
+							option = ""
+							data.forEach((row)=>{
+								option += `<option value="${row.id_datos_cobro}">${row.nombre}</option>`
+							})
+							$("#bancTipoT").html("<option selected disabled>Nombre</option>"+option)
+							$(".trans").fadeIn(300);
+							// $(".movil").fadeOut(0);
+
+							$("#bancTipoT").on('change', function(){
+								muvi = $("#bancTipoT").val()
+								resultado = data.find(item => item.id_datos_cobro == muvi);
+								$("#cedBancT").val(resultado.rif_cedula)
+								$("#numCuen").val(resultado.num_cuenta)
+								datosTrans = resultado.id_datos_cobro
+							})
+						break;
+					
+						default:
+							break;
+
+					}
+				}
+			})
+		}
+	  }
+
+	  function banco() {
+		let opu
+		$.ajax({
+			url: '',
+			method: 'POST',
+			dataType: 'json',
+			data:{
+				mostrarB: "xd"
+			},success(data){
+				data.forEach(row => {
+					opu += `<option value="${row.id_banco}">${row.nombre}</option>`;
+				})
+				$("#bancTipoRT, #bancTipoRM").html("<option selected disabled>Nombre</option>"+opu)
+				
+			}
+		})
+	  }
+
 	// Validicaiones Tercer Step
 
-	$("#codPostal").keyup(()=> {  validarVC($("#canDep"),$("#errorCanDep"), "Error en la Cantidad,") });
-	$("#codPostal").keyup(()=> {  validarFecha($("#fecha"),$("#errorFecha"), "Error en la Fecha,") });
-	$("#empresa").keyup(()=> {  validarNumero($("#numRef"),$("#errorNumRef"), "Error en la Cantidad") });
-	$("#sede").keyup(()=> {  validarString($("#nomBanc"),$("#errorNomBanc"), "Error de Banco,") });
+	// function validarRepetido(){
+	// 	$(".select-tipo").change(function(){
+	// 		let tipo
+
+	// 		$(".select-tipo").each(function () {
+	// 			tipo = $(this).val()
+	// 			let count = 0;
+
+	// 			$(".select-tipo").each(function() {
+	// 				if(tipo != ''){
+
+	// 					if(tipo == $(this).val()){
+	// 					  count++
+
+	// 					  if(count >=2){
+	// 						$(this).closest('tr').attr('style', 'border-color: red;')
+	// 						$(this).attr('valid', 'false');
+	// 						$('#error3').text('No pueden haber tipos de pago repetidos');
+
+	// 					  }else{
+	// 						$(this).attr('valid', 'true');
+	// 					  }
+	// 					}
+	// 				  }
+	// 			})
+	// 		})
+	// 	})
+	// }
+	
+	function validarRepetido(){
+		let selects
+		$(".select-tipo").change(function(){
+			let valores = [];
+			let repetidos = false
+			selects = $(this)
+			
+			$('.select-tipo').each(function() {
+				// $(this).attr('valid', 'true');
+  				var valor = $(this).val(); 
+  				valores.push(valor); 
+				if($(this).val() == 4 && $(this).val() == 4){
+					tipoPago($(this).val())
+				}
+			});
+
+			for (var i = 0; i < valores.length; i++) {
+  				var contador = 0;
+  
+				for (var j = 0; j < valores.length; j++) {
+					if (valores[i] === valores[j]) {
+					contador++;
+					cuenta();
+					}
+					
+				}
+				
+			}
+			
+
+			function cuenta() {
+				
+				if (contador >= 2) {
+					selects.closest('tr').attr('style', 'border-color: red;')
+					selects.attr('valid', 'false');
+					$('#error3').text('No pueden haber tipos de pagos repetidos');
+				} else {
+					selects.attr('valid', 'true');
+					selects.closest('tr').attr('style', 'border-color: none;')
+				}
+			}
+				
+				$('.select-tipo').each(function(){
+					if($(this).is('[valid="true"]')){
+						$(this).closest('tr').attr('style', 'border-color: none;');
+					}
+				if(!$('.select-tipo').is('[valid="false"]')){
+					$('#error3').text('');
+				}
+				
+			})
+		})
+	}
+
+	function validarRepetidoB() {
+		let valores = [];
+		selects = $(this)
+		$('.select-tipo').each(function() {
+			// $(this).attr('valid', 'true');
+			var valor = $(this).val(); 
+			valores.push(valor); 
+		});
+
+		for (var i = 0; i < valores.length; i++) {
+			  var contador = 0;
+
+			for (var j = 0; j < valores.length; j++) {
+				if (valores[i] === valores[j]) {
+				contador++;
+				cuentaB();
+				}
+				
+			}
+			
+		}
+		
+
+		function cuentaB() {
+			
+			if (contador >= 2) {
+				selects.closest('tr').attr('style', 'border-color: red;')
+				selects.attr('valid', 'false');
+				$('#error3').text('No pueden haber tipos de pagos repetidos');
+			} else {
+				selects.attr('valid', 'true');
+				selects.closest('tr').attr('style', 'border-color: none;')
+			}
+		}
+			
+		$('.select-tipo').each(function(){
+			if($(this).is('[valid="true"]')){
+				$(this).closest('tr').attr('style', 'border-color: none;');
+			}
+			if(!$('.select-tipo').is('[valid="false"]')){
+				$('#error3').text('');
+			}
+			
+		})
+	}
+
+	// function validarRepetido() {
+		
+			
+
+	// 			// Escuchar el evento change en cada selector
+	// 		$(".select-tipo").on("change", function() {
+				
+	// 			var valorSeleccionado = $(this).val();
+				
+	// 			// Verificar que el valor no se repita en otros selectores
+	// 			$(".select-tipo").each(function() {
+	// 				if ($(this).val() === valorSeleccionado) {
+
+	// 					$(this).closest('tr').attr('style', 'border-color: red;')
+
+    //               		$(this).attr('valid', 'false');
+    //               		$('#error3').text('No pueden haber productos repetidos');
+	// 					return false; // Detener el bucle each si se encuentra una repetición
+	// 				}else{
+	// 					$(this).attr('valid', 'true');
+	// 					$(this).closest('tr').attr('style', 'border-color: none;')
+	// 				}
+	// 			});
+
+	// 			$('.select-tipo').each(function(){
+	// 				if($(this).is('[valid="true"]')){
+	// 				  $(this).closest('tr').attr('style', 'border-color: none;');
+	// 				}
+					
+	// 			  })
+	// 			  if(!$('.select-tipo').is('[valid="false"]')){
+	// 			   $('#error3').text('');
+	// 			 }
+				
+	// 		});
+
+			
+	// }
+
+	function validarPrecio(input){
+		let valor = input.val();
+		if(valor <= 0 || isNaN(valor)){
+		  $('#errorMonto').text('Precio inválido.');
+		  input.css({'border': 'solid 1px', 'border-color':'red'})
+		  input.attr('valid','false')
+		  return false;
+		// }else if (valor == null || valor == '') {
+		// 	$('#errorMonto').text('Rellene los campos vacios.');
+		//   	input.css({'border': 'solid 1px', 'border-color':'red'})
+		//   	input.attr('valid','false')
+		}else{
+		  $('#errorMonto').text('');
+		  input.css({'border': 'none'});
+		  input.attr('valid','true');
+		  return true;
+		}
+	}
+	validarRepetido();
+	validarValores();
+	function validarValores(){
+		$('.precio input').keyup(function(){ validarPrecio($(this)) });
+	}
+
 	$("#tipoP").change(()=> {  validarSelect($("#tipoP"),$("#errorTipoP"), "Error de Tipo,") });
 	$("#bancTipo").change(()=> {  validarSelect($("#bancTipo"),$("#errorBancTipo"), "Error de Banco,") });
+	
+	$("#bancTipoT").change(()=> {validarSelect($("#bancTipoT"),$("#errorBancTipoT"), "Error de Banco,")});
+	$("#referenciaTrans").change(()=> {validarNumero($("#referenciaTrans"),$("#errorReferenciaTrans"), "Error de Referencia,")});
+	$("#bancTipoRT").change(()=> {validarSelect($("#bancTipoRT"),$("#errorBancTipoRT"), "Error de Banco,")});
 
+	$("#bancTipoM").change(()=> {validarSelect($("#bancTipoM"),$("#errorBancTipo"), "Error de Banco,")})
+	$("#referenciaMovil").change(()=> {validarNumero($("#referenciaMovil"),$("#errorReferenciaMovil"), "Error de Referencia,")})
+	$("#bancTipoRM").change(()=> {validarSelect($("#bancTipoRM"),$("#errorbancTipoRM"), "Error de Banco,")})
+	let direcE
+	
+	
 	$("#3").click((e)=>{
-		let cantidad = validarVC($("#canDep"),$("#errorCanDep"), "Error en la Cantidad,");
-		let fecha = validarFecha($("#fecha"),$("#errorFecha"), "Error en la Fecha,");
-		let referencia = validarNumero($("#numRef"),$("#errorNumRef"), "Error en la Cantidad");
-		let nomban = validarString($("#nomBanc"),$("#errorNomBanc"), "Error de Banco,");
+		let vmonto
+		let monto = 0
+		let valid = false
+		let vtipoPago = true
+		let vprecio = true
+		let estado, sede, calle, avenida, numCasa, referencia
 
-		let tipoPago = validarSelect($("#tipoP"),$("#errorTipoP"), "Error de Tipo,");
-		let NomBanc = validarSelect($("#bancTipo"),$("#errorBancTipo"), "Error de Banco,");
+		let direccion = validarDireccion($("#direcClien"),$("#errorDirec"), "Error de Direccion,") ;
+		let correo = validarCorreo($("#emailClien"),$("#errorEmail"), "Error de Correo,") ;
+		let telefono = validarTelefono($("#teleClien"),$("#errorTele"), "Error de Telefono,") ;
+		let cedula = validarCedula($("#cedClien"),$("#errorCed"), "Error de Cedula,") ;
+	 	let nombre = validarNombre($("#nomClien"),$("#errorNomApe"), "Error de Nombre,") ;
+
+		switch (idGlass) {
+			case "repartidor":
+				calle = validarString($("#calle"),$("#errorCalle"), "Error de Calle,");
+				avenida = validarString($("#numAv"),$("#errorNumAv"), "Error de Avenida,");
+				numCasa = validarString($("#numCasa"),$("#errorNumCasa"), "Error de Casa,");
+				referencia = validarString($("#ref"),$("#errorRef"), "Error de Referencia,");
+				
+				if (calle && avenida && numCasa && referencia) {
+					valid = true;
+	 			}else{
+					valid = false;
+	 			}
+				$("#estado, #sede").val(" ")
+				break;
+			case "nacional":
+				estado = validarSelect($("#estado"),$("#errorEstado"), "Error de Estado,");
+				sedeV = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+
+				if (estado && sedeV) {
+					valid = true;
+				}else{
+					valid = false;
+				}
+				$("#calle, #numAv, #numCasa, #ref").val(" ")	
+				break;
+
+			case "persona":
+
+				valid = true;
+				$("#estado, #sede").val(" ")
+				$("#calle, #numAv, #numCasa, #ref").val(" ")
+				break;
+				
+			default:
+				valid = false;
+				break;
+		}
+
+		$('#FILL tr').each(function(){
+			let tipoPago = $(this).find('.select-tipo').val();
+			if(tipoPago == "" || tipoPago == null){
+				$(this).attr('style', 'border-color: red;')
+				$(this).attr('valid', 'false');
+				vtipoPago = false;
+				$('#error3').text('No debe haber tipo de pagos vacíos.')
+			}
+		})
+		let value = 0
+		$('.precio input').each(function(){ 
+			let valPre = validarPrecio($(this)) 
+			value = parseFloat($(this).val());
+				if (!isNaN(value)) {
+					monto = parseFloat(monto + value)
+				}
+			
+			if (!valPre) {
+				vprecio = false
+			}
+
+		});
+
+		// monto = (typeof monto === 'undefined') ? 0 : monto;
+
+		if (monto == total) {
+			vmonto = true;
+			$("#errorMonto").text('')
+		}else if(monto > total){
+			vmonto = false;
+			$("#errorMonto").text('Error en el monto, la Cantidad es Mayor')
+			$('.precio input').css({'border': 'solid 1px', 'border-color':'red'})
+		}else if(monto < total){
+			vmonto = false;
+			$("#errorMonto").text('Error en el monto, la Cantidad es Menor')
+			$('.precio input').css({'border': 'solid 1px', 'border-color':'red'})
+		}else{
+			vmonto = false;
+			$("#errorMonto").text('Error en el monto, la Cantidad es Invalida')
+		}
+
+
+		let push = []
+
+		if(idGlass == "repartidor"){
+			direcE = $("#calle").val()+" "+$("#numAv").val()+" "+$("#numCasa").val()+" "+$("#ref").val()
+		}else{
+			direcE = ""
+		}
+
+
+
+		let tipVal
+		let movil = true
+		let trans = true
+
+		$(".trans input, .trans select").attr('style', 'border-coler: none');
+		$(".movil input, .movil select").attr('style', 'border-coler: none');
+		$(".trans p").text("");
+		$(".movil p").text("");
+
+		$('.select-tipo').each(function(i) {
+			tipVal = $(this).closest('tr')
+			switch (tipVal.find("select").val()) {
+				case "4":
+					let cep = validarSelect($("#bancTipoM"),$("#errorBancTipo"), "Error de Banco,") ;
+					let nao = validarNumero($("#referenciaMovil"),$("#errorReferenciaMovil"), "Error de Referencia,") ;
+					let nin = validarSelect($("#bancTipoRM"),$("#errorbancTipoRM"), "Error de Banco,") ;
+					if(!cep || !nao || !nin){
+						movil = false
+					}
+
+					push[i] = {tipo: tipVal.find("select").val(), monto: tipVal.find(".precio-tipo").val(), bancoReceptor: datosMovil, referencia: $("#referenciaMovil").val(), bancoEmisor: $("#bancTipoRM").val(), cambio: cambio};
+				break;
+				case "5":
+					let poa = validarSelect($("#bancTipoT"),$("#errorBancTipoT"), "Error de Banco,") ;
+					let bro = validarNumero($("#referenciaTrans"),$("#errorReferenciaTrans"), "Error de Referencia,") ;
+					let nen = validarSelect($("#bancTipoRT"),$("#errorBancTipoRT"), "Error de Banco,") ;
+					if(!poa || !bro || !nen){
+						trans = false
+					}
+
+					push[i] = {tipo: tipVal.find("select").val(), monto: tipVal.find(".precio-tipo").val(), bancoReceptor: datosTrans, referencia: $("#referenciaTrans").val(), bancoEmisor: $("#bancTipoRT").val(), cambio: cambio};
+				break;
+			
+				default:
+
+					push[i] = {tipo: tipVal.find("select").val(), monto: tipVal.find(".precio-tipo").val(), bancoReceptor: " ", referencia: " ", bancoEmisor: " ", cambio: cambio};
+					break;
+			}
+	
+			
+			
+		})
+
 		
+		
+		if(nombre && direccion && telefono && cedula && correo && movil && trans && valid && vtipoPago && vprecio && vmonto){
+			validarCarrito().then(() => {
+
+				$.ajax({
+					url: '',
+					method: 'POST',
+					dataType: 'json',
+					data:{
+						cedula: memas[0].cedula,
+						nombre: memas[0].nombre,
+						apellido: memas[0].apellido,
+						direccion: $("#direcClien").val(),
+						telefono: $("#teleClien").val(),
+						correo: $("#emailClien").val(),
+						
+						sede: $("#sede").val(),
+						
+						direccion: direcE,
+						detalles: push
+						
+						
+					},
+					success(final){
+						if (final.resultado === "Registrado Pedido") {
+							Swal.fire({
+								title: 'Compra Realizada',
+								text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
+								icon: 'success',
+							})
+							// setTimeout(function(){
+							// 	location = '?url=inico'
+							// }, 2500);
+						} else {
+							Toast.fire({ icon: 'error', title: 'No fue Posible Realizar la Compra' })
+						}
+					}
+				})
+			})
+			
+		}else{
+			
+		}
+
+
 	})
+
+
+
+
+
+
+
     
     // next step
     $('.f1 .btn-next').on('click', function() {
@@ -298,20 +861,6 @@ $(document).ready(function() {
     	// navigation steps / progress steps
     	var current_active_step = $(this).parents('.f1').find('.f1-step.active');
     	var progress_line = $(this).parents('.f1').find('.f1-progress-line');
-    	
-    	// fields validation
-
-    	// parent_fieldset.find('input[type="text"], input[type="password"], textarea').each(function() {
-    	// if( $(this).val() == "" ) {
-    	// 	$(this).attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");
-    	// 	next_step = false;
-    	// }
-    	// else {
-    	// 	$(this).removeClass('input-error');
-    	// }
-    	// });
-
-    	// fields validation
     	
     	if( next_step ) {
     		parent_fieldset.fadeOut(400, function() {
@@ -345,23 +894,34 @@ $(document).ready(function() {
 			scroll_to_class( $('.f1'), 20 );
     	});
     });
+
+	function validarCarrito() {
+		return new Promise((resolve, reject)=>{
+			$.ajax({
+				method: 'post',
+				url: '',
+				dataType: 'JSON',
+				data:{
+					carrito:'carrito'
+				},success(data){
+					if (data[0].cuenta >= 0) {
+						return resolve(true)
+					} else {
+						Swal.fire({
+							title: 'Productos Agotados!',
+							text: 'Los Productos Selecionados estan agotados en nuestro almacen',
+							icon: 'error',
+						  })
+						//   setTimeout(function(){
+						// 	location = '?url=home'
+						//   }, 1600);
+						return reject(false)
+					}
+				}
+			})
+		})
+	}
     
-    // submit
-    $('.f1').on('submit', function(e) {
-    	
-    	// fields validation
-    	$(this).find('input[type="text"], input[type="password"], textarea').each(function() {
-    		if( $(this).val() == "" ) {
-    			e.preventDefault();
-    			$(this).addClass('input-error');
-    		}
-    		else {
-    			$(this).removeClass('input-error');
-    		}
-    	});
-    	// fields validation
-    	
-    });
     
     
 });
