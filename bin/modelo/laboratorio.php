@@ -68,18 +68,18 @@
 
         try{
           $this->conectarDB();
-
-          $new = $this->con->prepare("INSERT INTO laboratorio(cod_lab,rif,direccion,razon_social,status) VALUES(DEFAULT,?,?,?,1)");
-          $new->bindValue(1, $this->rif); 
-          $new->bindValue(2, $this->direccion); 
-          $new->bindValue(3, $this->razon);
+          $pk = $this->uniqueID();
+          $new = $this->con->prepare("INSERT INTO laboratorio(cod_lab,rif,direccion,razon_social,status) VALUES(?,?,?,?,1)");
+          $new->bindValue(1, $pk);
+          $new->bindValue(2, $this->rif); 
+          $new->bindValue(3, $this->direccion); 
+          $new->bindValue(4, $this->razon);
           $new->execute();
-          $lastInsertId = $this->con->lastInsertId();
 
           $new = $this->con->prepare("INSERT INTO contacto_lab(id_contacto_lab, telefono, contacto, cod_lab) VALUES (DEFAULT, ?, ?, ?)");
           $new->bindValue(1, $this->telefono);
           $new->bindValue(2, $this->contacto);
-          $new->bindValue(3, $lastInsertId);
+          $new->bindValue(3, $pk);
           $new->execute();
           $resultado = ['resultado' => 'ok', 'msg' => "Laboratorio registrado."];
           $this->binnacle("Laboratorio",$_SESSION['cedula'],"Registró laboratorio.");
@@ -141,7 +141,7 @@
 
       public function getItem($id){
 
-        if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+        if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1){
           die(json_encode(['resultado' => 'Error de id','msg' => 'Id inválida.']));
         }
 
@@ -185,7 +185,7 @@
         if(preg_match_all("/^[0-9]{10,30}$/", $telefono) != 1){
           die(json_encode(['resultado' => 'Error de telefono','msg' => 'Telefono inválido.']));
         }
-        if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+        if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1){
           die(json_encode(['resultado' => 'Error de id','msg' => 'Id inválida.']));
         }
 
@@ -232,7 +232,7 @@
 
 
       public function getEliminar($id){
-        if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
+        if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1){
           die(json_encode(['resultado' => 'Error de id','msg' => 'Id inválida.']));
         }
 
