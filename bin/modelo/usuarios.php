@@ -13,6 +13,10 @@ class usuarios extends DBConnect{
   private $rol;
   private $id;
 
+  private $key;
+  private $iv;
+  private $cipher;
+
   function __construct(){
     parent::__construct();
   }
@@ -44,7 +48,11 @@ class usuarios extends DBConnect{
       echo json_encode($resultado);
       die();
     }
-
+    if(preg_match_all("/^[0-9]{1,2}$/", $tipoUsuario) == false){
+      $resultado = ['resultado' => 'Error de rol' , 'error' => 'rol invalido.'];
+      echo json_encode($resultado);
+      die();
+    }
 
     $this->cedula = $cedula;
     $this->name = $name;
@@ -58,6 +66,13 @@ class usuarios extends DBConnect{
 
   private function agregarUsuario(){
    try{
+    $this->key = parent::KEY();
+    $this->iv = parent::IV();
+    $this->cipher = parent::CIPHER();
+
+    $this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
+    $this->email = openssl_encrypt($this->email, $this->cipher, $this->key, 0, $this->iv);
+    
     parent::conectarDB();
     $new = $this->con->prepare("SELECT `cedula`, `status` FROM `usuario` WHERE `cedula` = ?");
     $new->bindValue(1, $this->cedula);
@@ -81,7 +96,7 @@ class usuarios extends DBConnect{
       echo json_encode($resultado);
       $this->binnacle("Usuario",$_SESSION['cedula'],"Registró un usuario");
       parent::desconectarDB();
-      die();
+
 
     }elseif ($data[0]['status'] == 0) {
 
@@ -100,14 +115,18 @@ class usuarios extends DBConnect{
       echo json_encode($resultado);
       $this->binnacle("Usuario",$_SESSION['cedula'],"Registró un usuario");
       parent::desconectarDB();
-      die();
+
+    }else{
+      $resultado = ['resultado' => 'No se registro', 'error' => 'error desconocido.'];
+      echo json_encode($resultado);
+      
     }
 
-
+    die();
 
     
   }catch(exection $error){
-   return $error;
+   die($error);
  }
 
 }
@@ -116,13 +135,21 @@ public function getMostrarUsuario($bitacora = false){
 
   try{
     parent::conectarDB();
-    $query = "SELECT u.cedula, u.nombre, u.apellido, u.correo, u.rol FROM usuario u WHERE u.status = 1";
+    $this->key = parent::KEY();
+    $this->iv = parent::IV();
+    $this->cipher = parent::CIPHER();
+
+    $query = "SELECT u.cedula as cedulaE, u.cedula, u.nombre, u.apellido, u.correo, u.rol FROM usuario u WHERE u.status = 1";
 
     $new = $this->con->prepare($query);
     $new->execute();
-    $data = $new->fetchAll();
-    echo json_encode($data);
+    $data = $new->fetchAll(\PDO::FETCH_OBJ);
+    foreach ($data as $item) {
+      $item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0, $this->iv);
+      $item->correo = openssl_decrypt($item->correo, $this->cipher, $this->key, 0, $this->iv);
+    }
     if($bitacora) $this->binnacle("Usuario",$_SESSION['cedula'],"Consultó listado.");
+    echo json_encode($data);
     parent::desconectarDB();
     die();
 
@@ -181,14 +208,21 @@ private function eliminarUsuario(){
     private function seleccionarUnico(){
       try{
         parent::conectarDB();
+        $this->key = parent::KEY();
+        $this->iv = parent::IV();
+        $this->cipher = parent::CIPHER();
+        
         $new = $this->con->prepare("SELECT cedula, nombre, apellido, correo, rol FROM `usuario` WHERE `usuario`.`cedula` = ?");
         $new->bindValue(1, $this->cedula);
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
+    
+        $data[0]->cedula = openssl_decrypt($data[0]->cedula, $this->cipher, $this->key, 0, $this->iv);
+        $data[0]->correo = openssl_decrypt($data[0]->correo, $this->cipher, $this->key, 0, $this->iv);
         echo json_encode($data);
         parent::desconectarDB();
+        
         die();
-
       }catch(\PDOexection $error){
 
        return $error;
@@ -219,7 +253,7 @@ private function eliminarUsuario(){
       die();
     }
     if(preg_match_all("/^[A-Za-z0-9 *?=&_!¡()@#]{3,30}$/", $password) == false) {
-      $resultado = ['resultado' => 'Error de contraseña' , 'error' => 'Correo invalida.'];
+      $resultado = ['resultado' => 'Error de contraseña' , 'error' => 'Contraseña invalida.'];
       echo json_encode($resultado);
       die();
     }
@@ -243,7 +277,13 @@ private function eliminarUsuario(){
   private function editarUsuario(){
 
     try{
-      
+      $this->key = parent::KEY();
+      $this->iv = parent::IV();
+      $this->cipher = parent::CIPHER();
+  
+      $this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
+      $this->email = openssl_encrypt($this->email, $this->cipher, $this->key, 0, $this->iv);
+
       $this->password = password_hash($this->password, PASSWORD_BCRYPT);
       parent::conectarDB();
       $new = $this->con->prepare("UPDATE `usuario` SET `cedula`= ?,`nombre`= ?,`apellido`= ?,`correo`= ?,`password`=?,`rol`=? WHERE `usuario`.`cedula` = ?");
@@ -282,6 +322,12 @@ private function eliminarUsuario(){
 private function validarC(){
   try{
     parent::conectarDB();
+
+    $this->key = parent::KEY();
+    $this->iv = parent::IV();
+    $this->cipher = parent::CIPHER();
+
+    $this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
     $new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
     $new->bindValue(1, $this->cedula);
     $new->execute();
@@ -315,6 +361,12 @@ public function getValidarE($email){
 private function validarE(){
   try{
     parent::conectarDB();
+
+    $this->key = parent::KEY();
+    $this->iv = parent::IV();
+    $this->cipher = parent::CIPHER();
+
+    $this->email = openssl_encrypt($this->email, $this->cipher, $this->key, 0, $this->iv);
     $new = $this->con->prepare("SELECT `correo` FROM `usuario` WHERE `status` = 1 and `correo` = ?");
     $new->bindValue(1, $this->email);
     $new->execute();
