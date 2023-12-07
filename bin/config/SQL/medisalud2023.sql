@@ -8,7 +8,7 @@ USE medisalud;
 
 -- TABLA PARA CLIENTES 
 CREATE TABLE cliente(
-    cedula varchar(15) COLLATE utf8_spanish2_ci PRIMARY KEY,
+    cedula varchar(30) COLLATE utf8_spanish2_ci PRIMARY KEY,
     nombre varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
     apellido varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
     direccion varchar(180) COLLATE utf8_spanish2_ci NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE rol(
 
 -- TABLA PARA USUARIOS 
 CREATE TABLE usuario(
-    cedula int PRIMARY KEY,
+    cedula varchar(30) PRIMARY KEY,
     nombre varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
     apellido varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
     correo varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE permisos(
 CREATE TABLE bitacora (
   id int AUTO_INCREMENT PRIMARY KEY,
   modulo varchar(20) NOT NULL,
-  usuario int(11) NOT NULL,
+  usuario varchar(30) NOT NULL,
   descripcion varchar(50) NOT NULL,
   fecha datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
   status int(11) NOT NULL,
@@ -85,9 +85,9 @@ CREATE TABLE bitacora (
 -- TABLA PARA EL CONTACTO DE LOS CLIENTES 
 CREATE TABLE contacto_cliente(
     id_contacto int AUTO_INCREMENT PRIMARY KEY,
-    celular varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
+    celular varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
     correo varchar(60) COLLATE utf8_spanish2_ci,
-    cedula varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
+    cedula varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
     FOREIGN KEY (cedula) REFERENCES cliente(cedula) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci; 
 
@@ -185,7 +185,7 @@ CREATE TABLE cambio(
 -- TABLA PARA CARRITO 
 
 CREATE TABLE carrito(
-    cedula int NOT NULL,
+    cedula varchar(30) NOT NULL,
     cod_producto int NOT NULL,
     cantidad varchar(10) NOT NULL,
     FOREIGN KEY (cedula) REFERENCES usuario (cedula) ON DELETE CASCADE ON UPDATE CASCADE,
