@@ -5,6 +5,9 @@
 	use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
 	use PhpOffice\PhpSpreadsheet\Spreadsheet;
 	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+	use PhpOffice\PhpSpreadsheet\IOFactory;
+	use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+	use \PhpOffice\PhpSpreadsheet\Style\Border;
 
 	use config\connect\DBConnect as DBConnect;
 
@@ -41,12 +44,12 @@
 							IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5) as 'divisa_total'
 							FROM venta v 
 							INNER JOIN cliente c ON v.cedula_cliente = c.cedula
-                            INNER JOIN pago p ON p.num_fact = v.num_fact
-                            INNER JOIN detalle_pago dp ON p.id_pago = dp.id_pago
+							INNER JOIN pago p ON p.num_fact = v.num_fact
+							INNER JOIN detalle_pago dp ON p.id_pago = dp.id_pago
 							INNER JOIN cambio cm ON cm.id_cambio = dp.id_cambio
 							INNER JOIN moneda m ON m.id_moneda = cm.moneda
 							WHERE v.fecha BETWEEN CONCAT(?, ' 00:00:00') AND CONCAT(?, ' 23:59:59')
-							ORDER BY v.fecha",
+							GROUP BY p.num_fact;",
 				"error" => ["resultado"=>"error", "msg" => "Tipo de reporte inválido."]
 			];
 
@@ -188,10 +191,20 @@
 			$spreadsheet = new Spreadsheet();
 			$this->sheet = $spreadsheet->getActiveSheet();
 
-			$col = range('A', 'Z');
+			$col = range('A', 'L');
 			foreach ($col as $columna) {
 				$this->sheet->getColumnDimension($columna)->setAutoSize(true);
 			}
+
+			$styleArray = [
+				'borders' => [
+					'allBorders' => [
+						'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_NONE,
+					],
+				],
+			];
+			$tamaño_reporte = count($reporte) + 10;
+			$this->sheet->getStyle("A1:L{$tamaño_reporte}")->applyFromArray($styleArray);
 
 			$styleColumns = [
 				'font' => [
@@ -268,7 +281,21 @@
 			$writer = new Xlsx($spreadsheet);
 			$repositorio = 'assets/reportes/'.$nombre.'.xlsx';
 			$writer->save($repositorio);
-			$respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
+
+			$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($repositorio);
+			$phpWord = $reader->load($repositorio);
+
+			$xmlWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($phpWord,'Mpdf');
+
+			$xmlWriter->writeAllSheets();
+			// $xmlWriter->setFooter("Sdfsdf");
+
+			$repositorioPdf = "assets/reportes/".$nombre.".pdf";
+			$xmlWriter->save($repositorioPdf);
+
+			if(file_exists($repositorio)) unlink($repositorio);
+
+			$respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorioPdf];
 			die(json_encode($respuesta));
 		}
 
@@ -310,7 +337,7 @@
 				$this->sheet->setCellValue('J7', "Mayor proveedor:");
 				$this->sheet->setCellValue('K7', $datos_compra['count_proveedor']->proveedor_mas);
 				$this->sheet->setCellValue('J8', "Produto más comprado:");
-				$this->sheet->setCellValue('K8', $datos_compra["producto_mas_ventas"]->descripcion);
+				$this->sheet->setCellValue('K8', $datos_compra["producto_mas_ventas"]->nombre);
 				$this->sheet->setCellValue('J9', "Cantidad comprada de ese producto: ");
 				$this->sheet->setCellValue('K9', "{$datos_compra["producto_mas_ventas"]->cantidad}");
 
@@ -369,7 +396,7 @@
 						ORDER BY COUNT(*) DESC LIMIT 1;
 					",
 					"producto_mas_ventas" => "
-						SELECT p.descripcion, SUM(cp.cantidad) as cantidad FROM compra c 
+						SELECT p.nombre, SUM(cp.cantidad) as cantidad FROM compra c 
 						INNER JOIN compra_producto cp ON cp.cod_compra = c.cod_compra
 						INNER JOIN producto p ON p.cod_producto = cp.cod_producto
 						WHERE c.fecha BETWEEN ? AND ?
