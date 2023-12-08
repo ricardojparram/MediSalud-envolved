@@ -38,7 +38,10 @@ body{
 .sidebar-nav .nav-content a{
     color: var(--color-letra);
 }
-
+.notifications {
+    width: 300px;
+    overflow-x: hidden;
+}
 /* Estilos para dispositivos móviles */
 @media (max-width: 575px) {
   .notifications {

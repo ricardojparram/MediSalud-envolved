@@ -8,7 +8,6 @@
 
   $header = '
     <header id="header" class="header fixed-top d-flex align-items-center">
-
 <div class="d-flex align-items-center justify-content-between">
   <a href="?url=home" class="logo d-flex align-items-center">
     <img src="assets/img/Logo_Medi.png" alt="">
@@ -22,20 +21,14 @@
 
         <li class="nav-item dropdown">
 
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+          <a class="nav-link nav-icon notification_icon" href="#" data-bs-toggle="dropdown">
             <i class="bi bi-bell"></i>
             <span class="badge iconos badge-number contador"></span>
           </a><!-- End Notification Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
             <li class="dropdown-header text-center">
-              Usted tiene <span class="numNoti"></span> nuevas notificaciones
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="dropdown-header text-start">
-              Nuevas
+              Usted tiene <span class="numNoti"></span> notificaciones
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -45,19 +38,6 @@
               
             </li>
 
-            <li class="dropdown-footer text-start">
-              Anteriores
-            </li>
-             <li class="itemVisto list-group">
-              
-            </li>
-
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="dropdown-footer">
-              <a href="#">Marcar todo como leido</a>
-            </li>
 
           </ul><!-- End Notification Dropdown Items -->
 
