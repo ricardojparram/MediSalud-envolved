@@ -219,6 +219,7 @@ $(document).ready(function() {
 			case "nacional":
 				$(".glass").fadeOut(0);
 				$("#envio").fadeIn(300);
+				calcularTipo()
 				pTarifas = valorT
 				precio();
 				break;
@@ -233,6 +234,25 @@ $(document).ready(function() {
 				break;
 		}
 	})
+
+	function calcularTipo() {
+		$.ajax({
+			url: '',
+			type: 'post',
+			dataType: 'JSON',
+			data:{calculaT: 'vv'},
+			success(data){
+				if(data.resultado == 'cuenta superior'){
+					$("#errorBot").html("No puedes exceder las 12 unidades (no más de tres del mismo tipo) por envio nacional")
+					return false
+				}else{
+					$("#errorBot").html("")
+					return true
+				}
+			}
+
+		})
+	}
 
 	// Validicaiones Segundo Step
 
@@ -658,7 +678,7 @@ $(document).ready(function() {
 		let valid = false
 		let vtipoPago = true
 		let vprecio = true
-		let estado, sede, calle, avenida, numCasa, referencia
+		let estado, sede, calle, avenida, numCasa, referencia, calTipo
 
 		let direccion = validarDireccion($("#direcClien"),$("#errorDirec"), "Error de Direccion,") ;
 		let correo = validarCorreo($("#emailClien"),$("#errorEmail"), "Error de Correo,") ;
@@ -683,8 +703,9 @@ $(document).ready(function() {
 			case "nacional":
 				estado = validarSelect($("#estado"),$("#errorEstado"), "Error de Estado,");
 				sedeV = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+				calTipo = calcularTipo()
 
-				if (estado && sedeV) {
+				if (estado && sedeV && calTipo) {
 					valid = true;
 				}else{
 					valid = false;
@@ -830,9 +851,9 @@ $(document).ready(function() {
 								text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
 								icon: 'success',
 							})
-							// setTimeout(function(){
-							// 	location = '?url=inico'
-							// }, 2500);
+							setTimeout(function(){
+							location = '?url=inico'
+							}, 2500);
 						} else {
 							Toast.fire({ icon: 'error', title: 'No fue Posible Realizar la Compra' })
 						}

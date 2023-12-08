@@ -46,24 +46,39 @@
 
         public function mostrarDatosP($cedula){
             try {
+                $this->key = parent::KEY();
+                $this->iv = parent::IV();
+                $this->cipher = parent::CIPHER();
+
                 parent::conectarDB();
-                $new = $this->con->prepare("SELECT * FROM cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula WHERE status = 1 and c.cedula = ?");
+                $new = $this->con->prepare("SELECT c.nombre, c.apellido, c.cedula, c.direccion, cc.correo, cc.celular FROM cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula WHERE status = 1 and c.cedula = ?");
                 $new->bindValue(1, $cedula);
                 $new->execute();
                 $data = $new->fetchAll();
-
+                //  foreach ($data as $item) {
+                //     $item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0, $this->iv);
+                //     $item->direccion = openssl_decrypt($item->direccion, $this->cipher, $this->key, 0, $this->iv);
+                //     $item->celular = openssl_decrypt($item->celular, $this->cipher, $this->key, 0, $this->iv);
+                //     $item->correo = openssl_decrypt($item->correo, $this->cipher, $this->key, 0, $this->iv);
+                // }
+                parent::desconectarDB();
                 if(isset($data[0]["cedula"])){ 
                     echo json_encode($data);
                 }elseif (!isset($data[0]["cedula"])) {
+                    parent::conectarDB();
                     $new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo FROM usuario u WHERE u.cedula = ?");
                     $new->bindValue(1, $cedula);
                     $new->execute();
                     $data = $new->fetchAll();
+                    // foreach ($data as $item) {
+                    //     $item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0, $this->iv);
+                    //     $item->correo = openssl_decrypt($item->correo, $this->cipher, $this->key, 0, $this->iv);
+                    // }
                     echo json_encode($data);
-                    
+                    parent::desconectarDB();
                     
                 }
-                parent::desconectarDB();
+
                 die();
                 
             } catch(\PDOexection $error){
@@ -205,12 +220,20 @@
 
           private function registrar(){
             try {
+                $this->key = parent::KEY();
+                $this->iv = parent::IV();
+                $this->cipher = parent::CIPHER();
+                
                 parent::conectarDB();
                 $new = $this->con->prepare("SELECT cedula FROM cliente WHERE cedula = ?");
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll();
                 parent::desconectarDB();
+                $this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
+                $this->correo = openssl_encrypt($this->correo, $this->cipher, $this->key, 0, $this->iv);
+                $this->direccionF = openssl_encrypt($this->direccion, $this->cipher, $this->key, 0, $this->iv);
+                $this->telefono = openssl_encrypt($this->telefono, $this->cipher, $this->key, 0, $this->iv);
                 if(isset($data[0]["cedula"])){ 
                     
                     parent::conectarDB();
@@ -373,10 +396,14 @@
                 echo json_encode($resultado);
                 die();
             }
+            $this->key = parent::KEY();
+            $this->iv = parent::IV();
+            $this->cipher = parent::CIPHER();
 
             $this->cedula = $cedula;
             $this->nombre = $_SESSION['nombre'];
             $this->apellido = $_SESSION['apellido'];
+            $this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
 
             if($this->validarCarrito($this->cedula) != true){
                 die("<script> window.location = '?url=carrito' </script>");
@@ -387,16 +414,21 @@
 
         private function comprobarEstadoPago(){
             try{
+
+
                 parent::conectarDB();
                 $new = $this->con->prepare("SELECT cedula FROM cliente WHERE cedula = ?");
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 [0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
+                
+
+                
                 parent::desconectarDB();
 
                 if(!isset($data->cedula)){
                     parent::conectarDB();
-                    $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,1)");
+                    $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,0)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->nombre);
                     $new->bindValue(3, $this->apellido);
@@ -456,6 +488,10 @@
             
             
             try {
+                $this->key = parent::KEY();
+                $this->iv = parent::IV();
+                $this->cipher = parent::CIPHER();
+    
                 if($cedula === NULL){
                     parent::conectarDB();
                     $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual 
@@ -465,6 +501,8 @@
                     parent::desconectarDB();
                 }else {
                     parent::conectarDB();
+                    $cedula = openssl_encrypt($cedula, $this->cipher, $this->key, 0, $this->iv);
+
                     $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual 
                                             FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
                     $new->bindValue(1, $cedula);
@@ -523,6 +561,31 @@
                 $new->bindValue(2, $cod_producto);
                 $new->execute();
                 parent::desconectarDB();
+            }catch(\PDOexection $error){
+                die($error);
+            }
+        }
+
+        public function calcularTipo($cedula){
+            try{
+                parent::conectarDB();
+                $new = $this->con->prepare("SELECT p.cod_tipo, SUM(c.cantidad) AS cuenta FROM carrito c INNER JOIN producto p ON c.cod_producto = p.cod_producto WHERE c.cedula = ? GROUP by p.cod_tipo");
+                $new->bindValue(1, $cedula);
+                $new->execute();
+                $data = $new->fetchAll(\PDO::FETCH_OBJ);
+                parent::desconectarDB();
+
+                foreach ($data as $item) {
+                    if ($item->cuenta > 3) {
+                        $resultado = ['resultado' => 'cuenta superior'];
+                        echo json_encode($resultado);
+                        die();
+                    }
+                }
+                $resultado = ['resultado' => 'cuenta regulada'];
+                echo json_encode($resultado);
+                die();
+                
             }catch(\PDOexection $error){
                 die($error);
             }

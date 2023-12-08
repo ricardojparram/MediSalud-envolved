@@ -8,7 +8,7 @@
 	if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
 	$model = new sedeEnvio();
-	// $model->registrarSedes();
+	//$model->registrarSedes();
 
 	$permisos = $model->getPermisosRol($_SESSION['nivel']);
 	$permiso = $permisos['Sedes de Envio'];

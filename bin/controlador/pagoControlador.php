@@ -48,6 +48,9 @@
   if (isset($_POST['mostrarB'])){
     $objModel->banco();
   }
+  if (isset($_POST['calculaT'])){
+    $objModel->calcularTipo($_SESSION['cedula']);
+  }
   
   $VarComp = new initcomponents();
   $tiendaComp = new tienda();
