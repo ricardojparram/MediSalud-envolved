@@ -198,7 +198,7 @@
                       <?php if(isset($mostrarC)){
                         foreach($mostrarC as $data){
                           ?> 
-                          <option value="<?php echo $data->cedula;?>" class="opcion"><?php echo $data->nombre;?> <?php echo $data->apellido;?> <?php echo $data->cedula;?></option>
+                          <option value="<?php echo $data->cedulaE;?>" class="opcion"><?php echo $data->nombre;?> <?php echo $data->apellido;?> <?php echo $data->cedula;?></option>
                           <?php
                         }
                       }else{"";}?>

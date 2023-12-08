@@ -13,15 +13,14 @@
       private $cantidad;
       private $metodo;
       private $moneda;
+      private $key;
+      private $iv;
+      private $cipher;
 
 
      //---------------------------------AGREGAR VENTAS--------------------------------
 
      public function getAgregarVenta($cedula){
-
-     if(preg_match_all("/^[0-9]{3,30}$/", $cedula) != 1){
-        return "Error de cedula!";
-      }
 
       $this->cedula = $cedula; 
 
@@ -278,11 +277,20 @@
       try{
          parent::conectarDB();
 
+         $this->key = parent::KEY();
+         $this->iv = parent::IV();
+         $this->cipher = parent::CIPHER();
+
         $query = "SELECT v.num_fact, v.fecha, v.cedula_cliente , p.monto_total , CONCAT(IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN pago p ON p.num_fact = v.num_fact INNER JOIN detalle_pago dp ON p.id_pago = dp.id_pago INNER JOIN cambio cm ON cm.id_cambio = dp.id_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE v.status = 1 GROUP BY v.num_fact";
 
         $new = $this->con->prepare($query);
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
+
+        foreach ($data as $item) {
+          $item->cedula_cliente = openssl_decrypt($item->cedula_cliente, $this->cipher, $this->key, 0 , $this->iv);
+        }
+
         echo json_encode($data);
         if($bitacora) $this->binnacle("Ventas",$_SESSION['cedula'],"Consultó listado.");
         parent::desconectarDB();
@@ -309,6 +317,11 @@
     private function exportar(){
       try{
        parent::conectarDB();
+
+       $this->key = parent::KEY();
+       $this->iv = parent::IV();
+       $this->cipher = parent::CIPHER();
+
        $query = "SELECT v.cedula_cliente , c.nombre , c.apellido , c.direccion , cc.celular , v.num_fact , v.fecha , p.monto_total ,CONCAT(IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN pago p ON p.num_fact = v.num_fact INNER JOIN detalle_pago dp ON dp.id_pago = p.id_pago INNER JOIN cliente c ON c.cedula = v.cedula_cliente INNER JOIN contacto_cliente cc ON cc.cedula = c.cedula INNER JOIN cambio cm ON cm.id_cambio = dp.id_cambio INNER JOIN moneda m ON m.id_moneda = cm.moneda WHERE v.status = 1 AND v.num_fact = ?";
        $new = $this->con->prepare($query);
        $new->bindValue(1 , $this->id);
@@ -321,8 +334,13 @@
        $new->execute();
        $dataP = $new->fetchAll();
 
+       foreach ($dataV as $item) {
+        $item['cedula_cliente'] = openssl_decrypt( $item['cedula_cliente'], $this->cipher, $this->key, 0 , $this->iv);
+        $item['direccion'] = openssl_decrypt($item['direccion'], $this->cipher, $this->key, 0 , $this->iv);
+        $item['celular'] = openssl_decrypt($item['celular'], $this->cipher, $this->key, 0 , $this->iv);
+      }
         
-       $nombre = 'Ticket_'.$dataV[0]['num_fact'].'_'.$dataV[0]['cedula_cliente'].'.pdf';
+       $nombre = 'Ticket_'.$dataV[0]['num_fact'].'_'.$item['cedula_cliente'].'.pdf';
        
        $pdf = new FPDF();
        $pdf->SetMargins(4,10,4);
@@ -334,8 +352,8 @@
        $pdf->SetFont('Arial','',9);
        $pdf->MultiCell(0,5,utf8_decode('Rif: 1234567'),0,'C',false);
        $pdf->MultiCell(0,5,utf8_decode('Dirreción: Barrio José Félix Ribas, Barquisimeto-Estado Lara.'),0,'C',false);
-       $pdf->MultiCell(0,5,utf8_decode('Teléfono: 00000000'),0,'C',false);
-       $pdf->MultiCell(0,5,utf8_decode('Correo: correo@gmail.com'),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode('Teléfono: 04120502369'),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode('Correo: MediSalud@gmail.com'),0,'C',false);
 
        $pdf->Ln(1);
        $pdf->Cell(0,5,utf8_decode("------------------------------------------------------"),0,0,'C');
@@ -350,10 +368,10 @@
        $pdf->Cell(0,5,utf8_decode("------------------------------------------------------"),0,0,'C');
        $pdf->Ln(5);
 
-       $pdf->MultiCell(0,5,utf8_decode("Cliente: ". $dataV[0]['nombre'].' '.$dataV[0]['apellido']),0,'C',false);
-       $pdf->MultiCell(0,5,utf8_decode("Documento: ".$dataV[0]['cedula_cliente']),0,'C',false);
-       $pdf->MultiCell(0,5,utf8_decode("Teléfono: ".$dataV[0]['celular']),0,'C',false);
-       $pdf->MultiCell(0,5,utf8_decode("Dirección: ".$dataV[0]['direccion']),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode("Cliente: ". $dataV[0]['nombre'].' '. $dataV[0]['apellido']),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode("Documento: ".$item['cedula_cliente']),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode("Teléfono: ".$item['celular']),0,'C',false);
+       $pdf->MultiCell(0,5,utf8_decode("Dirección: ".$item['direccion']),0,'C',false);
 
        $pdf->Ln(1);
        $pdf->Cell(0,5,utf8_decode("-------------------------------------------------------------------"),0,0,'C');
@@ -439,10 +457,6 @@
 
      public function validarCliente($cedula){
      
-      if(preg_match_all("/^[0-9]{3,30}$/", $cedula) != 1){
-        return "Error de cedula!";
-      }
-      
        $this->cedula = $cedula;
 
        return $this->validarC();
@@ -592,10 +606,18 @@
     public function getMostrarCliente(){
       try{
         parent::conectarDB();
-        $new = $this->con->prepare("SELECT * FROM `cliente` WHERE status = 1");
+        $this->key = parent::KEY();
+        $this->iv = parent::IV();
+        $this->cipher = parent::CIPHER();
+
+        $new = $this->con->prepare("SELECT c.cedula AS cedulaE, c.cedula , c.nombre , c.apellido FROM cliente c WHERE status = 1");
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
         parent::desconectarDB();
+
+        foreach ($data as $item) {
+          $item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0 , $this->iv);
+        }
         return $data;
         
       }catch(\PDOexection $error){

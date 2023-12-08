@@ -238,7 +238,7 @@ CREATE TABLE envio(
 CREATE TABLE venta(
     num_fact int AUTO_INCREMENT PRIMARY KEY,
     fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    cedula_cliente varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
+    cedula_cliente varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
     direccion varchar(60),
     id_envio int,
     online int,
