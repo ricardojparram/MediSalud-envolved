@@ -1,7 +1,7 @@
 <?php
 
   use component\initcomponents as initcomponents;
-  use component\nav as nav;
+  use component\tienda as tienda;
   use modelo\pago as pago;
   
   $objModel = new pago();
@@ -12,6 +12,10 @@
 
   if (isset($_POST['datos']) && isset($_SESSION['cedula'])) {
     $objModel->mostrarDatosP($_SESSION['cedula']);
+  }
+
+  if (isset($_POST['selectTipo'])) {
+    $objModel->getMostrarMetodo();
   }
 
   if (isset($_POST['mostrarT']) && isset($_POST['tipo'])) {
@@ -30,8 +34,16 @@
     $objModel->mostrarSede($_POST['nomEmpre']);
   }
 
+  if (isset($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles'])) {
+    $objModel->nunca($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles']);
+  }
+
+  if (isset($_POST['mostrarB'])){
+    $objModel->banco();
+  }
+
   $VarComp = new initcomponents();
-  $Nav = new nav();
+  $tiendaComp = new tienda();
 
   require_once("vista/inicio/pagoVista.php");
 

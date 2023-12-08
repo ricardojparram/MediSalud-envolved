@@ -1,7 +1,7 @@
 <?php  
 
 	use component\initcomponents as initcomponents;
-	use component\nav as nav;	
+	use component\tienda;	
 	use modelo\carrito as carrito;
 
 	$model = new carrito();
@@ -12,6 +12,15 @@
 		}
 		$model->getCarritoUsuario($_SESSION['cedula']);
 	}
+
+	if(isset($_POST['añadirCarrito'], $_POST['id'], $_POST['cantidad'])){
+		if(!isset($_SESSION['cedula'])){
+			$res = ['resultado' => false, 'msg' => 'Necesita iniciar sesión para agregar productos al carrito.'];
+			die(json_encode($res));
+		}
+		$model->getAgregarProducto($_SESSION['cedula'], $_POST['id'], $_POST['cantidad']);
+	}
+
 
 	if(isset($_POST['validar'], $_POST['productos'])){
 		$model->getValidarStock($_POST['productos']);
@@ -30,7 +39,7 @@
 	}
 
 	$VarComp = new initcomponents();
-	$Nav = new nav();
+	$tiendaComp = new tienda();
 	
 	require "vista/inicio/carritoVista.php";	
 

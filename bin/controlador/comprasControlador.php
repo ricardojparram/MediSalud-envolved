@@ -25,8 +25,8 @@
     
 	if(isset($_POST['mostrar']) && isset($_POST['bitacora'])){
 		($_POST['bitacora'] == 'true')
-		? $objModel->mostrarComprar(true)
-		: $objModel->mostrarComprar();
+		? $objModel->mostrarCompras(true)
+		: $objModel->mostrarCompras();
 	}
 
   

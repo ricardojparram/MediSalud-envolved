@@ -2,11 +2,8 @@
 
   use component\initcomponents as initcomponents;
   use component\header as header;
-  use component\menuLateral as menuLateral;
   use modelo\miscompras as miscompras;
-
-  use component\nav as nav;
-  use component\carDesplegable as carDesplegable;
+  use component\tienda;
 	
 
 
@@ -16,71 +13,23 @@
      }
 
      $objModel = new miscompras();
-     $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
-     $permiso = $permisos['Ventas'];
-
-
-      if(isset($_SESSION['nivel'])){
-    	if($_SESSION['nivel'] != 1){
-      die('<script> window.location = "?url=home" </script>');
-    }
-  		}else{
-    		die('<script> window.location = "?url=login" </script>');
-  	}
-
-
-      if($permiso->status != 1) die(`<script> window.location = "?url=home" </script>`);
-
-      if (isset($_POST['getPermisos']) && $permiso->status == 1 || $permiso->status == 3) {
-        die(json_encode($permiso));
-      }
-      
-      $mostrarC = $objModel->getMostrarCliente();
-      $mostrerM = $objModel->getMostrarMetodo();
+ 
 
       if (isset($_POST['mostrar']) && isset($_POST['bitacora'])) {
         
-        $objModel->MostrarVentas();
+        $objModel->getMostrarVentas();
       }
-
-       if(isset($_POST['detalleV']) && $permiso->consultar == 1) {
+      if(isset($_POST['detalleV'])) {
           $objModel->getDetalleV($_POST['id']);
        }
-
-      if (isset($_POST['selectM']) && $permiso->status == 1) {
-         $objModel->getMostrarMoneda();
-      }
-       
-      if(isset($_POST['select']) && $permiso->status == 1) {
-         $objModel->getMostrarProducto();
-      }
-
-      if(isset($_POST['cedula']) && isset($_POST['validar']) && $permiso->status == 1){
-        $objModel->validarCliente($_POST['cedula']);
-      }
-
-      if(isset($_GET['producto']) && isset($_GET['fill'])  && $permiso->status == 1){
-        $objModel->productoDetalle($_GET['producto']);
-      }
-
-
-      if(isset($_POST['cedula']) && isset($_POST['montoT']) && isset($_POST['metodo']) && isset($_POST['moneda']) && $permiso->registrar == 1){
-
-        $objModel->getAgregarVenta($_POST['cedula'] , $_POST['montoT'] , $_POST['metodo'] , $_POST['moneda'] );
-
-      }
-
-      if(isset($_POST['producto']) && isset($_POST['precio']) && isset($_POST['cantidad']) && isset($_POST['id']) && $permiso->registrar == 1){
-
-       $objModel->AgregarVentaXProd($_POST['producto'] , $_POST['precio'] , $_POST['cantidad'], $_POST['id'] );
-       
-     }
-
      if (isset($_POST['id']) && isset($_POST['factura']) ){
        $objModel->ExportarFactura($_POST['id']);
      }
+      if(isset($_POST['detalleTipo'])) {
+          $objModel->getDetalleTipoPago($_POST['id']);
+       }
 
-     if(isset($_POST['validarCI']) && isset($_POST['id']) && $permiso->status == 1){
+     if(isset($_POST['validarCI']) && isset($_POST['id'])){
       $objModel->validarSelect($_POST['id']);
      }
 
@@ -90,9 +39,7 @@
 
      $VarComp = new initcomponents();
      $header = new header();
-     $menu = new menuLateral($permisos);
-     $Nav = new nav();
-	$Car = new carDesplegable();
+     $Nav = new tienda();
 
 
    if(file_exists("vista/inicio/miscomprasVista.php")){

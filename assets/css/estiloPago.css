@@ -47,7 +47,9 @@
 .f1-step.activated p { color: var(--barraprogress); }
 .f1-step.active p { color: var(--barraprogress); }
 
-.f1 fieldset {  display: none;  text-align: left; }
+.f1 fieldset { 
+	display: none; 
+	text-align: left; } 
 
 .f1-buttons { text-align: right; }
 
@@ -102,4 +104,19 @@ only screen and (                min-resolution: 2dppx) {
 	height: 40px;
 	width: 40px;
 	border-radius: 50%;
+}
+
+.a-asd{
+    color: black ;
+    font-weight: 800;
+}
+
+.a-asd:hover{
+    color: #a7b754;
+}
+
+.select-asd{
+    background: transparent;
+    border: none;
+    width: 100%;
 }

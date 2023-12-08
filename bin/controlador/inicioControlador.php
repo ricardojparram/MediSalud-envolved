@@ -1,8 +1,7 @@
 <?php
 
 	use component\initcomponents as initcomponents;
-	use component\nav as nav;
-	use component\carDesplegable as carDesplegable;
+	use component\tienda as tienda;
 	use component\footerInicio as footerInicio;
 	use modelo\inicio as inicio;
 
@@ -30,8 +29,7 @@
 
 	
 	$VarComp = new initcomponents();	
-	$Nav = new nav();
-	$Car = new carDesplegable();
+	$tiendaComp = new tienda();
 	$footer= new footerInicio(); 
 	require "vista/inicio/inicioVista.php";	
 

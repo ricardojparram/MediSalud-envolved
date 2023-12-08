@@ -64,13 +64,13 @@
 
               <tr>
                 <th scope="col">Tipos de pago</th>
-                <th scope="col">Online</th>
+
+                <th scope="col">online</th>
+
                 <th scope="col">Opciones</th>
 
               </tr>
             </thead>
-
-
             <tbody id ="tbody">
              
            

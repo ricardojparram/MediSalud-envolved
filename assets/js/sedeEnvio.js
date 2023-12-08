@@ -1,14 +1,14 @@
 $(document).ready(function(){
 
     let mostrar
-	let permisos, editarPermiso, eliminarPermiso, registrarPermiso;
+	let editarPermiso, eliminarPermiso, registrarPermiso;
 	$.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:'a'},
-		success(data){ permisos = data; }
-	}).then(function(){
-		rellenar(true);
-    	registrarPermiso = (permisos.registrar != 1) ? 'disabled' : ''; 
-    	$('#agregarModalButton').attr(registrarPermiso, '');
-	});
+		success(permisos){
+            registrarPermiso = (typeof permisos.Registrar === 'undefined') ? 'disabled' : '';
+            editarPermiso = (typeof permisos.Editar === 'undefined') ? 'disabled' : '';
+            eliminarPermiso = (typeof permisos.Eliminar === 'undefined') ? 'disabled' : '';
+        }
+	}).then(() => rellenar(true));
 
     function rellenar(bitacora = false){ 
         $.ajax({
@@ -19,15 +19,15 @@ $(document).ready(function(){
             success(data){
                 let tabla;
                 data.forEach(row => {
-                    editarPermiso = (permisos.editar != 1) ? 'disabled' : '';
-                	eliminarPermiso = (permisos.eliminar != 1) ? 'disabled' : '';
                     tabla += `
                         <tr>
                             <td>${row.nombre}</td>
                             <td>${row.ubicacion}</td>
-                            <td class="d-flex justify-content-center">
-                            	<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.id_sede}" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
-                            	<button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.id_sede}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
+                            <td>
+                                <span class="d-flex justify-content-center">
+                                <button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.id_sede}" data-bs-toggle="modal" data-bs-target="#Editar"><i class="bi bi-pencil"></i></button>
+                                <button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.id_sede}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
+                                </span>
                             </td>
                         </tr>`;
                 });
@@ -46,7 +46,7 @@ $(document).ready(function(){
 
     $("#registrar").click((e)=>{
 
-    	if(permisos.registrar != 1){
+    	if(registrarPermiso === 'disabled'){
     		Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
     		throw new Error('Permiso denegado.');
     	}
@@ -70,10 +70,7 @@ $(document).ready(function(){
     				Toast.fire({ icon: 'error', title: data.msg }); 
     				throw new Error(data.msg);	
     			}
-    			$.ajax({
-    				type: "post",
-    				dataType: "json",
-    				url: '',
+    			$.ajax({type: "post",dataType: "json",url: '',
     				data: {
     					ubicacion : $("#ubicacion").val(),
     					empresa : $("#empresa_envio").val(),
@@ -100,26 +97,21 @@ $(document).ready(function(){
     let id;
     $(document).on('click', '.editar', function() {
     	id = this.id; 
-    	$.ajax({
-    		method: "post",
-    		url: "",
-    		dataType: "json",
-		        data: {select: "", id},
-		        success(data){
-		        	if(data.status){
-		        		$('#empresa_envioEdit').val(data.id_empresa);
-		        		$('#ubicacionEdit').val(data.ubicacion);
-		        	}else{
-		        		Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' }); 
-		        	}
-		        }
+    	$.ajax({method: "post",url: "",dataType: "json",data: {select: "", id},
+            success(data){
+                if(data.status){
+                    $('#empresa_envioEdit').val(data.id_empresa);
+                    $('#ubicacionEdit').val(data.ubicacion);
+                }else{
+                    Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' }); 
+                }
+            }
 
-		    })
-
+        })
     });
 
     $('#editar').click((e)=>{
-    	if(permisos.editar != 1){
+    	if(editarPermiso === 'disabled'){
     		Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
     		throw new Error('Permiso denegado.');
     	}
@@ -143,11 +135,8 @@ $(document).ready(function(){
     				Toast.fire({ icon: 'error', title: data.msg }); 
     				throw new Error(data.msg);	
     			}
-    			$.ajax({
-    				type: "post",
-    				dataType: "json",
-    				url: '',
-    				data: {
+    			$.ajax({type: "post",dataType: "json", url: '', 
+                    data: {
     					id,
     					ubicacion : $("#ubicacionEdit").val(),
     					empresa : $("#empresa_envioEdit").val(),
@@ -175,18 +164,14 @@ $(document).ready(function(){
     });
 
     $('#borrar').click(()=>{
-    	if(permisos.eliminar != 1){
+    	if(eliminarPermiso === 'disabled'){
     		Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
     		throw new Error('Permiso denegado.');
     	}
 
     	if(click >= 1) throw new Error('spaaam');
 
-    	$.ajax({
-    		type : 'post',
-    		dataType: 'json',
-    		url : '',
-    		data : {eliminar : '', id},
+    	$.ajax({type : 'post',dataType: 'json',url : '',data : {eliminar : '', id},
     		success(data){
     			if(data.resultado){
 	    			mostrar.destroy();

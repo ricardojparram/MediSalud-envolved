@@ -163,7 +163,7 @@ $(document).ready(function(){
 					tabla+=`
 						<tr>
 							<td>${row.nombre} </td>
-							<td>${row.cambio} </td>
+							<td>${row.monto} </td>
 							<td>${row.fecha} </td>
 							<td class="d-flex justify-content-center">
 							<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.id_cambio}" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="bi bi-pencil"></i></button>

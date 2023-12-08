@@ -41,8 +41,8 @@
     $objModel->getEliminar($_POST['id']);
   }
 
-  if(isset($_POST['rif'], $_POST['validar'])){
-    $resultado = $objModel->getRif($_POST['rif']);
+  if(isset($_POST['rif'], $_POST['validar'], $_POST['edit'])){
+    $resultado = $objModel->getRif($_POST['rif'], $_POST['edit']);
     die(json_encode($resultado));
   }
   

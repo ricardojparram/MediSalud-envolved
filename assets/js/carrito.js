@@ -10,12 +10,9 @@ $(document).ready(function(){
 			confirmarEliminar();
 		})
 	}
-
+	
 	async function mostrarCarrito(){
-		await $.ajax({
-			method: 'POST',
-			dataType: 'json',
-			url: '?url=carrito',
+		await $.ajax({method: 'POST',dataType: 'json',url: '?url=carrito',
 			data: {mostrar:'', carrito:''},
 			success(response){
 				let div = '';
@@ -52,7 +49,7 @@ $(document).ready(function(){
 						let hr = (i == response.length - 1) ? '' : '<hr class="my-2">';
 						div += `
 						<div class="item-carrito  ${flexDirection} p-2">
-			                <img class="" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
+			                <img class="" src="assets/img/image-asset.png">
 			                <div class="descripcion ">
 			                  <h3>${row.descripcion}</h3>
 			                  <p>${row.contraindicaciones}</p>
@@ -71,7 +68,7 @@ $(document).ready(function(){
 			            `
 			            productos.push({id_producto: row.cod_producto, cantidad: row.cantidad});
 					}
-
+					actualizarBadge(productos.length);
 					$('.carrito-container').html(div);
 					$('#precioTotal').html(precioTotal);
 					validarStock(productos);
@@ -182,6 +179,12 @@ $(document).ready(function(){
 			id = $(this).attr('prod');
 		})
 	}
+	
+	function actualizarBadge($cantidad){
+		badge = $('#carrito_badge');
+		badge.html($cantidad)
+	}
+
 
 	$('#delProductFromCar').click(function(){
 		
@@ -201,6 +204,44 @@ $(document).ready(function(){
 		})
 
 	})
+
+	// $('#añadirAlCarrito').click(function(){
+	// 		input = $('#catalogoCantidadInput');
+	// 		cantidad = Number(input.val());
+	// 		error = $('#errorCantidadCatalogo');
+
+	// 		if(validarVC(input, error, 'Error,') != true){
+	// 			error.css({display: 'block'});
+	// 			return
+	// 		}else{
+	// 			error.css({display: 'none'});
+	// 		}
+
+	// 		validarStock(id).then((res) => {
+	// 			if(!res) return;
+
+	// 			$.ajax({ url: '', type: 'post', dataType: 'json',
+	// 				data: {añadirCarrito:'', id, cantidad},
+	// 				success(res){
+	// 					if(res.resultado === true){
+	// 						$('.cerrar').click();
+	// 						carrito.refrescar();
+	// 						Toast.fire({ icon: 'success', title: 'Se ha añadido el producto al carrito.'});
+	// 					}else{
+	// 						$('.cerrar').click();
+	// 						Toast.fire({ icon: 'error', title: res.msg});
+	// 					}
+	// 				},
+	// 				error: (e) => {
+	// 					$('.cerrar').click();
+	// 					Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.'});
+	// 				}
+
+	// 			})
+				
+	// 		})
+
+	// 	})
 
 	$('.vaciar').click(function(e){
 		e.preventDefault();
@@ -232,7 +273,7 @@ $(document).ready(function(){
 		})
 		validarStock(productos).then(res => {
 			if(!res) return;
-			console.log('go to facturacion')
+			window.location = "?url=pago";
 		});
 	})
 

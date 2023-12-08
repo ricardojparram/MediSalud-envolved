@@ -8,6 +8,9 @@
 	<?php $VarComp->header(); ?>
 	<link rel="stylesheet" href="assets/css/estiloInterno.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/dataTables.bootstrap5.min.css">
+	<link rel="stylesheet" href="assets/css/select2.min.css">
+	<link rel="stylesheet" href="assets/css/select2-bootstrap-5-theme.min.css">
+	<link rel="stylesheet" href="assets/css/select2-bootstrap-5-theme.rtl.min.css">
 </head>
  <body>
  	<!-- ======= Header ======= -->
@@ -112,7 +115,18 @@
 	                  <label class="col-form-label"> <strong>Nombre de banco</strong> </label>
 	                  <div class="input-group">
 	                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el nombre del Banco"><i class="bi bi-bank"></i></button> 
-	                    <input class="form-control" id="nombre" placeholder="Nombre">
+	                    <select class="form-control nombreBanco" aria-label="Default select example" id="nombre">
+	                    	<option selected disabled>Seleccione una opción</option>
+	                    	<?php var_dump($datosBanco);
+	                    	if (isset($datosBanco)) {
+	                    		foreach ($datosBanco as $data) {
+
+	                    		?>
+	                    		<option value="<?php echo $data->id_banco;?>"><?php echo $data->nombre;?> <?php echo $data->codigo;?></option>
+	                    		<?php
+	                    	}
+	                    }else{"";}?>
+	                </select>
 	                  </div>
 	                  <p class="error" style="color:#ff0000;text-align: center;" id="error2"></p>
 	                </div>
@@ -144,15 +158,6 @@
 	              		<p class="error" style="color:#ff0000;text-align: center;" id="error4"></p>
 	              	</div>
 
-	              	<div class="form-group col-12 CodigoBanco" style="display: none;">                          
-	              		<label class="col-form-label"> <strong>Codigo de Banco</strong> </label>
-	              		<div class="input-group">
-	              			<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el codigo de banco"><i class="bi bi-bank2"></i></button> 
-	              			<input class="form-control" id="codBank" placeholder="Codigo de Banco">
-	              		</div>
-	              		<p class="error" style="color:#ff0000;text-align: center;" id="error5"></p>
-	              	</div>
-
 
 	              	<div class="form-group col-12 telefono" style="display: none;">                          
 	              		<label class="col-form-label Telefono"> <strong>Telefono</strong> </label>
@@ -160,7 +165,7 @@
 	              			<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el telefono de banco afiliado"><i class="bi bi-telephone"></i></button> 
 	              			<input class="form-control" id="telefono" placeholder="Telefono">
 	              		</div>
-	              		<p class="error" style="color:#ff0000;text-align: center;" id="error6"></p>
+	              		<p class="error" style="color:#ff0000;text-align: center;" id="error5"></p>
 	              	</div>
 
 
@@ -215,7 +220,18 @@
 	                  <label class="col-form-label"> <strong>Nombre de banco</strong> </label>
 	                  <div class="input-group">
 	                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el nombre del Banco"><i class="bi bi-bank"></i></button> 
-	                    <input class="form-control" id="nombreEdit" placeholder="Nombre">
+	                    <select class="form-control nombreBancoEdit" aria-label="Default select example" id="nombreEdit">
+	                    	<option selected disabled>Seleccione una opción</option>
+	                    	<?php var_dump($datosBanco);
+	                    	if (isset($datosBanco)) {
+	                    		foreach ($datosBanco as $data) {
+
+	                    			?>
+	                    			<option value="<?php echo $data->id_banco;?>"><?php echo $data->nombre;?> <?php echo $data->codigo;?></option>
+	                    			<?php
+	                    		}
+	                    	}else{"";}?>
+	                    </select>
 	                  </div>
 	                  <p class="error" style="color:#ff0000;text-align: center;" id="errorEdit2"></p>
 	                </div>
@@ -249,14 +265,6 @@
 	              		<p class="error" style="color:#ff0000;text-align: center;" id="errorEdit4"></p>
 	              	</div>
 
-	              	<div class="form-group col-12 CodigoBanco" style="display: none;">                          
-	              		<label class="col-form-label"> <strong>Codigo de Banco</strong> </label>
-	              		<div class="input-group">
-	              			<button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el codigo de banco"><i class="bi bi-bank2"></i></button> 
-	              			<input class="form-control" id="codBankEdit" placeholder="Codigo de Banco">
-	              		</div>
-	              		<p class="error" style="color:#ff0000;text-align: center;" id="errorEdit5"></p>
-	              	</div>
 
 
 	              	<div class="form-group col-12 telefono" style="display: none;">                          
@@ -312,6 +320,7 @@
    
  </body>
  <?php $VarComp->js(); ?>
+ <script src="assets/js/select2.full.min.js"></script>
  <script src="assets/js/banco.js"></script>
  </html>
 

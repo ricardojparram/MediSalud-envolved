@@ -278,7 +278,14 @@
       try{
          parent::conectarDB();
 
-        $query = "SELECT v.num_fact, v.fecha, v.cedula_cliente , p.monto_total , CONCAT(IF(MOD(p.monto_total / cm.cambio, 1) >= 0.5, CEILING(p.monto_total / cm.cambio), FLOOR(p.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v INNER JOIN pago p ON p.num_fact = v.num_fact INNER JOIN detalle_pago dp ON p.id_pago = dp.id_pago INNER JOIN cambio cm ON cm.id_cambio = dp.id_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE v.status = 1";
+        $query ="SELECT v.num_fact, v.fecha, v.cedula_cliente , format(p.monto_total,2,'de_DE') as total, 
+        CONCAT(IF(MOD(format(p.monto_total,2,'de_DE') / format(cm.cambio,2,'de_DE'), 1) >= 0.5, 
+        CEILING(p.monto_total / cm.cambio), 
+        FLOOR(format(p.monto_total,2,'de_DE')  / format(cm.cambio,2,'de_DE') ) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v  
+        INNER JOIN pago p ON p.num_fact = v.num_fact 
+        INNER JOIN detalle_pago dp ON p.id_pago = dp.id_pago 
+        INNER JOIN cambio cm ON cm.id_cambio = dp.id_cambio 
+        INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE v.status = 1 GROUP by v.num_fact";
 
         $new = $this->con->prepare($query);
         $new->execute();

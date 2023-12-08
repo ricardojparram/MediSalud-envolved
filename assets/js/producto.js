@@ -24,17 +24,22 @@ $(document).ready(function(){
            let tabla;
             data.forEach(row =>{
               editarPermiso = (permiso.editar != 1)?  'disable' : '';
+              imagenPermiso = (permiso.imagen != 1)? 'disable' : '';
               eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
+
               tabla += `
               <tr>
               <td>${row.descripcion}</td>
               <td>${row.stock}</td>
-              <td>${row.p_venta}</td>
+              <td>${row.venta}</td>
               <td>${row.des_tipo}</td>
               <td>${row.vencimiento}</td>
               <td class="d-flex justify-content-center">
-              <button type="button" ${editarPermiso} id="${row.id_banco}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
-              <button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.cod_compra}" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
+              <button type="button" ${editarPermiso} id="${row.cod_producto}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
+              <button type="button" ${imagenPermiso} id="${row.cod_producto}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#infoImg"> <i class="bi bi-eye icon-24 t" width="20"></i></button>
+              <button type="button" ${eliminarPermiso} id="${row.cod_producto}" class="btn btn-danger borrar mx-2"  data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
+              
+             
               </td>
               </tr>
               `
@@ -48,13 +53,17 @@ $(document).ready(function(){
       }
 
 
-      $('#descripcion').keyup(()=> {validarStringLong($("#descripcion"),$("#error1"),"Error de descripcion") });
+       $('#descripcion').keyup(()=> {validarStringLong($("#descripcion"),$("#error2"),"Error de nombre") });
+
+       $('#codigo').keyup(()=> {validarStringLong($("#codigo"),$("#error2"),"Error de nombre") });
+
       $('#fecha').change(function(){
-      validarFechaHoy($("#fecha"),$("#error2"),"Error de fecha"); 
+      validarFechaHoy($("#fecha"),$("#error3"),"Error de fecha"); 
      })
-      $('#composición').keyup(()=> {validarStringLong($("#composición"),$("#error3"),"Error de Composición") });
-      $('#codigo_producto').keyup(()=> {validarStringLong($("#codigo_producto"),$("#error4"),"Error de Código") });
+      $('#composición').keyup(()=> {validarStringLong($("#composición"),$("#error4"),"Error de Composición") });
+
       $('#posologia').keyup(()=> {validarStringLong($("#posologia"),$("#error5"),"Error de posologia") });
+
        $('#ubicación').change(function(){
         validarSelect($("#ubicación"),$("#error6"),"Error, elige ubicación");
       })
@@ -81,11 +90,10 @@ $(document).ready(function(){
 
     $("#boton").click((e)=>{
 
-      if(click >= 1){ throw new Error('Spam de clicks');
-    }
+      if(click >= 1) throw new Error('Spam de clicks');
+    
 
-      let descripcion = validarStringLong($("#descripcion"),$("#error1"),"Error de descripcion");
-      let codigo_producto = validarStringLong($("#codigo_producto"),$("#error2"),"Error de código");
+      let descripcion = validarStringLong($("#descripcion"),$("#error2"),"Error de descripcion");
       let fecha = validarFechaHoy($("#fecha"),$("#error3"),"Error de fecha");
       let composición = validarStringLong($("#composición"),$("#error4"),"Error de Composición");
       let posologia = validarStringLong($("#posologia"),$("#error5"),"Error de posologia");
@@ -98,21 +106,21 @@ $(document).ready(function(){
       let cantidad = validarNumero($("#cantidad"),$("#error12"),"Error de cantidad");
       let precioV = validarVC($("#precioV"),$("#error13"),"Error de precio venta");
 
-      if(descripcion && fecha && composición && posologia && laboratorio && tipo && presentación && ubicación && contraIn && cantidad && precioV && codigo_producto){
-
+      if(descripcion && fecha && composición && posologia && ubicación && laboratorio && presentación && tipo && clase && contraIn  && cantidad && precioV){
+        
         $descripcionP = $('#descripcion');
-        $codigo_producto = $('#codigo_producto');
         $fechaVP = $('#fecha');
         $composicionP = $('#composición');
         $posologiaP = $('#posologia');
+        $ubicaciónP = $('#ubicación');
         $laboratorioP = $('#laboratorio');
+        $presentaciónP = $('#presentación');
         $tipoP = $('#tipoP');
         $clase = $('#clase');
-        $presentaciónP = $('#presentación');
-        $ubicaciónP = $('#ubicación');
         $contraInP = $('#contraIn');
         $cantidadP = $('#cantidad');
         $precioVenP = $('#precioV');
+        $codigo = $('#codigo');
 
 
         //  ENVÍO DE DATOS
@@ -122,15 +130,15 @@ $(document).ready(function(){
           dataType: 'json',
           data: {
             "descripcion" : $descripcionP.val(),
-            "codigo_producto" : $codigo_producto.val(),    
+             "codigo" : $codigo.val(),
             "fechaV" : $fechaVP.val(),
             "composicionP" : $composicionP.val(),
             "posologia" : $posologiaP.val(),
-            "laboratorio" : $laboratorioP.val(),
-            "tipoP" : $tipoP.val(),
-            "clase" : $clase.val(),
-            "presentación" : $presentaciónP.val(),
             "ubicación" : $ubicaciónP.val(),
+            "laboratorio" : $laboratorioP.val(),
+            "presentación" : $presentaciónP.val(),
+            "tipoP" : $tipoP.val(),
+            "clase" : $clase.val(),           
             "contraIn" : $contraInP.val(),
             "cantidad" : $cantidadP.val(),
             "precioV" : $precioVenP.val(),
@@ -173,7 +181,7 @@ $(document).ready(function(){
      fechaHoy($('#fecha'));
    })
 
-   /* --- EDITAR --- */
+   /* --- EDITAR --- */ 
    let id;
 
    $(document).on('click', '.editar', function() {
@@ -185,16 +193,17 @@ $(document).ready(function(){
             dataType: "json",
             data: {select: "edit", id},
             success(data){
+             
               $("#descripcionEd").val(data[0].descripcion);
-              $("#codigo_productoEd").val(data[0].codigo_producto);
+               $("#codigoEd").val(data[0].codigo);
               $("#fechaEd").val(data[0].vencimiento);
               $("#composicionEd").val(data[0].composicion);
-              $("#laboratorioEd").val(data[0].cod_lab); 
+              $("#posologiaEd").val(data[0].posologia); 
+              $("#ubicaciónEd").val(data[0].ubicacion);
+              $("#laboratorioEd").val(data[0].cod_lab);
+              $("#presentaciónEd").val(data[0].cod_pres);
               $("#tipoEd").val(data[0].cod_tipo);
               $("#claseEd").val(data[0].cod_clase);
-              $("#presentaciónEd").val(data[0].cod_pres);
-              $("#posologiaEd").val(data[0].posologia);
-              $("#ubicaciónEd").val(data[0].ubicacion);
               $("#contraInEd").val(data[0].contraindicaciones);
               $("#cantidadEd").val(data[0].stock);
               $("#VentaEd").val(data[0].p_venta);
@@ -203,13 +212,16 @@ $(document).ready(function(){
 
           })
       });
-          
-      $('#descripcionEd').keyup(()=> {validarStringLong($("#descripcionEd"),$("#errorE1"),"Error de descripcion") });
+      
+
+      $('#descripcionEd').keyup(()=> {validarStringLong($("#descripcionEd"),$("#errorE2"),"Error de descripcion") });
+       
        $('#fechaEd').change(function(){
-       validarFecha($('#fechaEd'),$("#errorE2"),"Error de fecha");
+       validarFecha($('#fechaEd'),$("#errorE3"),"Error de fecha");
       })
-      $('#composicionEd').keyup(()=> {validarStringLong($("#composicionEd"),$("#errorE3"),"Error de Composición") });
-      $('#codigo_productoEd').keyup(()=> {validarStringLong($("#codigo_productoEd"),$("#errorE4"),"Error de Composición") });
+
+      $('#composicionEd').keyup(()=> {validarStringLong($("#composicionEd"),$("#errorE4"),"Error de Composición") });
+     
       $('#posologiaEd').keyup(()=> {validarStringLong($("#posologiaEd"),$("#errorE5"),"Error de posologia") });
       $('#ubicaciónEd').change(function(){
         validarSelect($("#ubicaciónEd"),$("#errorE6"),"Error ubicación");
@@ -233,13 +245,29 @@ $(document).ready(function(){
 
      
       // FORMULARIO DE EDITAR
+    let ID;
+        // Mostrar informacion 
+        $(document).on('click', '.infoImg', function () {
+            ID = this.ID;
+            $.ajax({
+                method: "post",
+                url: "",
+                dataType: "json",
+                data: { select1: true, ID: ID },
+                success(data) {
+                    $("#cod_producto").val(data[0].cod_producto);
+                    $("#img").val(data[0].img);
+
+                    
+                }
+            });
+        });
 
       $("#actualizar").click((e)=>{
           //VALIDACIONES
-          if(click >= 1){ throw new Error('Spam de clicks');}
-
-          let descripcionE = validarStringLong($("#descripcionEd"),$("#errorE1"),"Error de descripcion");
-          let codigoProE = validarStringLong($("#codigo_producto"),$("#errorE2"),"Error de descripcion");
+          if(click >= 1) throw new Error('Spam de clicks');
+          
+          let descripcionE = validarStringLong($("#descripcionEd"),$("#errorE2"),"Error de descripcion");        
           let fechaE = validarFecha($('#fechaEd'),$("#errorE3"),"Error de fecha")
           let composicionE = validarStringLong($("#composicionEd"),$("#errorE4"),"Error de Composición") ;
           let posologiaE = validarStringLong($("#posologiaEd"),$("#errorE5"),"Error de posologia") ;
@@ -252,7 +280,7 @@ $(document).ready(function(){
           let cantidadE = validarNumero($("#cantidadEd"),$("#errorE12"),"Error de cantidad");
           let VentaE = validarVC($("#VentaEd"),$("#errorE13"),"Error de precio venta");
 
-          if(descripcionE && codigoProE && fechaE && composicionE && posologiaE && laboratorioE && tipoE && claseE && presentaciónE && ubicaciónE && contraInE && cantidadE && VentaE){
+          if(descripcionE && fechaE && composicionE && posologiaE && ubicaciónE && laboratorioE && presentaciónE && tipoE && claseE  && contraInE && cantidadE && VentaE){
 
       //  ENVÍO DE DATOS
       $.ajax({
@@ -260,16 +288,18 @@ $(document).ready(function(){
         url: '',
         dataType: "json",
         data: {
+          
+          
           descripcionEd : $('#descripcionEd').val(),
-          codigo_productoEd : $('#codigo_productoEd').val(),
+          codigoEd : $('#codigoEd').val(),
           fechaEd : $('#fechaEd').val(),
           composicionEd : $('#composicionEd').val(), 
           posologiaEd: $('#posologiaEd').val(),
-          laboratorioEd : $('#laboratorioEd').val() ,
-          tipoEd : $('#tipoEd').val() ,
-          claseEd : $('#claseEd').val(),
-          presentaciónEd : $('#presentaciónEd').val() ,
           ubicaciónEd : $('#ubicaciónEd').val() ,
+          laboratorioEd : $('#laboratorioEd').val() ,
+          presentaciónEd : $('#presentaciónEd').val() ,
+          tipoEd : $('#tipoEd').val() ,
+          claseEd : $('#claseEd').val(),    
           contraInEd : $('#contraInEd').val() ,
           cantidadEd : $('#cantidadEd').val() ,
           VentaEd : $('#VentaEd').val() ,
@@ -317,7 +347,6 @@ $(document).ready(function(){
       })
       click++;
     })
-
 
 
 });

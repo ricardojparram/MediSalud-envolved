@@ -31,11 +31,13 @@ class perfil extends DBConnect{
 
     private function datos(){
     	try {
-    		$new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo, n.nombre as nivel FROM usuario u INNER JOIN nivel n ON n.cod_nivel = u.nivel WHERE u.cedula = ?");
+			parent::conectarDB();
+    		$new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo, n.nombre as nivel FROM usuario u INNER JOIN rol n ON n.id_rol = u.rol WHERE u.cedula = ?");
             $new->bindValue(1, $this->cedula);
             $new->execute();
             $data = $new->fetchAll();
             echo json_encode($data);
+			parent::desconectarDB();
             die();
     	} catch(\PDOexection $error){
             return $error;
@@ -44,13 +46,13 @@ class perfil extends DBConnect{
 
     public function mostrarUsuarios(){
     	try {
-    		
+    		parent::conectarDB();
     		$new = $this->con->prepare("SELECT img, CONCAT(nombre, ' ', apellido) AS nombre FROM usuario
     			WHERE status = 1
     			ORDER BY RAND() LIMIT 4");
     		$new->execute();
     		$data = $new->fetchAll(\PDO::FETCH_OBJ);
-
+			parent::desconectarDB();
     		echo json_encode($data);
     		die();
 
@@ -80,12 +82,12 @@ class perfil extends DBConnect{
 
     private function validarContraseña(){
     	try {
-
+			parent::conectarDB();
     		$new = $this->con->prepare("SELECT password FROM usuario WHERE cedula = ? AND status = 1");
     		$new->bindValue(1, $this->cedulaVieja);
     		$new->execute();
     		$data = $new->fetchAll(\PDO::FETCH_OBJ);
-
+			parent::desconectarDB();
     		if(password_verify($this->passwordAct, $data[0]->password)){
     			die(json_encode(['resultado' => 'Contraseña válida.']));
     		}else{
@@ -146,6 +148,7 @@ class perfil extends DBConnect{
 
 	private function editarDatos(){
 		try {
+			parent::conectarDB();
 			$new = $this->con->prepare("UPDATE `usuario` SET `cedula`= ?,`nombre`= ?,`apellido`= ?,`correo`= ? WHERE cedula = ?");
             $new->bindValue(1, $this->cedulaNueva);
             $new->bindValue(2, $this->nombre);
@@ -153,7 +156,7 @@ class perfil extends DBConnect{
             $new->bindValue(4, $this->correo);
             $new->bindValue(5, $this->cedulaVieja);
             $new->execute();
-
+			parent::desconectarDB();
             $_SESSION['cedula'] = $this->cedulaNueva;
             $_SESSION['nombre'] = $this->nombre;
             $_SESSION['apellido'] = $this->apellido;
@@ -165,6 +168,7 @@ class perfil extends DBConnect{
 			return $error;
 		}
 	}
+
 	private function subirImagen(){
 
 		if($this->foto['error'] > 0){
@@ -199,7 +203,7 @@ class perfil extends DBConnect{
 
 		if(move_uploaded_file($this->foto['tmp_name'], $nombre)){
 			try {
-
+				parent::conectarDB();
 				$new = $this->con->prepare('SELECT img FROM usuario WHERE cedula = ?');
 				$new->bindValue(1, $this->cedulaNueva);
 				$new->execute();
@@ -214,7 +218,7 @@ class perfil extends DBConnect{
 				$new->bindValue(1, $nombre);
 				$new->bindValue(2, $this->cedulaNueva);
 				$new->execute();
-
+				parent::desconectarDB();
 				$_SESSION['fotoPerfil'] = $nombre;
 
 				return ['respuesta' => 'Imagen guardada.', 'url' => $nombre];
@@ -231,12 +235,12 @@ class perfil extends DBConnect{
 	private function borrarImagen(){
 
 		try {
-			
+			parent::conectarDB();
 			$new = $this->con->prepare("UPDATE usuario SET img = ? WHERE cedula = ?");
 			$new->bindValue(1, $this->imagenPorDefecto);
 			$new->bindValue(2, $this->cedulaNueva);
 			$new->execute();
-
+			parent::desconectarDB();
 			$fotoActual = $_SESSION['fotoPerfil'];
 			if($fotoActual != $this->imagenPorDefecto){
 				unlink($fotoActual);				
@@ -275,6 +279,7 @@ class perfil extends DBConnect{
 
 	private function cambioContra(){
 		try {
+			parent::conectarDB();
 			$this->hash = password_hash($this->passwordNew, PASSWORD_BCRYPT);
 
 			$new = $this->con->prepare("SELECT password FROM usuario WHERE cedula = ?");
@@ -296,6 +301,7 @@ class perfil extends DBConnect{
 				echo json_encode($resultado);
 				die();
 			}
+			parent::desconectarDB();
 		} catch (\PDOException $error) {
 			return $error;
 		}
@@ -303,5 +309,7 @@ class perfil extends DBConnect{
 	}
 
 }
+
+
 
 ?>

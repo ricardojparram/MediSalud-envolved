@@ -30,7 +30,7 @@
           <td>${row.fecha}</td>
           <td><button class="btn btn-success detalleTipo" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#detalleTipoPago">Ver Metodos Pago</button></td>
           <td>${row.total_divisa}</td>
-          <td>${row.monto_total}</td>
+          <td>${row.total}</td>
           <td class="d-flex justify-content-center">
           <button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
           </td>
@@ -488,7 +488,7 @@
       
     }
     
-    //Validar que no se repita tipo de paog
+    //Validar que no se repita tipo de pago
     function validarRepetidoTipoPago() {
        $('.select-tipo').change(function(){
         let tipoPago;

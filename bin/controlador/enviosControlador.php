@@ -3,32 +3,29 @@
 	use component\initcomponents as initcomponents;
 	use component\header as header;
 	use component\menuLateral as menuLateral;
-	use modelo\comprobarPago;
+	use modelo\envios;
 
 	if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
-	$model = new comprobarPago();
+	$model = new envios();
 	$permisos = $model->getPermisosRol($_SESSION['nivel']);
-	$permiso = $permisos['Comprobar pago'];
+	$permiso = $permisos['Envios'];
+
+	if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
 
 	if(isset($_POST['getPermisos'], $permiso["Consultar"])){
 		die(json_encode($permiso));
 	}
 
-	if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
 
 	if(isset($_POST['mostrar'], $_POST['bitacora'], $permiso['Consultar'])){
-		$model->mostrarPagos($_POST['bitacora']);
+		$model->mostrarEnvios($_POST['bitacora']);
 	}
 
-	if(isset($_POST['id_pago'], $_POST['estado'], $permiso['Comprobar pago'])){
-		$model->getComprobacion($_POST['id_pago'], $_POST['estado']);
+	if(isset($_POST['id_envio'], $_POST['estado'], $permiso['Asignar estado'])){
+		$model->getComprobacion($_POST['id_envio'], $_POST['estado']);
 	}
-
-	if(isset($_POST['id_pago'], $_POST['detalle_pago'], $permiso['Consultar'])){
-		$model->getDetallePago($_POST['id_pago']);
-	}
-
+	
 	$comp = new initcomponents();
 	$header = new header();
 	$menu = new menuLateral($permisos);
@@ -37,6 +34,6 @@
 		die("No existe la vista del módulo");
 	}
 
-	require_once("vista/interno/comprobarPagoVista.php");
+	require_once("vista/interno/enviosVista.php");
 
 ?>

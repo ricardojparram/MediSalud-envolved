@@ -4,7 +4,7 @@ INSERT INTO rol(nombre, status) VALUES ('Administrador', '1'), ('Gerente', '1'),
 
 -- INSERTA USUARIO ADMIN
 
-INSERT INTO usuario (cedula, nombre, apellido, correo, password, rol, img, status) VALUES ('123123', 'admin', 'admin', 'admin@admin.com', '$2y$10$IQ3tD7JwCMoBHFwv6P4YteAgNOnlevdqxZYwtR8XfvkebK0It3RN.', '1', NULL, '1');
+INSERT INTO usuario (cedula, nombre, apellido, correo, password, rol, img, status) VALUES ('123123123', 'admin', 'admin', 'admin@admin.com', '$2y$10$IQ3tD7JwCMoBHFwv6P4YteAgNOnlevdqxZYwtR8XfvkebK0It3RN.', '1', NULL, '1');
 
 -- INSERTA LOS CLIENTES
 INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES 
@@ -54,7 +54,13 @@ INSERT INTO tipo_pago(id_tipo_pago, des_tipo_pago, online, status) VALUES
 (1,'Tarjeta de credito',0,1),
 (2,'Efectivo',0,1),
 (3,'Divisa',0,1),
-(4,'Pago movil',1,1);
+(4,'Pago movil',1,1),
+(5,'Transferencia',1,1);
+
+INSERT INTO producto (cod_producto, nombre, descripcion, ubicacion, composicion, contraindicaciones, posologia, vencimiento, p_venta, stock, img,cod_tipo, cod_clase, cod_pres, status) 
+VALUES (NULL, 'Acetaminofen', 'Acetaminofen', 'sadghsdgsdg', 'sdgsdggdsdsg', 'sadgsdgdsgdsgagds', 'asdgdsgdsgdsggds', '2023-10-11', '12', '43', '1', '2', '1', '4', '1')
+,(NULL, 'Ibuprofeno', 'Ibuprofeno', 'sadghsdgsdg', 'sdgsdggdsdsg', 'sadgsdgdsgdsgagds', 'asdgdsgdsgdsggds', '2023-10-11', '12', '43', '1', '2', '1', '4', '1')
+,(NULL, 'Diclofenac', 'Diclofenac', 'sadghsdgsdg', 'sdgsdggdsdsg', 'sadgsdgdsgdsgagds', 'asdgdsgdsgdsggds', '2023-10-11', '12', '43', '1', '2', '1', '4', '1');
 
 INSERT INTO moneda(id_moneda, nombre, status) VALUES(1, 'Dolar', 1), (2, 'Euro', 1);
 
@@ -65,6 +71,35 @@ INSERT INTO cambio(cambio, fecha, moneda, status) VALUES('35', DEFAULT, 1, 1), (
 INSERT INTO empresa_envio (rif, nombre, contacto, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
 INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
 
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (1 , 'Banco Central de Venezuela', '0001', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (2 , 'Banco de Venezuela (BDV)', '0102', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (3 , 'Banco Venezolano de Credito (BVC)', '0104', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (4 , 'Banco Mercantil', '0105', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (5 , 'Banco Provincial (BBVA)', '0108', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (6 , 'Bancaribe', '0114', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (7 , 'Banco Exterior', '0115', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (8 , 'Banco Caroni', '0128', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (9 , 'Banesco Banco Universal', '0134', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (10 , 'Sofitasa', '0137', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (11 , 'Banco Plaza', '0138', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (12 , 'Bangente', '0146', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (13 , 'Banco Fondo Comun (BFC)', '0151', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (14 , '100% Banco', '0156', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (15 , 'Del Sur Banco Universal', '0157', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (16 , 'Banco del Tesoro', '0163', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (17 , 'Banco Agricola de Venezuela', '0166', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (18 , 'Bancrecer', '0168', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (19 , 'Mi Banco, Banco Microfinanciero C.A', '0169', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (20 , 'Banco Activo', '0171', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (21 , 'Bancamiga', '0172', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (22 , 'Banplus', '0174', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (23 , 'Banco Bicentenario del Pueblo', '0175', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (24 , 'Banco de la Fuerza Armada Nacional Bolivariana (BANFANB)', '0177', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (25 , 'Banco Nacional de Credito (BNC)', '0191', 1);
+
+INSERT INTO datos_cobro_farmacia (id_datos_cobro, num_cuenta, rif_cedula, telefono, id_banco, status) 
+VALUES (NULL, '0108245678234662235852', '30374812', NULL, '5', '1'), 
+	(NULL, NULL, '30125380', '04120503888', '2', '1');
 
 INSERT INTO modulos(id_modulo, nombre, status) VALUES
 (1, 'Clientes',1),
@@ -85,7 +120,9 @@ INSERT INTO modulos(id_modulo, nombre, status) VALUES
 (16,'Cuentas farmacia', 1),
 (17,'Roles', 1),
 (18,'Empresa de Envio',1),
-(19,'Sedes de Envio',1);
+(19,'Sedes de Envio',1),
+(20,'Comprobar pago',1),
+(21,'Envios',1);
 
 INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES 
 (1, 1, 'Registrar', '1'),
@@ -158,7 +195,10 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (1, 19, 'Registrar', '1'),
 (1, 19, 'Editar', '1'),
 (1, 19, 'Eliminar', '1'),
-(1, 19, 'Consultar', '1');
+(1, 19, 'Consultar', '1'),
+(1, 20, 'Consultar', '1'),
+(1, 21, 'Consultar', '1'),
+(1, 21, 'Asignar estado', '1');
 INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES 
 (2, 1, 'Registrar', '1'),
 (2, 1, 'Editar', '1'),
@@ -230,7 +270,11 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (2, 19, 'Registrar', '1'),
 (2, 19, 'Editar', '1'),
 (2, 19, 'Eliminar', '1'),
-(2, 19, 'Consultar', '1');
+(2, 19, 'Consultar', '1'),
+(2, 20, 'Consultar', '1'),
+(2, 20, 'Comprobar pago', '1'),
+(2, 21, 'Consultar', '1'),
+(2, 21, 'Asignar estado', '1');
 INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES 
 (3, 1, 'Registrar', '1'),
 (3, 1, 'Editar', '1'),
@@ -302,4 +346,8 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (3, 19, 'Registrar', '1'),
 (3, 19, 'Editar', '1'),
 (3, 19, 'Eliminar', '1'),
-(3, 19, 'Consultar', '1');
+(3, 19, 'Consultar', '1'),
+(3, 20, 'Consultar', '1'),
+(3, 20, 'Comprobar pago', '1'),
+(3, 21, 'Consultar', '1'),
+(3, 21, 'Asignar estado', '1');

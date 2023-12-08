@@ -21,22 +21,18 @@
      private $descripcion;
      private $nombre;
      private $img;
-     private $codigo_producto;
+     private $codigo;
+     private $img_defecto;
+
 
 
      function __construct(){
       parent::__construct();
     }
 
-    public function getRegistraProd($codigo_producto,$nombre,$descripcion, $fechaV ,$composicionP,$posologia,$laboratorio,$tipoP,$clase,$presentación,$ubicación,$contraIn,$cantidad,$precioV){
+    public function getRegistraProd($codigo, $descripcion, $fechaV ,$composicionP, $posologia , $ubicación , $laboratorio , $presentación  , $tipoP , $clase , $contraIn, $cantidad, $precioV){
       
-      if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $codigo_producto) !== 1){
-      return "Error de código de producto!";
-    }
-      if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $nombre) !== 1){
-      return "Error nombre!";
 
-    }
      if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $descripcion) !== 1){
       return "Error de descripcion!";
     }
@@ -48,7 +44,7 @@
       return "Error de composicion de productos!";
     }
     if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $posologia) !== 1){
-      return "Error de pasologia!";
+      return "Error de posologia!";
     }
     if(preg_match_all("/^[0-9]{1,10}$/", $laboratorio) !== 1){
       return "Error de laboratorio!";
@@ -85,6 +81,7 @@
     die();
     }
 
+    $this->codigo = $codigo;
     $this->descripcion = $descripcion;
     $this->composicionP = $composicionP;
     $this->fechaV = $fechaV;
@@ -93,12 +90,10 @@
     $this->posologia = $posologia;
     $this->cantidad = $cantidad;
     $this->precioV = $precioV;
-    $this->nombre = $nombre;
-    $this->cod_producto = $codigo_producto;
     $this->laboratorio = $laboratorio;
     $this->tipoP = $tipoP;
     $this->clase = $clase;
-    $this->presentación = $presentación; 
+    $this->presentación = $presentación;  
 
 
     return $this->registraProd();
@@ -108,31 +103,30 @@
     private function registraProd(){
      try{
       parent::conectarDB();
-      $new = $this->con->prepare("INSERT INTO `producto`(`codigo_producto`, `descripcion`, `ubicacion`, `composicion`, `contraindicaciones`, `posologia`, `vencimiento`, `p_venta`, `stock`, `img`, `cod_lab`, `cod_tipo`, `cod_clase`, `cod_pres`, `status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 1)");
+      $new = $this->con->prepare("INSERT INTO `producto`(`codigo`, `descripcion`, `ubicacion`, `composicion`, `contraindicaciones`, `posologia`, `vencimiento`, `p_venta`, `stock`, `cod_lab`, `cod_tipo`, `cod_clase`, `cod_pres`,`status`) VALUES ( ? , ? , ? , ? , ? , ? ,? , ? , ? , ? , ? , ? , ? , 1)");
 
-      $new->bindValue(1, $this->codigo_producto);
+      $new->bindValue(1, $this->codigo);
       $new->bindValue(2, $this->descripcion);
-      $new->bindValue(3, $this->ubicacion);
-      $new->bindValue(4, $this->composicion);
-      $new->bindValue(5, $this->contraindicaciones);
+      $new->bindValue(3, $this->ubicación);
+      $new->bindValue(4, $this->composicionP);
+      $new->bindValue(5, $this->contraIn);
       $new->bindValue(6, $this->posologia);
-      $new->bindValue(7, $this->vencimiento);
-      $new->bindValue(8, $this->p_venta);
-      $new->bindValue(9, $this->stock);
-      $new->bindValue(10, $this->img);
-      $new->bindValue(11, $this->cod_lab);
-      $new->bindValue(12, $this->cod_tipo);
-      $new->bindValue(13, $this->cod_clase);
-      $new->bindValue(14, $this->cod_pres);
-      $new->bindValue(15, $this->fechaV);
+      $new->bindValue(7, $this->fechaV);
+      $new->bindValue(8, $this->precioV);
+      $new->bindValue(9, $this->cantidad);
+      $new->bindValue(10, $this->laboratorio);
+      $new->bindValue(11, $this->tipoP);
+      $new->bindValue(12, $this->clase);
+      $new->bindValue(13, $this->presentación); 
+     
+
       $new->execute();
              
-
       $result = ['resultado' => 'Registrado'];
 
-      echo json_encode($result);
+     echo json_encode($result);
      parent::desconectarDB();
-      die();
+     die();
 
     }catch(\PDOexection $error) {
      $error;
@@ -140,10 +134,13 @@
     }
   }
 
+
+
+
    public function MostrarEditProductos($id){
       try{
         $this->id = $id;
-        $new = $this->con->prepare("SELECT * FROM producto p INNER JOIN laboratorio_producto lp ON p.cod_producto = lp.cod_producto INNER JOIN presentacion_producto pp ON p.cod_producto = pp.cod_producto INNER JOIN tipo_producto tp ON p.cod_producto = tp.cod_producto INNER JOIN clase_producto cp ON cp.cod_producto = p.cod_producto WHERE p.status = 1 and p.cod_producto = ?");
+        $new = $this->con->prepare("SELECT `cod_producto`, `codigo` , `descripcion`, `ubicacion`, `composicion`, `contraindicaciones`, `posologia`, `vencimiento`, `p_venta`, `stock`, `cod_lab`, `cod_tipo`, `cod_clase`, `cod_pres`,  `status` FROM producto p WHERE p.status = 1 and p.cod_producto = ?");
         $new->bindValue(1, $this->id);
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -157,15 +154,8 @@
     }
 
 
-   public function getEditarProd($codigo_productoEd, $nombreEd, $descripcionEd, $fechaEd ,$composicionEd,$posologiaEd,$laboratorioEd,$tipoEd,$claseEd,$presentaciónEd,$ubicaciónEd,$contraInEd,$cantidadEd,$VentaEd,$id){
+   public function getEditarProd($codigoEd, $descripcionEd, $fechaEd ,$composicionEd,$posologiaEd,$ubicaciónEd,$laboratorioEd,$presentaciónEd,$tipoEd,$claseEd,$contraInEd,$cantidadEd,$VentaEd,$id){
  
-    if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $nombreEd) !== 1){
-      return "Error nombre!";
-
-    }
-   if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $codigo_productoEd) !== 1){
-      return "Error de codigo de barra!";
-    }
     if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $descripcionEd) !== 1){
       return "Error de nombre!";
     }
@@ -205,6 +195,7 @@
 
    
     $this->id = $id;
+    $this->codigo = $codigoEd;
     $this->descripcion = $descripcionEd;
     $this->composicionP = $composicionEd;
     $this->fechaV = $fechaEd;
@@ -212,9 +203,7 @@
     $this->ubicación = $ubicaciónEd;
     $this->posologia = $posologiaEd;
     $this->cantidad = $cantidadEd;
-    $this->precioV = $VentaEd;
-    $this->cod_producto = $codigo_productoEd;
-    $this->nombre = $nombreEd;
+    $this->precioV = $VentaEd;  
     $this->laboratorio = $laboratorioEd;
     $this->tipoP = $tipoEd;
     $this->clase = $claseEd;
@@ -224,50 +213,28 @@
 
     }
 
+
     private function editarProd(){
       try{
     parent::conectarDB();
-      $new = $this->con->prepare("UPDATE `producto` SET `codigo_producto`= ? , `nombre`= ?, `descripcion`= ? ,`composicion`= ? ,`contraindicaciones`= ?,`ubicacion`= ?,`posologia`= ?,`stock`= ?,`p_venta`= ?,`img`= ?,`vencimiento`= ? WHERE cod_producto = ? and status = 1");
+      $new = $this->con->prepare("UPDATE producto p SET `codigo`= ? ,`descripcion`= ? ,`ubicacion`= ? ,`composicion`= ? ,`contraindicaciones`= ? ,`posologia`= ? ,`vencimiento`= ? ,`p_venta`= ?,`stock`= ? ,`cod_lab`= ? ,`cod_tipo`= ? ,`cod_clase`= ? ,`cod_pres`= ? WHERE p.status = 1 AND p.cod_producto = ?");
 
-      $new->bindValue(1, $this->codigo_producto);
-      $new->bindValue(2, $this->nombre);
-      $new->bindValue(3, $this->descripcion);
-      $new->bindValue(4, $this->ubicacion);
-      $new->bindValue(5, $this->composicion);
-      $new->bindValue(6, $this->contraindicaciones);
-      $new->bindValue(7, $this->posologia);
-      $new->bindValue(8, $this->vencimiento);
-      $new->bindValue(9, $this->p_venta);
-      $new->bindValue(10, $this->stock);
-      $new->bindValue(11, $this->img);
-      $new->bindValue(12, $this->cod_lab);
-      $new->bindValue(13, $this->cod_tipo);
-      $new->bindValue(14, $this->cod_clase);
-      $new->bindValue(15, $this->cod_pres);
-      $new->bindValue(16, $this->fechaV);
+      $new->bindValue(1, $this->codigo);
+      $new->bindValue(2, $this->descripcion);
+      $new->bindValue(3, $this->ubicación);
+      $new->bindValue(4, $this->composicionP);   
+      $new->bindValue(5, $this->contraIn);
+      $new->bindValue(6, $this->posologia);
+      $new->bindValue(7, $this->fechaV);
+      $new->bindValue(8, $this->precioV);
+      $new->bindValue(9, $this->cantidad);
+      $new->bindValue(10, $this->laboratorio);
+      $new->bindValue(11, $this->tipoP);
+      $new->bindValue(12, $this->clase); 
+      $new->bindValue(13, $this->presentación);
+      $new->bindValue(14, $this->id);
       $new->execute();
              
-
-      $new = $this->con->prepare("UPDATE `laboratorio_producto` SET `cod_lab`= ? WHERE cod_producto = ?");
-      $new->bindValue(1,  $this->laboratorio);
-      $new->bindValue(2, $this->id);
-      $new->execute();
-
-      $new = $this->con->prepare("UPDATE `presentacion_producto` SET `cod_pres` = ? WHERE `cod_producto` = ?");
-      $new->bindValue(1, $this->presentación);
-      $new->bindValue(2, $this->id);
-      $new->execute();
-
-      $new = $this->con->prepare("UPDATE `tipo_producto` SET `cod_tipo` = ? WHERE `cod_producto` = ?");
-      $new->bindValue(1, $this->tipoP);
-      $new->bindValue(2, $this->id);
-      $new->execute();
-
-      $new = $this->con->prepare("UPDATE `clase_producto` SET `cod_clase` = ? WHERE `cod_producto` = ?");
-      $new->bindValue(1, $this->clase);
-      $new->bindValue(2, $this->id);
-      $new->execute();
-      
       $resultado = ['resultado' => 'Editado'];
       echo json_encode($resultado);
       parent::desconectarDB();
@@ -296,7 +263,7 @@
     public function MostrarProductos(){
       try{
         parent::conectarDB();
-        $query = "SELECT `cod_producto`, `descripcion`, `vencimiento`, `p_venta`, `stock`, t.des_tipo FROM producto p INNER JOIN tipo t ON t.cod_tipo = p.cod_tipo WHERE p.status = 1";
+        $query = "SELECT `cod_producto`, `codigo`, `descripcion`, `vencimiento`, format(p_venta,2,'de_DE') as venta, `stock`, t.des_tipo FROM producto p INNER JOIN tipo t ON t.cod_tipo = p.cod_tipo WHERE p.status = 1";
 
         $new = $this->con->prepare($query);
         $new->execute();
@@ -366,4 +333,5 @@
     }
 
   }
+
 ?>

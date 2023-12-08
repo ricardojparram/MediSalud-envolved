@@ -189,7 +189,7 @@ $(document).ready(function(){
         rellenar(); 
         $('#editarform').trigger('reset');
         $('.cerrar').click();
-        Toast.fire({ icon: 'success', title: 'Laboratorio modificado' })
+        Toast.fire({ icon: 'success', title: 'Proveedor modificado' })
 
       },
       error(e){
@@ -229,7 +229,7 @@ $(document).ready(function(){
         mostrar.destroy();
         $('.cerrar').click();
         rellenar();
-        Toast.fire({ icon: 'success', title: 'Laboratorio eliminado' })
+        Toast.fire({ icon: 'success', title: 'Proveedor eliminado' })
       },
       error(e){
                 Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.' });
