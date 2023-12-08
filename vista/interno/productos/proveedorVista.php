@@ -197,7 +197,7 @@
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header alert alert-success">
-        <h4 class="modal-title"> <strong>Editar Laboratorio</strong> </h4>
+        <h4 class="modal-title"> <strong>Editar proveedor</strong> </h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 

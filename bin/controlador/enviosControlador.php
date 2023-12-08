@@ -18,6 +18,11 @@
 	}
 
 
+	
+	if(isset($_POST['precio_envio'])){
+		$model->calcularPrecioEnvio();
+	}
+
 	if(isset($_POST['mostrar'], $_POST['bitacora'], $permiso['Consultar'])){
 		$model->mostrarEnvios($_POST['bitacora']);
 	}

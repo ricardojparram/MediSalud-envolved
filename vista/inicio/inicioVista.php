@@ -9,143 +9,268 @@
   <link rel="stylesheet" href="assets/css/tienda.css">
 </head>
 
-<body class="body" id="body">
+<body>
 
   <header class="w-100 h-100">
     
   <!-- Barra navegadora -->
     <?php $tiendaComp->nav(); ?>
+<<<<<<< HEAD
+
+=======
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
 
   </header>
+  <section class="presentacion d-flex justify-content-center align-items-center">
+    <div class="container container-md row text-white">
+      <div class="col-12 col-md-6 row align-items-center">
+        <div>
+          <h1 class="fw-bold">Farmacia MediSalud C.A</h1>
+          <p class="fs-6" style="text-align: justify;"><strong>Nuestra farmacia en línea ofrece una amplia variedad de medicamentos y productos de salud para satisfacer todas sus necesidades. Ofrecemos envíos a todo el país para que pueda recibir sus productos directamente en la comodidad de su hogar.</strong></p>
+          <span class="row gap-4 align-items-center justify-content-center">
+            <button class="btn btn-light col-6">Más informacion</button>
+            <button class="btn btn-success col-5"><b>¡Compra ya!</b></button>
+          </span>
+          
+        </div>
+      </div>
+      <div class="col-12 col-md-6 row align-items-center justify-content-center pt-5">
+        <img class="img-fluid " src="assets/img/presentacion-imagen.svg" alt="Imagen vectorizada de farmacia">
+      </div>
+      
+    </div>
+  </section>
 
-   <main class="w-100"> 
-   <div id="carrusel" class=" d-flex justify-content-center align-items-center mb-3">
-          <div id="carouselExampleCaptions" class="carousel">
-            <div class="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active bg-black" aria-current="true" aria-label="Slide 1"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2" class="bg-black"></button>
-              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3" class="bg-black"></button>
+  <main class="w-100"> 
+
+
+    <!-- ======= Services Section ======= -->
+            
+        <section class="row gap-4 servicios mt-5">
+          <header>
+            <h2 class="text-center fs-2 fw-bold titulos">Servicios</h2>
+            <p class="text-center fs-5 fw-bold">Ofrecemos una amplia gama de productos, incluyendo las siguientes presentaciones.</p>
+          </header>
+
+          <div class="row">
+
+            <div class="col-xl-4 text-center">
+              <img src="assets/img/servicios-img.svg" class="img-fluid p-4" alt="">
             </div>
-            <div class="carousel-inner ">
-              <div class="carousel-item active">
-                <img src="assets/img/tera.jpg" class="d-block w-100" alt="...">
-              </div>
-              <div class="carousel-item">
-                <img src="assets/img/rixigal.jpg" class="d-block w-100" alt="...">
-              </div>
-              <div class="carousel-item">
-                <img src="assets/img/inmukids.jpg" class="d-block w-100" alt="...">
+
+            <div class="col-xl-8 d-flex content">
+              <div class="row align-self-center gy-4">
+
+                <div class="col-md-6 icon-box" data-aos="fade-up">
+                  <i class="ri-capsule-fill"></i>
+                  <div>
+                    <h4>Tabletas y Cápsulas</h4>
+                    <p>Son formas sólidas de administración de medicamentos que contienen una dosis precisa de ingredientes activos. Son convenientes y efectivas, ya que se pueden tragar fácilmente y se absorben rápidamente en el torrente sanguíneo.</p>
+                  </div>
+                </div>
+
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
+                  <i class="ri-medicine-bottle-fill"></i>
+                  <div>
+                    <h4>Jarabes</h4>
+                    <p>Son medicamentos líquidos que contienen ingredientes activos en una base de agua y azúcar. Son una forma conveniente de administrar medicamentos, especialmente para niños, ya que son fáciles de tragar y suelen tener un buen sabor.</p>
+                  </div>
+                </div>
+
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
+                  <i class="ri-syringe-fill"></i>
+                  <div>
+                    <h4>Inyecciones</h4>
+                    <p>Son una forma líquida de medicamentos administrados directamente al cuerpo a través de una aguja y una jeringa. Son una forma rápida y efectiva de administrar medicamentos, pero pueden llegar a ser dolorosas.</p>
+                  </div>
+                </div>
+
+                <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
+                  <i class="ri-hand-sanitizer-fill"></i>
+                  <div>
+                    <h4>Loción</h4>
+                    <p>Es una forma líquida de medicamento que se aplica sobre la piel para tratar afecciones dermatológicas. Éstos medicamentos son efectivos, ya que pueden llegar a las capas profundas de la piel cuando ésta las absorbe.</p>
+                  </div>
+                </div>
+
               </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+
+          </div>
+
+        </section>
+    <!-- ====== Service section end -->        
+
+    <!-- ====== Productos section ====== -->
+    <section class="container-fluid my-4 p-0">
+      <div class="productos-head w-100">
+        <header class="text-white py-3">
+          <h2 class="text-center fs-2 p-3 mt-3 fw-bold">Productos</h3>
+          <p class="fs-5 text-center fw-bold">Éstos son los distintos tipos de medicamentos que tenemos a la venta.</p>
+        </header>
+        <div class="categorias">
+          <div id="categoriaSlider" class="carousel slide carousel-fade">
+            <div class="carousel-inner">
+
+              <!-- Slide -->
+              <div class="carousel-item active pt-2 pb-2">
+                  <div class="categoria-item">
+                    <div class="card-body">
+                      <a href="#" class="text-dark">
+                        <div class="mt-1 mb-0">
+                          <img src="https://boticaportugal.com/cdn/shop/products/9342018120_152e3f51-7a5f-4175-818b-e667a7ca4f47.png?v=1648745401" alt="Imagen del producto" class="img-fluid">
+                        </div>
+                        <h2 class="text-center fw-bold">Antiinflamatorio</h2>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="categoria-item">
+                    <div class="card-body">
+                      <a href="#" class="text-dark">
+                        <div class="mt-1 mb-0">
+                          <img src="https://eqf.com.mx/wp-content/uploads/2022/08/AMS148.png" alt="Imagen del producto" class="img-fluid">
+                        </div>
+                        <h2 class="text-center fw-bold">Antidepresivo</h2>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="categoria-item">
+                    <div class="card-body">
+                      <a href="#" class="text-dark">
+                        <div class="mt-1 mb-0">
+                          <img src="https://drogueriascomfenalco.com/image/cache/catalog/FOTOS/LINEA%20GENERICA(VENTA%20LIBRE)/GENFAR/losartan_5105-0323-300x300.PNG" alt="Imagen del producto" class="img-fluid">
+                        </div>
+                        <h2 class="text-center fw-bold">Antihipertensivos</h2>
+                      </a>
+                    </div>
+                  </div>
+              </div>
+              <!-- Slide end -->
+
+              <!-- Slide -->
+              <div class="carousel-item pt-2 pb-2">
+                  <div class="categoria-item">
+                    <div class="card-body">
+                      <a href="#" class="text-dark">
+                        <div class="mt-1 mb-0">
+                          <img src="https://boticaportugal.com/cdn/shop/products/9342018120_152e3f51-7a5f-4175-818b-e667a7ca4f47.png?v=1648745401" alt="Imagen del producto" class="img-fluid">
+                        </div>
+                        <h2 class="text-center fw-bold">Antiinflamatorio</h2>
+                      </a>
+                    </div>
+                  </div>
+                   <div class="categoria-item">
+                    <div class="card-body">
+                      <a href="#" class="text-dark">
+                        <div class="mt-1 mb-0">
+                          <img src="https://eqf.com.mx/wp-content/uploads/2022/08/AMS148.png" alt="Imagen del producto" class="img-fluid">
+                        </div>
+                        <h2 class="text-center fw-bold">Antidepresivo</h2>
+                      </a>
+                    </div>
+                  </div>
+                   <div class="categoria-item">
+                    <div class="card-body">
+                      <a href="#" class="text-dark">
+                        <div class="mt-1 mb-0">
+                          <img src="https://drogueriascomfenalco.com/image/cache/catalog/FOTOS/LINEA%20GENERICA(VENTA%20LIBRE)/GENFAR/losartan_5105-0323-300x300.PNG" alt="Imagen del producto" class="img-fluid">
+                        </div>
+                        <h2 class="text-center fw-bold">Antihipertensivos</h2>
+                      </a>
+                    </div>
+                  </div>
+              </div>
+              <!-- Slide end -->
+
+              <!-- Slide -->
+              <div class="carousel-item pt-2 pb-2">
+                   <div class="categoria-item">
+                    <div class="card-body">
+                      <a href="#" class="text-dark">
+                        <div class="mt-1 mb-0">
+                          <img src="https://drogueriascomfenalco.com/image/cache/catalog/FOTOS/LINEA%20GENERICA(VENTA%20LIBRE)/GENFAR/losartan_5105-0323-300x300.PNG" alt="Imagen del producto" class="img-fluid">
+                        </div>
+                        <h2 class="text-center fw-bold">Antihipertensivos</h2>
+                      </a>
+                    </div>
+                  </div>
+                   <div class="categoria-item">
+                    <div class="card-body">
+                      <a href="#" class="text-dark">
+                        <div class="mt-1 mb-0">
+                          <img src="https://eqf.com.mx/wp-content/uploads/2022/08/AMS148.png" alt="Imagen del producto" class="img-fluid">
+                        </div>
+                        <h2 class="text-center fw-bold">Antidepresivo</h2>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="categoria-item">
+                    <div class="card-body">
+                      <a href="#" class="text-dark">
+                        <div class="mt-1 mb-0">
+                          <img src="https://boticaportugal.com/cdn/shop/products/9342018120_152e3f51-7a5f-4175-818b-e667a7ca4f47.png?v=1648745401" alt="Imagen del producto" class="img-fluid">
+                        </div>
+                        <h2 class="text-center fw-bold">Antiinflamatorio</h2>
+                      </a>
+                    </div>
+                  </div>
+              </div>
+              <!-- Slide end -->
+
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#categoriaSlider" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#categoriaSlider" data-bs-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Next</span>
             </button>
           </div>
-        </div>
-
-
-        <!-- ======= Services Section ======= -->
-        <section id="services" class="services my-5">
-          <div class="container">
-
-            <div class="section-title">
-              <h2 class="text-center">Servicios</h2>
-              <p class="fs-4 text-center">Nuestra farmacia ofrece una amplia gama de productos que incluyen , entre otros, la venta de medicamentos en las siguientes presentaciones: </p>
-            </div>
-
-
-            <div class="row">
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div id="services_1" class="icon-box">
-                  <div class="icon text-center mb-4 mt-4 ">
-                    <i class="ri-capsule-fill"></i>
-                  </div>
-                  <h4 class="title text-center"><a>Tabletas y Cápsulas</a></h4>
-                  <p class="description text-justify fs-7">Son formas sólidas de administración de medicamentos que contienen una dosis precisa de ingredientes activos</p>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div id="services_2" class="icon-box" data-aos="fade-up" data-aos-delay="100">
-                  <div class="icon text-center mb-4 mt-4">
-                    <i class="ri-medicine-bottle-fill"></i>
-                  </div>
-                  <h4 class="title text-center"><a>Jarabes</a></h4>
-                  <p class="description text-justify fs-7">Son formas líquidas de administración de medicamentos que contienen una solución de ingredientes activos en una base de agua y azúcar</p>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div id="services_3" class="icon-box" data-aos="fade-up" data-aos-delay="200">
-                  <div class="icon text-center mb-4 mt-4">
-                    <i class="ri-syringe-fill"></i>
-                  </div>
-                  <h4 class="title text-center"><a>Inyecciones</a></h4>
-                  <p class="description text-justify fs-7">Son formas de administración de medicamentos que se aplican directamente en el cuerpo a través de una aguja y una jeringa</p>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div id="services_4" class="icon-box" data-aos="fade-up" data-aos-delay="300">
-                  <div class="icon text-center mb-4 mt-4">
-                    <i class="ri-hand-sanitizer-fill"></i>
-                  </div>
-                  <h4 class="title text-center"><a>Loción</a></h4>
-                  <p class="description text-justify fs-7">Es una forma líquida de administración de medicamentos que se aplica tópicamente en la piel para tratar afecciones dermatológicas</p>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </section><!-- End Services Section -->
-
-        <section id="productos" class="productos my-4">
-         <div class="container my-2">
-           <h3 class="text-center p-3 mt-3 fw-bold">Productos</h3>
-           <div class="row mx-auto" id="catalogo">
-
-
-
-           </div>
-           <div class="row">
-            <div class="col-12 d-flex justify-content-center mb-4"> 
-              <a class="btn btn-lg btn-dark" href="#!">Ver Todo</a>
-            </div>
-          </div>
 
         </div>
-      </section>
+      </div>
+      <!--- Productos listados -->
+      <div class="productos-populares">
+        <h3 class="w-100 text-center fs-3 fw-bold mb-4">Los productos más comprados en nuestra tienda</h3>
+        <div class="row mx-auto justify-content-center align-items-center" id="catalogo">
 
+        </div>
+      </div>
+      <!--- Productos listados end -->
 
+      <!--- Botón de ir al catálogo -->
+        <div class="w-100 mt-4 mb-5 d-flex justify-content-center"> 
+          <a class="btn btn-lg btn-outline-success ir_catalogo" href="#!"><strong>Ir al catálogo </strong><span><i class="bi bi-arrow-right"></i></span></a>
+        </div>
+      <!--- Botón de ir al catálogo end -->
+
+    </section> 
+    <!-- ====== Productos section end ====== -->
 
     </main>
 
-<footer>
-   <?php $footer->footer(); ?>
+  <?php $footer->footer(); ?>
 
+<<<<<<< HEAD
+=======
 </footer>
 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
   <?php $tiendaComp->car(); ?>
 
   <?php $VarComp->js() ?>
   <script src="assets/js/inicio.js"></script>
   <script src="assets/js/carrito.js"></script>
   <script>
-    
-    const myCarouselElement = document.querySelector('#carouselExampleCaptions')
+    const myCarouselElement = document.querySelector('#carouselExampleRide')
 
     const carousel = new bootstrap.Carousel(myCarouselElement, {
-      interval: 1000,
-       touch: false
+      interval: 2000,
+      touch: false
     })
-
   </script>
+
 </body>
 
 </html>
@@ -169,27 +294,77 @@
   </div>
 </div>
 
-<div class="modal fade" id="AñadirCarrito" tabindex="-1" aria-modal="true" role="dialog">
-  <div class="modal-dialog modal-dialog-centered">
+
+
+<div class="modal fade" id="AñadirCarritoModal" style="transition: all 0.4s ease-in-out 0s;" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" role="dialog">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Añadir a carrito</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="text-center m-3">
-          <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
+      <div class="modal-body p-8">
+        <div class="position-absolute top-0 end-0 me-3 mt-3">
+          <button type="button" class="btn-close cerrar" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="row">
+          <div class="col-lg-6 row justify-content-center align-items-center">
+            <!-- img slide -->
+              <img class=".img-fluid producto_imagen_modal" src="assets/img/productos/producto_imagen.png" alt="producto_imagen">
+          </div>
+          <div class="col-lg-6">
+            <div class="ps-lg-8 mt-6 mt-lg-0">
+              <a href="#!" class="mb-4 d-block tipo_medicamento">Antiinflamatorio</a>
+              <h2 class="mb-1 h1 nombre_medicamento">Diclofenac potásico</h2>
+              <h6 class="descripcion_medicamento"></h6>
+              <div class="mb-4">
+                <small class="text-warning">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-half"></i></small><a href="#" class="ms-2"></a>
+              </div>
+              <div class="fs-4 precios">
+                <span class="fw-bold text-dark ">Bs. <span class="precio_bs">120.00</span></span>
+                <span class="text-muted precio_dolar" >$4.00</span>
+              </div>
+              <hr class="my-6">
+              <div class="opciones row">
+                <div class="input-group cantidad_producto col-6" style="max-width: 180px;">
+                  <button class="btn btn-light menos"><i class="bi bi-dash-lg"></i></button>
+                  <input type="number" id="cantidad_añadir_producto" min="1" max="50" value="1" class="form-control form-input">
+                  <button class=" btn btn-light mas"><i class="bi bi-plus-lg"></i></button>
+                </div>
+                <div class="invalid-tooltip-prod col-6" style="">Cantidad no disponible.</div>
+              </div>
+              <div class="mt-3 row justify-content-start g-2 align-items-center">
 
-        <div class="card-title mostrarP p-3">
-
-
+                <div class="col-lg-4 col-md-5 col-6 d-grid">
+                  <button type="button" id="añadir_al_carrito" class="btn btn-success">
+                    Agregar al carrito <i class="bi bi-cart-plus-fill"></i>
+                  </button>
+                </div>
+              </div>
+              <hr class="my-6">
+              <div>
+                <table class="table table-borderless">
+                  <tbody>
+                    <tr>
+                      <td>Código de producto:</td>
+                      <td class="codigo_producto"></td>
+                    </tr>
+                    <tr>
+                      <td>Tipo:</td>
+                      <td class="tipo_producto"></td>
+                    </tr>
+                    <tr>
+                      <td>Contraindicaciones:</td>
+                      <td class="contraindicaciones">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success" id="añadirAlCarrito">Añadir al carrito</button>
-
       </div>
     </div>
   </div>

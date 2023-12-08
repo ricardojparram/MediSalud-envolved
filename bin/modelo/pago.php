@@ -54,21 +54,32 @@
 
                 if(isset($data[0]["cedula"])){ 
                     echo json_encode($data);
+<<<<<<< HEAD
+=======
                     parent::desconectarDB();
                     die();
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 }elseif (!isset($data[0]["cedula"])) {
                     $new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo FROM usuario u WHERE u.cedula = ?");
                     $new->bindValue(1, $cedula);
                     $new->execute();
                     $data = $new->fetchAll();
                     echo json_encode($data);
+<<<<<<< HEAD
+                    
+                    
+                }
+                parent::desconectarDB();
+                die();
+=======
                     parent::desconectarDB();
                     die();
                 }
                 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 
             } catch(\PDOexection $error){
-                return $error;
+                die($error);
             }
         }
 
@@ -76,7 +87,7 @@
             try {
                 parent::conectarDB();
                 $new = $this->con->prepare('SELECT
-                    (SELECT SUM(round(car.cantidad*car.precioActual)) FROM carrito car WHERE car.cedula = ?) AS total,
+                    (SELECT SUM(round(car.cantidad*p.p_venta)) FROM carrito car INNER JOIN producto p ON car.cod_producto = p.cod_producto WHERE car.cedula = ?) AS total,
                     (SELECT COUNT(*) FROM carrito car WHERE car.cedula = ?) AS cuenta,
                     (SELECT c.cambio FROM cambio c INNER JOIN moneda m ON c.moneda = m.id_moneda  WHERE c.status = 1 AND m.nombre = "Dolar" or m.nombre = "dolar"ORDER BY c.fecha DESC LIMIT 1) AS cambio,
                     (SELECT c.id_cambio FROM cambio c INNER JOIN moneda m ON c.moneda = m.id_moneda  WHERE c.status = 1 AND m.nombre = "Dolar" or m.nombre = "dolar"ORDER BY c.fecha DESC LIMIT 1) AS id_cambio');
@@ -93,10 +104,14 @@
             }
         }
 
-        public function mostrarEmpresa(){
+        public function mostrarEstados(){
             try {
                 parent::conectarDB();
+<<<<<<< HEAD
+                $new = $this->con->prepare('SELECT * FROM `estados_venezuela` ORDER BY nombre ASC');
+=======
                 $new = $this->con->prepare('SELECT * FROM `empresa_envio` WHERE status = 1;');
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 $new->execute();
                 $data = $new->fetchAll();
                 echo json_encode($data);
@@ -108,11 +123,16 @@
             }
         }
 
-        public function mostrarSede($sede){
+        public function mostrarSede($estado){
             try {
                 parent::conectarDB();
+<<<<<<< HEAD
+                $new = $this->con->prepare('SELECT * FROM sede_envio WHERE id_estado = ? and status = 1');
+                $new->bindValue(1, $estado);
+=======
                 $new = $this->con->prepare('SELECT * FROM sede_envio WHERE id_empresa =  ? and status = 1');
                 $new->bindValue(1, $sede);
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 $new->execute();
                 $data = $new->fetchAll();
                 echo json_encode($data);
@@ -127,7 +147,11 @@
         public function getMostrarMetodo(){
             try{
               parent::conectarDB();
+<<<<<<< HEAD
+              $new = $this->con->prepare("SELECT * FROM tipo_pago WHERE status = 1 and online = 1");
+=======
               $new = $this->con->prepare("SELECT * FROM `tipo_pago` WHERE status = 1 and online = 1");
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
               $new->execute();
               $data = $new->fetchAll(\PDO::FETCH_OBJ);
               echo json_encode($data);
@@ -144,7 +168,11 @@
         public function banco(){
             try{
                 parent::conectarDB();
+<<<<<<< HEAD
+                $new = $this->con->prepare("SELECT * FROM banco WHERE status = 1");
+=======
                 $new = $this->con->prepare("SELECT * FROM `banco` WHERE status = 1");
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
                 echo json_encode($data);
@@ -158,7 +186,11 @@
              }   
         }
 
+<<<<<<< HEAD
+        public function getRegistar($cedula, $nombre, $apellido, $direccionF, $telefono, $correo, $sede, $direccionE, $detalles){
+=======
           public function nunca($cedula, $nombre, $apellido, $direccionF, $telefono, $correo, $sede, $direccionE, $detalles){
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
 
             if(preg_match_all("/^[a-zA-Z]{0,30}$/", $nombre) == false){
                 $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
@@ -175,26 +207,29 @@
                 echo json_encode($resultado);
                 die();
             }
+<<<<<<< HEAD
             if(preg_match_all("/[$%&|<>]/", $direccionF) == true){
                 $resultado = ['resultado' => 'Error de direccion factura' , 'error' => 'Direccion inválida.'];
                 echo json_encode($resultado);
                 die();
             }
+=======
+
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
             if(preg_match_all("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/", $correo) == false){
                 $resultado = ['resultado' => 'Error de email' , 'error' => 'Correo invalida.'];
                 echo json_encode($resultado);
                 die();
             }
-            if(preg_match_all("/^[0-9]{1,2}$/", $sede) == false){
-                $resultado = ['resultado' => 'Error de rol' , 'error' => 'rol invalido.'];
-                echo json_encode($resultado);
-                die();
-            }
+<<<<<<< HEAD
             if(preg_match_all("/[$%&|<>]/", $direccionE) == true){
                 $resultado = ['resultado' => 'Error de direccion entrega' , 'error' => 'Direccion inválida.'];
                 echo json_encode($resultado);
                 die();
             }
+=======
+
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
 
 
             $this->cedula = $cedula;
@@ -206,6 +241,15 @@
             $this->sede = $sede;
             $this->direccionE = $direccionE;
             $this->detalles = $detalles;
+<<<<<<< HEAD
+            $this->registar();
+          }
+
+          private function registrar(){
+            try {
+                parent::conectarDB();
+                $new = $this->con->prepare("SELECT cedula FROM cliente WHERE cedula = ?");
+=======
             $this->hola2();
           }
 
@@ -213,6 +257,7 @@
             try {
                 parent::conectarDB();
                 $new = $this->con->prepare("SELECT cedula FROM cliente WHERE status = 1 and cedula = ?");
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll();
@@ -257,11 +302,19 @@
                 parent::conectarDB();
                 if($this->sede != "" || $this->sede != NULL){
 
+<<<<<<< HEAD
+                    $new = $this->con->prepare("INSERT INTO envio(id_envio, id_sede, status) VALUES (DEFAULT, ?, 3)");
+                    $new->bindValue(1, $this->sede);
+                    $new->execute();
+
+                    $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
+=======
                     $new = $this->con->prepare("INSERT INTO `envio`(`id_envio`, `id_sede`, `status`) VALUES (DEFAULT, ?, 3)");
                     $new->bindValue(1, $this->sede);
                     $new->execute();
 
                     $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                                 VALUES (DEFAULT, DEFAULT, ?, NULL, ?, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->sede);
@@ -270,7 +323,11 @@
                     // echo json_encode($resultado);
                 }elseif ($this->direccionE != NULL || $this->direccionE != "") {
 
+<<<<<<< HEAD
+                    $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
+=======
                     $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                                 VALUES (DEFAULT, DEFAULT, ?, ?, NULL, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->direccionE);
@@ -280,7 +337,11 @@
                     // echo json_encode($resultado);
                 }else{
 
+<<<<<<< HEAD
+                    $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
+=======
                     $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                                 VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
@@ -295,7 +356,11 @@
                 $data = $new->fetchAll();
 
                 foreach ($data as $dato) {
+<<<<<<< HEAD
+                    $new = $this->con->prepare("INSERT INTO venta_producto(num_fact, cod_producto, cantidad, precio_actual) 
+=======
                     $new = $this->con->prepare("INSERT INTO `venta_producto`(`num_fact`, `cod_producto`, `cantidad`, `precio_actual`) 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                                 VALUES (?, ?, ?, ?)");
                     $new->bindValue(1, $numFactura);
                     $new->bindValue(2, $dato['cod_producto']);
@@ -312,7 +377,11 @@
                 $totalMonto = array_sum($monto);
                 
 
+<<<<<<< HEAD
+                    $new = $this->con->prepare("INSERT INTO pago(id_pago, monto_total, num_fact, status) 
+=======
                     $new = $this->con->prepare("INSERT INTO `pago`(`id_pago`, `monto_total`, `num_fact`, `status`) 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                             VALUES (DEFAULT, ?, ?, 1)");
                     $new->bindValue(1, $totalMonto);
                     $new->bindValue(2, $numFactura);
@@ -352,8 +421,193 @@
 
                 die();
             } catch (\PDOException $error) {
+<<<<<<< HEAD
+                die($error);
+            }
+          }
+
+
+        private function validarCarrito($cedula){
+            try {
+                parent::conectarDB();
+                $new = $this->con->prepare("SELECT COUNT(*) as cuenta FROM carrito WHERE cedula = ?");
+                $new->bindValue(1, $cedula);
+                $new->execute();
+                $data = $new->fetchAll(\PDO::FETCH_OBJ);
+                parent::desconectarDB();
+                if(isset($data[0])) return ($data[0]->cuenta >= 1);
+                return false;
+
+            } catch (\PDOException $e) {
+                die($e);
+            }
+        }
+
+        public function getComprobarEstadoPago($cedula){
+            if(preg_match_all("/^[0-9]{7,10}$/", $cedula) == false){
+                $resultado = ['resultado' => 'Error de cedula' , 'error' => 'Cédula inválida.'];
+                echo json_encode($resultado);
+                die();
+            }
+
+            $this->cedula = $cedula;
+            $this->nombre = $_SESSION['nombre'];
+            $this->apellido = $_SESSION['apellido'];
+
+            if($this->validarCarrito($this->cedula) != true){
+                die("<script> window.location = '?url=carrito' </script>");
+            }
+
+            $this->comprobarEstadoPago();
+        }
+
+        private function comprobarEstadoPago(){
+            try{
+                parent::conectarDB();
+                $new = $this->con->prepare("SELECT cedula FROM cliente WHERE cedula = ?");
+                $new->bindValue(1, $this->cedula);
+                $new->execute();
+                [0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
+                parent::desconectarDB();
+
+                if(!isset($data->cedula)){
+                    parent::conectarDB();
+                    $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,1)");
+                    $new->bindValue(1, $this->cedula);
+                    $new->bindValue(2, $this->nombre);
+                    $new->bindValue(3, $this->apellido);
+                    $new->bindValue(4, "");
+                    $new->execute();
+
+                    $new = $this->con->prepare("INSERT INTO contacto_cliente(cedula) VALUES (?)");
+                    $new->bindValue(1, $this->cedula);
+                    $new->execute();
+                    parent::desconectarDB();
+                }
+                parent::conectarDB();
+                $new = $this->con->prepare("SELECT status FROM venta WHERE cedula_cliente = ? AND online = 1 AND status = 2");
+                $new->bindValue(1, $this->cedula);
+                $new->execute();
+                $data = $new->fetchAll(\PDO::FETCH_OBJ);
+                parent::desconectarDB();
+
+                if(!isset($data[0]->status)){
+                    parent::conectarDB();
+                    $new = $this->con->prepare("SELECT c.cod_producto, c.cantidad, p.p_venta FROM carrito c
+                                                INNER JOIN producto p ON p.cod_producto = c.cod_producto
+                                                WHERE cedula = ?");
+                    $new->bindValue(1, $this->cedula);
+                    $new->execute();
+                    $carrito = $new->fetchAll(\PDO::FETCH_OBJ);
+
+                    $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
+                        VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 2)");
+                    $new->bindValue(1, $this->cedula);
+                    $new->execute();
+                    $num_fact = $this->con->lastInsertId();
+                    parent::desconectarDB();
+                    foreach($carrito as $producto){
+                        parent::conectarDB();
+                        $new = $this->con->prepare("INSERT INTO venta_producto(num_fact, cod_producto, cantidad, precio_actual) 
+                            VALUES (?,?,?,?)");
+                        $new->bindValue(1, $num_fact);
+                        $new->bindValue(2, $producto->cod_producto);
+                        $new->bindValue(3, $producto->cantidad);
+                        $new->bindValue(4, $producto->p_venta);
+                        $new->execute();
+                        parent::desconectarDB();
+                       
+                        $this->actualizarStockProducto($producto->cod_producto , $producto->cantidad, "restar");
+                    }
+
+                }
+
+
+            }catch(\PDOException $e) {
+                die($e);
+            }
+        }
+
+        public function comprobarTiempoDePago($cedula){
+            
+            
+            try {
+                if($cedula === NULL){
+                    parent::conectarDB();
+                    $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual 
+                                            FROM venta WHERE online = 1 AND status = 2;");
+                    $new->execute();
+                    $ventas = $new->fetchAll(\PDO::FETCH_OBJ);
+                    parent::desconectarDB();
+                }else {
+                    parent::conectarDB();
+                    $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual 
+                                            FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
+                    $new->bindValue(1, $cedula);
+                    $new->execute();
+                    $ventas = $new->fetchAll(\PDO::FETCH_OBJ);
+                    parent::desconectarDB();
+                }
+
+                foreach($ventas as $venta){
+                    $hora_limite = strtotime($venta->fecha_venta) + 3600; // 3600 = 1hora en segundos
+                    $hora_actual = strtotime($venta->fecha_actual);
+                    if($hora_actual > $hora_limite){
+                        parent::conectarDB();
+                        $new = $this->con->prepare("SELECT cantidad, cod_producto FROM venta_producto WHERE num_fact = ?");
+                        $new->bindValue(1, $venta->num_fact);
+                        $new->execute();
+                        $productos = $new->fetchAll(\PDO::FETCH_OBJ);
+                        parent::desconectarDB();
+                        foreach($productos as $producto){
+                            $this->actualizarStockProducto($producto->cod_producto, $producto->cantidad, "sumar");
+                        }
+                        parent::conectarDB();
+                        $new = $this->con->prepare("DELETE FROM venta WHERE num_fact = ?");
+                        $new->bindValue(1, $venta->num_fact);
+                        $new->execute();
+                        parent::desconectarDB();
+                        
+                        if($cedula != NULL) {
+                            $resultado = ['resultado' => 'Eliminado correctamente.'];
+                            echo json_encode($resultado);
+                        }
+                    }
+                    
+                }
+                die();
+
+
+            } catch (\PDOException $e) {
+                die($e);
+            }
+        }
+
+        private function actualizarStockProducto($cod_producto , $cantidad, $accion){
+            try{
+                parent::conectarDB();
+                $new = $this->con->prepare("SELECT stock FROM producto WHERE cod_producto = ? and status = 1");
+                $new->bindValue(1, $cod_producto);
+                $new->execute();
+                parent::desconectarDB();
+                [0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
+
+                $stock = ($accion === "sumar") ? $data->stock + $cantidad : $data->stock - $cantidad;
+                parent::conectarDB();
+                $new = $this->con->prepare("UPDATE producto SET stock = ? WHERE cod_producto = ? and status = 1");
+                $new->bindValue(1, $stock);
+                $new->bindValue(2, $cod_producto);
+                $new->execute();
+                parent::desconectarDB();
+            }catch(\PDOexection $error){
+                die($error);
+            }
+        }
+
+=======
                 return $error;
             }
           }
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
     }
 ?>

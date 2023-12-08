@@ -35,7 +35,7 @@
  	<!-- End Sidebar-->
  	<main class="main" id="main">
  		<div class="pagetitle">
- 			<h1>Bancos</h1>
+ 			<h1 class="text-start">Bancos</h1>
  			<nav>
  				<ol class="breadcrumb">
  					<li class="breadcrumb-item">Gestionar Cuentas de Banco</li>
@@ -175,10 +175,10 @@
 
 	        </div>
 
-	        <p style="color:#ff0000;text-align: center;" id="error"><?php echo (isset($respuesta)) ? $respuesta : " "; ?></p>
+	        <p class="error" style="color:#ff0000;text-align: center;" id="error"><?php echo (isset($respuesta)) ? $respuesta : " "; ?></p>
 	        
 	        <div class="modal-footer">
-	          <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
+	          <button type="button" id="cancelar" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
 	          <button type="submit" class="btn btn-success " id="registrar">Registrar</button>
 	        </div>
 	      </form>
@@ -198,7 +198,7 @@
 
 	      <div class="modal-body ">
 
-	        <form id = "agregarform">
+	        <form id = "agregarformEdit">
 
 	          <div class="form-group col-md-12">  
 	            <div class="container-fluid">
@@ -286,7 +286,7 @@
 	        <p style="color:#ff0000;text-align: center;" id="errorEdit"><?php echo (isset($respuesta)) ? $respuesta : " "; ?></p>
 	        
 	        <div class="modal-footer">
-	          <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
+	          <button type="button" id="cancelar" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
 	          <button type="submit" class="btn btn-success " id="editar">Registrar</button>
 	        </div>
 	      </form>

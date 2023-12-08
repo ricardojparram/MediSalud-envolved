@@ -50,6 +50,7 @@ INSERT INTO tipo(des_tipo, status) VALUES
 -- INSERTA LAS CLASE
 INSERT INTO clase(des_clase, status) VALUES ('NO ASIGNADO',1);
 
+
 INSERT INTO tipo_pago(id_tipo_pago, des_tipo_pago, online, status) VALUES 
 (1,'Tarjeta de credito',0,1),
 (2,'Efectivo',0,1),
@@ -57,40 +58,56 @@ INSERT INTO tipo_pago(id_tipo_pago, des_tipo_pago, online, status) VALUES
 (4,'Pago movil',1,1),
 (5,'Transferencia',1,1);
 
+INSERT INTO producto (cod_producto, nombre, descripcion, ubicacion, composicion, contraindicaciones, posologia, vencimiento, p_venta, stock, img,cod_tipo, cod_clase, cod_pres, status) 
+VALUES (NULL, 'Acetaminofen', 'Acetaminofen', 'sadghsdgsdg', 'sdgsdggdsdsg', 'sadgsdgdsgdsgagds', 'asdgdsgdsgdsggds', '2023-10-11', '12', '43', '1', '2', '1', '4', '1')
+,(NULL, 'Ibuprofeno', 'Ibuprofeno', 'sadghsdgsdg', 'sdgsdggdsdsg', 'sadgsdgdsgdsgagds', 'asdgdsgdsgdsggds', '2023-10-11', '12', '43', '1', '2', '1', '4', '1')
+,(NULL, 'Diclofenac', 'Diclofenac', 'sadghsdgsdg', 'sdgsdggdsdsg', 'sadgsdgdsgdsgagds', 'asdgdsgdsgdsggds', '2023-10-11', '12', '43', '1', '2', '1', '4', '1');
+
+
 INSERT INTO moneda(id_moneda, nombre, status) VALUES(1, 'Dolar', 1), (2, 'Euro', 1);
 
 INSERT INTO cambio(id_cambio, cambio, fecha, moneda, status) VALUES(1, '35', DEFAULT, 1, 1), (2, '40', DEFAULT, 2, 1);
 
 INSERT INTO cambio(cambio, fecha, moneda, status) VALUES('35', DEFAULT, 1, 1), ('40', DEFAULT, 2, 1);
 
-INSERT INTO empresa_envio (rif, nombre, contacto, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
-INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
+INSERT INTO estados_venezuela (id_estado, nombre) VALUES
+(1, 'Distrito Capital'),(2, 'Amazonas'),(3, 'Anzoategui'),(4, 'Apure'),(5, 'Aragua'),(6, 'Barinas'),
+(7, 'Bolivar'),(8, 'Carabobo'),(9, 'Cojedes'),(10, 'Falcon'),(11, 'Guarico'),(12, 'Lara'),
+(13, 'Merida'),(14, 'Monagas'),(15, 'Nueva Esparta'),(16, 'Portuguesa'),(17, 'Sucre'),(18, 'Tachira'),
+(19, 'Trujillo'),(20, 'Yaracuy'),(21, 'Zulia'),(22, 'Delta Amacuro'),(23, 'Miranda'),(24, 'La Guaira');
 
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (1 , 'Banco Central de Venezuela', '0001', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (2 , 'Banco de Venezuela (BDV)', '0102', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (3 , 'Banco Venezolano de Credito (BVC)', '0104', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (4 , 'Banco Mercantil', '0105', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (5 , 'Banco Provincial (BBVA)', '0108', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (6 , 'Bancaribe', '0114', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (7 , 'Banco Exterior', '0115', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (8 , 'Banco Caroni', '0128', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (9 , 'Banesco Banco Universal', '0134', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (10 , 'Sofitasa', '0137', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (11 , 'Banco Plaza', '0138', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (12 , 'Bangente', '0146', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (13 , 'Banco Fondo Comun (BFC)', '0151', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (14 , '100% Banco', '0156', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (15 , 'Del Sur Banco Universal', '0157', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (16 , 'Banco del Tesoro', '0163', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (17 , 'Banco Agricola de Venezuela', '0166', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (18 , 'Bancrecer', '0168', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (19 , 'Mi Banco, Banco Microfinanciero C.A', '0169', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (20 , 'Banco Activo', '0171', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (21 , 'Bancamiga', '0172', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (22 , 'Banplus', '0174', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (23 , 'Banco Bicentenario del Pueblo', '0175', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (24 , 'Banco de la Fuerza Armada Nacional Bolivariana (BANFANB)', '0177', 1);
-INSERT INTO `banco`(`id_banco`, `nombre`, `codigo`, `status`) VALUES (25 , 'Banco Nacional de Credito (BNC)', '0191', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (1 , 'Banco Central de Venezuela', '0001', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (2 , 'Banco de Venezuela (BDV)', '0102', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (3 , 'Banco Venezolano de Credito (BVC)', '0104', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (4 , 'Banco Mercantil', '0105', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (5 , 'Banco Provincial (BBVA)', '0108', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (6 , 'Bancaribe', '0114', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (7 , 'Banco Exterior', '0115', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (8 , 'Banco Caroni', '0128', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (9 , 'Banesco Banco Universal', '0134', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (10 , 'Sofitasa', '0137', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (11 , 'Banco Plaza', '0138', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (12 , 'Bangente', '0146', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (13 , 'Banco Fondo Comun (BFC)', '0151', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (14 , '100% Banco', '0156', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (15 , 'Del Sur Banco Universal', '0157', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (16 , 'Banco del Tesoro', '0163', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (17 , 'Banco Agricola de Venezuela', '0166', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (18 , 'Bancrecer', '0168', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (19 , 'Mi Banco, Banco Microfinanciero C.A', '0169', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (20 , 'Banco Activo', '0171', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (21 , 'Bancamiga', '0172', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (22 , 'Banplus', '0174', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (23 , 'Banco Bicentenario del Pueblo', '0175', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (24 , 'Banco de la Fuerza Armada Nacional Bolivariana (BANFANB)', '0177', 1);
+INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (25 , 'Banco Nacional de Credito (BNC)', '0191', 1);
+
+INSERT INTO datos_cobro_farmacia (id_datos_cobro, num_cuenta, rif_cedula, telefono, id_banco, status) 
+VALUES (NULL, '0108245678234662235852', '30374812', NULL, '5', '1'), 
+	(NULL, NULL, '30125380', '04120503888', '2', '1');
+
+-- INSERT INTO empresa_envio (rif, nombre, contacto,id_estado, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
+-- INSERT INTO sede_envio (ubicacion, id_empresa, status) VALUES ('Carrera 22 Con Cale 22 Andres Bello Local Nro 4 Barquisimeto', '1', '1'), ('Carrera 21, Entre Av. Moran Y Calle 8, C.c. Plaza Sevilla Local 28 Y 29. Barquisimeto', '1', '1');
 
 INSERT INTO modulos(id_modulo, nombre, status) VALUES
 (1, 'Clientes',1),

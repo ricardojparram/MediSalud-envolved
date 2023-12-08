@@ -30,8 +30,8 @@ $(document).ready(function(){
 							<td>${row.correo}</td>
 							<td>${row.rol} </td>
 							<td class="d-flex justify-content-center">
-							<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.cedula}" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
-							<button type="button" ${eliminarPermiso} class="btn btn-danger eliminar mx-2" id="${row.cedula}" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
+							<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.cedulaE}" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
+							<button type="button" ${eliminarPermiso} class="btn btn-danger eliminar mx-2" id="${row.cedulaE}" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
 								</td>
 						</tr>`;  
 				});
@@ -106,9 +106,10 @@ $(document).ready(function(){
 	})
 
 
-	let cedulaDel;
+	var cedulaDel;
 	$(document).on('click', '.eliminar', function() {
 		cedulaDel = this.id;
+		
 	});
 
 	$("#delete").click(() =>{
@@ -118,7 +119,7 @@ $(document).ready(function(){
 			throw new Error('Permiso denegado.');
 		}
 
-		validarC($(cedulaDel),$("#errorNo") ,"Error de cédula,").then(() => {
+		validarC(cedulaDel,$("#errorNo") ,"Error de cédula,").then(() => {
 			$("#errorDel").html("Error de Cedula, Cedula no Registrada")
 		  }).catch(()=>{
 			$.ajax({
@@ -158,7 +159,7 @@ $(document).ready(function(){
 				$("#nameEdit").val(data[0].nombre);
 				$("#apellidoEdit").val(data[0].apellido);
 				$("#emailEdit").val(data[0].correo);
-				$("#selectEdit").val(data[0].nivel);
+				$("#selectEdit").val(data[0].rol);
 			}
 		})
 	})
@@ -184,7 +185,7 @@ $(document).ready(function(){
 			let nombre = validarNombre($("#nameEdit"),$("#errorNomEdit") ,"Error de Nombre,") ;
 			let dni = validarCedula($("#cedulaEdit"),$("#errorCedEdit") ,"Error de Cedula,") ;
 			if (dni) { validarC($("#cedulaEdit"),$("#errorNo") ,"Error de cédula,").then(() => {
-				$("#error2").html("Error de Cedula, Cedula no Registrada")
+				$("#error2").html("Error de Cedula, No Puede Ser Registrada")
 			  }).catch(()=>{
 				if (tipo && contra && correo && lastName && nombre) {
 					$.ajax({
@@ -237,7 +238,8 @@ $(document).ready(function(){
 
 	function validarC(input, div, mensaje){
 		return new Promise((resolve , reject)=>{
-			$.getJSON('',{cedula: input.val(),validar: 'lalo'},
+			$.getJSON('',{cedula: input.val(),validar: 'lola'},
+			
 				function(data){
 					if(data.resultado === "Error de cedula"){
 						div.text(mensaje+" "+data.error);

@@ -54,8 +54,8 @@ $(document).ready(function(){
                 <td>${row.celular} </td>
                 <td>${row.correo} </td>
                 <td class="d-flex justify-content-center">
-                  <button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.cedula}" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
-                  <button type="button" ${eliminarPermiso} class="btn btn-danger eliminar mx-2" id="${row.cedula}" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
+                  <button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.cedulaE}" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
+                  <button type="button" ${eliminarPermiso} class="btn btn-danger eliminar mx-2" id="${row.cedulaE}" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
 	    	      	</td>
               </tr>`;  
           });
@@ -215,9 +215,7 @@ $(document).ready(function(){
         let celuEdit = $("#telClienEdit").val();
         let emailEdit = $("#emailClienEdit").val();
 
-        if(cedulaEdit){ validarC($("#cedClienEdit"),$("#errorNo"), "Error de Cedula, ").then(() => {
-          $("#error2").html("Error de Cedula, Cedula no Registrada")
-        }).catch(()=>{
+        if(cedulaEdit){ validarC($("#cedClienEdit"),$("#error2"), "Error de Cedula, ").then(() => {
           if (nombreEdit && direccionEdit && apellidoEdit && correoEdit && telefonoEdit) {
             $.ajax({
               type: "POST",
@@ -239,6 +237,8 @@ $(document).ready(function(){
               }
             })  
           }
+        }).catch(()=>{
+          $("#error2").html("Error de Cedula, No Puede Ser Registrada")
         })} 
       })
 
@@ -262,12 +262,11 @@ $(document).ready(function(){
     //Validacion para la Cedula 
     function validarC(input, div, mensaje){
       return new Promise((resolve , reject)=>{
-        console.log()
+
         $.getJSON('',{
           cedula: input.val(), 
           validar: 'xd'},
           function(valid){
-            console.log(valid);
             if(valid.resultado === "Error de cedula"){
               div.text(mensaje+" "+valid.error);
               input.attr("style","border-color: red;")

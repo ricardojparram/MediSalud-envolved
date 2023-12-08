@@ -14,6 +14,8 @@
 
 
 </head>
+<<<<<<< HEAD
+=======
 <style>
     .main{
         margin-top: 76px;
@@ -37,6 +39,7 @@
 }
 </style>
 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
 
 
 <body class="bg-gradient-primary" id="body">
@@ -138,7 +141,11 @@
                                 </div>
                                 <p id="errorBot" style="color:#ff0000;text-align: center;"></p>
                             </div>
+<<<<<<< HEAD
+                            <div class="row form-group mb-1 col-md-12 m-auto">
+=======
                             <div class="row form-group mb-1 col-md-12">
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                 <div class="glass" id="delivery">
                                     <div class="row form-group col-md-12">
                                         <div class="col-lg-6">
@@ -178,6 +185,25 @@
                                     </div>
                                 </div>
                                 <div class="glass" id="envio">
+<<<<<<< HEAD
+                                    <div class="row form-group col-md-12 ">
+                                        <div class="col-lg-6">
+                                            <label for="inputText" class="col-12 col-form-label "><strong>Estado</strong></label>
+                                            <div class="input-group">
+                                                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone el estadoa donde se le va a enviar su pedido."><i class="bi bi-truck"></i></button>
+                                                <select class="form-select" id="estado">
+                                                    <option selected="" disabled="">Nombre</option>
+                                                </select>
+                                            </div>
+                                            <p class="m-0" id="errorEstado" style="color:#ff0000;text-align: center;"></p>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="inputText" class="col-12 col-form-label "><strong>Nombre de Sede</strong></label>
+                                            <div class="input-group">
+                                                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone la sede de la empresa."><i class="bi bi-box-seam"></i></button>
+                                                <select class="form-select" id="sede">
+                                                    <option selected="" disabled="">Nombre</option>
+=======
                                     <div class="row form-group col-md-12">
                                         <div class="col-lg-6">
                                             <label for="inputText" class="col-12 col-form-label "><strong>Empresa de Envio</strong></label>
@@ -195,15 +221,30 @@
                                                 <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone la sede de la empresa."><i class="bi bi-box-seam"></i></button>
                                                 <select class="form-select" id="sede">
                                                     <option selected="" disabled="">Ubicacion</option>
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                                 </select>
                                             </div>
                                             <p class="m-0" id="errorSede" style="color:#ff0000;text-align: center;"></p>
                                         </div>
                                     </div>
+<<<<<<< HEAD
+                                    <div class="row form-group col-md-12">
+                                        <label for="inputText" class="col-12 col-form-label"><strong>Direccion de Sede</strong></label>
+                                        <div class="input-group">
+                                            <textarea type="text" class="form-control" id="ubicacion" disabled placeholder="Direccion"></textarea>
+                                        </div>
+                                        <p class="m-0" id="errorUbicacion" style="color:#ff0000;text-align: center;"></p>
+                                    </div>
+                                </div>
+                                <div class="glass" id="retirar">
+                                    <p>
+                                        Puede ir a retirar su compra una vez se aprobada a esta direccion <strong>Av. Principal José Félix Ribas entre Calles Ayacucho y Maracay,</strong> con solo decir su nombre o su numero de cedula podra retirar su compra
+=======
                                 </div>
                                 <div class="glass" id="retirar">
                                     <p>
                                         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, eaque! Vitae quae ab corrupti accusantium a in repellat eveniet tempora obcaecati, nemo quo earum aspernatur assumenda quod eligendi? Nisi, pariatur.
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                     </p>
                                 </div>
                             </div>
@@ -250,6 +291,7 @@
                                 </div>
                             </div>
                             <p class="mt-2" id="error3" style="color:#ff0000;text-align: center;"></p>
+                            <p class="mt-2" id="errorMonto" style="color:#ff0000;text-align: center;"></p>
                             <div class="f1-buttons mt-3">
                                 <button type="button" class="btn btn-secondary btn-previous">Atrás</button>
                                 <button type="button" class="btn btn-success enviar" id="3">Registar Datos</button>
@@ -271,6 +313,11 @@
                 <div class="row">
                     <h5 class="col-6"><strong>Subtotal: </strong></h5>
                     <h5 class="col-6 text-end" id="valorBs"></h5>
+                </div>
+                <hr class="mt-1">
+                <div class="row">
+                    <h5 class="col-6"><strong>Costo de Envio: </strong></h5>
+                    <h5 class="col-6 text-end" id="pEnvio"></h5>
                 </div>
                 <hr class="mt-1">
                 <div class="row">

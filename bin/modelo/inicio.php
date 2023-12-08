@@ -18,8 +18,13 @@
   public function mostrarCatalogo(){
   	try {
 
-  		$query = 'SELECT `cod_producto`,`descripcion` ,`stock`, `p_venta` FROM `producto` WHERE status = 1 and stock != 0 LIMIT 4';
-        $this->conectarDB();
+
+  		$query='SELECT p.cod_producto, p.nombre, p.descripcion, p.stock, p.p_venta, p.img, p.contraindicaciones, t.des_tipo, ps.cantidad as cantidad_pres, ps.medida as medida_pres, ps.peso as peso_pres FROM producto p
+              INNER JOIN tipo t ON t.cod_tipo = p.cod_tipo
+              INNER JOIN presentacion ps ON ps.cod_pres = p.cod_pres
+              WHERE p.status = 1 and p.stock != 0 LIMIT 4';
+      $this->conectarDB();
+
   		$new = $this->con->prepare($query); 
   		$new->execute();
   		$data = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -31,6 +36,7 @@
   	}
 
   }
+
 
   public function rellenarDatos($id){
 
@@ -134,6 +140,7 @@
     }
 
   }
+
 
  }
 ?>

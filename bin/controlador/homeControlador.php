@@ -16,6 +16,10 @@
   $objModel = new home();
   $permisos = $objModel->getPermisosRol($_SESSION['nivel']);
 
+  if(isset($_POST['notificacion'])) {
+    $objModel->getNotificacion();
+  }
+
   if (isset($_POST['clien'])) {
     $objModel->mostrarClientes();
   }

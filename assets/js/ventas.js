@@ -30,7 +30,7 @@
           <td>${row.fecha}</td>
           <td><button class="btn btn-success detalleTipo" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#detalleTipoPago">Ver Metodos Pago</button></td>
           <td>${row.total_divisa}</td>
-          <td>${row.monto_total}</td>
+          <td>${row.total}</td>
           <td class="d-flex justify-content-center">
           <button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#Borrar"><i class="bi bi-trash3"></i></button>
           </td>
@@ -271,10 +271,11 @@
    
     
     //  SELECT2 CON BOOTSTRAP-5 
-    $(".select2").select2({
-      theme: 'bootstrap-5',
-      dropdownParent: $('#Agregar .modal-body'),
-    })
+ $(".select2").select2({
+  theme: 'bootstrap-5',
+  dropdownParent: $('#Agregar .modal-body'),
+  width: '80%' 
+});
     
     // fila de tipo pago
     let newRowTipo = ` <tr>
@@ -293,6 +294,8 @@
         selectTipoPago();
         validarRepetidoTipoPago();
         validarValores();
+        selectMultifila($('.select-tipo'), $('.filaTipoPago'), '.table-body-tipo' ,'No debe haber tipo pago vacíos.');
+        validarFila($('#FILL') ,$('.filaTipoPago'));
       }
  
 
@@ -315,28 +318,32 @@
       $('#ASD').append(newRow);
       selectOptions();
       cambio();
-      validarRepetido()
+      validarRepetido();
+      selectMultifila($('.select-productos'), $('.filaProductos'),'.table-body' ,'No debe haber productos vacíos.');;     
+      validarFila($('#ASD') ,$('.filaProductos'));
     }
 
     // Agregar fila para insertar producto
      $('.newRow').on('click',function(e){
-       filaN();
+       filaN();       
      });
 
      // Agregar fila para insertar tipo de pago
      $('.newRowPago').on('click',function(e){
-       filaTipoN();
+       filaTipoN();    
      });
 
     // ELiminar fila
      $('body').on('click','.removeRow', function(e){
         $(this).closest('tr').remove();
+        validarFila($('#ASD') ,$('.filaProductos'));
         calculate()
      });
 
      // ELiminar fila Tipo de Pago
      $('body').on('click','.removeRowPagoTipo', function(e){
         $(this).closest('tr').remove();
+        validarFila($('#FILL') ,$('.filaTipoPago'));
      });
 
      //Calcular Cantidad por tipo de pago
@@ -394,20 +401,60 @@
 
       if (totalAsignado > montoMax) {
         preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+        $(preciosPorTipo).attr('valid', 'false');
+
       }else if(totalAsignado < montoMax){
         preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+        $(preciosPorTipo).attr('valid', 'false');
+
       } else if(totalAsignado < 1 ){
         preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
-      }else{
+        $(preciosPorTipo).attr('valid', 'false');
+
+      }else if(totalAsignado == montoMax){
          preciosPorTipo.css({"border": "none"});
+        $(preciosPorTipo).attr('valid', 'true');
       }
     })
+
+    function validarTipoPorPrecio(montoM , precioXtipo){
+      let montoMax = parseFloat(montoM.val());
+      let preciosPorTipo = precioXtipo;
+
+      let totalAsignado = 0;
+      preciosPorTipo.each(function(){
+        totalAsignado += parseFloat($(this).val());
+      });
+
+       resto = montoMax - totalAsignado
+
+      if (totalAsignado > montoMax) {
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+        $(preciosPorTipo).attr('valid', 'false');
+        $('#pValid').text('Excede el monto máximo por ' + resto.toFixed(2) + ' bs');
+
+      }else if(totalAsignado < montoMax){
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+        $(preciosPorTipo).attr('valid', 'false');
+        $('#pValid').text('Falta ' + resto.toFixed(2) + ' bs para alcanzar el monto máximo');
+
+      } else if(totalAsignado < 1 ){
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+        $(preciosPorTipo).attr('valid', 'false');
+        $('#pValid').text('');
+
+      }else if(totalAsignado == montoMax){
+         preciosPorTipo.css({"border": "none"});
+        $(preciosPorTipo).attr('valid', 'true');
+      }
+
+    }
 
     function validarPrecio(input){
       let valor = input.val();
       if(valor <= 0 || isNaN(valor)){
         $('#error').text('Precio inválido.');
-        input.css({'border': 'solid 2px', 'border-color':'red'})
+        input.css({'border': 'solid 1px', 'border-color':'red'})
         input.attr('valid','false')
         return false;
       }else{
@@ -464,7 +511,7 @@
                 if(count >=2){
                   $(this).closest('tr').attr('style', 'border-color: red;')
                   $(this).attr('valid', 'false');
-                  $('#error').text('No pueden haber productos repetidos');
+                  $('#pValid').text('No pueden haber productos repetidos');
                 }else{
                   $(this).attr('valid', 'true');
                 }
@@ -481,7 +528,7 @@
           
         })
         if(!$('.select-productos').is('[valid="false"]')){
-         $('#error').text('');
+         $('#pValid').text('');
        }
        
      })
@@ -505,7 +552,7 @@
                 if(count >=2){
                   $(this).closest('tr').attr('style', 'border-color: red;')
                   $(this).attr('valid', 'false');
-                  $('#error').text('No pueden haber Tipo de Pagos repetidos');
+                  $('#pValid').text('No pueden haber Tipo de Pagos repetidos');
                 }else{
                   $(this).attr('valid', 'true');
                 }
@@ -522,7 +569,7 @@
           
         })
         if(!$('.select-tipo').is('[valid="false"]')){
-         $('#error').text('');
+         $('#pValid').text('');
        }
        
      })
@@ -544,15 +591,42 @@
         })
       })
     }
+
+    function validarFila(filas , error){
+      let filaExiste = false;
+      $(filas).each(function(){
+        let fila = $(this).find('tr');
+        if(fila.length > 0){
+          filaExiste = true;
+          $(error).text('');
+          return false
+        }
+      })
+      if(!filaExiste){
+        $(error).text('No debe haber filas vacias.');
+      }
+      return filaExiste;
+    }
+
+      function selectMultifila(select , error , table , mensaje){
+       $(select).change(()=>{
+       $(`${table} tbody tr`).each(function(){
+          let selectFila = $(this).find(select).val();
+          if(selectFila == "" || selectFila == null){
+           $(error).text(mensaje);
+         }else{
+          $(error).text('');
+        }
+       }) 
+      })
+     }
     
 
      // REGISTRAR VENTA
-    let vmetodo, vmoneda;
+    let vmoneda;
 
 
-    $('#moneda').change(function(){
-      vmoneda =  validarSelect($('#moneda'),$("#error5"),"Error de moneda")
-    })
+     $('#moneda').change(()=>{ vmoneda =  validarSelect($('#moneda'),$("#error5"),"Error de moneda")  })
      $('.iva').keyup(()=> {validarNumero($(".iva"),$("#error4"),"Error de iva") });
 
      $('.select2').change(function(){
@@ -561,6 +635,10 @@
        validarCedula($(".select2"),$(".select2-selection") ,$("#error1"));
       }
      })
+
+
+     selectMultifila($('.select-tipo'), $('.filaTipoPago'), '.table-body-tipo' ,'No debe haber tipo pago vacíos.');
+     selectMultifila($('.select-productos'), $('.filaProductos'),'.table-body' ,'No debe haber productos vacíos.');
 
      let click = 0;
      setInterval(()=>{click = 0}, 2000);
@@ -573,8 +651,14 @@
 
      let cedula = validarSelec2($(".select2"),$(".select2-selection"),$("#error1"),"Error de Cedula");
 
+
       if(cedula) validarCedula($(".select2"),$(".select2-selection") ,$("#error1")).then(()=>{
 
+        let filaProductos;
+        let filaTipoPago;
+
+       filaProductos = validarFila($('#ASD') ,$('.filaProductos'));
+       filaTipoPago = validarFila($('#FILL') ,$('.filaTipoPago'));
 
       $('.select2').change(function(){
        let select2 = $(this).val() 
@@ -593,29 +677,36 @@
       let vproductos = true;
       let vtipoPago = true;
       let vprecio = true;
+      let totalTipo = true
 
    //Validar Productos
-      $('.table-body tbody tr').each(function(){
-        let producto = $(this).find('.select-productos').val();
-        if(producto == "" || producto == null){
-         vproductos = false;
-         $('#error').text('No debe haber productos vacíos.')
-       }
-     })
+         $('.table-body tbody tr').each(function(){
+          let producto = $(this).find('.select-productos').val();
+          if(producto == "" || producto == null){
+           vproductos = false;
+           $('.filaProductos').text('No debe haber productos vacíos.')
+         }else{
+          $('.filaProductos').text('');
+          vproductos = true;
+        }
+      })
      
      //Validar Tipo Producto
-      $('.table-body-tipo tbody tr').each(function(){
+       $('.table-body-tipo tbody tr').each(function(){
         let tipoPago = $(this).find('.select-tipo').val();
         if(tipoPago == "" || tipoPago == null){
-         vtipoPago = false;
-         $('#error').text('No debe haber tipo pago vacíos.')
-       }
-     })
+         vtipoPago = false; 
+         $('.filaTipoPago').text('No debe haber tipo pago vacíos.');
+       }else{
+        $('.filaTipoPago').text('');
+        vtipoPago = true;
+      }
+    })
 
       $('.precioPorTipo input').each(function(){ validarPrecio($(this)) });
 
       if($('.precioPorTipo input').is('[valid="false"]')){
-        $('#error').text('Precio inválido.');
+        $('#pValid').text('Precio inválido.');
         vprecio = false;
       }
       
@@ -636,20 +727,25 @@
         repetidosTipoPago = true
       }
 
+      validarTipoPorPrecio($('#monto') , $('.precio-tipo'))
+      if($('.precio-tipo').is('[valid="false"]')){
+       totalTipo = false
+      }else if(!$('.precio-tipo').is('[valid="false"]')){
+       totalTipo = true
+      }
+
       let vstock = true;
       if($('.stock').is('[valid="false"]')){
         vstock  = false
-        $('#error').text('Cantidad inválida.')
+        $('#pValid').text('Cantidad inválida.')
       }else if($('.stock').val() == "" || $('.stock').val() === '0'){
         vstock = false
-        $('#error').text('Seleccione un producto');
+        $('#pValid').text('Cantidad inválida.');
       } 
 
 
 
-      if(cedula && vmoneda && montoT && vproductos && vtipoPago && vstock && vprecio && iva && repetidos && repetidosTipoPago){
-
-       console.log("Enviando ...");
+      if(cedula && vmoneda && montoT && vproductos && vtipoPago && vstock && vprecio && totalTipo && iva && repetidos && repetidosTipoPago && filaProductos && filaTipoPago){
 
        $.post('',{
         cedula: $('#cedula').val()
@@ -756,11 +852,13 @@
      $('.select2').val(0).trigger('change'); // LIMPIA EL SELECT2
      $('#agregarform').trigger('reset'); // LIMPIAR EL FORMULARIO
      $('#Agregar select').attr("style","borden-color:none;","borden-color:none;");
+     $('#Agregar .select2-selection').attr("style","borden-color:none;","borden-color:none;");
      $('#Agregar input').attr("style","borden-color:none;","borden-color:none;");
      $('.error').text(" ");
      $('.removeRow').click(); // LIMPIAR FILAS
      $('.removeRowPagoTipo').click(); // LIMPIAR FILAS TIPO PAGO
      filaN() // 
+     filaTipoN()
   })
 
   // ELIMNINAR VENTA
@@ -807,7 +905,7 @@
                 mostrar.destroy();
                 rellenar();
                 $('.cerrar').click();
-                Toast.fire({ icon: 'success', title: 'Venta eliminada' }); // ALERTA 
+                Toast.fire({ icon: 'success', title: 'Venta anulada' }); // ALERTA 
               }
             });
           }).catch(() => {

@@ -198,7 +198,7 @@
                       <?php if(isset($mostrarC)){
                         foreach($mostrarC as $data){
                           ?> 
-                          <option value="<?php echo $data->cedula;?>" class="opcion"><?php echo $data->nombre;?> <?php echo $data->apellido;?> <?php echo $data->cedula;?></option>
+                          <option value="<?php echo $data->cedulaE;?>" class="opcion"><?php echo $data->nombre;?> <?php echo $data->apellido;?> <?php echo $data->cedula;?></option>
                           <?php
                         }
                       }else{"";}?>
@@ -253,7 +253,7 @@
         
         <div class="row">
 
-          <div class="form-group col-md-5 h-75">  
+          <div class="form-group col-md-5 h-75 my-3">  
             <div class="container-fluid">
               <div class="row">
                 <div class="table table-body-tipo form-group col-12">
@@ -276,8 +276,11 @@
                         </td>
                         <td width='15%' class="precioPorTipo"><input class="select-asd precio-tipo" type="number" value=""/></td>
                       </tr>
+                     
                     </tbody>
                   </table>
+
+                   <p class="filaTipoPago error" style="color:#ff0000;text-align: center;"></p>
                   <a class="newRowPago a-asd" href="#"><i class="bi bi-plus-circle-fill"></i> Nueva fila</a> <br>
 
                 </div>
@@ -286,7 +289,7 @@
 
           </div>
 
-        <div class="form-group col-md-7">  
+        <div class="form-group col-md-7 my-3">  
           <div class="container-fluid">
             <div class="row">
               <div class="table table-body form-group col-12">
@@ -317,8 +320,11 @@
                     </tr>
                   </tbody>
                 </table>
+
+                <p class="filaProductos error" style="color:#ff0000;text-align: center;"></p>
+
                 <a class="newRow a-asd" href="#"><i class="bi bi-plus-circle-fill"></i> Nueva fila</a> <br>
-                <div class="text-end">
+                <div class="text-end pt-4">
                   <p class="text-end" id="montos"></p>
                   <p class="text-end" id="montos2"></p>
                   <p class="text-end"id="cambio"></p>
@@ -331,8 +337,7 @@
 
       </div>
 
-      <p class="error" style="color:#ff0000;text-align: center;" id="error"></p>
-
+      <p id="pValid" class="error" style="color:#ff0000;text-align: center;"></p>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary cerrar" id="cerrar" data-bs-dismiss="modal">Cancelar</button>
         <button type="submit" class="btn btn-success " id="registrar">Registrar</button>

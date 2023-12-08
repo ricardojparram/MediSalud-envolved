@@ -17,6 +17,10 @@
 
     if(!isset($permiso['Consultar'])) die(`<script> window.location = "?url=home" </script>`); 
 
+    if(isset($_POST['notificacion'])) {
+    	$objModel->getNotificacion();
+    }
+
     $proveedores = $objModel->mostrarProveedor();
   
     if(isset($_POST['getPermisos'])&& $permiso['Consultar'] ==1){

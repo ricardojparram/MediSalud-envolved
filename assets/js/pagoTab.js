@@ -26,13 +26,29 @@ $(document).ready(function() {
 	let select
 	let memas
 	let cambio
-
+	var pTarifas = 0
 
 	DatosP();
 	precio();
-	empresaEnvio();
 	selectTipoPago();
 	banco();
+	tarifa();
+
+
+	validarCarrito().then(()=>{
+		$.ajax({
+			type: "post",
+            url: "",
+            dataType: "json",
+            data:{datosCar: 'xd'},
+            success(data) {
+			}
+		})
+	})
+
+	$(window).on('beforeunload', function(){
+		return
+	})
 
 
 	// Datos Personales
@@ -54,39 +70,32 @@ $(document).ready(function() {
 		});
 	}
 	
-	function imprimirMemas() {
-  		console.log(memas[0].nombre); // Imprime los datos cuando se hayan asignado a memas
-	}
-
-
 	
-	
-	
-
+	let impuesto
+	let total
+	var precioUsd
 	// Precio y Cambio
 	function precio(){
-		let impuesto
-		let total
 		$.ajax({
 			type: "post",
             url: "",
             dataType: "json",
 			data:{mostrarP: "hola"},
 			success(pre){
-				let precioUsd
+				precioUsd = pre[0].cambio
 				cambio = pre[0].id_cambio
 				if (pre[0].cuenta > 0) {
-					console.log(pre);
 					$("#valorBs").html(parseFloat(pre[0].total).toFixed(2)+" Bs");
 					impuesto = pre[0].total * 0.16;
 					$("#impuesto").html(parseFloat(impuesto).toFixed(2)+" Bs");
-					total = pre[0].total + impuesto;
+					$('#pEnvio').html(parseFloat(pTarifas).toFixed(2)+" Bs");
+					total = pre[0].total + impuesto + pTarifas;
 					$("#total").html(parseFloat(total).toFixed(2)+" Bs");
 					$("#valorUsd").html(parseFloat(total / pre[0].cambio).toFixed(2)+" $");
 					
+					
 
 				} else {
-					console.log("nada")
 					let div=`
 						<div class="col-8 mx-auto text-center">
                     		<h3>Su Carrito Esta Vacio</h3>
@@ -97,59 +106,74 @@ $(document).ready(function() {
 		})
 	}
 
-	// Mostrar Empresa y Sede de Envio
-
-	function empresaEnvio(){
+	// Mostrar Estado y Sede de Envio
+	estado();
+	function estado(){
 		let selEm
 		$.ajax({
 			type: "post",
             url: "",
             dataType: "json",
-			data:{mostrarE: "empre"},
+			data:{mostrarE: "est"},
 			success(empre){
-				var empresas = empre
-				empresas.forEach(row => {
+				var estados = empre
+				estados.forEach(row => {
 					selEm+=`
-					<option value="${row.id_empresa}">${row.nombre}</option>
+					<option value="${row.id_estado}">${row.nombre}</option>
 					`;
 				})
-				$('#empresa').html('<option selected disabled>Nombre</option>' + selEm);
+				$('#estado').html('<option selected disabled>Nombre</option>' + selEm);
 			}
 		});
 		
 
 	};
+	var valorT
+	function tarifa() {
+		$.ajax({
+			type: "post",
+			url:'?url=envios',
+			dataType: 'JSON',
+			data:{
+				precio_envio: "ss"
+			},
+			success(data){
+				valorT = parseFloat(data.precio_solo)
+			}
+		})
+	}
 	
-	let nomEmpre
-		$("#empresa").change(()=> {
+	let nomEstado, sede, sedes, sedeU
+		$("#estado").change(()=> {
 			let selEnvi
-			nomEmpre = $("#empresa").val();
+			nomEstado = $("#estado").val();
 			
 			$.ajax({
 				type: "post",
 				url: "",
 				dataType: "json",
-				data:{mostrarS: "empre", nomEmpre},
+				data:{mostrarS: "xd", nomEstado},
 				success(sed){
-					console.log(sed);
-					var sede = sed
-					sede.forEach(row => {
+					sedes = sed
+					sed.forEach(row => {
 						selEnvi+=`
-						<option value="${row.id_sede}">${row.ubicacion}</option>
+						<option value="${row.id_sede}">${row.nombre}</option>
 						`;
 					})
-					$('#sede').html('<option selected disabled>Ubicacion</option>' + selEnvi);
+					$('#sede').html('<option selected disabled>Nombre</option>' + selEnvi);
+					
 				}
 			});
 		})
-	
+		
+		$("#sede").change(()=> {
+			sede = $("#sede").val()
+			sedeU = sedes.find(item => item.id_sede == sede)
+			$("#ubicacion").val(sedeU.ubicacion);
+			console.log(sedes)
+			console.log(sedes.find(item => item.id_sede == sede))
+		})
     
-    $('#top-navbar-1').on('shown.bs.collapse', function(){
-    	$.backstretch("resize");
-    });
-    $('#top-navbar-1').on('hidden.bs.collapse', function(){
-    	$.backstretch("resize");
-    });
     
     /*
         Form
@@ -185,22 +209,24 @@ $(document).ready(function() {
 		$("#errorBot").text("");
 		idGlass = this.id;
 		next_step = false;
-		
 		switch (idGlass) {
 			case "repartidor":
-				console.log("deli");
 				$(".glass").fadeOut(0);
 				$("#delivery").fadeIn(300);
+				pTarifas = precioUsd * 1
+				precio()
 				break;
 			case "nacional":
-				console.log("perso");
 				$(".glass").fadeOut(0);
 				$("#envio").fadeIn(300);
+				pTarifas = valorT
+				precio();
 				break;
 			case "persona":
-				console.log("perso");
 				$(".glass").fadeOut(0);
 				$("#retirar").fadeIn(300);
+				pTarifas = 0
+				precio();
 				break;
 		
 			default:
@@ -215,11 +241,11 @@ $(document).ready(function() {
 	$("#numAv").keyup(()=> {  validarString($("#numAv"),$("#errorNumAv"), "Error de Avenida,") });
 	$("#numCasa").keyup(()=> {  validarString($("#numCasa"),$("#errorNumCasa"), "Error de Casa,") });
 	$("#ref").keyup(()=> {  validarString($("#ref"),$("#errorRef"), "Error de Referencia,") });
-	$("#empresa").change(()=> {  validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,") });
+	$("#estado").change(()=> {  validarSelect($("#estado"),$("#errorEstado"), "Error de Estado,") });
 	$("#sede").change(()=> {  validarSelect($("#sede"),$("#errorSede"), "Error de Sede,") });
 
 	$("#2").click((e)=>{
-		let empresa, sede, calle, avenida, numCasa, referencia
+		let estado, sedeV, calle, avenida, numCasa, referencia
 		if(typeof idGlass == 'undefined'){
 			$("#errorBot").text("Elija una Opcion de Entrega");
 		}else{
@@ -240,9 +266,9 @@ $(document).ready(function() {
 	 			}	
 				break;
 			case "nacional":
-				empresa = validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,");
-				sede = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
-				if (empresa && sede) {
+				estado = validarSelect($("#estado"),$("#errorEstado"), "Error de Estado,");
+				sedeV = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+				if (estado && sedeV) {
 					next_step = true;
 				}else{
 					next_step = false;
@@ -286,9 +312,15 @@ $(document).ready(function() {
 		filaTipoN();
 	});
 
-		// ELiminar fila Tipo de Pago
+	// Caracteriticas de la fila Tipo Pago
+	function borrarFilaTipoN(){
+		validarRepetidoB();
+		//validarPrecio($(this));
+	}
+	// ELiminar fila Tipo de Pago
 	$('body').on('click','.removeRowPagoTipo', function(e){
 		$(this).closest('tr').remove();
+		borrarFilaTipoN();
 	});
 
 	let datosTrans, datosMovil
@@ -346,7 +378,6 @@ $(document).ready(function() {
 					mostrarT: 'xd', tipo
 				},
 				success(data){
-					console.log(data)
 					  data 
 					let option = ""
 					switch (tipo) {
@@ -423,16 +454,12 @@ $(document).ready(function() {
 	// 		$(".select-tipo").each(function () {
 	// 			tipo = $(this).val()
 	// 			let count = 0;
-	// 			console.log('tipo = '+tipo)
 
 	// 			$(".select-tipo").each(function() {
 	// 				if(tipo != ''){
-	// 					console.log('segundo = '+$(this).val())
 
 	// 					if(tipo == $(this).val()){
-	// 						console.log(tipo == $(this).val())
 	// 					  count++
-	// 					  console.log(count)
 
 	// 					  if(count >=2){
 	// 						$(this).closest('tr').attr('style', 'border-color: red;')
@@ -452,19 +479,18 @@ $(document).ready(function() {
 	function validarRepetido(){
 		let selects
 		$(".select-tipo").change(function(){
-			var valores = [];
+			let valores = [];
 			let repetidos = false
 			selects = $(this)
 			
 			$('.select-tipo').each(function() {
 				// $(this).attr('valid', 'true');
-  				var valor = $(this).val(); // Obtén el valor de cada elemento select
-  				valores.push(valor); // Agrega el valor al array
+  				var valor = $(this).val(); 
+  				valores.push(valor); 
 				if($(this).val() == 4 && $(this).val() == 4){
 					tipoPago($(this).val())
 				}
 			});
-			console.log(valores); // Muestra los valores en la consola
 
 			for (var i = 0; i < valores.length; i++) {
   				var contador = 0;
@@ -472,7 +498,7 @@ $(document).ready(function() {
 				for (var j = 0; j < valores.length; j++) {
 					if (valores[i] === valores[j]) {
 					contador++;
-					ola();
+					cuenta();
 					}
 					
 				}
@@ -480,8 +506,7 @@ $(document).ready(function() {
 			}
 			
 
-			console.log(contador);
-			function ola() {
+			function cuenta() {
 				
 				if (contador >= 2) {
 					selects.closest('tr').attr('style', 'border-color: red;')
@@ -505,6 +530,52 @@ $(document).ready(function() {
 		})
 	}
 
+	function validarRepetidoB() {
+		let valores = [];
+		selects = $(this)
+		$('.select-tipo').each(function() {
+			// $(this).attr('valid', 'true');
+			var valor = $(this).val(); 
+			valores.push(valor); 
+		});
+
+		for (var i = 0; i < valores.length; i++) {
+			  var contador = 0;
+
+			for (var j = 0; j < valores.length; j++) {
+				if (valores[i] === valores[j]) {
+				contador++;
+				cuentaB();
+				}
+				
+			}
+			
+		}
+		
+
+		function cuentaB() {
+			
+			if (contador >= 2) {
+				selects.closest('tr').attr('style', 'border-color: red;')
+				selects.attr('valid', 'false');
+				$('#error3').text('No pueden haber tipos de pagos repetidos');
+			} else {
+				selects.attr('valid', 'true');
+				selects.closest('tr').attr('style', 'border-color: none;')
+			}
+		}
+			
+		$('.select-tipo').each(function(){
+			if($(this).is('[valid="true"]')){
+				$(this).closest('tr').attr('style', 'border-color: none;');
+			}
+			if(!$('.select-tipo').is('[valid="false"]')){
+				$('#error3').text('');
+			}
+			
+		})
+	}
+
 	// function validarRepetido() {
 		
 			
@@ -517,7 +588,6 @@ $(document).ready(function() {
 	// 			// Verificar que el valor no se repita en otros selectores
 	// 			$(".select-tipo").each(function() {
 	// 				if ($(this).val() === valorSeleccionado) {
-	// 					console.log("El número seleccionado ya está duplicado en otro selector.");
 
 	// 					$(this).closest('tr').attr('style', 'border-color: red;')
 
@@ -548,22 +618,26 @@ $(document).ready(function() {
 	function validarPrecio(input){
 		let valor = input.val();
 		if(valor <= 0 || isNaN(valor)){
-		  $('#error3').text('Precio inválido.');
+		  $('#errorMonto').text('Precio inválido.');
 		  input.css({'border': 'solid 1px', 'border-color':'red'})
 		  input.attr('valid','false')
 		  return false;
+		// }else if (valor == null || valor == '') {
+		// 	$('#errorMonto').text('Rellene los campos vacios.');
+		//   	input.css({'border': 'solid 1px', 'border-color':'red'})
+		//   	input.attr('valid','false')
 		}else{
-		  $('#error3').text('');
+		  $('#errorMonto').text('');
 		  input.css({'border': 'none'});
 		  input.attr('valid','true');
 		  return true;
 		}
-	  }
-	  validarRepetido();
-	  validarValores();
-	  function validarValores(){
+	}
+	validarRepetido();
+	validarValores();
+	function validarValores(){
 		$('.precio input').keyup(function(){ validarPrecio($(this)) });
-	  }
+	}
 
 	$("#tipoP").change(()=> {  validarSelect($("#tipoP"),$("#errorTipoP"), "Error de Tipo,") });
 	$("#bancTipo").change(()=> {  validarSelect($("#bancTipo"),$("#errorBancTipo"), "Error de Banco,") });
@@ -579,10 +653,12 @@ $(document).ready(function() {
 	
 	
 	$("#3").click((e)=>{
+		let vmonto
+		let monto = 0
 		let valid = false
 		let vtipoPago = true
 		let vprecio = true
-		let empresa, sede, calle, avenida, numCasa, referencia
+		let estado, sede, calle, avenida, numCasa, referencia
 
 		let direccion = validarDireccion($("#direcClien"),$("#errorDirec"), "Error de Direccion,") ;
 		let correo = validarCorreo($("#emailClien"),$("#errorEmail"), "Error de Correo,") ;
@@ -590,7 +666,7 @@ $(document).ready(function() {
 		let cedula = validarCedula($("#cedClien"),$("#errorCed"), "Error de Cedula,") ;
 	 	let nombre = validarNombre($("#nomClien"),$("#errorNomApe"), "Error de Nombre,") ;
 
-		 switch (idGlass) {
+		switch (idGlass) {
 			case "repartidor":
 				calle = validarString($("#calle"),$("#errorCalle"), "Error de Calle,");
 				avenida = validarString($("#numAv"),$("#errorNumAv"), "Error de Avenida,");
@@ -602,13 +678,13 @@ $(document).ready(function() {
 	 			}else{
 					valid = false;
 	 			}
-				$("#empresa, #sede").val(" ")
+				$("#estado, #sede").val(" ")
 				break;
 			case "nacional":
-				empresa = validarSelect($("#empresa"),$("#errorEmpresa"), "Error de Empresa,");
-				sede = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
+				estado = validarSelect($("#estado"),$("#errorEstado"), "Error de Estado,");
+				sedeV = validarSelect($("#sede"),$("#errorSede"), "Error de Sede,");
 
-				if (empresa && sede) {
+				if (estado && sedeV) {
 					valid = true;
 				}else{
 					valid = false;
@@ -619,7 +695,7 @@ $(document).ready(function() {
 			case "persona":
 
 				valid = true;
-				$("#empresa, #sede").val(" ")
+				$("#estado, #sede").val(" ")
 				$("#calle, #numAv, #numCasa, #ref").val(" ")
 				break;
 				
@@ -637,21 +713,40 @@ $(document).ready(function() {
 				$('#error3').text('No debe haber tipo de pagos vacíos.')
 			}
 		})
-		
-
-		$('.precio input').each(function(){ let valPre = validarPrecio($(this)) 
+		let value = 0
+		$('.precio input').each(function(){ 
+			let valPre = validarPrecio($(this)) 
+			value = parseFloat($(this).val());
+				if (!isNaN(value)) {
+					monto = parseFloat(monto + value)
+				}
+			
 			if (!valPre) {
 				vprecio = false
 			}
+
 		});
 
+		// monto = (typeof monto === 'undefined') ? 0 : monto;
 
-		
+		if (monto == total) {
+			vmonto = true;
+			$("#errorMonto").text('')
+		}else if(monto > total){
+			vmonto = false;
+			$("#errorMonto").text('Error en el monto, la Cantidad es Mayor')
+			$('.precio input').css({'border': 'solid 1px', 'border-color':'red'})
+		}else if(monto < total){
+			vmonto = false;
+			$("#errorMonto").text('Error en el monto, la Cantidad es Menor')
+			$('.precio input').css({'border': 'solid 1px', 'border-color':'red'})
+		}else{
+			vmonto = false;
+			$("#errorMonto").text('Error en el monto, la Cantidad es Invalida')
+		}
 
-		
 
 		let push = []
-
 
 		if(idGlass == "repartidor"){
 			direcE = $("#calle").val()+" "+$("#numAv").val()+" "+$("#numCasa").val()+" "+$("#ref").val()
@@ -703,11 +798,14 @@ $(document).ready(function() {
 			
 			
 		})
-			console.log(push)
+
 		
-		if(nombre && direccion && telefono && cedula && correo && movil && trans && valid && vtipoPago && vprecio){
-			$.ajax({
-				url: '',
+		
+		if(nombre && direccion && telefono && cedula && correo && movil && trans && valid && vtipoPago && vprecio && vmonto){
+			validarCarrito().then(() => {
+
+				$.ajax({
+					url: '',
 					method: 'POST',
 					dataType: 'json',
 					data:{
@@ -717,13 +815,13 @@ $(document).ready(function() {
 						direccion: $("#direcClien").val(),
 						telefono: $("#teleClien").val(),
 						correo: $("#emailClien").val(),
-	
+						
 						sede: $("#sede").val(),
-	
+						
 						direccion: direcE,
 						detalles: push
-			
-			
+						
+						
 					},
 					success(final){
 						if (final.resultado === "Registrado Pedido") {
@@ -731,14 +829,15 @@ $(document).ready(function() {
 								title: 'Compra Realizada',
 								text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
 								icon: 'success',
-							  })
-							  setTimeout(function(){
-								location = '?url=inico'
-							  }, 2500);
+							})
+							// setTimeout(function(){
+							// 	location = '?url=inico'
+							// }, 2500);
 						} else {
-                			Toast.fire({ icon: 'error', title: 'No fue Posible el Registro' })
+							Toast.fire({ icon: 'error', title: 'No fue Posible Realizar la Compra' })
 						}
 					}
+				})
 			})
 			
 		}else{
@@ -762,20 +861,6 @@ $(document).ready(function() {
     	// navigation steps / progress steps
     	var current_active_step = $(this).parents('.f1').find('.f1-step.active');
     	var progress_line = $(this).parents('.f1').find('.f1-progress-line');
-    	
-    	// fields validation
-
-    	// parent_fieldset.find('input[type="text"], input[type="password"], textarea').each(function() {
-    	// if( $(this).val() == "" ) {
-    	// 	$(this).attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");
-    	// 	next_step = false;
-    	// }
-    	// else {
-    	// 	$(this).removeClass('input-error');
-    	// }
-    	// });
-
-    	// fields validation
     	
     	if( next_step ) {
     		parent_fieldset.fadeOut(400, function() {
@@ -809,6 +894,33 @@ $(document).ready(function() {
 			scroll_to_class( $('.f1'), 20 );
     	});
     });
+
+	function validarCarrito() {
+		return new Promise((resolve, reject)=>{
+			$.ajax({
+				method: 'post',
+				url: '',
+				dataType: 'JSON',
+				data:{
+					carrito:'carrito'
+				},success(data){
+					if (data[0].cuenta >= 0) {
+						return resolve(true)
+					} else {
+						Swal.fire({
+							title: 'Productos Agotados!',
+							text: 'Los Productos Selecionados estan agotados en nuestro almacen',
+							icon: 'error',
+						  })
+						//   setTimeout(function(){
+						// 	location = '?url=home'
+						//   }, 1600);
+						return reject(false)
+					}
+				}
+			})
+		})
+	}
     
     
     

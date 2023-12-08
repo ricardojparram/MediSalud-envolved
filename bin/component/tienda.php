@@ -7,19 +7,21 @@
       public function Nav(){
 
         $adminDashboard = "";
+        $misCompras = "";
         if(isset($_SESSION['nivel'])){
+          $misCompras = '<li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=miscompras">Mis compras</a></li>';
           $adminDashboard = ($_SESSION['nivel'] != "4") 
             ? '<li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=home">Admin</a></li>' : '';
         }
         $loginIcons = (!isset($_SESSION['cedula']))
-          ? '<div class="m-0">
-                <a class="text-success me-2" href="?url=login">
-                  <em class="ocultarlg">Iniciar sesión</em><i class="bi bi-person-fill fs-4"></i>
+          ? '<div class="mt-2 mt-lg-0">
+                <a class="btn btn-sm btn-outline-success me-2" href="?url=login">
+                  <span class="ocultarlg fw-bold">Iniciar sesión </span><i class="bi bi-person-fill"></i>
                 </a>
             </div>
-            <div class="m-0">
-              <a class="text-success me-2" href="?url=registro">
-                <em class="ocultarlg">Registrarse </em><i class="bi bi-person-lines-fill fs-4"></i>
+            <div class="mt-2 mt-lg-0">
+              <a class="btn btn-sm btn-outline-success" href="?url=registro">
+                <span class="ocultarlg fw-bold">Registrarse </span><i class="bi bi-person-lines-fill"></i>
               </a>
             </div>'
           : '<div class="m-0">
@@ -29,10 +31,12 @@
         $nav = '
         <nav class="navbar navbar-expand-lg navbar-light fixed-top d-block" id="navbar">
           <div class="container">
-            <a class="navbar-brand d-inline-flex" id="tituloNav" href="?url=inicio">
-              <img class="d-inline-block" src="assets/img/Logo_Medi.png" alt="logo" width="50px" height="50px" />
-              <span class="text-1000 fs-2 fw-bold mx-2 m-auto">Medisalud</span>
-            </a>
+            <div>
+              <a class="navbar-brand d-inline-flex" id="tituloNav" href="?url=inicio">
+                <img class="d-inline-block" src="assets/img/Logo_Medi.png" alt="logo" width="50px" height="50px" />
+                <h1 class="text-1000 fs-2 fw-bold mx-2 m-auto">Medisalud</h1>
+              </a>
+            </div>
 
             <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
             </button>
@@ -44,7 +48,7 @@
                 <li class="nav-item px-2"><a class="nav-link fw-medium" href="#">Nosotros</a></li>
                 <li class="nav-item px-2"><a class="nav-link fw-medium" href="#">Catálogo</a></li>
                 <li class="nav-item px-2"><a class="nav-link fw-medium" href="#">Contactos</a></li>
-                <li class="nav-item px-2"><a class="nav-link fw-medium" href="?url=miscompras">Mis compras</a></li>
+                '.$misCompras.'
                 '.$adminDashboard.'
               </ul>
 
@@ -61,7 +65,9 @@
 
             </div>
           </div>
-        </nav>';
+        </nav>
+
+        ';
         echo $nav;
       }
 

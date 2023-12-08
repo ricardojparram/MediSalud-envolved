@@ -1,39 +1,72 @@
 $(document).ready(function(){
 
 	mostrarCatalogo()
+	const getProductos = () => JSON.parse(localStorage.getItem('productos'));
+	const getProdDetalle = (id) => {let prod = getProductos(); return prod[`${id}`] }
 
 	function mostrarCatalogo(){
 		$.ajax({type: 'POST',url: '',dataType: 'json',data:{mostraC: ''},
 			success(data){
-			let mostrar = '';
-            data.forEach(row =>{
-             	mostrar += `
-	            <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-	              <div class="card">
-	                <div class="text-center m-3">
-	                  <img class="card-img-top mx-auto" style="width: 80%;" src="https://images.squarespace-cdn.com/content/v1/58126462bebafbc423916e25/1490212943759-5AVQSBMUSU12111CKAYM/image-asset.png">
-	                </div>
-	                <div class="card-body d-flex flex-column justify-content-between">
-	                  <div class="d-flex justify-content-between">
-	                    <p class="card-title align-self-center">${row.descripcion}</p>
-	                    <buttom class="btn btn-success align-self-center mostrarC" id='${row.cod_producto}' data-bs-toggle="modal" data-bs-target="#AñadirCarrito"><i class="bi bi-cart4"></i></buttom>
-	                  </div>
-	                  <div class="m-0 d-flex flex-column">
-	                    <p class="card-text align-self-left">Precio: ${row.p_venta}</p>
-	                  </div>
-	                </div>
-	              </div>
-	            </div>
-             	`;
-             })
-             $('#catalogo').html(mostrar);
+				let productos = data.reduce((acc, curr) => {
+					acc[curr.cod_producto] = curr;
+					return acc;
+				}, {});
+	            localStorage.setItem('productos', JSON.stringify(productos));
+				let mostrar = '';
+	            data.forEach(row =>{
+	             	mostrar += `
+		            <div class="product-container">
+		              <div class="card-product position-relative">
+		                <div class="card-body">
+		                  <div class="text-center position-relative">
+		                    <img src="${row.img}" alt="Imagen del producto" class="mb-3 img-fluid">
+		                    <small class="text-warning position-absolute bottom-0 end-0">
+		                      <i class="bi bi-star-fill"></i>
+		                      <i class="bi bi-star-fill"></i>
+		                      <i class="bi bi-star-fill"></i>
+		                      <i class="bi bi-star-fill"></i>
+		                      <i class="bi bi-star-half"></i>
+		                    </small>
+		                  </div>
+		                  <div class="text-small mb-1">
+		                    <a href="#!" class="text-decoration-none text-muted" tabindex="0"><small>${row.des_tipo}</small></a>
+		                  </div>
+		                  <h2 class="fs-6">${row.nombre}</h2>
+		                  <!-- rating -->
 
+		                  <div class="d-flex justify-content-between align-items-center mt-3">
+		                    <div>
+		                      <span class="text-dark">Bs. ${row.p_venta}</span><span class="text-muted"> $5</span>
+		                    </div>
+		                    <!-- btn -->
+		                    <button id_prod="${row.cod_producto}" class="btn btn-sm btn-success text-white mostrarCatalogo" data-bs-toggle="modal" data-bs-target="#AñadirCarritoModal">
+		                      <strong>Comprar </strong><i class="fs-7 text-white bi bi-cart-plus-fill"></i> 
+		                    </button>
+		                  </div>
+		                </div>
+		              </div>
+		            </div>
+	             	`;
+	            })
+	            $('#catalogo').html(mostrar);
 			}
 		})
 	}
 
 	let id, producto;
-	let cantidad, error, input;
+
+	$(document).on('click' , '.mostrarCatalogo' , function(){
+		id = this.attributes.id_prod.value;
+		let producto = getProdDetalle(id);
+		 console.log(producto)
+		$('.tipo_medicamento').html(producto.des_tipo);
+		$('.nombre_medicamento').html(producto.nombre);
+		$('.descripcion_medicamento').html(producto.descripcion);
+		$('.precio_bs').html(producto.p_venta);
+		$('.producto_imagen_modal').attr('src', producto.img);
+		$('.codigo_producto').html(producto.cod_producto);
+		$('.tipo_producto').html(producto.des_tipo);
+		$('.contraindicaciones').html(producto.contraindicaciones);
 
 	function actualizarTotal(){
 		input = $('#catalogoCantidadInput');
@@ -132,6 +165,5 @@ $(document).ready(function(){
 		})
 
 	})
-
 
 })

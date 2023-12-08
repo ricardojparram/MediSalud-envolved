@@ -49,6 +49,8 @@ $(document).ready(function(){
     $(".nombreBanco").select2({
       theme: 'bootstrap-5',
       dropdownParent: $('#Agregar .modal-body'),
+      width: '80%' 
+
   })
 
 
@@ -82,10 +84,15 @@ $(document).ready(function(){
              "pago Movil" || selectedOption == "pagomovil") {
     			$('.cuentaBancaria').css("display", "none");
     			$('.telefono').css("display", "block");
-    		} else {
+    		} else if(selectedOption == "Transferencia" || selectedOption == "transferencia" || selectedOption == "tranferencia" || selectedOption ==
+             "Tranferencia") {
     			$('.cuentaBancaria').css("display", "block");
     			$('.telefono').css("display", "none");
-    		}
+    		}else{
+                $('#error1').text("Solo se permite Transferencia o Pago movil") 
+                $('#tipoP').attr("style","border-color: red;")
+                $('#tipoP').attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");                         
+            }
     	});
     }  
 
@@ -108,7 +115,6 @@ $(document).ready(function(){
     }
     
     function ValidarDatos(dato ,dato1 , dato2, div , id = null){
-
         return new Promise((resolve, reject) => {
             $.post('',{tipoP : dato , tipo : dato1.val(), cedulaRif : dato2.val(), id ,validarD: "CedulaRif"},
                function(data){
@@ -124,20 +130,57 @@ $(document).ready(function(){
         })
     }
 
+    function selectOption(select , error){
+     $(select).change(()=>{
+        let tipoP = $(select).find('option:selected').text();
+        switch(tipoP){
 
+            case 'Seleccione una opción':
+            $(error).text(" seleccione una opción") 
+            $(select).attr("style","border-color: red;")
+            $(select).attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");                         
+            break;
+
+            case 'Pago movil' || 'Pago Movil' || 'pago movil' || 'pago Movil' || 'pagomovil' :
+            $(error).text("") 
+            $(select).attr("style","border-color: none")
+            $(select).attr("style","border-color: none");                         
+            break
+
+            case 'Transferencia' || 'transferencia' || 'tranferencia' || 'Tranferencia' : 
+            $(error).text("") 
+            $(select).attr("style","border-color: none")
+            $(select).attr("style","border-color: none");                         
+            break
+
+            default:
+
+            $(error).text("Solo se permite Transferencia o Pago movil") 
+            $(select).attr("style","border-color: red;")
+            $(select).attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");                         
+
+            break; 
+        }
+    })
+ }
 
       let ValidarT , idNombre;
 
       $('#tipoP').change(function(){
-       let valid = validarSelect($("#tipoP"),$("#error1"),"Error elige un tipo");
-       if (valid){
-        validarTipoP($("#tipoP"), $("#error1"))      
-       }
+
+        validarTipoP($("#tipoP"), $("#error")).then(()=>{
+         selectOption($('#tipoP') , $('#error1'));
+        })      
+
       })
       $('#nombre').change(() =>{ validarSelec2($("#nombre"),$(".select2-selection"),$("#error2"),"Error de Nombre"); });
       $('#cedulaRif').keyup(() =>{ validarCedula($('#cedulaRif') , $('#error3') , "Error de Rif") } );
       $('#cuentaBank').keyup(() =>{ validarBanco($('#cuentaBank'), $('#error4') , "Error de codigo banco") });
       $('#telefono').keyup(() =>{ validarTelefono($('#telefono'), $('#error5') , "Error de telefono") });
+
+     $('#cuentaBank').keyup(()=>{ ValidarDatos($('#tipoP').find('option:selected').text() , $('#cuentaBank'), $('#cedulaRif'), $("#error")) }); 
+     $('#telefono').keyup(()=>{ ValidarDatos($('#tipoP').find('option:selected').text() , $('#telefono'), $('#cedulaRif'), $("#error")) });
+
 
      let click = 0;
      setInterval(() => { click = 0 ;}, 2000);
@@ -151,7 +194,7 @@ $(document).ready(function(){
 
             let tPago = $('#tipoP').find('option:selected').text();
             let datos = [];
-            validarTipoP($("#tipoP"), $("#error1")).then(()=>{
+            validarTipoP($("#tipoP"), $("#error")).then(()=>{
 
                 switch(tPago){
 
@@ -184,7 +227,7 @@ $(document).ready(function(){
                          if(data.resultado === "banco registrado."){
                             mostrar.destroy();
                             rellenar(); 
-                            $('#agregarform').trigger('reset'); 
+                            $('#agregarform').trigger('reset');  
                             $('.nombreBanco').val(0).trigger('change'); // LIMPIA EL SELECT2
                             $('.cerrar').click(); 
                             Toast.fire({ icon: 'success', title: 'Banco registrado' }) 
@@ -197,7 +240,7 @@ $(document).ready(function(){
             });
                 break;
 
-                default: 
+                case 'Transferencia' || 'transferencia' || 'tranferencia' || 'Tranferencia' : 
                 // Validar
                 tipoP = validarSelect($('#tipoP'), $('#error1') , "Tipo invalido");
                 Nombre = validarSelec2($("#nombre"),$(".select2-selection"),$("#error2"),"Error de Nombre");
@@ -232,6 +275,14 @@ $(document).ready(function(){
             });
                 
                 break;
+
+                default:
+
+                $('#error1').text("Solo se permite Transferencia o Pago movil") 
+                $('#tipoP').attr("style","border-color: red;")
+                $('#tipoP').attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");                         
+
+                break; 
             }
         }).catch(()=>{
             $("#error1").text("El tipo pago no está registrado. Seleccione otro. ");
@@ -298,17 +349,20 @@ $(document).ready(function(){
     }
 
     $('#tipopEdit').change(function(){
-       let valid = validarSelect($("#tipopEdit"),$("#errorEdit1"),"Error elige un tipo");
-       if (valid){
-        validarTipoP($("#tipopEdit"), $("#errorEdit1"));
-       }
+
+        validarTipoP($("#tipopEdit"), $("#errorEdit")).then(()=>{
+            selectOption($('#tipopEdit'), $("#errorEdit1"));
+        })
+       
       })
       $('#nombreEdit').change(() =>{ validarSelect($('#nombreEdit'), $('#errorEdit2') , "Nombre invalido"); });
       $('#cedulaRifEdit').keyup(() =>{ validarCedula($('#cedulaRifEdit') , $('#errorEdit3') , "Error de Rif") } );
       $('#cuentaBankEdit').keyup(() =>{ validarBanco($('#cuentaBankEdit'), $('#errorEdit4') , "Error de codigo banco") });
       $('#telefonoEdit').keyup(() =>{ validarTelefono($('#telefonoEdit'), $('#errorEdit6') , "Error de telefono") });
 
- 
+      $('#cuentaBankEdit').keyup(()=>{ ValidarDatos($('#tipopEdit').find('option:selected').text() , $('#cuentaBankEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id) }); 
+      $('#telefonoEdit').keyup(()=>{ ValidarDatos($('#tipopEdit').find('option:selected').text() , $('#telefonoEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id) });
+
       $('#editar').click((e) =>{
          e.preventDefault();
 
@@ -352,7 +406,7 @@ $(document).ready(function(){
                      if(data.resultado === "banco editado."){
                         mostrar.destroy();
                         rellenar(); 
-                        $('#agregarform').trigger('reset'); 
+                        $('#agregarformEdit').trigger('reset'); 
                         $('.cerrar').click(); 
                         Toast.fire({ icon: 'success', title: 'Banco editado' }) 
                     }
@@ -364,7 +418,7 @@ $(document).ready(function(){
         });
             break;
 
-            default: 
+            case 'Transferencia' || 'transferencia' || 'tranferencia' || 'Tranferencia' : 
             // Validar
             tipopEdit = validarSelect($('#tipopEdit'), $('#errorEdit1'), "Tipo invalido");
             nombreEdit = validarSelect($('#nombreEdit'), $('#errorEdit2'), "Nombre invalido");
@@ -387,7 +441,7 @@ $(document).ready(function(){
                        if(data.resultado === "banco editado."){
                         mostrar.destroy();
                         rellenar(); 
-                        $('#agregarform').trigger('reset'); 
+                        $('#agregarformEdit').trigger('reset'); 
                         $('.cerrar').click(); 
                         Toast.fire({ icon: 'success', title: 'Banco Editado' }) 
                     }
@@ -400,10 +454,16 @@ $(document).ready(function(){
         });
             
             break;
+
+            default:
+            $('#errorEdit').text("Solo se permite Transferencia o Pago movil") 
+            $('#tipopEdit').attr("style","border-color: red;")
+            $('#tipopEdit').attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);");                         
+
+            break; 
         }
 
       
-
     }).catch(() =>{
        throw new Error('No exite.');
    })
@@ -411,6 +471,16 @@ $(document).ready(function(){
     click++;
 
  })
+
+    $('#cancelar').click(()=>{
+     $('#nombre').val(0).trigger('change'); // LIMPIA EL SELECT2
+     $('#agregarform').trigger('reset'); // LIMPIAR EL FORMULARIO
+     $('#Agregar .select2-selection').attr("style","borden-color:none;","borden-color:none;");
+     $('#Agregar select').attr("style","borden-color:none;","borden-color:none;");
+     $('#Agregar input').attr("style","borden-color:none;","borden-color:none;");
+     $('.error').text(" ");
+  })
+ 
 
     $(document).on('click', '.borrar', function(){
         id = this.id;

@@ -65,12 +65,16 @@
           <thead>
             <tr>
               <th scope="col">Moneda</th>
+              <th scope="col">Cambio</th>
+              <th scope="col">Fecha</th>
               <th scope="col">Opciones</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
               <th scope="col">Moneda</th>
+              <th scope="col">Cambio</th>
+              <th scope="col">Fecha</th>
               <th scope="col">Opciones</th>
             </tr>
           </tfoot>
@@ -85,59 +89,7 @@
   </div>
 
 
-  <div class="pagetitle">
 
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><h1>Gestionar cambio de moneda</h1></li>
-      </ol>
-    </nav>
-
-  </div>
-
-  <div class="card">
-    <div class="card-body">
-
-      <div class="row">
-        <div class="col-6">
-          <h5 class="card-title">Cambios</h5>
-        </div>
-
-        <div class="col-6 text-end mt-3">
-          <button id="agregarCambio" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#registrarModal">Agregar</button>
-
-        </div>
-      </div>
-
-      <div class="table-responsive">
-
-
-        <table class="table table-bordered" id="tabla" width="100%" cellspacing="0">
-          <thead>
-            <tr>
-              <th scope="col">Tipos de moneda</th>
-              <th scope="col">Alcambio</th>
-              <th scope="col">Fecha</th>
-              <th scope="col">Opciones</th>
-            </tr>
-          </thead>
-          <tfoot>
-            <tr>
-              <th scope="col">Tipos de moneda</th>
-              <th scope="col">Alcambio</th>
-              <th scope="col">Fecha</th>
-              <th scope="col">Opciones</th>
-            </tr>
-          </tfoot>
-          <tbody id = "tbody">
-
-          </tbody>
-        </table>
-      </div>
-      <!-- End Table with stripped rows -->
-
-    </div>
-  </div>
 
 
  </main>
@@ -253,8 +205,8 @@
 
 
 
-     <!-- Modal Registrar-->
-     <div class="modal fade" id="registrarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+     <!-- Modal Registrar Cambio-->
+     <div class="modal fade z-1" id="registrarModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
@@ -296,7 +248,7 @@
               </div>
               <p id="error" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
               <div class="modal-footer">
-                <button type="reset" id="close" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="reset" id="close" class="btn btn-secondary" data-bs-target="#editHistory" data-bs-toggle="modal">Cerrar</button>
                 <button type="button" id="enviar" class="btn btn-success">Registrar</button>
               </div>
             </form>
@@ -311,7 +263,7 @@
 
 <!-- Modal Editar cambio-->
 
-    <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade z-1" id="editarModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-keyboard="false">
      <div class="modal-dialog modal-lg">
       <div class="modal-content">
 
@@ -358,7 +310,7 @@
           </div>
           <p id="error2" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
           <div class="modal-footer">
-            <button type="reset" id="closeEdit" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="reset" id="closeEdit" class="btn btn-secondary" data-bs-target="#editHistory" data-bs-toggle="modal">Cerrar</button>
             <button type="button" id="enviarEdit" class="btn btn-success">Actualizar</button>
           </div>
 
@@ -370,7 +322,7 @@
 
     <!-- Modal Eliminar Cambio-->
 
-    <div class="modal fade" id="delModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade z-1" id="delModal"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -381,12 +333,66 @@
             <h5>Los datos serán eliminados completamente del sistema</h5>
           </div>
           <div class="modal-footer">
-            <button id="closeDel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button id="closeDel" type="button" class="btn btn-secondary" data-bs-target="#editHistory" data-bs-toggle="modal">Cancelar</button>
             <button id="delete" type="button" class="btn btn-danger">Borrar</button>
           </div>
         </div>
       </div>
     </div>
+
+
+    <!-- Modal con Historial de Cambios -->
+    <div class="modal fade" id="editHistory" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          <div class="modal-header alert alert-success">
+              <h3 class="modal-title"> <strong>Gestionar Cambio</strong> </h3>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+          <div class="modal-body">
+          <div class="row">
+            <div class="col-6">
+              <h3 class="modal-title"> <strong id="nomMoneda"></strong> </h3>
+            </div>
+
+            <div class="col-6 text-end">
+              <button id="agregarMoneda" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#registrarModal">Agregar</button>
+
+            </div>
+          </div>
+
+      <div class="table-responsive">
+
+        <table class="table table-bordered" id="tabla" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+
+              <th scope="col">Alcambio</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Opciones</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+
+              <th scope="col">Alcambio</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Opciones</th>
+            </tr>
+          </tfoot>
+          <tbody id = "tbody">
+
+          </tbody>
+        </table>
+      </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   
    <?php $VarComp->js(); ?>   
@@ -397,6 +403,7 @@
 
 <!-- Production version -->
 <script src="assets/js/popper.min.js"></script>
+
 
 
 

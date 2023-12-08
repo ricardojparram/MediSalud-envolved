@@ -143,13 +143,15 @@ class banco extends DBConnect{
 	private function validDatos(){
 		try {
 			parent::conectarDB();
-			$new = $this->con->prepare("SELECT * FROM (SELECT 'Pago movil' as  tipo_pago, id_datos_cobro as id, rif_cedula, telefono as tipo, id_banco as banco FROM datos_cobro_farmacia
+			$query = "SELECT * FROM (SELECT 'Pago movil' as  tipo_pago, id_datos_cobro as id, rif_cedula, telefono as tipo, id_banco as banco FROM datos_cobro_farmacia
 				WHERE telefono IS NOT NULL
 				UNION 
 				SELECT 'Transferencia' as tipo_pago, id_datos_cobro, rif_cedula, num_cuenta, id_banco FROM datos_cobro_farmacia
 				WHERE num_cuenta IS NOT NULL
 				) as detalle
-				WHERE detalle.tipo_pago = ? AND detalle.tipo = ? AND detalle.rif_cedula = ?");
+				WHERE detalle.tipo_pago = ? AND detalle.tipo = ? AND detalle.rif_cedula = ?";
+
+			$new = $this->con->prepare($query);
 			$new->bindValue(1, $this->tipoP);
 			$new->bindValue(2, $this->nombre);
 			$new->bindValue(3, $this->cedulaRif);
@@ -174,13 +176,15 @@ class banco extends DBConnect{
 	private function validDatosEdit(){
 		try {
 		parent::conectarDB();
-		$new = $this->con->prepare("SELECT * FROM (SELECT 'Pago movil' as  tipo_pago, id_datos_cobro as id, rif_cedula, telefono as tipo, id_banco as banco FROM datos_cobro_farmacia
+		$query = "SELECT * FROM (SELECT 'Pago movil' as  tipo_pago, id_datos_cobro as id, rif_cedula, telefono as tipo, id_banco as banco FROM        	  datos_cobro_farmacia
 				WHERE telefono IS NOT NULL
 				UNION 
 				SELECT 'Transferencia' as tipo_pago, id_datos_cobro, rif_cedula, num_cuenta, id_banco FROM datos_cobro_farmacia
 				WHERE num_cuenta IS NOT NULL
 				) as detalle
-				WHERE detalle.tipo_pago = ? AND detalle.tipo = ? AND detalle.rif_cedula = ? AND detalle.id_datos_cobro != ?");
+				WHERE detalle.tipo_pago = ? AND detalle.tipo = ? AND detalle.rif_cedula = ? AND detalle.id != ?";
+
+		$new = $this->con->prepare($query);
 		$new->bindValue(1, $this->tipoP);
 		$new->bindValue(2, $this->nombre);
 		$new->bindValue(3, $this->cedulaRif);

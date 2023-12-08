@@ -8,10 +8,17 @@
 	if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
 	$model = new sedeEnvio();
+	// $model->registrarSedes();
+
 	$permisos = $model->getPermisosRol($_SESSION['nivel']);
 	$permiso = $permisos['Sedes de Envio'];
 
 	if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
+
+
+	if(isset($_POST['notificacion'])) {
+    $objModel->getNotificacion();
+  }
 
 	$selectEmpresa = $model->selectEmpresas();
 

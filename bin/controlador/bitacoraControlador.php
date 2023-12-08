@@ -15,6 +15,10 @@
 
 	 if(!isset($permiso['Consultar'])) die(`<script> window.location = "?url=home" </script>`);
 
+	 if(isset($_POST['notificacion'])) {
+	 	$objModel->getNotificacion();
+	 }
+
 	if(isset($_POST['mostrar']) && isset($permiso['Consultar'])){
 		$objModel->mostrarBitacora();
 	}

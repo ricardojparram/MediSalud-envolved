@@ -73,6 +73,62 @@
 
 		}
 
+
+		public function calcularPrecioEnvio(){
+
+			$url = "http://agencias.com.ve/sys/ajax.php";
+
+			$body = [
+				"courier" => "MRW", 
+				"cmd" => "calculo_tarifa", 
+				"origen" => "",
+				"destino" => "",
+				"formapago" => "enorigen",
+				"tipoenvio" => "age",
+				"peso" => "1",
+				"size_x" => "15",
+				"size_y" => "15",
+				"size_z" => "5",
+				"valorseguro" => ""
+			];
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($body));
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded;charset=UTF-8'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+			$response = curl_exec($ch);
+
+			if($response === false) {
+				$resultado = ['resultado' => 'error', 'msg' => "No se ha podido conseguir el precio de envío."];
+				die(json_encode($resultado));
+			}
+
+			curl_close($ch);
+
+			$dom = new  \DOMDocument();
+			$dom->loadHTML($response);
+
+			$padre = $dom->getElementsByTagName('tbody')->item(0);
+			$hijo = $padre->getElementsByTagName('tr')->item(4);
+
+			$html = $dom->saveHTML($hijo);
+
+			$textoCompleto = $dom->saveHTML($hijo);
+
+			preg_match('/Bs\.\s*([\d\.]+)/', $textoCompleto, $matches);
+			$total_envio = $matches[0];
+
+			$precio = number_format(floatval(str_replace('Bs. ', '', $total_envio)), 2);
+
+			$resultado = ['precio_solo' => $precio, 'precio_bs' => "$total_envio"];
+			die(json_encode($resultado));
+
+		}
+
+
 	}
 
 ?>

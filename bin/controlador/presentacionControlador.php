@@ -17,7 +17,6 @@
     $objModel->mostrarPresentacionAjax();
   }
 
-
   if(isset($_POST['med'])  && isset($_POST['cant']) && isset($_POST['pes']) && isset($permiso['Registrar'])){
 
   	

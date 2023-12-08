@@ -17,11 +17,15 @@
 
 	if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
 
+	if(isset($_POST['notificacion'])) {
+		$objModel->getNotificacion();
+	}
+
 	if(isset($_POST['getPermisos'], $permiso["Consultar"]) ){
 		die(json_encode($permiso));
 	}
 
-	if(isset($_GET['cedula']) && isset($_GET['validar'])){
+	if(isset($_GET['cedula'], $_GET['validar'])){
 		$objModel->getValidarC($_GET['cedula']);
 	}
 
