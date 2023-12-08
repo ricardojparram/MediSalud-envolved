@@ -73,6 +73,7 @@
 
 		}
 
+
 		public function calcularPrecioEnvio(){
 
 			$url = "http://agencias.com.ve/sys/ajax.php";
@@ -126,6 +127,7 @@
 			die(json_encode($resultado));
 
 		}
+
 
 	}
 

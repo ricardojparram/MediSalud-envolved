@@ -14,6 +14,32 @@
 
 
 </head>
+<<<<<<< HEAD
+=======
+<style>
+    .main{
+        margin-top: 76px;
+    }
+
+    #fade{
+        display: none;
+    } 
+
+    .form-switch {
+        padding-left: 3.5em;
+    }
+    .botEntre{
+        height: 52px;
+        border-radius: 24px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .table-responsive {
+        overflow: visible;
+}
+</style>
+
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
 
 
 <body class="bg-gradient-primary" id="body">
@@ -115,7 +141,11 @@
                                 </div>
                                 <p id="errorBot" style="color:#ff0000;text-align: center;"></p>
                             </div>
+<<<<<<< HEAD
                             <div class="row form-group mb-1 col-md-12 m-auto">
+=======
+                            <div class="row form-group mb-1 col-md-12">
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                 <div class="glass" id="delivery">
                                     <div class="row form-group col-md-12">
                                         <div class="col-lg-6">
@@ -155,6 +185,7 @@
                                     </div>
                                 </div>
                                 <div class="glass" id="envio">
+<<<<<<< HEAD
                                     <div class="row form-group col-md-12 ">
                                         <div class="col-lg-6">
                                             <label for="inputText" class="col-12 col-form-label "><strong>Estado</strong></label>
@@ -172,11 +203,31 @@
                                                 <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone la sede de la empresa."><i class="bi bi-box-seam"></i></button>
                                                 <select class="form-select" id="sede">
                                                     <option selected="" disabled="">Nombre</option>
+=======
+                                    <div class="row form-group col-md-12">
+                                        <div class="col-lg-6">
+                                            <label for="inputText" class="col-12 col-form-label "><strong>Empresa de Envio</strong></label>
+                                            <div class="input-group">
+                                                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone la empresa para enviarle su pedido."><i class="bi bi-truck"></i></button>
+                                                <select class="form-select" id="empresa">
+                                                    <option selected="" disabled="">Nombre</option>
+                                                </select>
+                                            </div>
+                                            <p class="m-0" id="errorEmpresa" style="color:#ff0000;text-align: center;"></p>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label for="inputText" class="col-12 col-form-label "><strong>Sede de Envio</strong></label>
+                                            <div class="input-group">
+                                                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Selecicone la sede de la empresa."><i class="bi bi-box-seam"></i></button>
+                                                <select class="form-select" id="sede">
+                                                    <option selected="" disabled="">Ubicacion</option>
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                                 </select>
                                             </div>
                                             <p class="m-0" id="errorSede" style="color:#ff0000;text-align: center;"></p>
                                         </div>
                                     </div>
+<<<<<<< HEAD
                                     <div class="row form-group col-md-12">
                                         <label for="inputText" class="col-12 col-form-label"><strong>Direccion de Sede</strong></label>
                                         <div class="input-group">
@@ -188,6 +239,12 @@
                                 <div class="glass" id="retirar">
                                     <p>
                                         Puede ir a retirar su compra una vez se aprobada a esta direccion <strong>Av. Principal José Félix Ribas entre Calles Ayacucho y Maracay,</strong> con solo decir su nombre o su numero de cedula podra retirar su compra
+=======
+                                </div>
+                                <div class="glass" id="retirar">
+                                    <p>
+                                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, eaque! Vitae quae ab corrupti accusantium a in repellat eveniet tempora obcaecati, nemo quo earum aspernatur assumenda quod eligendi? Nisi, pariatur.
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                     </p>
                                 </div>
                             </div>

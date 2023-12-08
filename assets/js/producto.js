@@ -24,17 +24,22 @@ $(document).ready(function(){
            let tabla;
             data.forEach(row =>{
               editarPermiso = (permiso.editar != 1)?  'disable' : '';
+              imagenPermiso = (permiso.imagen != 1)? 'disable' : '';
               eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
+
               tabla += `
               <tr>
               <td>${row.descripcion}</td>
               <td>${row.stock}</td>
-              <td>${row.p_venta}</td>
+              <td>${row.venta}</td>
               <td>${row.des_tipo}</td>
               <td>${row.vencimiento}</td>
               <td class="d-flex justify-content-center">
               <button type="button" ${editarPermiso} id="${row.cod_producto}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
+              <button type="button" ${imagenPermiso} id="${row.cod_producto}" class="btn btn-success editar mx-2" data-bs-toggle="modal" data-bs-target="#infoImg"> <i class="bi bi-eye icon-24 t" width="20"></i></button>
               <button type="button" ${eliminarPermiso} id="${row.cod_producto}" class="btn btn-danger borrar mx-2"  data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
+              
+             
               </td>
               </tr>
               `
@@ -49,6 +54,8 @@ $(document).ready(function(){
 
 
        $('#descripcion').keyup(()=> {validarStringLong($("#descripcion"),$("#error2"),"Error de nombre") });
+
+       $('#codigo').keyup(()=> {validarStringLong($("#codigo"),$("#error2"),"Error de nombre") });
 
       $('#fecha').change(function(){
       validarFechaHoy($("#fecha"),$("#error3"),"Error de fecha"); 
@@ -113,6 +120,7 @@ $(document).ready(function(){
         $contraInP = $('#contraIn');
         $cantidadP = $('#cantidad');
         $precioVenP = $('#precioV');
+        $codigo = $('#codigo');
 
 
         //  ENVÍO DE DATOS
@@ -122,6 +130,7 @@ $(document).ready(function(){
           dataType: 'json',
           data: {
             "descripcion" : $descripcionP.val(),
+             "codigo" : $codigo.val(),
             "fechaV" : $fechaVP.val(),
             "composicionP" : $composicionP.val(),
             "posologia" : $posologiaP.val(),
@@ -172,7 +181,7 @@ $(document).ready(function(){
      fechaHoy($('#fecha'));
    })
 
-   /* --- EDITAR --- */
+   /* --- EDITAR --- */ 
    let id;
 
    $(document).on('click', '.editar', function() {
@@ -184,7 +193,9 @@ $(document).ready(function(){
             dataType: "json",
             data: {select: "edit", id},
             success(data){
+             
               $("#descripcionEd").val(data[0].descripcion);
+               $("#codigoEd").val(data[0].codigo);
               $("#fechaEd").val(data[0].vencimiento);
               $("#composicionEd").val(data[0].composicion);
               $("#posologiaEd").val(data[0].posologia); 
@@ -234,6 +245,23 @@ $(document).ready(function(){
 
      
       // FORMULARIO DE EDITAR
+    let ID;
+        // Mostrar informacion 
+        $(document).on('click', '.infoImg', function () {
+            ID = this.ID;
+            $.ajax({
+                method: "post",
+                url: "",
+                dataType: "json",
+                data: { select1: true, ID: ID },
+                success(data) {
+                    $("#cod_producto").val(data[0].cod_producto);
+                    $("#img").val(data[0].img);
+
+                    
+                }
+            });
+        });
 
       $("#actualizar").click((e)=>{
           //VALIDACIONES
@@ -261,7 +289,9 @@ $(document).ready(function(){
         dataType: "json",
         data: {
           
+          
           descripcionEd : $('#descripcionEd').val(),
+          codigoEd : $('#codigoEd').val(),
           fechaEd : $('#fechaEd').val(),
           composicionEd : $('#composicionEd').val(), 
           posologiaEd: $('#posologiaEd').val(),
@@ -317,7 +347,6 @@ $(document).ready(function(){
       })
       click++;
     })
-
 
 
 });

@@ -5,7 +5,8 @@
   use component\tienda as tienda;
 
   $objModel = new login();
-
+  
+ 
   if(isset($_SESSION['nivel'])){
     die('<script>window.location = "?url=inicio" </script>');
   }

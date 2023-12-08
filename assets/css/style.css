@@ -63,6 +63,7 @@ h6 {
 .pagetitle h1 {
   font-size: 24px;
   margin-bottom: 0;
+  text-align: center;
   font-weight: 600;
   color: #63685e;
 }

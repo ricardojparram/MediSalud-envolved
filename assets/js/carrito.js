@@ -11,6 +11,7 @@ $(document).ready(function(){
 			})
 	}
 
+
 	if('productos' in localStorage === false) getProductosBD();
 
 	/* Para la manipulacion de los detalles del producto en localStorage */
@@ -87,6 +88,70 @@ $(document).ready(function(){
 				if(response.resultado != 'ok'){
 					res = false;
 					return;
+
+	
+	async function mostrarCarrito(){
+		await $.ajax({method: 'POST',dataType: 'json',url: '?url=carrito',
+			data: {mostrar:'', carrito:''},
+			success(response){
+				let div = '';
+				if(typeof response.error != 'undefined'){
+					div = `<div class="alert alert-secondary w-75" role="alert">
+				                <h3>Necesita iniciar sesión para agregar productos al carrito.</h3>
+				                <div>
+				                  <a class="text-center col-6" href=""><u>Iniciar sesión</u></a> | 
+				                  <a class="text-center col-6" href=""><u>Registrarse</u></a>
+				                </div>
+				            </div>`;
+					$('.carrito-container').html(div);
+					$('.cardTotal').hide();
+					$('.vaciar').hide();
+				}
+				if(response.length == 0){
+					div = `<div class="alert alert-secondary w-75" role="alert">
+								<h3>Su carrito está vacío.</h3>
+				            </div>`;
+				    $('.carrito-container').html(div);
+				    $('.carrito-container').css({width:'500px'})
+				    $('.regresar').parent().toggleClass('col-6')
+					$('.cardTotal').hide();
+					$('.vaciar').hide();
+				}
+				if(response.length > 0){
+					let productos = [];
+					let precioTotal = 0;
+					let flexDirection = ($('.carrito-container').width() < 400) ? 'item-carrito-tienda' : '';
+					for(let i = 0; i < response.length; i++){
+						let row = response[i];
+						let precioUnidadTotal = row.precioActual * row.cantidad;
+						precioTotal += precioUnidadTotal;
+						let hr = (i == response.length - 1) ? '' : '<hr class="my-2">';
+						div += `
+						<div class="item-carrito  ${flexDirection} p-2">
+			                <img class="" src="assets/img/image-asset.png">
+			                <div class="descripcion ">
+			                  <h3>${row.descripcion}</h3>
+			                  <p>${row.contraindicaciones}</p>
+			                  <div class="opciones position-relative">
+			                    <input type="number" id="${row.cod_producto}" value="${row.cantidad}" class="form-control cantidad" placeholder="Cant.">
+			                    <a class="eliminar" prod="${row.cod_producto}" >Eliminar</a>
+			                    <div class="invalid-tooltip">Cantidad no disponible.</div>
+			                  </div>
+			                </div>
+			                <div class="precio">
+			                  <h6>Unidad: <span class="precioUnidad">${row.precioActual}</span>$</h6>
+			                  <h6 class="fs-5">Total: <span class="precioUnidadTotal">${precioUnidadTotal}</span>$</h6>
+			                </div>
+			            </div>
+			            ${hr}
+			            `
+			            productos.push({id_producto: row.cod_producto, cantidad: row.cantidad});
+					}
+					actualizarBadge(productos.length);
+					$('.carrito-container').html(div);
+					$('#precioTotal').html(precioTotal);
+					validarStock(productos);
+
 				}
 
 				res = true;
@@ -376,6 +441,12 @@ $(document).ready(function(){
 			id = $(this).attr('prod');
 		})
 	}
+	
+	function actualizarBadge($cantidad){
+		badge = $('#carrito_badge');
+		badge.html($cantidad)
+	}
+
 
 	/* Elimina productos del carrito en localStorage y BD */
 	$('#delProductFromCar').click(function(){
@@ -409,7 +480,48 @@ $(document).ready(function(){
 
 	})
 
+
 	/* Abre modal confirmar el vaciar carrito */
+
+	// $('#añadirAlCarrito').click(function(){
+	// 		input = $('#catalogoCantidadInput');
+	// 		cantidad = Number(input.val());
+	// 		error = $('#errorCantidadCatalogo');
+
+	// 		if(validarVC(input, error, 'Error,') != true){
+	// 			error.css({display: 'block'});
+	// 			return
+	// 		}else{
+	// 			error.css({display: 'none'});
+	// 		}
+
+	// 		validarStock(id).then((res) => {
+	// 			if(!res) return;
+
+	// 			$.ajax({ url: '', type: 'post', dataType: 'json',
+	// 				data: {añadirCarrito:'', id, cantidad},
+	// 				success(res){
+	// 					if(res.resultado === true){
+	// 						$('.cerrar').click();
+	// 						carrito.refrescar();
+	// 						Toast.fire({ icon: 'success', title: 'Se ha añadido el producto al carrito.'});
+	// 					}else{
+	// 						$('.cerrar').click();
+	// 						Toast.fire({ icon: 'error', title: res.msg});
+	// 					}
+	// 				},
+	// 				error: (e) => {
+	// 					$('.cerrar').click();
+	// 					Toast.fire({ icon: 'error', title: 'Ha ocurrido un error.'});
+	// 				}
+
+	// 			})
+				
+	// 		})
+
+	// 	})
+
+
 	$('.vaciar').click(function(e){
 		e.preventDefault();
 		$('#vaciarCarritoModal').modal('show');
@@ -463,5 +575,5 @@ $(document).ready(function(){
 		});
 	})
 
-
+ }
 })

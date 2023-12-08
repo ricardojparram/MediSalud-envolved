@@ -135,6 +135,7 @@ CREATE TABLE presentacion(
 -- TABLA PARA PRODUCTO 
 CREATE TABLE producto( 
     cod_producto int AUTO_INCREMENT PRIMARY KEY,
+    codigo varchar(50) NOT NULL,
     nombre varchar(30) NOT NULL,
     descripcion varchar(200) COLLATE utf8_spanish2_ci NOT NULL,
     ubicacion varchar(100)COLLATE utf8_spanish2_ci NOT NULL,
@@ -292,6 +293,7 @@ CREATE TABLE detalle_pago(
     id_tipo_pago int NOT NULL,
     id_datos_cobro int,
     id_banco_cliente int,
+    referencia varchar(50),
     monto_pago decimal (10,2) NOT NULL,
     id_cambio int NOT NULL,
     FOREIGN KEY (id_banco_cliente) REFERENCES banco(id_banco) ON DELETE CASCADE ON UPDATE CASCADE,

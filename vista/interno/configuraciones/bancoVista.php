@@ -35,7 +35,7 @@
  	<!-- End Sidebar-->
  	<main class="main" id="main">
  		<div class="pagetitle">
- 			<h1>Bancos</h1>
+ 			<h1 class="text-start">Bancos</h1>
  			<nav>
  				<ol class="breadcrumb">
  					<li class="breadcrumb-item">Gestionar Cuentas de Banco</li>

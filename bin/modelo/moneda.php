@@ -54,8 +54,8 @@ class moneda extends DBConnect{
    	try{
         parent::conectarDB();
        $new = $this->con->prepare("
-        SELECT m.nombre,c.cambio,c.fecha, c.id_cambio FROM moneda m INNER JOIN cambio c ON c.moneda = m.id_moneda WHERE c.status = 1 AND m.status = 1 AND m.nombre = ?");
-        $new->bindValue(1, $nombreMon);
+        SELECT m.nombre, format(c.cambio,2,'de_DE') as monto, c.fecha, c.id_cambio  FROM moneda m INNER JOIN cambio c ON c.moneda = m.id_moneda WHERE c.status = 1 AND m.status = 1");
+
        $new->execute();
        $data = $new->fetchAll();
        echo json_encode($data);

@@ -1,17 +1,8 @@
 $(document).ready(function(){
 
 
-  let mostrar;
-  let permiso , eliminarPermiso, registrarPermiso;
-
-    $.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos : "permiso"},
-      success(data){ permiso = data; }
-
-    }).then(function(){
-      rellenar(true);
-      registrarPermiso = (permiso.registrar != 1)? 'disable' : '';
-        $('#agregarModal').attr(registrarPermiso, '');
-    })         
+  let mostrar;        
+  rellenar(true);
 
   function rellenar(bitacora = false){
     $.ajax({
@@ -20,18 +11,18 @@ $(document).ready(function(){
       dataType: "json",
       data:{mostrar: "venta" , bitacora},
       success(data){
+        console.log(data)
         let tabla;
         data.forEach(row =>{
-          eliminarPermiso = (permiso.eliminar != 1)? 'disable' : '';
           tabla +=`
           <tr>
           <td>${row.cedula_cliente}</td>
-          
+          <td><button class="btn btn-success detalleV" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#detalleVenta">Ver Detalles</button></td>
           <td>${row.fecha}</td>
-          <td>${row.des_tipo_pago}</td>
+          <td><button class="btn btn-success detalleTipo" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#detalleTipoPago">Ver Metodos Pago</button></td>
           <td>${row.total_divisa}</td>
           <td>${row.monto}</td>
-          <td><button class="btn btn-success detalleV" id="${row.num_fact}" data-bs-toggle="modal" data-bs-target="#detalleVenta">Ver detalles</button></td>
+
           </tr>
           `
         })
@@ -249,11 +240,7 @@ $(document).ready(function(){
        filaN();
      });
 
-    // ELiminar fila
-     $('body').on('click','.removeRow', function(e){
-        $(this).closest('tr').remove();
-        calculate()
-     });
+
 
     //Evento keyup para que funcione calculate()
     $('.table-body').on('keyup','input',function(){
@@ -446,80 +433,48 @@ $(document).ready(function(){
 
   $(document).on('click', '.factura' , function(){
     id = this.id;
+
     $.ajax({
       type: "POST",
       url: '',
       dataType: 'json',
       data: {id, factura: "factura"},
       success(data){
-
+       if(data.respuesta === 'Archivo guardado'){
+        Toast.fire({ icon: 'success', title: 'Exportado correctamente.' });
+        descargarArchivo(data.ruta);
+       }else{
+        Toast.fire({ icon: 'error', title: 'Error de Exportado.' });
+       }
       }
     })
   })
 
-  $('#cerrar').click(()=>{
-     $('.select2').val(0).trigger('change'); // LIMPIA EL SELECT2
-     $('#agregarform').trigger('reset'); // LIMPIAR EL FORMULARIO
-     $('#Agregar select').attr("style","borden-color:none;","borden-color:none;");
-     $('#Agregar input').attr("style","borden-color:none;","borden-color:none;");
-     $('.error').text(" ");
-     $('.removeRow').click(); // LIMPIAR FILAS 
-     filaN() // 
-  })
+  function descargarArchivo(ruta){
+    let link = document.createElement('a');
+    link.href = ruta;
+    link.target = '_black';
+    link.click();
+  }
 
-  // ELIMNINAR VENTA
+      $(document).on('click', '.detalleTipo' , function(){
 
-       $(document).on('click', '.borrar', function(){
-        id = this.id;
-        
-      })   
+       id = this.id; // id = id
+       $.post('',{detalleTipo : 'detTipoPago' , id}, function(data){
+        let lista = JSON.parse(data);
+        let tabla;
 
-       function validarEliminar() {
-        return new Promise((resolve, reject) => {
-          $.ajax({
-            type: "POST",
-            url: '',
-            dataType: "json",
-            data: { validarCI: "existe", id },
-            success(data) {
-              console.log(data);
-              if (data.resultado === "Error de venta") {  
-                Toast.fire({ icon: 'error', title: 'Esta venta ya esta anulada' }); // ALERTA 
-                mostrar.destroy();
-                rellenar();
-                $('.cerrar').click();
-                reject(); // Rechaza la promesa si la condición se cumple
-              } else {
-                resolve(); // Resuelve la promesa si la condición no se cumple
-              }
-            }
-          });
-        });
-      }
+        lista.forEach(row=>{
+          tabla += `
+          <tr>
+          <td>${row.des_tipo_pago}</td>
+          <td>${row.monto_pago}</td>                    
+          </tr>
+          `  
+        })
+        $('#ventaNombreTipoPago').text(`Numero de Factura #${lista[0].num_fact}.`);
+        $('#bodyDetalleTipo').html(tabla);
+      })
+     })
 
-      $("#delete").click(() => { 
-        if (click >= 1) {
-          throw new Error('Spam de clicks');
-        }
-        validarEliminar().then(() => {
-            // Si la promesa se resuelve, la ejecución continúa
-            $.ajax({
-              type: "POST",
-              url: '',
-              data: { eliminar: "asd", id },
-              success(data) {
-                mostrar.destroy();
-                rellenar();
-                $('.cerrar').click();
-                Toast.fire({ icon: 'success', title: 'Venta eliminada' }); // ALERTA 
-              }
-            });
-          }).catch(() => {
-      // Si la promesa se rechaza, la ejecución se detiene
-      console.log('No se puede eliminar la venta');
-      });
-      click++;
-    });
-
-
-});
+})

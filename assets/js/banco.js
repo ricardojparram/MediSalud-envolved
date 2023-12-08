@@ -50,6 +50,7 @@ $(document).ready(function(){
       theme: 'bootstrap-5',
       dropdownParent: $('#Agregar .modal-body'),
       width: '80%' 
+
   })
 
 
@@ -166,9 +167,11 @@ $(document).ready(function(){
       let ValidarT , idNombre;
 
       $('#tipoP').change(function(){
+
         validarTipoP($("#tipoP"), $("#error")).then(()=>{
          selectOption($('#tipoP') , $('#error1'));
         })      
+
       })
       $('#nombre').change(() =>{ validarSelec2($("#nombre"),$(".select2-selection"),$("#error2"),"Error de Nombre"); });
       $('#cedulaRif').keyup(() =>{ validarCedula($('#cedulaRif') , $('#error3') , "Error de Rif") } );
@@ -177,6 +180,7 @@ $(document).ready(function(){
 
      $('#cuentaBank').keyup(()=>{ ValidarDatos($('#tipoP').find('option:selected').text() , $('#cuentaBank'), $('#cedulaRif'), $("#error")) }); 
      $('#telefono').keyup(()=>{ ValidarDatos($('#tipoP').find('option:selected').text() , $('#telefono'), $('#cedulaRif'), $("#error")) });
+
 
      let click = 0;
      setInterval(() => { click = 0 ;}, 2000);

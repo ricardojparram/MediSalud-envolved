@@ -54,17 +54,29 @@
 
                 if(isset($data[0]["cedula"])){ 
                     echo json_encode($data);
+<<<<<<< HEAD
+=======
+                    parent::desconectarDB();
+                    die();
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 }elseif (!isset($data[0]["cedula"])) {
                     $new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo FROM usuario u WHERE u.cedula = ?");
                     $new->bindValue(1, $cedula);
                     $new->execute();
                     $data = $new->fetchAll();
                     echo json_encode($data);
+<<<<<<< HEAD
                     
                     
                 }
                 parent::desconectarDB();
                 die();
+=======
+                    parent::desconectarDB();
+                    die();
+                }
+                
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 
             } catch(\PDOexection $error){
                 die($error);
@@ -95,7 +107,11 @@
         public function mostrarEstados(){
             try {
                 parent::conectarDB();
+<<<<<<< HEAD
                 $new = $this->con->prepare('SELECT * FROM `estados_venezuela` ORDER BY nombre ASC');
+=======
+                $new = $this->con->prepare('SELECT * FROM `empresa_envio` WHERE status = 1;');
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 $new->execute();
                 $data = $new->fetchAll();
                 echo json_encode($data);
@@ -110,8 +126,13 @@
         public function mostrarSede($estado){
             try {
                 parent::conectarDB();
+<<<<<<< HEAD
                 $new = $this->con->prepare('SELECT * FROM sede_envio WHERE id_estado = ? and status = 1');
                 $new->bindValue(1, $estado);
+=======
+                $new = $this->con->prepare('SELECT * FROM sede_envio WHERE id_empresa =  ? and status = 1');
+                $new->bindValue(1, $sede);
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 $new->execute();
                 $data = $new->fetchAll();
                 echo json_encode($data);
@@ -126,7 +147,11 @@
         public function getMostrarMetodo(){
             try{
               parent::conectarDB();
+<<<<<<< HEAD
               $new = $this->con->prepare("SELECT * FROM tipo_pago WHERE status = 1 and online = 1");
+=======
+              $new = $this->con->prepare("SELECT * FROM `tipo_pago` WHERE status = 1 and online = 1");
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
               $new->execute();
               $data = $new->fetchAll(\PDO::FETCH_OBJ);
               echo json_encode($data);
@@ -143,7 +168,11 @@
         public function banco(){
             try{
                 parent::conectarDB();
+<<<<<<< HEAD
                 $new = $this->con->prepare("SELECT * FROM banco WHERE status = 1");
+=======
+                $new = $this->con->prepare("SELECT * FROM `banco` WHERE status = 1");
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
                 echo json_encode($data);
@@ -157,7 +186,11 @@
              }   
         }
 
+<<<<<<< HEAD
         public function getRegistar($cedula, $nombre, $apellido, $direccionF, $telefono, $correo, $sede, $direccionE, $detalles){
+=======
+          public function nunca($cedula, $nombre, $apellido, $direccionF, $telefono, $correo, $sede, $direccionE, $detalles){
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
 
             if(preg_match_all("/^[a-zA-Z]{0,30}$/", $nombre) == false){
                 $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
@@ -174,21 +207,29 @@
                 echo json_encode($resultado);
                 die();
             }
+<<<<<<< HEAD
             if(preg_match_all("/[$%&|<>]/", $direccionF) == true){
                 $resultado = ['resultado' => 'Error de direccion factura' , 'error' => 'Direccion inválida.'];
                 echo json_encode($resultado);
                 die();
             }
+=======
+
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
             if(preg_match_all("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/", $correo) == false){
                 $resultado = ['resultado' => 'Error de email' , 'error' => 'Correo invalida.'];
                 echo json_encode($resultado);
                 die();
             }
+<<<<<<< HEAD
             if(preg_match_all("/[$%&|<>]/", $direccionE) == true){
                 $resultado = ['resultado' => 'Error de direccion entrega' , 'error' => 'Direccion inválida.'];
                 echo json_encode($resultado);
                 die();
             }
+=======
+
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
 
 
             $this->cedula = $cedula;
@@ -200,6 +241,7 @@
             $this->sede = $sede;
             $this->direccionE = $direccionE;
             $this->detalles = $detalles;
+<<<<<<< HEAD
             $this->registar();
           }
 
@@ -207,6 +249,15 @@
             try {
                 parent::conectarDB();
                 $new = $this->con->prepare("SELECT cedula FROM cliente WHERE cedula = ?");
+=======
+            $this->hola2();
+          }
+
+          private function hola2(){
+            try {
+                parent::conectarDB();
+                $new = $this->con->prepare("SELECT cedula FROM cliente WHERE status = 1 and cedula = ?");
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll();
@@ -251,11 +302,19 @@
                 parent::conectarDB();
                 if($this->sede != "" || $this->sede != NULL){
 
+<<<<<<< HEAD
                     $new = $this->con->prepare("INSERT INTO envio(id_envio, id_sede, status) VALUES (DEFAULT, ?, 3)");
                     $new->bindValue(1, $this->sede);
                     $new->execute();
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
+=======
+                    $new = $this->con->prepare("INSERT INTO `envio`(`id_envio`, `id_sede`, `status`) VALUES (DEFAULT, ?, 3)");
+                    $new->bindValue(1, $this->sede);
+                    $new->execute();
+
+                    $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                                 VALUES (DEFAULT, DEFAULT, ?, NULL, ?, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->sede);
@@ -264,7 +323,11 @@
                     // echo json_encode($resultado);
                 }elseif ($this->direccionE != NULL || $this->direccionE != "") {
 
+<<<<<<< HEAD
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
+=======
+                    $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                                 VALUES (DEFAULT, DEFAULT, ?, ?, NULL, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->direccionE);
@@ -274,7 +337,11 @@
                     // echo json_encode($resultado);
                 }else{
 
+<<<<<<< HEAD
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
+=======
+                    $new = $this->con->prepare("INSERT INTO `venta`(`num_fact`, `fecha`, `cedula_cliente`, `direccion`, `id_envio`, `online`, `status`) 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                                 VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
@@ -289,7 +356,11 @@
                 $data = $new->fetchAll();
 
                 foreach ($data as $dato) {
+<<<<<<< HEAD
                     $new = $this->con->prepare("INSERT INTO venta_producto(num_fact, cod_producto, cantidad, precio_actual) 
+=======
+                    $new = $this->con->prepare("INSERT INTO `venta_producto`(`num_fact`, `cod_producto`, `cantidad`, `precio_actual`) 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                                 VALUES (?, ?, ?, ?)");
                     $new->bindValue(1, $numFactura);
                     $new->bindValue(2, $dato['cod_producto']);
@@ -306,7 +377,11 @@
                 $totalMonto = array_sum($monto);
                 
 
+<<<<<<< HEAD
                     $new = $this->con->prepare("INSERT INTO pago(id_pago, monto_total, num_fact, status) 
+=======
+                    $new = $this->con->prepare("INSERT INTO `pago`(`id_pago`, `monto_total`, `num_fact`, `status`) 
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
                                             VALUES (DEFAULT, ?, ?, 1)");
                     $new->bindValue(1, $totalMonto);
                     $new->bindValue(2, $numFactura);
@@ -346,6 +421,7 @@
 
                 die();
             } catch (\PDOException $error) {
+<<<<<<< HEAD
                 die($error);
             }
           }
@@ -528,5 +604,10 @@
             }
         }
 
+=======
+                return $error;
+            }
+          }
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
     }
 ?>

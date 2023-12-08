@@ -55,6 +55,7 @@
 				$new->bindValue(1, $pass);
 				$new->bindValue(2, $this->email);
 				$new->execute();
+<<<<<<< HEAD
 
 				if($this->enviarEmail($correo, $generatedPass, $nombre)){
 					$resultado = ['resultado' => 'Correo enviado'];
@@ -66,6 +67,18 @@
 				die(json_encode($resultado));
 
 			}catch(\PDOException $error){
+=======
+
+				if($this->enviarEmail($correo, $generatedPass, $nombre)){
+					$resultado = ['resultado' => 'Correo enviado'];
+				}else{
+					$resultado = ['resultado' => 'Error al enviar correo'];
+
+				$this->desconectarDB();
+				die(json_encode($resultado));
+
+			}catch(exection $error){
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
 				return $error;
 			}
 

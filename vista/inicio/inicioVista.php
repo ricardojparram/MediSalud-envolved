@@ -15,7 +15,10 @@
     
   <!-- Barra navegadora -->
     <?php $tiendaComp->nav(); ?>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
 
   </header>
   <section class="presentacion d-flex justify-content-center align-items-center">
@@ -249,6 +252,11 @@
 
   <?php $footer->footer(); ?>
 
+<<<<<<< HEAD
+=======
+</footer>
+
+>>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
   <?php $tiendaComp->car(); ?>
 
   <?php $VarComp->js() ?>

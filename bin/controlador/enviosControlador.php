@@ -17,6 +17,7 @@
 		die(json_encode($permiso));
 	}
 
+
 	
 	if(isset($_POST['precio_envio'])){
 		$model->calcularPrecioEnvio();

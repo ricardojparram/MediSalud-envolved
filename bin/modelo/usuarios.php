@@ -150,6 +150,7 @@ public function getMostrarUsuario($bitacora = false){
     }
     if($bitacora) $this->binnacle("Usuario",$_SESSION['cedula'],"Consultó listado.");
     echo json_encode($data);
+
     parent::desconectarDB();
     die();
 

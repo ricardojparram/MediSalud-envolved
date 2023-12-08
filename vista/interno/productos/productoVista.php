@@ -38,7 +38,7 @@
       
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><h1> Gestionar Productos</h1></li>
+          <li class="breadcrumb-item"><h1>Productos</h1></li>
         </ol>
       </nav>
 
@@ -56,6 +56,7 @@
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#basicModal">Agregar</button>
           </div>
         </div>
+
 
 
         <div class="table-responsive">
@@ -106,13 +107,22 @@
 
 
 
-                      <div class="form-group col-lg-8">
+                      <div class="form-group col-lg-4">
+                        <label class="col-form-label"> <strong>Código del producto</strong> </label>
+                        <div class="input-group">
+                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-fill"></i></button> 
+                         <input id="codigo" class="form-control" placeholder="código">
+                       </div>
+                      <p class="error" id="error" style="color: red"></p>
+                     </div>
+
+                     <div class="form-group col-lg-4">
                         <label class="col-form-label"> <strong>Descripción del Producto</strong> </label>
                         <div class="input-group">
                          <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-fill"></i></button> 
                          <input id="descripcion" class="form-control" placeholder="descripcion del producto">
                        </div>
-                      <p class="error" id="error2" style="color: red"></p>
+                      <p class="error" id="error3" style="color: red"></p>
                      </div>
 
 
@@ -122,7 +132,7 @@
                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=" Descripción "><i class="bi bi-calendar"></i></button> 
                        <input type="date" id="fecha" class="form-control">
                      </div>
-                    <p class="error" id="error3" style="color: red"></p> 
+                    <p class="error" id="error4" style="color: red"></p> 
                    </div>
 
                  </div>
@@ -140,7 +150,7 @@
                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-line"></i></button>
                      <input class="form-control" id="composición" placeholder="Composición del producto">
                    </div>
-                   <p class="error" id="error4" style="color: red"></p> 
+                   <p class="error" id="error5" style="color: red"></p> 
                  </div>
 
                  <div class="form-group col-lg-4">
@@ -149,7 +159,7 @@
                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-clock"></i></button>
                    <input class="form-control" id="posologia" placeholder="posologia">
                  </div> 
-                 <p class="error" id="error5" style="color: red"></p> 
+                 <p class="error" id="error6" style="color: red"></p> 
                </div>
 
                <div class="form-group col-lg-4">
@@ -165,7 +175,7 @@
 
                 </select>
               </div>
-              <p class="error" id="error6" style="color: red"></p> 
+              <p class="error" id="error7" style="color: red"></p> 
             </div>
 
           </div>
@@ -192,7 +202,7 @@
 
              </select>
            </div>
-           <p class="error" id="error7" style="color: red"></p> 
+           <p class="error" id="error8" style="color: red"></p> 
          </div>
 
 
@@ -212,7 +222,7 @@
 
            </select>
          </div> 
-         <p class="error" id="error8" style="color: red"></p> 
+         <p class="error" id="error9" style="color: red"></p> 
        </div>
 
        <div class="form-group col-lg-3">
@@ -231,7 +241,7 @@
 
          </select>
        </div>
-       <p class="error" id="error9" style="color: red"></p> 
+       <p class="error" id="error10" style="color: red"></p> 
      </div>
 
      <div class="form-group col-lg-3">
@@ -250,7 +260,7 @@
 
        </select>
      </div>
-     <p class="error" id="error10" style="color: red"></p>  
+     <p class="error" id="error11" style="color: red"></p>  
     </div>
 
     </div>
@@ -270,7 +280,7 @@
              <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx  bx-no-entry"></i></button>
              <input class="form-control" id="contraIn" placeholder="text">
            </div>
-           <p class="error" id="error11" style="color: red"></p> 
+           <p class="error" id="error12" style="color: red"></p> 
          </div>
 
          <div class="form-group col-lg-4">
@@ -279,7 +289,7 @@
            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-sort-up"></i></button>
            <input type="number" class="form-control" id="cantidad" placeholder="cantidad">
          </div>
-         <p class="error" id="error12" style="color: red"></p> 
+         <p class="error" id="error13" style="color: red"></p> 
        </div> 
 
        <div class="form-group col-lg-4">
@@ -290,11 +300,13 @@
         </div>
         <p class="error" id="error13" style="color: red"></p> 
       </div>
-
-
-    </div>
+      </div>
   </div>
 </div>
+
+       
+        
+
 
     </div>
     <p id="error" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
@@ -308,6 +320,47 @@
 </div>
 
 <!-- Modal Registrar Final-->
+<div class="modal fade" id="infoImg" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+       <div class="modal-dialog modal-md ">
+        <div class="modal-content">
+          <div class="modal-header alert alert-success">
+            <h3 class="modal-title"> <strong>Imagen del producto</strong> </h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body ">
+            <form id="editarform">
+
+             
+                          <div class="col-lg-5 col-md-4 col-sm-4 col-xs-3">
+                            <img class="fotoProducto" id="imgEditar" src="<?= $_SESSION['fotoPerfil']; ?>" alt="Profile">
+                          </div>
+                                  
+                                     
+                                      <label class="col-md-4 col-lg-3 col-form-label"><strong>Imagen</strong></label>
+                                     <input type="file" class="form-control" id="img" placeholder="img">
+                                     </div>
+                                      <p id="error" class="error" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
+                                <div class="modal-footer">
+                                  <div class="col-12 mt-2">
+                              <a href="#" class="btn btn-danger" id="borrarFoto" title="Eliminar foto de perfil">Eliminar <i class="bi bi-trash"></i></a>
+                            </div>
+                                 <button id="Cancelar" type="reset" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
+                             <button id="actualizarImg" type="button" class="btn btn-success">Actualizar</button>
+                            </div>
+                                          
+                              </div>
+                               </div>
+                                </div>
+                                </div>
+                                </div>
+                                </div>
+                                 </div>
+                                 </div>
+                                 </div>
+                                 </div>
+
+
 
     <!-- Modal Editar-->
 
@@ -325,15 +378,22 @@
               <div class="form-group col-md-12">  
                 <div class="container-fluid">
                   <div class="row">
+                  <div class="form-group col-lg-4">
+                        <label class="col-form-label"> <strong>Código del producto</strong> </label>
+                        <div class="input-group">
+                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-fill"></i></button> 
+                         <input id="codigoEd" class="form-control" placeholder="codigo">
+                       </div>
+                      <p class="error" id="errorE2" style="color: red"></p>
+                     </div>
 
-
-                    <div class="form-group col-lg-8">
-                      <label class="col-form-label"> <strong>Descripcion del Producto *</strong> </label>
+                    <div class="form-group col-lg-4">
+                      <label class="col-form-label"> <strong>Descripción del Producto</strong> </label>
                       <div class="input-group">
                        <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-fill"></i></button> 
                        <input name="descripcionEd" id="descripcionEd" class="form-control" placeholder="descripcion del producto">
                      </div>
-                     <p class="error" id="errorE2" style="color: red"></p> 
+                     <p class="error" id="errorE3" style="color: red"></p> 
                    </div>
 
 
@@ -343,7 +403,7 @@
                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=" Descripción "><i class="bi bi-calendar"></i></button> 
                      <input type="date" name="fechaEd" id="fechaEd" class="form-control">
                    </div>
-                    <p class="error" id="errorE3" style="color: red"></p> 
+                    <p class="error" id="errorE4" style="color: red"></p> 
                  </div>
 
                </div>
@@ -363,7 +423,7 @@
                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="ri-capsule-line"></i></button>
                    <input class="form-control" name="composicionEd" id="composicionEd" placeholder="Composición del producto">
                  </div>
-                  <p class="error" id="errorE4" style="color: red"></p> 
+                  <p class="error" id="errorE5" style="color: red"></p> 
                </div>
 
                <div class="form-group col-lg-4">
@@ -372,7 +432,7 @@
                  <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-clock"></i></button>
                  <input class="form-control" name="posologiaEd" id="posologiaEd" placeholder="posologia">
                </div> 
-                <p class="error" id="errorE5" style="color: red"></p> 
+                <p class="error" id="errorE6" style="color: red"></p> 
              </div>
 
              <div class="form-group col-lg-4">
@@ -387,7 +447,7 @@
 
               </select>
             </div>
-             <p class="error" id="errorE6" style="color: red"></p> 
+             <p class="error" id="errorE7" style="color: red"></p> 
           </div>
           
         </div>
@@ -416,7 +476,7 @@
              
            </select>
          </div>
-          <p class="error" id="errorE7" style="color: red"></p> 
+          <p class="error" id="errorE8" style="color: red"></p> 
        </div>
 
        <div class="form-group col-lg-3">
@@ -435,7 +495,7 @@
            
          </select>
        </div>
-       <p class="error" id="errorE8" style="color: red"></p>  
+       <p class="error" id="errorE9" style="color: red"></p>  
      </div>
 
        <div class="form-group col-lg-3">
@@ -454,7 +514,7 @@
 
          </select>
        </div>
-        <p class="error" id="errorE9" style="color: red"></p> 
+        <p class="error" id="errorE10" style="color: red"></p> 
      </div>
 
     <div class="form-group col-lg-3">
@@ -473,7 +533,7 @@
          
        </select>
       </div>
-       <p class="error" id="errorE10" style="color: red"></p>  
+       <p class="error" id="errorE11" style="color: red"></p>  
      </div>
 
 
@@ -492,7 +552,7 @@
              <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bx  bx-no-entry"></i></button>
              <input class="form-control" name="contraInEd" id="contraInEd" placeholder="text">
            </div>
-            <p class="error" id="errorE11" style="color: red"></p> 
+            <p class="error" id="errorE12" style="color: red"></p> 
          </div>
 
          <div class="form-group col-lg-4">
@@ -501,7 +561,7 @@
            <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-sort-up"></i></button>
            <input type="number" class="form-control" name="cantidadEd" id="cantidadEd" placeholder="cantidad">
          </div>
-          <p class="error" id="errorE12" style="color: red"></p> 
+          <p class="error" id="errorE13" style="color: red"></p> 
        </div> 
 
        <div class="form-group col-lg-4">
@@ -510,14 +570,13 @@
           <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="  Descripción "><i class="bi bi-cash-coin"></i></button>
           <input  class="form-control" name="VentaEd" id="VentaEd" placeholder="Precio de venta">
         </div>
-         <p class="error" id="errorE13" style="color: red"></p> 
+         <p class="error" id="errorE14" style="color: red"></p> 
       </div>
 
         </div>
        </div>
       </div>
-
-       </div>
+     
        <p id="error" class="error" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
        <div class="modal-footer">
         <button id="Cancelar" type="reset" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
@@ -527,7 +586,9 @@
     </div>
   </div>
 </div>
-
+</div>
+</div>
+</div>
 <!-- Modal Editar Final-->
 
 <!-- Modal delete-->
@@ -549,6 +610,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- Modal delete Final-->
 

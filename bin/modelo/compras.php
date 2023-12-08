@@ -30,7 +30,7 @@
 				parent::conectarDB();
 
 
-				$query = "SELECT c.cod_compra, c.fecha ,c.orden_compra, p.razon_social, c.monto_total , CONCAT(IF(MOD(c.monto_total / cm.cambio, 1) >= 0.5, CEILING(c.monto_total / cm.cambio), FLOOR(c.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa' FROM compra c INNER JOIN proveedor p ON c.cod_prove = p.cod_prove INNER JOIN cambio cm ON cm.id_cambio = c.id_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE c.status = 1";
+				$query = "SELECT c.cod_compra, c.fecha ,c.orden_compra, p.razon_social, format (c.monto_total,2, 'de_DE') as total, CONCAT(IF(MOD(format(c.monto_total,2,'de_DE') / format(cm.cambio,2,'de_DE'), 1) >= 0.5, CEILING(c.monto_total / cm.cambio), FLOOR(format(c.monto_total,2,'de_DE') / format( cm.cambio,2,'de_DE') ) + 0.5), ' ', m.nombre) as 'total_divisa' FROM compra c INNER JOIN proveedor p ON c.cod_prove = p.cod_prove INNER JOIN cambio cm ON cm.id_cambio = c.id_cambio INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE c.status = 1";
 
 				$new = $this->con->prepare($query);
 				$new->execute();

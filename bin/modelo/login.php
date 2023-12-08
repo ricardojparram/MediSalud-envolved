@@ -30,8 +30,10 @@
 			$this->cedula = $cedula;
 			$this->password = $password;
 			
+
 			$validCedula = $this->validarCedula();
 			if($validCedula['res'] != true) die(json_encode($validCedula));
+
 
 			$this->loginSistema();
 		}
@@ -49,6 +51,13 @@
 				$new->bindValue(1 , $this->cedula);
 				$new->execute();
 				$data = $new->fetchAll();
+
+				if(!isset($data[0]["password"])){
+
+					$resultado = ['resultado' => 'Error de cedula', 'error' => 'La cédula no está registrada.'];
+					$this->desconectarDB();
+					die(json_encode($resultado));
+				}
 
 				if(!password_verify($this->password, $data[0]['password'])){
 					$resultado = ['resultado' => 'Error de contraseña' , 'error' => 'Contraseña incorrecta.'];
