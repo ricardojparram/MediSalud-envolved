@@ -4,7 +4,8 @@ INSERT INTO rol(nombre, status) VALUES ('Administrador', '1'), ('Gerente', '1'),
 
 -- INSERTA USUARIO ADMIN
 
-INSERT INTO usuario (cedula, nombre, apellido, correo, password, rol, img, status) VALUES ('123123123', 'admin', 'admin', 'admin@admin.com', '$2y$10$IQ3tD7JwCMoBHFwv6P4YteAgNOnlevdqxZYwtR8XfvkebK0It3RN.', '1', NULL, '1');
+INSERT INTO usuario (cedula, nombre, apellido, correo, password, rol, img, status) VALUES
+('O9OnH0ox4pHUYNZMrowa2Q==', 'Admin', 'Admin', 'mE/+zG67/LRq502a/iv4tA==', '$2y$10$Vt8b5Zt/dgSIUliGJjavhOry4AHII29ercr1UYgGKDRUXz9P8SN8G', 4, NULL, 1);
 
 -- INSERTA LOS CLIENTES
 INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES 
@@ -89,6 +90,8 @@ INSERT INTO estados_venezuela (id_estado, nombre) VALUES
 (7, 'Bolivar'),(8, 'Carabobo'),(9, 'Cojedes'),(10, 'Falcon'),(11, 'Guarico'),(12, 'Lara'),
 (13, 'Merida'),(14, 'Monagas'),(15, 'Nueva Esparta'),(16, 'Portuguesa'),(17, 'Sucre'),(18, 'Tachira'),
 (19, 'Trujillo'),(20, 'Yaracuy'),(21, 'Zulia'),(22, 'Delta Amacuro'),(23, 'Miranda'),(24, 'La Guaira');
+
+INSERT INTO empresa_envio (rif, nombre, contacto, status) VALUES ('123123', 'MRW', 'mrw@example.com', '1');
 
 INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (1 , 'Banco Central de Venezuela', '0001', 1);
 INSERT INTO banco(id_banco, nombre, codigo, status) VALUES (2 , 'Banco de Venezuela (BDV)', '0102', 1);

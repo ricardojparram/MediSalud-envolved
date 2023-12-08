@@ -29,7 +29,11 @@
 		protected function recuperarSistema(){
 
 			try{
-				
+				$this->key = parent::KEY();
+				$this->iv = parent::IV();
+				$this->cipher = parent::CIPHER();
+			
+				$this->email = openssl_encrypt($this->email, $this->cipher, $this->key, 0, $this->iv);
 				$this->conectarDB();
 				$new = $this->con->prepare("SELECT correo, CONCAT(nombre,' ',apellido) AS nombre FROM usuario WHERE status = 1 and correo = ?");
 				$new->bindValue(1 , $this->email);

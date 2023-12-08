@@ -215,7 +215,9 @@ $(document).ready(function(){
         let celuEdit = $("#telClienEdit").val();
         let emailEdit = $("#emailClienEdit").val();
 
-        if(cedulaEdit){ validarC($("#cedClienEdit"),$("#error2"), "Error de Cedula, ").then(() => {
+        if(cedulaEdit){ validarC($("#cedClienEdit"),$("#errorNOa"), "Error de Cedula, ").then(() => {
+          $("#error2").html("Error de Cedula, No Puede Ser Registrada")
+        }).catch(()=>{
           if (nombreEdit && direccionEdit && apellidoEdit && correoEdit && telefonoEdit) {
             $.ajax({
               type: "POST",
@@ -237,8 +239,6 @@ $(document).ready(function(){
               }
             })  
           }
-        }).catch(()=>{
-          $("#error2").html("Error de Cedula, No Puede Ser Registrada")
         })} 
       })
 

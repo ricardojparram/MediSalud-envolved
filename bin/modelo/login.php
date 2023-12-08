@@ -41,8 +41,11 @@
 		private function loginSistema(){
 
 			try{
-
+				$this->key = parent::KEY();
+				$this->iv = parent::IV();
+				$this->cipher = parent::CIPHER();
 				$this->conectarDB();
+
 
 				$new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo, u.password, u.img, u.rol as nivel, r.nombre as puesto FROM usuario u 
 					INNER JOIN rol r
@@ -95,7 +98,12 @@
 		private function validarCedula(){
 			try{
 
-				parent::conectarDB();
+				$this->key = parent::KEY();
+				$this->iv = parent::IV();
+				$this->cipher = parent::CIPHER();
+				$this->conectarDB();
+
+				$this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
 
 				$new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
 				$new->bindValue(1, $this->cedula);

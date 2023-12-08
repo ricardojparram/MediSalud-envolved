@@ -42,27 +42,19 @@
   }
 
   if (isset($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles'])) {
-<<<<<<< HEAD
     $objModel->getRegistar($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles']);
-=======
-    $objModel->nunca($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles']);
->>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
   }
 
   if (isset($_POST['mostrarB'])){
     $objModel->banco();
   }
-<<<<<<< HEAD
+  if (isset($_POST['calculaT'])){
+    $objModel->calcularTipo($_SESSION['cedula']);
+  }
   
   $VarComp = new initcomponents();
   $tiendaComp = new tienda();
   
-=======
-
-  $VarComp = new initcomponents();
-  $tiendaComp = new tienda();
-
->>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
   require_once("vista/inicio/pagoVista.php");
   
 ?>

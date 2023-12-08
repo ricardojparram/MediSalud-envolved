@@ -18,7 +18,6 @@
 		public function registrarSedes(){
 			try {
 				
-
 				$opts = [
 					"ssl" => [
 						"verify_peer"=>false,
