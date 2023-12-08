@@ -2,7 +2,7 @@ $(document).ready(function(){
 
 	/* Obtiene los detalles de los productos del carrito */
 	function getProductosBD(){
-		$.post('?url=inicio',{mostraC: ''}, function(res){
+		$.post('?url=catalogo',{mostrarCatalogo: ''}, function(res){
 				let productos = JSON.parse(res).reduce((acc, curr) => {
 					acc[curr.cod_producto] = curr;
 					return acc;
@@ -13,6 +13,19 @@ $(document).ready(function(){
 
 
 	if('productos' in localStorage === false) getProductosBD();
+
+	getPrecioDolar();
+	async function getPrecioDolar(){
+		await $.post('?url=carrito',{precioDolar: ''}, function(res){
+				let dolar = JSON.parse(res)[0]
+	            localStorage.setItem('dolar', dolar.cambio);
+			})
+	}
+
+	let params = new URLSearchParams(document.location.search);
+	if(params.get("url") === "carrito") getProductosBD();
+	
+	const getDolar = () => Number(localStorage.getItem('dolar'))
 
 	/* Para la manipulacion de los detalles del producto en localStorage */
 	const getProductos = () => JSON.parse(localStorage.getItem('productos'));
@@ -188,9 +201,9 @@ $(document).ready(function(){
 			$('.cardTotal').hide();
 			$('.vaciar').hide();
 		}
+		let productos = [];
 
 		if(carrito.length > 0){
-			let productos = [];
 			let precioTotal = 0;
 			let flexDirection = ($('.carrito-container').width() < 400) ? 'item-carrito-tienda' : '';
 			carrito.forEach((row, i) => {
@@ -200,7 +213,7 @@ $(document).ready(function(){
 				precioTotal += precioUnidadTotal;
 				let hr = (i == carrito.length - 1) ? '' : '<hr class="my-2">';
 				let img = (prod.img == null) ? '' : prod.img;
-
+				let precio_dolar = (Number(prod.p_venta) / getDolar()).toFixed(2);
 				div += `
 				<div class="item-carrito ${flexDirection} p-2">
 	                <img class="" src="${img}">
@@ -214,7 +227,7 @@ $(document).ready(function(){
 	                  </div>
 	                </div>
 	                <div class="precio">
-	                  <h6 class="text-muted fs-7">C/U: Bs. <span class="precioUnidad">${prod.p_venta}</span></h6>
+	                  <h6 class="text-muted fs-7">C/U: </br> Bs. <span class="precioUnidad">${prod.p_venta}</span> </br> <span>$. ${precio_dolar}</span></h6>
 	                  <h6 class="fs-6">Total: Bs. <span class="precioUnidadTotal">${precioUnidadTotal}</span></h6>
 	                </div>
 	            </div>
@@ -222,10 +235,10 @@ $(document).ready(function(){
 	            `
 	            productos.push({cod_producto: prod.cod_producto, cantidad: prod.cantidad});		
 			})
-
+			
 			actualizarBadge(productos.length);
 			$('.carrito-container').html(div);
-			$('#precioTotal').html(precioTotal);
+			actualizarTotalCarrito();
 			validarStock(productos);
 			editarCantidad();
 			confirmarEliminar();
@@ -373,7 +386,9 @@ $(document).ready(function(){
 			let precio = Number($(this).text());
 			total += precio;
 		})
+		let total_dolar = (Number(total) / getDolar()).toFixed(2);
 		$('#precioTotal').html(total);
+		$('#precioDolar').html(total_dolar);
 	}
 
 	/* Edita la cantidad de los productos ya agregados al carrito */

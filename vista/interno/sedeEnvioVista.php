@@ -62,8 +62,10 @@
             <thead>
 
               <tr>
-                <th scope="col">Empresa de envío</th>
+                <th scope="col">Empresa</th>
+                <th scope="col">Sede de envío</th>
                 <th scope="col">Ubicación</th>
+                <th scope="col">Estado</th>
                 <th scope="col">Opciones</th>
               </tr>
             </thead>
@@ -114,7 +116,7 @@
                 <div class="form-group col-12 ">                          
                     <label for="inputText" class="col-form-label"><strong>Empresas de envío</strong></label>
                     <div class="input-group">
-                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione una cédula registrada en el sistema."><i class="bi bi-person-fill"></i></button>
+                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione una empresa de envío."><i class="bi bi-building"></i></button>
                       <select class="form-control" placeholder="Empresas de envío" id="empresa_envio">
                         <option value="" selected disabled>Selecciona una empresa...</option>
                         <?php if(isset($selectEmpresa)){
@@ -131,20 +133,49 @@
                     </div>
                     <p style="color:#ff0000;margin-left: 10px;" id="error1"></p>
                 </div>
+                <div class="form-group col-12 ">                          
+                    <label for="inputText" class="col-form-label"><strong>Estado</strong></label>
+                    <div class="input-group">
+                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione una el estado de la sede de envío."><i class="bi bi-geo-alt-fill"></i></button>
+                      <select class="form-control" placeholder="Estado" id="estado_sede">
+                        <option value="" selected disabled>Selecciona un estado...</option>
+                        <?php if(isset($selectEstados)){
+                          foreach($selectEstados as $option){
+                        ?> 
+                            <option value="<?= $option->id_estado ?>" class="opcion">
+                              <?= $option->nombre ?>
+                            </option>
+                        <?php
+                          }
+                        }else{"";}
+                        ?>
+                      </select> 
+                    </div>
+                    <p style="color:#ff0000;margin-left: 10px;" id="error2"></p>
+                </div>
+
+                <div class="form-group col-12 ">                          
+                  <label class="col-form-label"> <strong>Nombre de la sede</strong> </label>
+                  <div class="input-group">
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Ingrese el nombre de la sede de envío."><i class="bi bi-card-text"></i></button> 
+                    <input class="form-control" id="nombre_sede" required="" placeholder="Nombre de la sede de envío">
+                  </div>
+                  <p style="color:#ff0000;margin-left: 10px;" id="error3"></p>
+
+                </div>
 
                 <div class="form-group col-12 ">                          
                   <label class="col-form-label"> <strong>Ubicación de la sede</strong> </label>
                   <div class="input-group">
-                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el RIF del Laboratorio"><i class="bi bi-card-text"></i></button> 
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la ubicación de la sede de envío"><i class="bi bi-pin-map-fill"></i></button> 
                     <input class="form-control" id="ubicacion" required="" placeholder="">
                   </div>
-                  <p style="color:#ff0000;margin-left: 10px;" id="error2"></p>
+                  <p style="color:#ff0000;margin-left: 10px;" id="error4"></p>
 
                 </div>
 
-
-
               </div>
+
             </div>
           </div>
 
@@ -182,9 +213,9 @@
                 <div class="form-group col-12 ">                          
                     <label for="inputText" class="col-form-label"><strong>Empresas de envío</strong></label>
                     <div class="input-group">
-                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione una cédula registrada en el sistema."><i class="bi bi-person-fill"></i></button>
+                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione una empresa de envío."><i class="bi bi-building"></i></button>
                       <select class="form-control" placeholder="Empresas de envío" id="empresa_envioEdit">
-                        <option value="" disabled>Selecciona una empresa...</option>
+                        <option value="" selected disabled>Selecciona una empresa...</option>
                         <?php if(isset($selectEmpresa)){
                           foreach($selectEmpresa as $option){
                         ?> 
@@ -197,20 +228,48 @@
                         ?>
                       </select> 
                     </div>
-                    <p style="color:#ff0000;margin-left: 10px;" id="error3"></p>
+                    <p style="color:#ff0000;margin-left: 10px;" id="error1"></p>
+                </div>
+                <div class="form-group col-12 ">                          
+                    <label for="inputText" class="col-form-label"><strong>Estado</strong></label>
+                    <div class="input-group">
+                      <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Seleccione una el estado de la sede de envío."><i class="bi bi-geo-alt-fill"></i></button>
+                      <select class="form-control" placeholder="Estado" id="estado_sedeEdit">
+                        <option value="" selected disabled>Selecciona un estado...</option>
+                        <?php if(isset($selectEstados)){
+                          foreach($selectEstados as $option){
+                        ?> 
+                            <option value="<?= $option->id_estado ?>" class="opcion">
+                              <?= $option->nombre ?>
+                            </option>
+                        <?php
+                          }
+                        }else{"";}
+                        ?>
+                      </select> 
+                    </div>
+                    <p style="color:#ff0000;margin-left: 10px;" id="error2"></p>
                 </div>
 
                 <div class="form-group col-12 ">                          
+                  <label class="col-form-label"> <strong>Nombre de la sede</strong> </label>
+                  <div class="input-group">
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Ingrese el nombre de la sede de envío."><i class="bi bi-card-text"></i></button> 
+                    <input class="form-control" id="nombre_sedeEdit" required="" placeholder="Nombre de la sede de envío">
+                  </div>
+                  <p style="color:#ff0000;margin-left: 10px;" id="error3"></p>
+
+                </div>
+
+                <div class="form-group col-12 ">                       
                   <label class="col-form-label"> <strong>Ubicación de la sede</strong> </label>
                   <div class="input-group">
-                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el RIF del Laboratorio"><i class="bi bi-card-text"></i></button> 
+                    <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca la ubicación de la sede de envío"><i class="bi bi-pin-map-fill"></i></button> 
                     <input class="form-control" id="ubicacionEdit" required="" placeholder="">
                   </div>
                   <p style="color:#ff0000;margin-left: 10px;" id="error4"></p>
 
                 </div>
-
-
 
               </div>
             </div>

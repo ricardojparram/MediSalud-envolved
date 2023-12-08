@@ -21,6 +21,7 @@
   }
 
 	$selectEmpresa = $model->selectEmpresas();
+	$selectEstados = $model->selectEstados();
 
 	if(isset($_POST['getPermisos'], $permiso['Consultar'])){
 		die(json_encode($permiso));
@@ -35,8 +36,8 @@
 		die(json_encode(['resultado' => $validar]));
 	}
 
-	if(isset($_POST['registrar'], $_POST['empresa'], $_POST['ubicacion'], $permiso['Registrar'])){
-		$model->getRegistrarSede($_POST['empresa'], $_POST['ubicacion']);
+	if(isset($_POST['registrar'], $_POST['empresa'], $_POST['estado'], $_POST['nombre'], $_POST['ubicacion'], $permiso['Registrar'])){
+		$model->getRegistrarSede($_POST['empresa'], $_POST['estado'], $_POST['nombre'], $_POST['ubicacion']);
 	}
 
 	if(isset($_POST['select'], $_POST['id'], $permiso['Editar'])){
@@ -44,8 +45,8 @@
 		die(json_encode($respuesta));
 	}
 
-	if(isset($_POST['editar'], $_POST['empresa'], $_POST['ubicacion'], $_POST['id'], $permiso['Editar'])){
-		$model->getEditarSede($_POST['empresa'], $_POST['ubicacion'], $_POST['id']);
+	if(isset($_POST['editar'], $_POST['id'], $_POST['empresa'], $_POST['estado'], $_POST['nombre'], $_POST['ubicacion'], $permiso['Editar'])){
+		$model->getEditarSede( $_POST['empresa'], $_POST['estado'], $_POST['nombre'], $_POST['ubicacion'], $_POST['id']);
 	}
 
 	if(isset($_POST['eliminar'], $_POST['id'], $permiso['Eliminar'])){

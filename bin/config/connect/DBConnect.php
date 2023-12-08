@@ -56,6 +56,10 @@
       }
     }
 
+    protected function uniqueID(){
+      return bin2hex(random_bytes(5));
+    }
+
     public function getPermisosRol($rol){
       $this->rol = $rol;
 
