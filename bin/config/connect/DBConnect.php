@@ -101,51 +101,6 @@
 
     }
 
-    public function getNotificacion(){
-
-      $this->notificaciones();
-    }
-
-    private function notificaciones(){
-      try {
-        $this->conectarDB();
-
-        // consulta de productos por vencer 
-        $new = $this->con->prepare("SELECT p.cod_producto, p.nombre, DATEDIFF(p.vencimiento, NOW()) AS dias_restantes, TIMEDIFF(DATE_FORMAT(p.vencimiento, '%Y-%m-%d %H:%i:%s'), NOW()) AS horas_restantes FROM producto p WHERE p.vencimiento BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) AND p.stock > 0 AND p.status = 1");
-
-        $new->execute();
-        $data = $new->fetchAll(\PDO::FETCH_OBJ);
-
-        // consulta de productos vencidos  
-        $new1 = $this->con->prepare("SELECT p.cod_producto, p.nombre, DATEDIFF(p.vencimiento, NOW()) AS dias_vencidos, TIMEDIFF(DATE_FORMAT(p.vencimiento, '%Y-%m-%d %H:%i:%s'), NOW()) AS horas_vencidas FROM producto p WHERE p.vencimiento BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() AND p.stock > 0 AND p.status = 1");
-        $new1->execute();
-        $data1 = $new1->fetchAll(\PDO::FETCH_OBJ);
-
-        // Dia de Inventario
-        $new2 = $this->con->prepare("SELECT p.cod_producto , p.descripcion , v.fecha , p.stock , SUM(vp.cantidad) as cantidadXmes, SUM(vp.cantidad)/30 as dia_inventario FROM producto p INNER JOIN venta_producto vp ON p.cod_producto = vp.cod_producto INNER JOIN venta v ON v.num_fact = vp.num_fact WHERE MONTH(v.fecha) = (MONTH(NOW())-1) AND p.status = 1 AND v.status = 1 GROUP BY p.cod_producto");
-        $new2->execute();
-        $data2 = $new2->fetchAll(\PDO::FETCH_OBJ);
-
-        // Productos proximos a terminar y terminados 
-        $new = $this->con->prepare('SELECT p.cod_producto , p.descripcion , p.stock FROM producto p WHERE p.stock <= 10 AND p.status = 1');
-        $new->execute();
-        $data3 = $new->fetchAll(\PDO::FETCH_OBJ);
-
-        $resultado = ['PorVencer' => $data , 'vencidos' => $data1 , 'diaDeInventario' => $data2 , 'StockBajo' => $data3]; 
-
-        echo json_encode($resultado);
-        $this->desconectarDB();
-        die();
-        
-      } catch (\PDOException $e) {
-        print "¡Error!: " . $e->getMessage() . "<br/>";
-        die();
-      }
-
-
-    }
-
-
   }
 
 

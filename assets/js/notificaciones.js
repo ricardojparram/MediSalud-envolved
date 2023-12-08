@@ -1,81 +1,42 @@
 $(document).ready(function(){
 
-  let tiempoNotificacion = 1800000; 
-  let tiempoDelete = 1740000;
-
-  localStorage.clear()
-
-  function redondear(numero) {
-    const parteEntera = Math.floor(numero);
-    const parteDecimal = numero - parteEntera;
-
-    if (parteDecimal === 0.5) {
-      return parteEntera + 1;
-    }
-
-    const redondeo = Math.round(numero);
-    return redondeo === 0 ? 1 : redondeo;
+  let tiempo_para_repetir_peticion = 1800000; 
+  if('noti_info' in localStorage === false){
+    localStorage.setItem('noti_info', JSON.stringify({ noti_cantidad: 0, leidos: 0 }))
   }
 
-  if(localStorage.getItem('porVencer') && localStorage.getItem('vencidos') && localStorage.getItem('diaDeInventario')){
-    let porVencidoGuardado = JSON.parse(localStorage.getItem('porVencer'));
-    let vencidosGuardados = JSON.parse(localStorage.getItem('vencidos'));
-    let diaDeInventarioGuardado = JSON.parse(localStorage.getItem('diaDeInventario'));
+  const getNotiInfo = () => JSON.parse(localStorage.getItem('noti_info'));
+  const setNotiInfo = noti_info => localStorage.setItem('noti_info', JSON.stringify(noti_info))
+  const getLeidos = () => JSON.parse(localStorage.getItem('noti_info')).leidos;
+  const setLeidos = (leidos) => {
+    let noti_info = getNotiInfo(); noti_info.leidos = leidos; setNotiInfo(noti_info);
+  }
+  const getNotiCantidad = () => JSON.parse(localStorage.getItem('noti_info')).noti_cantidad;
+  const setNotiCantidad = (noti_cantidad) => {
+    let noti_info = getNotiInfo(); noti_info.noti_cantidad = noti_cantidad; setNotiInfo(noti_info);
+  }
 
-    // Hacer algo con los datos guardados, por ejemplo:
-    console.log('porVencer guardado: ', porVencidoGuardado);
-    console.log('vencidos guardados: ', vencidosGuardados);
-    console.log('diaDeInventario guardado: ', diaDeInventarioGuardado);
 
-    mostrarNotificaciones(porVencidoGuardado , vencidosGuardados, diaDeInventarioGuardado);
-
-   }
-
-  notificaciones();
-     
-  function notificaciones(){
-    $.ajax({
-      type: 'POST',
-      url:  '',
-      dataType: 'json',
-      data: {notificacion : 'notificacion'},
+  getNotificaciones();
+  function getNotificaciones(){
+    $.ajax({ type: 'POST', url:  '?url=notificaciones', dataType: 'json', data: {notificacion : ''},
       success(data){
-        console.log(data && data.PorVencer && data.vencidos)
-        if(data && data.PorVencer && data.vencidos && data.diaDeInventario){
-          mostrarNotificaciones(data.PorVencer, data.vencidos ,data.diaDeInventario);
-        }else {
-          throw new Error('Error al obtener datos de notificación');
-        }
+        mostrarNotificaciones(data.productos_stock_bajo, data.productos_vencidos, data.dia_de_inventario);
+        
       }, 
-      error: function(qXHR, textStatus, errorThrown){
-        console.error('Error al obtener datos de notificación:', textStatus, errorThrown);
+      error(qXHR, textStatus, errorThrown){
+        throw new Error('Error al obtener datos de notificación:', textStatus, errorThrown);
       }
-
     })
-
-
   }
 
-  setInterval(notificaciones, tiempoNotificacion);
+  setInterval(getNotificaciones, tiempo_para_repetir_peticion);
 
-  setInterval(()=>{
-    localStorage.removeItem('porVencer');
-    localStorage.removeItem('vencidos');
-    localStorage.removeItem('diaDeInventario')
-    $('.notification-item').remove();
-    $('.contador').text(0);
-    $('.numNoti').text(0);
-  }, tiempoDelete);
+  function mostrarNotificaciones(productos_stock_bajo, productos_vencidos, dia_de_inventario) {
+    let mostrar = '', mostrar1 = '', mostrar2 = '';
+    let count_stock_bajo = 0, count_vencidos = 0, count_dia_inventario = 0;
 
-   function mostrarNotificaciones(porVencer, vencidos , diaDeInventario) {
-    let mostrar = '';
-    let mostrar1 = '';
-    let mostrar2 = '';
-    let contador = 0;
-    let contador1 = 0;
-    let contador2 = 0;
-
-    porVencer.forEach((row)=> {
+    productos_stock_bajo.forEach((row)=> {
       let minutos = 0;
       let tiempoMinutos = 60000;
       const actualizaMinutos = function() {
@@ -98,9 +59,6 @@ $(document).ready(function(){
           </div>
           </div>
         </div>
-        <div class="col fs-5 text-end NotiButton">
-          <a class="leido btn-sm" href="#">Marcar como leido</a>
-        </div>
       </div>
       </li>
 
@@ -109,10 +67,10 @@ $(document).ready(function(){
       </li>
 
       `;
-      contador++;
+      count_stock_bajo++;
     });
 
-    vencidos.forEach((row)=> {
+    productos_vencidos.forEach((row)=> {
       let minutos = 0;
       let tiempoMinutos = 60000;
       const actualizaMinutos = function() {
@@ -121,23 +79,20 @@ $(document).ready(function(){
       };
       setInterval(actualizaMinutos, tiempoMinutos);
       mostrar1 += `
-      <li class="notification-item notificacion w-100">
-        <div class="row">
-          <div class="col-md-12">
-          <div class="d-flex justify-content-between">
-            <div class="text-center mt-3">
-              <i class="bi bi-x-circle text-danger"></i>
-             </div>
-            <div>
-              <h4>Productos vencidos</h4>
-              <p>El producto: ${row.nombre} expiro hace ${Math.abs(row.dias_vencidos)} dias</p>
-              <p class='tiempo'>tiempo activo: ${minutos} minutos</p>
+        <li class="notification-item notificacion">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="d-flex justify-content-between">
+                <div class="text-center mt-3">
+                  <i class="bi bi-x-circle text-danger"></i>
+                </div>
+                <div>
+                  <h4>Producto vencido</h4>
+                  <p>El producto: ${row.nombre} expiro hace ${Math.abs(row.dias_vencidos)} dias</p>
+                  <p class='tiempo'>tiempo activo: ${minutos} minutos</p>
+                </div>
+              </div>
             </div>
-           </div>
-          </div>
-          <div class="col fs-5 text-end NotiButton">
-            <a class="leido btn-sm" href="#">Marcar como leido</a>
-          </div>
           </div>
         </li>
 
@@ -145,10 +100,10 @@ $(document).ready(function(){
           <hr class="dropdown-divider">
         </li>
       `;
-      contador1++;
+      count_vencidos++;
     });
 
-    diaDeInventario.forEach((row)=>{
+    dia_de_inventario.forEach((row)=>{
       let minutos = 0
       let tiempoMinutos = 60000
       const actualizaMinutos = function() {
@@ -172,9 +127,6 @@ $(document).ready(function(){
               </div>
             </div>
           </div>
-          <div class="col fs-5 text-end NotiButton">
-           <a class="leido btn-sm" href="#">Marcar como leido</a>
-          </div>
         </div>
 
       </li>
@@ -183,36 +135,35 @@ $(document).ready(function(){
            <hr class="dropdown-divider">
         </li>
       `;
-      contador2++;
+      count_dia_inventario++;
     })
 
-    const total = contador + contador1 + contador2;
+    let total_notificaciones = count_stock_bajo + count_vencidos + count_dia_inventario;
+
+    setNotiCantidad(total_notificaciones);
+
+    if(getLeidos() == total_notificaciones) total_notificaciones = 0;
+    if(getLeidos() < total_notificaciones) total_notificaciones = total_notificaciones - getLeidos();
 
     $('.notifications .item').append(mostrar);
     $('.notifications .item').append(mostrar1);
     $('.notifications .item').append(mostrar2);
-    $('.contador').text(total);
-    $('.numNoti').text(total);
-
-    localStorage.setItem('porVencer', JSON.stringify(porVencer));
-    localStorage.setItem('vencidos', JSON.stringify(vencidos));
-    localStorage.setItem('diaDeInventario', JSON.stringify(diaDeInventario));
+    $('.contador').text(total_notificaciones);
+    $('.numNoti').text(getNotiCantidad);
 
   }
 
-  $(document).on('click' , '.leido' , function(e){
-    e.preventDefault()
-    console.log('hola');
-
-    const selectedNotification = $(this).closest('.notification-item');
-    let divisor = selectedNotification.next('.divisor');
-
-    selectedNotification.removeClass('notificacion').addClass('notificacion-visto');
-    selectedNotification.find('.leido').remove();
-    divisor.remove()
-    $('.itemVisto').prepend(selectedNotification);
-    $('.itemVisto').prepend('<li class="divisor"><hr class="dropdown-divider"></li>');
+  $('.notification_icon').click(function(){
+    document.body.addEventListener('click', restaurarNotis);
   })
+
+  function restaurarNotis(event) {
+    if (!event.target.closest('a')) {
+      $('.contador').html(0);
+      setLeidos(getNotiCantidad());
+      document.body.removeEventListener('click', restaurarNotis);
+    }
+  }
 
   
 })
