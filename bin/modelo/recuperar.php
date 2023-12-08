@@ -33,10 +33,11 @@
 				$this->iv = parent::IV();
 				$this->cipher = parent::CIPHER();
 			
-				$this->email = openssl_encrypt($this->email, $this->cipher, $this->key, 0, $this->iv);
+				$emailEncrypt = openssl_encrypt($this->email, $this->cipher, $this->key, 0, $this->iv);
+
 				$this->conectarDB();
 				$new = $this->con->prepare("SELECT correo, CONCAT(nombre,' ',apellido) AS nombre FROM usuario WHERE status = 1 and correo = ?");
-				$new->bindValue(1 , $this->email);
+				$new->bindValue(1 , $emailEncrypt);
 				$new->execute();
 				$data = $new->fetchAll();
 
@@ -46,7 +47,6 @@
 				}
 
 				$nombre = $data[0]['nombre'];
-				$correo = $data[0]['correo'];
 
 				$date = date('m/d/Yh:i:sa', time());
 				$rand = rand(10000,99999);
@@ -59,9 +59,8 @@
 				$new->bindValue(1, $pass);
 				$new->bindValue(2, $this->email);
 				$new->execute();
-<<<<<<< HEAD
 
-				if($this->enviarEmail($correo, $generatedPass, $nombre)){
+				if($this->enviarEmail($this->email, $generatedPass, $nombre)){
 					$resultado = ['resultado' => 'Correo enviado'];
 				}else{
 					$resultado = ['resultado' => 'Error al enviar correo'];
@@ -71,18 +70,7 @@
 				die(json_encode($resultado));
 
 			}catch(\PDOException $error){
-=======
 
-				if($this->enviarEmail($correo, $generatedPass, $nombre)){
-					$resultado = ['resultado' => 'Correo enviado'];
-				}else{
-					$resultado = ['resultado' => 'Error al enviar correo'];
-
-				$this->desconectarDB();
-				die(json_encode($resultado));
-
-			}catch(exection $error){
->>>>>>> 47b90ecf60cdca7963cf419a73a4de5ff8a78247
 				return $error;
 			}
 
