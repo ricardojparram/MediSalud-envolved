@@ -53,6 +53,7 @@
 
   <?php $footer->footer(); ?>
 
+  <?php $tiendaComp->car(); ?>
 
   <?php $VarComp->js() ?>
   <script src="assets/js/carrito.js"></script>
@@ -62,7 +63,26 @@
 
 </html>
 
+<!-- Modal para confimar la elimińación de un producto del carrito -->
+<div class="modal fade" id="delModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="staticBackdropLabel">¿Estás seguro?</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h5>Desea eliminar el producto <b id="delProductTitle"></b> del carrito?</h5>
+      </div>
+      <div class="modal-footer" id="divEli">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarModalDel">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="delProductFromCar">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- Modal para añadir productos al carrito -->
 <div class="modal fade" id="AñadirCarritoModal" style="transition: all 0.4s ease-in-out 0s;" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" role="dialog">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
