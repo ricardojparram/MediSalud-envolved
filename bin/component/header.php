@@ -34,7 +34,21 @@
               <hr class="dropdown-divider">
             </li>
 
+            <li class="dropdown-header text-start">
+              Nuevas
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
             <li class="item list-group">
+              
+            </li>
+
+           <li class="dropdown-footer text-start">
+              Anteriores
+            </li>
+             <li class="itemVisto list-group">
               
             </li>
 

@@ -537,7 +537,7 @@
     public function getMostrarProducto(){
       try{
         parent::conectarDB();
-        $new = $this->con->prepare("SELECT * FROM producto WHERE status = 1 and stock > 0");
+        $new = $this->con->prepare("SELECT cod_producto, descripcion FROM producto WHERE status = 1 and stock > 0");
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
         echo json_encode($data);
@@ -596,7 +596,7 @@
     public function getMostrarMetodo(){
       try{
         parent::conectarDB();
-        $new = $this->con->prepare("SELECT * FROM `tipo_pago` WHERE status = 1");
+        $new = $this->con->prepare("SELECT id_tipo_pago, des_tipo_pago FROM `tipo_pago` WHERE status = 1");
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
         echo json_encode($data);

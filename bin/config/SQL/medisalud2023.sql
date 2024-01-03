@@ -82,6 +82,17 @@ CREATE TABLE bitacora (
   FOREIGN KEY (usuario) REFERENCES usuario (cedula) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
+-- TABLA PARA NOTIFICACIONES 
+CREATE TABLE notificaciones (
+  id int AUTO_INCREMENT PRIMARY KEY,
+  tipo_notificacion varchar(30) NOT NULL,
+  mensaje varchar(100) NOT NULL,
+  fecha date NOT NULL,
+  stock int,
+  dia_de_inventario decimal(10,2),
+  status int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
 -- TABLA PARA EL CONTACTO DE LOS CLIENTES 
 CREATE TABLE contacto_cliente(
     id_contacto int AUTO_INCREMENT PRIMARY KEY,
