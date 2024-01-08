@@ -537,7 +537,7 @@
     public function getMostrarProducto(){
       try{
         parent::conectarDB();
-        $new = $this->con->prepare("SELECT * FROM producto WHERE status = 1 and stock > 0");
+        $new = $this->con->prepare("SELECT * FROM producto p WHERE status = 1 and stock > 0");
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
         echo json_encode($data);
