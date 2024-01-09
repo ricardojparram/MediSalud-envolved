@@ -30,7 +30,7 @@
                     <form action="" method="post" class="f1">
                         <div class="row">
                             <h3 class="col-6">Registrar</h3>
-                            <h3 id="temporizador" class="col-6 text-end">1:00:00</h3>
+                            <h3 id="temporizador" class="col-6 text-end"></h3>
                         </div>
                         <div class="f1-steps">
                             <div class="f1-progress">
@@ -411,7 +411,7 @@
   <?php $VarComp->js();?>   
   <script src="assets/js/pagoTab.js"></script>
   <script src="assets/js/chosen.jquery.min.js"></script>
-
+  <script src="assets/js/carrito.js"></script>
 
 
 

@@ -28,11 +28,13 @@ $(document).ready(function () {
 	let cambio
 	var pTarifas = 0
 
+	temporizador();
 	DatosP();
 	precio();
 	selectTipoPago();
 	banco();
 	tarifa();
+
 
 
 	validarCarrito().then(() => {
@@ -942,30 +944,76 @@ $(document).ready(function () {
 			})
 		})
 	}
-	temporizador();
+
 	function temporizador() {
+		let color = true
 		$.ajax({
 			method: 'post',
 			url: '',
 			dataType: 'JSON',
 			data: {
-				comprobarLimitePago: "xd",
-				url_param: "pago"
+				tiempo: "val"
 			}, success(data) {
-				let tiempo = (data.tiempo)
-				let tiempo2 = tiempo * 1000
-				setInterval(() => {
+				console.log(data)
+				let segundos = (data)
+				let intervalo = setInterval(() => {
 
-					let actual = Date.now()
+					let fecha = new Date(segundos);
+					let fechaActual = new Date();
+					let diferenciaEnSegundos = (fecha - fechaActual) / 1000;
+					
+					let hora = 3600 + diferenciaEnSegundos
+					
+					if (hora <= 0) {
+						eliminarVenta()
+						return clearInterval(intervalo)
+					}
+					let horas = Math.floor(hora / 3600).toString().padStart(2, '0') 
+					let minutos = Math.floor((hora % 3600) / 60).toString().padStart(2, '0') 
+					let segundosRestantes = Math.floor(hora % 60).toString().padStart(2, '0') 
+					if (hora <= 600) {
+						if (color) {
+							color = false;
+							$("#temporizador").css("color", "black");
+						} else {
+							$("#temporizador").css("color", "red");
+							color = true
+						}
+					}
+					$("#temporizador").text(horas+ ":" + minutos+ ":" + segundosRestantes);
+					//$("#temporizador").text(hora);
 
-					let diferencia = tiempo2 - actual
-					let hora = new Date(tiempo).toLocaleTimeString()
-
-					// console.log(new Date(diferencia).toLocaleTimeString())
-					$("#temporizador").text(actual)
+					
 				}, 1000)
 			}
 		})
 	}
+
+	function eliminarVenta() {
+		setTimeout(() => {
+			$.ajax({
+				url: '',
+				dataType: 'JSON',
+				method: 'POST',
+				data: { comprobarLimitePago: '', url_param: "pago" },
+				success(asd) {
+					console.log(asd);
+					if (asd.resultado == "Eliminado correctamente.") {
+						Swal.fire({
+							title: 'Tiempo Limite Superdado!',
+							text: 'Acaba de Superar el Tiempo Limite de 1 Hora',
+							icon: 'error',
+						})
+						setTimeout(function () {
+							location = '?url=carrito'
+						}, 1600);
+					}
+				}
+			})
+		}, 2000)
+	}
+
+	// Ejemplo de uso
+
 
 });

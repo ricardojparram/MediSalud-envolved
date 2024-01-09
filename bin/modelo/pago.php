@@ -526,11 +526,6 @@
                             die();
                         }
                     }
-                    if($cedula != NULL) {
-                        $resultado = ['tiempo' => $hora_limite];
-                        echo json_encode($resultado);
-                    }
-                    
                 }
                 die();
 
@@ -582,6 +577,21 @@
                 die();
                 
             }catch(\PDOexection $error){
+                die($error);
+            }
+        }
+
+        public function temporizador($cedula,$venta = false){
+            try {
+                parent::conectarDB();
+                $new = $this->con->prepare("SELECT fecha FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?");
+                $new->bindValue(1, $cedula);
+                $new->execute();
+                $data = $new->fetchAll(\PDO::FETCH_OBJ);
+                parent::desconectarDB();
+                echo json_encode($data[0]->fecha);
+                die();
+            } catch(\PDOexection $error){
                 die($error);
             }
         }
