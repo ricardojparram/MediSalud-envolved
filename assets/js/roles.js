@@ -66,7 +66,7 @@ $(document).ready(function(){
                 Object.entries(data).forEach(([modulo_nombre, row]) => {
                     let permisos = "";
                     Object.entries(row).forEach(([nombre_permiso, permiso]) => {
-                        let checked = (permiso.status === "1") ? "checked" : "";
+                        let checked = (permiso.status == "1") ? "checked" : "";
                         let title = (nombre_permiso == "Consultar") ? "Acceso" : nombre_permiso;
                         permisos += `
                         <div title="${title}" class="d-flex px-3 flex-column justify-content-center align-items-center">
