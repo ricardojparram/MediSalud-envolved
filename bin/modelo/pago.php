@@ -215,7 +215,7 @@
             $this->sede = $sede;
             $this->direccionE = $direccionE;
             $this->detalles = $detalles;
-            $this->registar();
+            $this->registrar();
           }
 
           private function registrar(){
@@ -224,17 +224,18 @@
                 $this->iv = parent::IV();
                 $this->cipher = parent::CIPHER();
                 
+                $this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
+                $this->correo = openssl_encrypt($this->correo, $this->cipher, $this->key, 0, $this->iv);
+                $this->direccionF = openssl_encrypt($this->direccionF, $this->cipher, $this->key, 0, $this->iv);
+                $this->telefono = openssl_encrypt($this->telefono, $this->cipher, $this->key, 0, $this->iv);
                 parent::conectarDB();
                 $new = $this->con->prepare("SELECT cedula FROM cliente WHERE cedula = ?");
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll();
                 parent::desconectarDB();
-                $this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
-                $this->correo = openssl_encrypt($this->correo, $this->cipher, $this->key, 0, $this->iv);
-                $this->direccionF = openssl_encrypt($this->direccion, $this->cipher, $this->key, 0, $this->iv);
-                $this->telefono = openssl_encrypt($this->telefono, $this->cipher, $this->key, 0, $this->iv);
-                if(isset($data[0]["cedula"])){ 
+
+                if(isset($data[0]["cedula"])){
                     
                     parent::conectarDB();
                     $new = $this->con->prepare("UPDATE cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula SET c.cedula = ?, c.nombre = ?, c.apellido = ?, c.direccion = ?, cc.celular= ?, cc.correo = ?, cc.cedula = ? WHERE c.cedula = ?");
@@ -306,7 +307,7 @@
                 }
                 $numFactura = $this->con->lastInsertId();
 
-                $new = $this->con->prepare("SELECT c.cod_producto, c.cantidad, c.precioActual FROM carrito c INNER JOIN producto p ON c.cod_producto = p.cod_producto WHERE c.cedula = ?;");
+                $new = $this->con->prepare("SELECT c.cod_producto, c.cantidad, p.p_venta as precioActual FROM carrito c INNER JOIN producto p ON c.cod_producto = p.cod_producto WHERE cedula = ?;");
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll();
@@ -361,13 +362,35 @@
                     }
 
                 }
-
-
-                parent::desconectarDB();
-                $resultado = ['resultado' => 'Registrado Pedido'];
-                echo json_encode($resultado);
-
-                die();
+                try {
+                    parent::conectarDB();
+    
+                    $new = $this->con->prepare("SELECT num_fact FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
+                    $new->bindValue(1, $this->cedula);
+                    $new->execute();
+                    $venta = $new->fetchAll(\PDO::FETCH_OBJ);
+    
+                    $new = $this->con->prepare("SELECT cantidad, cod_producto FROM venta_producto WHERE num_fact = ?");
+                    $new->bindValue(1, $venta[0]->num_fact);
+                    $new->execute();
+                    $productos = $new->fetchAll(\PDO::FETCH_OBJ);
+                    parent::desconectarDB();
+                    foreach($productos as $producto){
+                        $this->actualizarStockProducto($producto->cod_producto, $producto->cantidad, "sumar");
+                    }
+                    parent::conectarDB();
+                    $new = $this->con->prepare("DELETE FROM venta WHERE num_fact = ?");
+                    $new->bindValue(1, $venta[0]->num_fact);
+                    $new->execute();
+                    
+                    parent::desconectarDB();
+                    $resultado = ['resultado' => 'Registrado Pedido'];
+                    echo json_encode($resultado);
+    
+                    die();
+                } catch(\PDOException $e){
+                    die($e);
+                }
             } catch (\PDOException $error) {
                 die($error);
             }

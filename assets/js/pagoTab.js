@@ -37,16 +37,7 @@ $(document).ready(function () {
 
 
 
-	validarCarrito().then(() => {
-		$.ajax({
-			type: "post",
-			url: "",
-			dataType: "json",
-			data: { datosCar: 'xd' },
-			success(data) {
-			}
-		})
-	})
+	
 
 	$(window).on('beforeunload', function () {
 		return
@@ -675,6 +666,7 @@ $(document).ready(function () {
 
 
 	$("#3").click((e) => {
+		console.log("hola")
 		let vmonto
 		let monto = 0
 		let valid = false
@@ -825,7 +817,7 @@ $(document).ready(function () {
 
 
 		if (nombre && direccion && telefono && cedula && correo && movil && trans && valid && vtipoPago && vprecio && vmonto) {
-			validarCarrito().then(() => {
+			//validarCarrito().then(() => {
 
 				$.ajax({
 					url: '',
@@ -853,6 +845,7 @@ $(document).ready(function () {
 								text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
 								icon: 'success',
 							})
+							localStorage.clear()
 							setTimeout(function () {
 								location = '?url=inico'
 							}, 2500);
@@ -861,7 +854,7 @@ $(document).ready(function () {
 						}
 					}
 				})
-			})
+			//})
 
 		} else {
 
@@ -918,32 +911,32 @@ $(document).ready(function () {
 		});
 	});
 
-	function validarCarrito() {
-		return new Promise((resolve, reject) => {
-			$.ajax({
-				method: 'post',
-				url: '',
-				dataType: 'JSON',
-				data: {
-					carrito: 'carrito'
-				}, success(data) {
-					if (data[0].cuenta >= 0) {
-						return resolve(true)
-					} else {
-						Swal.fire({
-							title: 'Productos Agotados!',
-							text: 'Los Productos Selecionados estan agotados en nuestro almacen',
-							icon: 'error',
-						})
-						//   setTimeout(function(){
-						// 	location = '?url=home'
-						//   }, 1600);
-						return reject(false)
-					}
-				}
-			})
-		})
-	}
+	// function validarCarrito() {
+	// 	return new Promise((resolve, reject) => {
+	// 		$.ajax({
+	// 			method: 'post',
+	// 			url: '',
+	// 			dataType: 'JSON',
+	// 			data: {
+	// 				carrito: 'carrito'
+	// 			}, success(data) {
+	// 				if (data[0].cuenta >= 0) {
+	// 					return resolve(true)
+	// 				} else {
+	// 					Swal.fire({
+	// 						title: 'Productos Agotados!',
+	// 						text: 'Los Productos Selecionados estan agotados en nuestro almacen',
+	// 						icon: 'error',
+	// 					})
+	// 					//   setTimeout(function(){
+	// 					// 	location = '?url=home'
+	// 					//   }, 1600);
+	// 					return reject(false)
+	// 				}
+	// 			}
+	// 		})
+	// 	})
+	// }
 
 	function temporizador() {
 		let color = true
