@@ -967,6 +967,7 @@ $(document).ready(function () {
 					if (hora <= 0) {
 						eliminarVenta()
 						return clearInterval(intervalo)
+						
 					}
 					let horas = Math.floor(hora / 3600).toString().padStart(2, '0') 
 					let minutos = Math.floor((hora % 3600) / 60).toString().padStart(2, '0') 
