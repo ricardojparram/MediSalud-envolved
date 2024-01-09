@@ -18,6 +18,10 @@
 		$model->notificacionVista($_POST['notificationId']);
 	}
 
+	if (isset($_POST['pedidoNotificacion'])) {
+		$model->actualizarNotificacion($_POST['mensaje']);
+	}
+
 	die("<script> window.location = '?url=login' </script>");
 
 ?>

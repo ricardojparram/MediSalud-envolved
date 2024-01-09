@@ -851,6 +851,7 @@ $(document).ready(function() {
 								text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
 								icon: 'success',
 							})
+							actualizarNotificacion(final.resultado)
 							setTimeout(function(){
 							location = '?url=inico'
 							}, 2500);
@@ -871,7 +872,17 @@ $(document).ready(function() {
 
 
 
+    function actualizarNotificacion(mensaje){
+    	$.ajax({
+    		url: '?url=notificaciones',
+    		dataType: 'json',
+    		method: 'POST',
+    		data:{mensaje , pedidoNotificacion: 'pedido'},
+    		success(){
 
+    		}
+    	})
+    }
 
 
     
