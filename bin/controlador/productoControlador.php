@@ -38,7 +38,7 @@
  
 
   if (isset($_POST['codigo'])&& isset($_POST['descripcion'])&& isset($_POST['fechaV']) && isset($_POST['fechaV']) && isset($_POST['composicionP']) && isset($_POST['posologia']) && isset($_POST['ubicación']) && isset($_POST['laboratorio']) && isset($_POST['presentación']) && isset($_POST['tipoP']) && isset($_POST['clase']) && isset($_POST['contraIn']) && isset($_POST['cantidad']) && isset($_POST['precioV']) && $permiso['Registrar'] )  {
-   	  
+  	
    	  $respuesta = $objModel->getRegistraProd($_POST['codigo'] , $_POST['descripcion'] , $_POST['fechaV'] , $_POST['composicionP'] , $_POST['posologia'] , $_POST['ubicación'] , $_POST['laboratorio'] , $_POST['presentación'] , $_POST['tipoP'] , $_POST['clase'] , $_POST['contraIn'] , $_POST['cantidad'] , $_POST['precioV'] );
    	  
    }

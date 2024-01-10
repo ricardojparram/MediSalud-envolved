@@ -51,6 +51,9 @@
   if (isset($_POST['calculaT'])){
     $objModel->calcularTipo($_SESSION['cedula']);
   }
+  if (isset($_POST['tiempo'])){
+    $objModel->temporizador($_SESSION['cedula']);
+  }
   
   $VarComp = new initcomponents();
   $tiendaComp = new tienda();

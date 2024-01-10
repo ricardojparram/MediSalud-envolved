@@ -32,9 +32,8 @@
 
 
     public function getRegistraProd($codigo, $descripcion, $fechaV ,$composicionP, $posologia , $ubicación , $laboratorio , $presentación  , $tipoP , $clase , $contraIn, $cantidad, $precioV){
-  
 
-     if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $descripcion) !== 1){
+    /* if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $descripcion) !== 1){
       return "Error de descripcion!";
     }
     
@@ -82,7 +81,7 @@
     die();
     }
 
-    
+    */
 
 
     $this->codigo = $codigo;
@@ -103,7 +102,8 @@
     $this->presentación = $presentación;  
 
 
-    return $this->registraProd();
+    $this->registraProd();
+     die('sadsdg');
 
     }
 
@@ -136,7 +136,7 @@
      die();
 
     }catch(\PDOexection $error) {
-     $error;
+    	die($error);
 
     }
   }
