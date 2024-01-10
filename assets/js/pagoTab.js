@@ -877,7 +877,7 @@ $(document).ready(function() {
     		url: '?url=notificaciones',
     		dataType: 'json',
     		method: 'POST',
-    		data:{mensaje , pedidoNotificacion: 'pedido'},
+    		data:{mensaje , nombreNotificacion: 'compra_realizada'},
     		success(){
 
     		}

@@ -11,9 +11,6 @@ $(document).ready(function(){
           throw new Error('notificaciones registradas');
         }
         
-      }, 
-      error(qXHR, textStatus, errorThrown){
-        throw new Error('Error al obtener datos de notificación:', textStatus, errorThrown);
       }
     })
   }

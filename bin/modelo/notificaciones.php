@@ -112,7 +112,8 @@
 					$new->bindValue(5, null);
 					$new->execute();
                     }else{
-                      var_dump('no agarra 1');
+                     	echo json_encode(['resultado' => 'Error de consulta productos vencidos']);
+						die();
                     }
 			
 				}
@@ -136,7 +137,8 @@
 					$new->bindValue(5, null);
 					$new->execute();
 					}else{
-                       var_dump('no agarra 2');
+                       echo json_encode(['resultado' => 'Error de consulta stock bajo']);
+						die();
                     }
 				}
 
@@ -160,7 +162,8 @@
 					$new->bindValue(5, $dia_inventario);
 					$new->execute();
 				  }else{
-                    	die('no agarra 3');
+                    	echo json_encode(['resultado' => 'Error de consulta dia de inventario']);
+						die();
                     }
 				}
 
@@ -169,6 +172,22 @@
 				print "¡Error!: " . $e->getMessage() . "<br/>";
 				die();
 			}
+		}
+
+		public function actualizarNotificacion($mensaje, $nombre){
+			$fechaHoy = date('Y-m-d');
+
+			 $new = $this->con->prepare('INSERT INTO notificaciones(id, tipo_notificacion, mensaje, fecha, stock , dia_de_inventario, status) VALUES (default,?,?,?,?,?,1)');
+
+			 $new->bindValue(1, $nombre);
+			 $new->bindValue(2, $mensaje);
+			 $new->bindValue(3, $fechaHoy);
+			 $new->bindValue(4, null);
+			 $new->bindValue(5, null);
+			 $new->execute();
+
+			 getNotificaciones();
+			 
 		}
 
 		private function getProductosVencidos(){
