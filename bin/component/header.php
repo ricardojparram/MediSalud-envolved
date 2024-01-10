@@ -46,8 +46,11 @@
             </li>
 
            <li class="dropdown-footer text-start">
-              Anteriores
-            </li>
+            Anteriores
+            <select class="form-control w-25" placeholder="" id="Anteriores">
+              <option value="0" selected>25</option>
+            </select>
+          </li>
              <li class="itemVisto list-group">
               
             </li>

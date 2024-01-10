@@ -2,7 +2,9 @@ $(document).ready(function(){
 
   let tiempo_para_repetir_peticion = 1800000; 
 
-  getRegistrarNotificaciones()
+  getRegistrarNotificaciones();
+
+   setInterval(getRegistrarNotificaciones, tiempo_para_repetir_peticion);
   
   function getRegistrarNotificaciones(){
     $.ajax({ type: 'POST', url:  '?url=notificaciones', dataType: 'json', data: {notificacionRegistrar : ''},
@@ -15,9 +17,10 @@ $(document).ready(function(){
     })
   }
 
-  setInterval(getRegistrarNotificaciones, tiempo_para_repetir_peticion);
+  setInterval(getNotificaciones , tiempo_para_repetir_peticion);
 
   getNotificaciones()
+
 
   function getNotificaciones(){
     $.ajax({ type : 'POST', url: '?url=notificaciones', dataType: 'json', data: {notificaciones: ''},
