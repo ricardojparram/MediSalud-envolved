@@ -512,7 +512,7 @@
 			input.attr("style","border-color: red;");					
 			return false
 		}else if (fechaActual < parametro) {
-			div.text(mensaje+" la fecha es mayor")	
+			div.text(mensaje+" no puede ser mayor a la actual.")	
 			input.attr("style","border-color: red;")
 			return false
 		}else{
