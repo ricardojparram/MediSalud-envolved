@@ -384,7 +384,12 @@
                     $new->execute();
                     
                     parent::desconectarDB();
-                    $resultado = ['resultado' => 'Registrado Pedido'];
+
+                    $this->cedula = openssl_decrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
+                    $this->nombre;
+                    $this->apellido ;
+
+                    $resultado = ['resultado' => 'Registrado Pedido', 'cedula' => $this->cedula , 'nombre' =>  $this->nombre , 'apellido' => $this->apellido];
                     echo json_encode($resultado);
     
                     die();

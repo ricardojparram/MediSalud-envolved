@@ -845,10 +845,15 @@ $(document).ready(function () {
 								text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
 								icon: 'success',
 							})
-							localStorage.clear()
-							setTimeout(function () {
-								location = '?url=inico'
-							}, 2500);
+							actualizarNotificacion(final).then(() => {
+							   localStorage.clear()
+								setTimeout(function () {
+									location = '?url=inico'
+								}, 2500); 
+							  }
+							);
+							
+
 						} else {
 							Toast.fire({ icon: 'error', title: 'No fue Posible Realizar la Compra' })
 						}
@@ -866,8 +871,24 @@ $(document).ready(function () {
 
 
 
-
-
+		function actualizarNotificacion(mensaje) {
+		  return new Promise((resolve, reject) => {
+		    $.ajax({
+		      url: '?url=notificaciones',
+		      dataType: 'json',
+		      method: 'POST',
+		      data: { 
+		      	mensaje: JSON.stringify(mensaje),
+		        nombreNotificacion: 'compra_realizada' },
+		      success: () => {
+		        resolve();
+		      },
+		      error: () => {
+		        reject();
+		      }
+		    });
+		  });
+		}
 
 
 	// next step
