@@ -30,8 +30,5 @@
             "name": "Victor Aparicio"
         }
     ],
-    "minimum-stability": "beta",
-    "require-dev": {
-        "phpunit/phpunit": "^9.6"
-    }
+    "minimum-stability": "beta"
 }

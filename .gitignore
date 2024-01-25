@@ -4,4 +4,7 @@
 /assets/tickets/*.pdf
 /assets/img/perfil/*.png
 .phpunit.result.cache
-/vendor
+.phpunit.result.cache
+phpunit.xml
+/vendor/
+/Tests/

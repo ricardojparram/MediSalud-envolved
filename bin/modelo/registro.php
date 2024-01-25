@@ -67,7 +67,10 @@
     private function registraSistema(){
 
       try{
-        parent::conectarDB();
+        $this->key = parent::KEY();
+				$this->iv = parent::IV();
+				$this->cipher = parent::CIPHER();
+				$this->conectarDB();
 
         $this->password = password_hash($this->password, PASSWORD_BCRYPT);
 
@@ -100,8 +103,13 @@
     }
 
     private function validarCedula(){
-      try{
-        parent::conectarDB();
+      try{        
+        $this->key = parent::KEY();
+				$this->iv = parent::IV();
+				$this->cipher = parent::CIPHER();
+				$this->conectarDB();
+
+				$this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
         $new = $this->con->prepare("SELECT `cedula` FROM `usuario` WHERE `status` = 1 and `cedula` = ?");
         $new->bindValue(1, $this->cedula);
         $new->execute();
@@ -134,7 +142,12 @@
 
     private function validarEmail(){
       try{
-        parent::conectarDB();
+        $this->key = parent::KEY();
+				$this->iv = parent::IV();
+				$this->cipher = parent::CIPHER();
+				$this->conectarDB();
+
+        $this->email = openssl_encrypt($this->email, $this->cipher, $this->key, 0, $this->iv);
         $new = $this->con->prepare("SELECT `correo` FROM `usuario` WHERE `status` = 1 and `correo` = ?");
         $new->bindValue(1, $this->email);
         $new->execute();

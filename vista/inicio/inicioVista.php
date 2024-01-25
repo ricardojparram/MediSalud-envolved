@@ -16,7 +16,6 @@
   <!-- Barra navegadora -->
     <?php $tiendaComp->nav(); ?>
 
-
   </header>
   <section class="presentacion d-flex justify-content-center align-items-center">
     <div class="container container-md row text-white">

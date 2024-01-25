@@ -48,6 +48,7 @@ function rellenar(bitacora = false){
 
 let ytipo
 $("#enviar").click((e)=>{
+	e.preventDefault();
 	ytipo =  validarNombre($("#tipNom"),$("#error") ,"Error del Tipo de Producto, ");
  	if(ytipo){
  $.ajax({
@@ -90,7 +91,8 @@ let id;
 $(document).on('click', '.borrar',function (){
 	id = this.id;
 })
-$("#delete").click(()=>{
+$("#delete").click((e)=>{
+	e.preventDefault();
 	$.ajax({
 		type:"POST",
 		url:'',
@@ -137,7 +139,7 @@ $("#tipNomEdit").keyup(()=>{  validarNombre($("#tipNomEdit"),$("#error2"),"Error
 
 let jtipo;
 $("#enviarEditar").click((e)=>{
-	console.log('hola')
+	e.preventDefault();
 jtipo = validarNombre($("#tipNomEdit"),$("#error2"),"Error de Tipo de Producto");
 if(jtipo){
 $.ajax({

@@ -53,7 +53,6 @@
 				die('lito');
 				die(json_encode($response));
 
-
 			} catch (\PDOException $e) {
 				die($e);
 			}

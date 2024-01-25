@@ -5,7 +5,6 @@
    
     class proveedor extends DBConnect{
 
-      private $cod_lab;
       private $rif;
       private $direccion;
       private $razon;
@@ -23,9 +22,9 @@
       public function mostrarProveedorAjax($bitacora){
         try{
           $this->conectarDB();
-          $sql = "SELECT l.rif, l.razon_social, l.direccion, cl.telefono, cl.contacto, l.cod_lab FROM laboratorio l
-                  INNER JOIN contacto_lab cl ON cl.cod_lab = l.cod_lab
-                  WHERE l.status = 1;";
+          $sql = "SELECT p.rif, p.razon_social, p.direccion, cp.telefono, cp.contacto, p.cod_prove FROM proveedor p
+                  INNER JOIN contacto_prove cp ON cp.cod_prove = p.cod_prove
+                  WHERE p.status = 1;";
           $new = $this->con->prepare($sql);
           $new->execute();
           $data = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -146,8 +145,8 @@
         try{
           $this->conectarDB();
           $sql = "SELECT * FROM proveedor p 
-          INNER JOIN contacto_prove cp ON p.cod_prove = cp.cod_lab 
-          WHERE l.status = 1 and l.cod_lab = ? ;";
+          INNER JOIN contacto_prove cp ON p.cod_prove = cp.cod_prove 
+          WHERE p.status = 1 and p.cod_prove = ? ;";
           $new = $this->con->prepare($sql);
           $new->bindValue(1, $this->id);
           $new->execute();
@@ -190,7 +189,7 @@
         $validarRif = $this->validarRif();
         if($validarRif['res'] === true) die(json_encode(["resultado" => "error", "El proveedor no existe"]));
 
-        $this->editarLaboratorio();
+        $this->editarProveedor();
       }
 
       private function editarProveedor(){
@@ -198,8 +197,9 @@
         try{
           $this->conectarDB();
           $sql = "UPDATE proveedor p
-          INNER JOIN contacto_prove contacto_prove cp ON p.cod_prove = cp.cod_prove 
-          SET p.rif= ?, p.razon_social = ? , p.direccion= ?, cp.telefono = ? , cp.contacto = ? WHERE p.cod_prove = ?";
+          INNER JOIN contacto_prove cp ON p.cod_prove = cp.cod_prove 
+          SET p.rif= ?, p.razon_social = ? , p.direccion= ?, cp.telefono = ? , cp.contacto = ? 
+          WHERE p.cod_prove = ?";
           $new = $this->con->prepare($sql);
           $new->bindValue(1, $this->rif);
           $new->bindValue(2, $this->direccion);

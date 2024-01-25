@@ -73,6 +73,7 @@
 
 		}
 
+
 		public function calcularPrecioEnvio(){
 
 			$url = "http://agencias.com.ve/sys/ajax.php";
@@ -110,9 +111,15 @@
 			$dom = new  \DOMDocument();
 			$dom->loadHTML($response);
 
-			$total_envio =	$dom->getElementsByTagName('tbody')
-								->item(0)->lastChild
-								->childNodes->item(2)->textContent;
+			$padre = $dom->getElementsByTagName('tbody')->item(0);
+			$hijo = $padre->getElementsByTagName('tr')->item(4);
+
+			$html = $dom->saveHTML($hijo);
+
+			$textoCompleto = $dom->saveHTML($hijo);
+
+			preg_match('/Bs\.\s*([\d\.]+)/', $textoCompleto, $matches);
+			$total_envio = $matches[0];
 
 			$precio = number_format(floatval(str_replace('Bs. ', '', $total_envio)), 2);
 
@@ -120,6 +127,7 @@
 			die(json_encode($resultado));
 
 		}
+
 
 	}
 

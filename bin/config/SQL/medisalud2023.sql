@@ -8,7 +8,7 @@ USE medisalud;
 
 -- TABLA PARA CLIENTES 
 CREATE TABLE cliente(
-    cedula varchar(15) COLLATE utf8_spanish2_ci PRIMARY KEY,
+    cedula varchar(30) COLLATE utf8_spanish2_ci PRIMARY KEY,
     nombre varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
     apellido varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
     direccion varchar(180) COLLATE utf8_spanish2_ci NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE rol(
 
 -- TABLA PARA USUARIOS 
 CREATE TABLE usuario(
-    cedula int PRIMARY KEY,
+    cedula varchar(30) PRIMARY KEY,
     nombre varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
     apellido varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
     correo varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
@@ -75,19 +75,30 @@ CREATE TABLE permisos(
 CREATE TABLE bitacora (
   id int AUTO_INCREMENT PRIMARY KEY,
   modulo varchar(20) NOT NULL,
-  usuario int(11) NOT NULL,
+  usuario varchar(30) NOT NULL,
   descripcion varchar(50) NOT NULL,
   fecha datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
   status int(11) NOT NULL,
   FOREIGN KEY (usuario) REFERENCES usuario (cedula) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
+-- TABLA PARA NOTIFICACIONES 
+CREATE TABLE notificaciones (
+  id int AUTO_INCREMENT PRIMARY KEY,
+  tipo_notificacion varchar(30) NOT NULL,
+  mensaje varchar(100) NOT NULL,
+  fecha date NOT NULL,
+  stock int,
+  dia_de_inventario decimal(10,2),
+  status int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
 -- TABLA PARA EL CONTACTO DE LOS CLIENTES 
 CREATE TABLE contacto_cliente(
     id_contacto int AUTO_INCREMENT PRIMARY KEY,
-    celular varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
+    celular varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
     correo varchar(60) COLLATE utf8_spanish2_ci,
-    cedula varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
+    cedula varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
     FOREIGN KEY (cedula) REFERENCES cliente(cedula) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci; 
 
@@ -135,7 +146,7 @@ CREATE TABLE presentacion(
 -- TABLA PARA PRODUCTO 
 CREATE TABLE producto( 
     cod_producto int AUTO_INCREMENT PRIMARY KEY,
-    nombre varchar(30) NOT NULL,
+    codigo varchar(50) NOT NULL,
     descripcion varchar(200) COLLATE utf8_spanish2_ci NOT NULL,
     ubicacion varchar(100)COLLATE utf8_spanish2_ci NOT NULL,
     composicion varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
@@ -185,7 +196,7 @@ CREATE TABLE cambio(
 -- TABLA PARA CARRITO 
 
 CREATE TABLE carrito(
-    cedula int NOT NULL,
+    cedula varchar(30) NOT NULL,
     cod_producto int NOT NULL,
     cantidad varchar(10) NOT NULL,
     FOREIGN KEY (cedula) REFERENCES usuario (cedula) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -238,7 +249,7 @@ CREATE TABLE envio(
 CREATE TABLE venta(
     num_fact int AUTO_INCREMENT PRIMARY KEY,
     fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    cedula_cliente varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
+    cedula_cliente varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
     direccion varchar(60),
     id_envio int,
     online int,
@@ -251,8 +262,8 @@ CREATE TABLE venta(
 CREATE TABLE venta_producto(
     num_fact int NOT NULL,
     cod_producto int NOT NULL,
-    cantidad varchar(10)  NOT NULL,
-    precio_actual varchar(10)  NOT NULL,
+    cantidad int NOT NULL,
+    precio_actual decimal (10,2)  NOT NULL,
     FOREIGN KEY (num_fact) REFERENCES venta(num_fact) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (cod_producto) REFERENCES producto(cod_producto) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
@@ -279,7 +290,7 @@ CREATE TABLE datos_cobro_farmacia(
 -- TABLA PARA PAGOS
 CREATE TABLE pago(
     id_pago int AUTO_INCREMENT PRIMARY KEY,
-    monto_total varchar(20) NOT NULL,
+    monto_total decimal (10,2) NOT NULL,
     num_fact int NOT NULL,
     status int NOT NULL,
     FOREIGN KEY (num_fact) REFERENCES venta(num_fact) ON DELETE CASCADE ON UPDATE CASCADE
@@ -292,6 +303,7 @@ CREATE TABLE detalle_pago(
     id_tipo_pago int NOT NULL,
     id_datos_cobro int,
     id_banco_cliente int,
+    referencia varchar(50),
     monto_pago decimal (10,2) NOT NULL,
     id_cambio int NOT NULL,
     FOREIGN KEY (id_banco_cliente) REFERENCES banco(id_banco) ON DELETE CASCADE ON UPDATE CASCADE,

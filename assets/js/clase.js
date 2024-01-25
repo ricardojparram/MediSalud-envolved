@@ -46,7 +46,7 @@ $(document).ready(function(){
 	$("#clase").keyup(()=> {  validarNombre($("#clase"),$("#error"), "Error de clase,") });
 	let vclase
 	$("#enviar").click((e)=>{
-
+		e.preventDefault();
 		vclase = validarNombre($("#clase"),$("#error") , "Error de clase,");
 		if (vclase){
 		$.ajax({
@@ -77,7 +77,9 @@ $(document).ready(function(){
 	$(document).on('click', '.borrar', function() {
     	id = this.id;
     });
-    	$('#borrar').click(()=>{
+    	$('#borrar').click((e)=>{
+        e.preventDefault();
+
     		$.ajax({
     			type : 'post',
     			url : '',
@@ -98,6 +100,7 @@ $(document).ready(function(){
     // SELECCIONA ITEM
     $(document).on('click', '.editar', function() {
         idedit = this.id; // se obtiene el id del botón, previamente le puse de id el codigo en rellenar()
+        
        	// RELLENA LOS INPUTS
        		$.ajax({
        			method: "post",
@@ -115,7 +118,7 @@ $(document).ready(function(){
 	$("#claseEdit").keyup(()=> {  validarNombre($("#claseEdit"),$("#error2"), "Error de clase,") });
 	let eclase
 	$("#enviarEdit").click((e)=>{
-
+     e.preventDefault();
 		eclase = validarNombre($("#claseEdit"),$("#error2") , "Error de clase,");
 		if(eclase){
 		$.ajax({

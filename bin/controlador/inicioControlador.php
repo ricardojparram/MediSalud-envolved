@@ -8,7 +8,7 @@
 	$model = new inicio();
 
 	if (isset($_POST['mostraC'])) {
-		$model->mostrarCatalogo();
+	 	$model->mostrarCatalogo();
 	}
 
 	if (isset($_POST['mostraProductos']) && isset($_POST['id'])) {

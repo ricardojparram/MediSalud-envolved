@@ -30,6 +30,7 @@
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 				$this->desconectarDB();
+
 				$resultado = ['resultado' => 'ok', 'carrito' => $data];
 				die(json_encode($resultado));
 
@@ -38,6 +39,8 @@
 			}
 
 		}
+
+
 
 		public function getPrecioDolar(){
 			try {
@@ -126,8 +129,10 @@
 
 		}
 
+
 		public function getEditarProd($cod_producto, $cantidad, $user){
 			$this->cod_producto = $cod_producto;
+
 			if(preg_match_all("/^[0-9]{1,10}$/", $cantidad) != 1){
 				die(json_encode(['error' => 'Id inválida.']));
 			}

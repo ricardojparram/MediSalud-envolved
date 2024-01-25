@@ -120,7 +120,7 @@ $(document).ready(function(){
                 data: { validarC: "existe", id},
                 success(data) {
                 if (data.resultado === "Error de empresa") {  
-                    Toast.fire({ icon: 'error', title: 'Esta banco ya esta anulada' }); // ALERTA 
+                    Toast.fire({ icon: 'error', title: 'Esta empresa ya esta anulada' }); // ALERTA 
                     mostrar.destroy();
                     rellenar();
                     $('.cerrar').click();
@@ -190,7 +190,7 @@ $(document).ready(function(){
                         rellenar(); 
                         $('#editarform').trigger('reset'); 
                         $('.cerrar').click(); 
-                        Toast.fire({ icon: 'success', title: 'Empresa Editado' }) 
+                        Toast.fire({ icon: 'success', title: 'Empresa Editada' }) 
                     }
                 }
             })
@@ -208,7 +208,7 @@ $(document).ready(function(){
 
     })
 
-    $('#cerrar').click(()=>{
+    $('.cerrar').click(()=>{
      $('#agregarform').trigger('reset'); // LIMPIAR EL FORMULARIO
      $('#Agregar select').attr("style","borden-color:none;","borden-color:none;");
      $('#Agregar input').attr("style","borden-color:none;","borden-color:none;");

@@ -16,6 +16,7 @@
     private $modulo;
     private $rol;
 
+    
     public function __construct(){
 
       $this->usuario = parent::_USER_();

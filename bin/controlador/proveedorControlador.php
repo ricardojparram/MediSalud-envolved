@@ -3,7 +3,7 @@
   use component\initcomponents as initcomponents;
   use component\header as header;
   use component\menuLateral as menuLateral;
-  use modelo\laboratorio as proveedor;
+  use modelo\proveedor as proveedor;
 
   if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
@@ -12,6 +12,10 @@
   $permiso = $permisos['Proveedor'];
 
   if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
+
+  if(isset($_POST['notificacion'])) {
+    $objModel->getNotificacion();
+  }
 
   if(isset($_POST['getPermisos'], $permiso["Consultar"])){
     die(json_encode($permiso));
@@ -30,7 +34,7 @@
   if(isset($_POST['select'], $permiso["Editar"])){
     $objModel->getItem($_POST['id']);
   }
-
+  
   if(isset($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id'], $permiso["Editar"])){
 
     $objModel->getEditar($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id']);

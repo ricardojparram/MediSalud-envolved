@@ -32,10 +32,16 @@ class perfil extends DBConnect{
     private function datos(){
     	try {
 			parent::conectarDB();
+			$this->key = parent::KEY();
+			$this->iv = parent::IV();
+			$this->cipher = parent::CIPHER();
     		$new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo, n.nombre as nivel FROM usuario u INNER JOIN rol n ON n.id_rol = u.rol WHERE u.cedula = ?");
             $new->bindValue(1, $this->cedula);
             $new->execute();
-            $data = $new->fetchAll();
+            $data = $new->fetchAll(\PDO::FETCH_OBJ);
+
+			$data[0]->cedula = openssl_decrypt($data[0]->cedula, $this->cipher, $this->key, 0, $this->iv);
+			$data[0]->correo = openssl_decrypt($data[0]->correo, $this->cipher, $this->key, 0, $this->iv);
             echo json_encode($data);
 			parent::desconectarDB();
             die();
@@ -131,7 +137,12 @@ class perfil extends DBConnect{
 	    $this->cedulaVieja = $cedulaVieja;
 	    $this->borrar = $borrar;
 
-
+        $this->key = parent::KEY();
+        $this->iv = parent::IV();
+        $this->cipher = parent::CIPHER();
+		
+		$this->cedulaNueva = openssl_encrypt($this->cedulaNueva, $this->cipher, $this->key, 0, $this->iv);
+		$this->correo = openssl_encrypt($this->correo, $this->cipher, $this->key, 0, $this->iv);
 
 	    $resultadoEdit = $this->editarDatos();
 
@@ -279,7 +290,9 @@ class perfil extends DBConnect{
 
 	private function cambioContra(){
 		try {
+
 			parent::conectarDB();
+			
 			$this->hash = password_hash($this->passwordNew, PASSWORD_BCRYPT);
 
 			$new = $this->con->prepare("SELECT password FROM usuario WHERE cedula = ?");
@@ -309,5 +322,7 @@ class perfil extends DBConnect{
 	}
 
 }
+
+
 
 ?>
