@@ -372,10 +372,11 @@
                     $new = $this->con->prepare("SELECT num_fact FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
-                    $venta = $new->fetchAll(\PDO::FETCH_OBJ);
+                    $venta = $new->fetchAll();
+                    
     
                     $new = $this->con->prepare("SELECT cantidad, cod_producto FROM venta_producto WHERE num_fact = ?");
-                    $new->bindValue(1, $venta[0]->num_fact);
+                    $new->bindValue(1, $venta[0]['num_fact']);
                     $new->execute();
                     $productos = $new->fetchAll(\PDO::FETCH_OBJ);
                     parent::desconectarDB();
@@ -384,7 +385,7 @@
                     }
                     parent::conectarDB();
                     $new = $this->con->prepare("DELETE FROM venta WHERE num_fact = ?");
-                    $new->bindValue(1, $venta[0]->num_fact);
+                    $new->bindValue(1, $venta[0]['num_fact']);
                     $new->execute();
                     
                     parent::desconectarDB();
@@ -464,7 +465,7 @@
                     parent::desconectarDB();
                 }
                 parent::conectarDB();
-                $new = $this->con->prepare("SELECT status FROM venta WHERE cedula_cliente = ? AND online = 1 AND status = 4");
+                $new = $this->con->prepare("SELECT status FROM venta WHERE cedula_cliente = ? AND online = 1 AND status = 2");
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -480,7 +481,7 @@
                     $carrito = $new->fetchAll(\PDO::FETCH_OBJ);
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
-                        VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 4)");
+                        VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 2)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
                     $num_fact = $this->con->lastInsertId();

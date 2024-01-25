@@ -94,7 +94,7 @@
 		   $new = $this->con->prepare('INSERT INTO notificaciones(id, tipo_notificacion, mensaje, fecha, stock , dia_de_inventario, status) VALUES (default,?,?,?,?,?,1)');
 
   			foreach ($productos_vencidos as $data) {
-				$nombre = $data->nombre;
+				$nombre = $data->descripcion;
 				$dias_vencidos = abs($data->dias_vencidos);
                 $mensaje = "El producto: {$nombre}.expiro hace {$dias_vencidos} dias";
 
@@ -116,7 +116,7 @@
 				}
 
 			foreach ($productos_stock_bajo as $data) {
-				$nombre = $data->nombre;
+				$nombre = $data->descripcion;
 				$stock = $data->stock;
                 $mensaje = "Faltan {$stock} unidades para que se agote el producto: {$nombre}";
 
@@ -137,7 +137,7 @@
 				}
 
 			foreach ($dia_de_inventario as $data) {
-				$nombre = $data->nombre;
+				$nombre = $data->descripcion;
 				$stock = $data->stock;
 			    $dia_inventario = $data->dia_inventario;
                 $mensaje = "Quedan " . round($stock / $dia_inventario) . " dias de inventario del producto: <strong>" . $nombre . "</strong>";
@@ -202,7 +202,7 @@
 		private function getProductosVencidos(){
 			try {
 
-				$query="SELECT p.nombre, DATEDIFF(p.vencimiento, NOW()) AS dias_vencidos,
+				$query="SELECT p.descripcion, DATEDIFF(p.vencimiento, NOW()) AS dias_vencidos,
 						TIMEDIFF(DATE_FORMAT(p.vencimiento, '%Y-%m-%d %H:%i:%s'), NOW()) AS horas_vencidas FROM producto p 
 						WHERE p.vencimiento < NOW() AND p.stock > 0 AND p.status = 1";
 				$new = $this->con->prepare($query);
@@ -217,7 +217,7 @@
 		private function getDiaDeInventario(){
 			try {
 
-				$query="SELECT p.nombre , v.fecha , p.stock , SUM(vp.cantidad) as cantidadXmes,
+				$query="SELECT p.descripcion , v.fecha , p.stock , SUM(vp.cantidad) as cantidadXmes,
 						SUM(vp.cantidad)/30 as dia_inventario FROM producto p 
 						INNER JOIN venta_producto vp ON p.cod_producto = vp.cod_producto 
 						INNER JOIN venta v ON v.num_fact = vp.num_fact 
@@ -235,7 +235,7 @@
 		private function getProductosStockBajo(){
 			try {
 				
-				$query="SELECT p.cod_producto , p.nombre , p.stock FROM producto p 
+				$query="SELECT p.cod_producto , p.descripcion , p.stock FROM producto p 
 						WHERE p.stock <= 10 AND p.status = 1";
 				$new = $this->con->prepare($query);
 				$new->execute();
