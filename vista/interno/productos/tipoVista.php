@@ -85,7 +85,7 @@
                    <p id="error" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>     
                     <div class="modal-footer">
                       <button id="closeAg" id="closeRegis" type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                      <button id="enviar" type="button" class="btn btn-success">Registrar</button>
+                      <button id="enviar" type="submit" class="btn btn-success">Registrar</button>
                       </div>
                     </div>
                   </form>
@@ -122,7 +122,7 @@
                   <p id="error2" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
                     <div class="modal-footer">
                       <button type="button" id="closeEditar"class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                      <button type="button" id="enviarEditar" class="btn btn-success">Actualizar</button>
+                      <button type="submit" id="enviarEditar" class="btn btn-success">Actualizar</button>
                     </div>
                   </form>
                   </div>
@@ -143,7 +143,7 @@
                     </div>
                     <div class="modal-footer">
                       <button id="cerrar" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                      <button id="delete" type="button" class="btn btn-danger">Borrar</button>
+                      <button id="delete" type="submit" class="btn btn-danger">Borrar</button>
                     </div>
                   </div>
                 </div>

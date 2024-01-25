@@ -21,7 +21,7 @@
 		$model->mostrarPagos($_POST['bitacora']);
 	}
 
-	if(isset($_POST['id_pago'], $_POST['estado'], $permiso['Comprobar pago'])){
+	if(isset($_POST['id_pago'], $_POST['estado'])){
 		$model->getComprobacion($_POST['id_pago'], $_POST['estado']);
 	}
 

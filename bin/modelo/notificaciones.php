@@ -166,7 +166,7 @@
 		}
 
 
-		public function actualizarNotificacion($mensaje, $nombre){			
+		public function agregarNotificacion($mensaje, $nombre){			
 			try {
 
 			$this->conectarDB();

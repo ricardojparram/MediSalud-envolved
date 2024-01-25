@@ -284,7 +284,7 @@
                     $new->execute();
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
-                                                VALUES (DEFAULT, DEFAULT, ?, NULL, ?, 1, 2)");
+                                                VALUES (DEFAULT, DEFAULT, ?, NULL, ?, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->sede);
                     $new->execute();
@@ -293,7 +293,7 @@
                 }elseif ($this->direccionE != NULL || $this->direccionE != "") {
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
-                                                VALUES (DEFAULT, DEFAULT, ?, ?, NULL, 1, 2)");
+                                                VALUES (DEFAULT, DEFAULT, ?, ?, NULL, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->direccionE);
                     $new->execute();
@@ -303,7 +303,7 @@
                 }else{
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
-                                                VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 2)");
+                                                VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
                     // $resultado = ['resultado' => 'Registrado Entrega'];
@@ -335,7 +335,7 @@
                 
 
                     $new = $this->con->prepare("INSERT INTO pago(id_pago, monto_total, num_fact, status) 
-                                            VALUES (DEFAULT, ?, ?, 1)");
+                                            VALUES (DEFAULT, ?, ?, 2)");
                     $new->bindValue(1, $totalMonto);
                     $new->bindValue(2, $numFactura);
                     $new->execute();
@@ -369,7 +369,7 @@
                 try {
                     parent::conectarDB();
     
-                    $new = $this->con->prepare("SELECT num_fact FROM venta WHERE online = 1 AND status = 4 AND cedula_cliente = ?;");
+                    $new = $this->con->prepare("SELECT num_fact FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
                     $venta = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -515,7 +515,7 @@
                 if($cedula === NULL){
                     parent::conectarDB();
                     $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual 
-                                            FROM venta WHERE online = 1 AND status = 4;");
+                                            FROM venta WHERE online = 1 AND status = 2;");
                     $new->execute();
                     $ventas = $new->fetchAll(\PDO::FETCH_OBJ);
                     parent::desconectarDB();
@@ -524,7 +524,7 @@
                     
 
                     $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual 
-                                            FROM venta WHERE online = 1 AND status = 4 AND cedula_cliente = ?;");
+                                            FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
                     $new->bindValue(1, $cedula);
                     $new->execute();
                     $ventas = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -614,7 +614,7 @@
         public function temporizador($cedula,$venta = false){
             try {
                 parent::conectarDB();
-                $new = $this->con->prepare("SELECT fecha FROM venta WHERE online = 1 AND status = 4 AND cedula_cliente = ?");
+                $new = $this->con->prepare("SELECT fecha FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?");
                 $new->bindValue(1, $cedula);
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);

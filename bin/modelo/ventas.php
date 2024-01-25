@@ -289,7 +289,7 @@
         INNER JOIN pago p ON p.num_fact = v.num_fact 
         INNER JOIN detalle_pago dp ON p.id_pago = dp.id_pago 
         INNER JOIN cambio cm ON cm.id_cambio = dp.id_cambio 
-        INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE v.status = 1 GROUP by v.num_fact";
+          INNER JOIN moneda m ON cm.moneda = m.id_moneda WHERE v.status = 1 AND p.status = 1 GROUP by v.num_fact";
 
 
         $new = $this->con->prepare($query);
