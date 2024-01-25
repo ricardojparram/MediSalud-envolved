@@ -179,7 +179,7 @@
         success(data){
           let option = ""
           data.forEach((row)=>{
-            option += `<option value="${row.cod_producto}">${row.nombre}</option>`
+            option += `<option value="${row.cod_producto}">${row.descripcion}</option>`
           })
           $('.select-productos').each(function(){
              if(this.children.length == 1){
