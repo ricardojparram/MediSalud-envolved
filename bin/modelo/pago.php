@@ -55,16 +55,18 @@
                 $new->bindValue(1, $cedula);
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
-                 foreach ($data as $item) {
-                    $item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0, $this->iv);
-                    $item->direccion = openssl_decrypt($item->direccion, $this->cipher, $this->key, 0, $this->iv);
-                    $item->celular = openssl_decrypt($item->celular, $this->cipher, $this->key, 0, $this->iv);
-                    $item->correo = openssl_decrypt($item->correo, $this->cipher, $this->key, 0, $this->iv);
-                }
+                // var_dump($data);
+                // die();
                 parent::desconectarDB();
-                if(isset($data[0]["cedula"])){ 
+                if(isset($data[0]->cedula)){ 
+                    foreach ($data as $item) {
+                       $item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0, $this->iv);
+                       $item->direccion = openssl_decrypt($item->direccion, $this->cipher, $this->key, 0, $this->iv);
+                       $item->celular = openssl_decrypt($item->celular, $this->cipher, $this->key, 0, $this->iv);
+                       $item->correo = openssl_decrypt($item->correo, $this->cipher, $this->key, 0, $this->iv);
+                   }
                     echo json_encode($data);
-                }elseif (!isset($data[0]["cedula"])) {
+                }elseif (!isset($data[0]->cedula)) {
                     parent::conectarDB();
                     $new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo FROM usuario u WHERE u.cedula = ?");
                     $new->bindValue(1, $cedula);
@@ -233,12 +235,14 @@
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll();
+               
+               
                 parent::desconectarDB();
 
                 if(isset($data[0]["cedula"])){
                     
                     parent::conectarDB();
-                    $new = $this->con->prepare("UPDATE cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula SET c.cedula = ?, c.nombre = ?, c.apellido = ?, c.direccion = ?, cc.celular= ?, cc.correo = ?, cc.cedula = ? WHERE c.cedula = ?");
+                    $new = $this->con->prepare("UPDATE cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula SET c.cedula = ?, c.nombre = ?, c.apellido = ?, c.direccion = ?, cc.celular= ?, cc.correo = ?, cc.cedula = ?, c.status = 1 WHERE c.cedula = ?");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->nombre);
                     $new->bindValue(3, $this->apellido);
@@ -280,7 +284,7 @@
                     $new->execute();
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
-                                                VALUES (DEFAULT, DEFAULT, ?, NULL, ?, 1, 1)");
+                                                VALUES (DEFAULT, DEFAULT, ?, NULL, ?, 1, 2)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->sede);
                     $new->execute();
@@ -289,7 +293,7 @@
                 }elseif ($this->direccionE != NULL || $this->direccionE != "") {
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
-                                                VALUES (DEFAULT, DEFAULT, ?, ?, NULL, 1, 1)");
+                                                VALUES (DEFAULT, DEFAULT, ?, ?, NULL, 1, 2)");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->direccionE);
                     $new->execute();
@@ -299,7 +303,7 @@
                 }else{
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
-                                                VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 1)");
+                                                VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 2)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
                     // $resultado = ['resultado' => 'Registrado Entrega'];
@@ -365,7 +369,7 @@
                 try {
                     parent::conectarDB();
     
-                    $new = $this->con->prepare("SELECT num_fact FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
+                    $new = $this->con->prepare("SELECT num_fact FROM venta WHERE online = 1 AND status = 4 AND cedula_cliente = ?;");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
                     $venta = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -438,7 +442,6 @@
                 $new->execute();
                 [0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
                 
-
                 
                 parent::desconectarDB();
 
@@ -457,7 +460,7 @@
                     parent::desconectarDB();
                 }
                 parent::conectarDB();
-                $new = $this->con->prepare("SELECT status FROM venta WHERE cedula_cliente = ? AND online = 1 AND status = 2");
+                $new = $this->con->prepare("SELECT status FROM venta WHERE cedula_cliente = ? AND online = 1 AND status = 4");
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -473,7 +476,7 @@
                     $carrito = $new->fetchAll(\PDO::FETCH_OBJ);
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
-                        VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 2)");
+                        VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 4)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
                     $num_fact = $this->con->lastInsertId();
@@ -508,7 +511,7 @@
                 if($cedula === NULL){
                     parent::conectarDB();
                     $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual 
-                                            FROM venta WHERE online = 1 AND status = 2;");
+                                            FROM venta WHERE online = 1 AND status = 4;");
                     $new->execute();
                     $ventas = $new->fetchAll(\PDO::FETCH_OBJ);
                     parent::desconectarDB();
@@ -517,7 +520,7 @@
                     
 
                     $new = $this->con->prepare("SELECT num_fact, cedula_cliente, fecha as fecha_venta, TIMESTAMP(NOW()) as fecha_actual 
-                                            FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
+                                            FROM venta WHERE online = 1 AND status = 4 AND cedula_cliente = ?;");
                     $new->bindValue(1, $cedula);
                     $new->execute();
                     $ventas = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -607,7 +610,7 @@
         public function temporizador($cedula,$venta = false){
             try {
                 parent::conectarDB();
-                $new = $this->con->prepare("SELECT fecha FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?");
+                $new = $this->con->prepare("SELECT fecha FROM venta WHERE online = 1 AND status = 4 AND cedula_cliente = ?");
                 $new->bindValue(1, $cedula);
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);

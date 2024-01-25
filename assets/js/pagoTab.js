@@ -37,7 +37,7 @@ $(document).ready(function () {
 
 
 
-	
+
 
 	$(window).on('beforeunload', function () {
 		return
@@ -314,11 +314,13 @@ $(document).ready(function () {
 						</tr>`;
 
 	// Caracteriticas de la fila Tipo Pago
+
 	function filaTipoN() {
 		$('#FILL').append(newRowTipo);
 		selectTipoPago();
 		validarRepetido();
 		validarValores();
+
 	}
 	// Agregar fila para insertar tipo de pago
 	$('.newRowPago').on('click', function (e) {
@@ -369,7 +371,23 @@ $(document).ready(function () {
 		let move
 		$(".select-tipo").on('change', function () {
 			move = $(this).val()
+			let contadorM = 0, contadorT = 0
+			$('.select-tipo').each(function () {
+				contadorM = ($(this).val() == 4) ? contadorM + 1 : contadorM
+				contadorT = ($(this).val() == 5) ? contadorT + 1 : contadorT
+				console.log(contadorM, contadorT)
+				if (contadorM < 1) {
+					$(".movil").fadeOut(0);
+				}
+				if (contadorT < 1) {
+					$(".trans").fadeOut(0);
+				}
+				if (contadorM < 1 && contadorT < 1) {
+					$("#fade").fadeOut(0);
+				}
+			})
 			tipoPago(move);
+
 		})
 	}
 
@@ -438,6 +456,8 @@ $(document).ready(function () {
 				}
 			})
 		}
+
+		return 0
 	}
 
 	function banco() {
@@ -458,36 +478,7 @@ $(document).ready(function () {
 		})
 	}
 
-	// Validicaiones Tercer Step
 
-	// function validarRepetido(){
-	// 	$(".select-tipo").change(function(){
-	// 		let tipo
-
-	// 		$(".select-tipo").each(function () {
-	// 			tipo = $(this).val()
-	// 			let count = 0;
-
-	// 			$(".select-tipo").each(function() {
-	// 				if(tipo != ''){
-
-	// 					if(tipo == $(this).val()){
-	// 					  count++
-
-	// 					  if(count >=2){
-	// 						$(this).closest('tr').attr('style', 'border-color: red;')
-	// 						$(this).attr('valid', 'false');
-	// 						$('#error3').text('No pueden haber tipos de pago repetidos');
-
-	// 					  }else{
-	// 						$(this).attr('valid', 'true');
-	// 					  }
-	// 					}
-	// 				  }
-	// 			})
-	// 		})
-	// 	})
-	// }
 
 	function validarRepetido() {
 		let selects
@@ -589,44 +580,7 @@ $(document).ready(function () {
 		})
 	}
 
-	// function validarRepetido() {
 
-
-
-	// 			// Escuchar el evento change en cada selector
-	// 		$(".select-tipo").on("change", function() {
-
-	// 			var valorSeleccionado = $(this).val();
-
-	// 			// Verificar que el valor no se repita en otros selectores
-	// 			$(".select-tipo").each(function() {
-	// 				if ($(this).val() === valorSeleccionado) {
-
-	// 					$(this).closest('tr').attr('style', 'border-color: red;')
-
-	//               		$(this).attr('valid', 'false');
-	//               		$('#error3').text('No pueden haber productos repetidos');
-	// 					return false; // Detener el bucle each si se encuentra una repetición
-	// 				}else{
-	// 					$(this).attr('valid', 'true');
-	// 					$(this).closest('tr').attr('style', 'border-color: none;')
-	// 				}
-	// 			});
-
-	// 			$('.select-tipo').each(function(){
-	// 				if($(this).is('[valid="true"]')){
-	// 				  $(this).closest('tr').attr('style', 'border-color: none;');
-	// 				}
-
-	// 			  })
-	// 			  if(!$('.select-tipo').is('[valid="false"]')){
-	// 			   $('#error3').text('');
-	// 			 }
-
-	// 		});
-
-
-	// }
 
 	function validarPrecio(input) {
 		let valor = input.val();
@@ -814,46 +768,46 @@ $(document).ready(function () {
 
 		})
 
-
+		console.log($("#direcClien").val())
 
 		if (nombre && direccion && telefono && cedula && correo && movil && trans && valid && vtipoPago && vprecio && vmonto) {
-			//validarCarrito().then(() => {
-
-				$.ajax({
-					url: '',
-					method: 'POST',
-					dataType: 'json',
-					data: {
-						cedula: memas[0].cedula,
-						nombre: memas[0].nombre,
-						apellido: memas[0].apellido,
-						direccion: $("#direcClien").val(),
-						telefono: $("#teleClien").val(),
-						correo: $("#emailClien").val(),
-
-						sede: $("#sede").val(),
-
-						direccion: direcE,
-						detalles: push
 
 
-					},
-					success(final) {
-						if (final.resultado === "Registrado Pedido") {
-							Swal.fire({
-								title: 'Compra Realizada',
-								text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
-								icon: 'success',
-							})
-							localStorage.clear()
-							setTimeout(function () {
-								location = '?url=inico'
-							}, 2500);
-						} else {
-							Toast.fire({ icon: 'error', title: 'No fue Posible Realizar la Compra' })
-						}
+			$.ajax({
+				url: '',
+				method: 'POST',
+				dataType: 'json',
+				data: {
+					cedula: memas[0].cedula,
+					nombre: memas[0].nombre,
+					apellido: memas[0].apellido,
+					direccionF: $("#direcClien").val(),
+					telefono: $("#teleClien").val(),
+					correo: $("#emailClien").val(),
+
+					sede: $("#sede").val(),
+
+					direccionE: direcE,
+					detalles: push
+
+
+				},
+				success(final) {
+					if (final.resultado === "Registrado Pedido") {
+						Swal.fire({
+							title: 'Compra Realizada',
+							text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
+							icon: 'success',
+						})
+						// localStorage.clear()
+						setTimeout(function () {
+							location = '?url=inico'
+						}, 2500);
+					} else {
+						Toast.fire({ icon: 'error', title: 'No fue Posible Realizar la Compra' })
 					}
-				})
+				}
+			})
 			//})
 
 		} else {
@@ -911,32 +865,7 @@ $(document).ready(function () {
 		});
 	});
 
-	// function validarCarrito() {
-	// 	return new Promise((resolve, reject) => {
-	// 		$.ajax({
-	// 			method: 'post',
-	// 			url: '',
-	// 			dataType: 'JSON',
-	// 			data: {
-	// 				carrito: 'carrito'
-	// 			}, success(data) {
-	// 				if (data[0].cuenta >= 0) {
-	// 					return resolve(true)
-	// 				} else {
-	// 					Swal.fire({
-	// 						title: 'Productos Agotados!',
-	// 						text: 'Los Productos Selecionados estan agotados en nuestro almacen',
-	// 						icon: 'error',
-	// 					})
-	// 					//   setTimeout(function(){
-	// 					// 	location = '?url=home'
-	// 					//   }, 1600);
-	// 					return reject(false)
-	// 				}
-	// 			}
-	// 		})
-	// 	})
-	// }
+
 
 	function temporizador() {
 		let color = true
@@ -954,17 +883,17 @@ $(document).ready(function () {
 					let fecha = new Date(segundos);
 					let fechaActual = new Date();
 					let diferenciaEnSegundos = (fecha - fechaActual) / 1000;
-					
+
 					let hora = 3600 + diferenciaEnSegundos
-					
+
 					if (hora <= 0) {
 						eliminarVenta()
 						return clearInterval(intervalo)
-						
+
 					}
-					let horas = Math.floor(hora / 3600).toString().padStart(2, '0') 
-					let minutos = Math.floor((hora % 3600) / 60).toString().padStart(2, '0') 
-					let segundosRestantes = Math.floor(hora % 60).toString().padStart(2, '0') 
+					let horas = Math.floor(hora / 3600).toString().padStart(2, '0')
+					let minutos = Math.floor((hora % 3600) / 60).toString().padStart(2, '0')
+					let segundosRestantes = Math.floor(hora % 60).toString().padStart(2, '0')
 					if (hora <= 600) {
 						if (color) {
 							color = false;
@@ -974,10 +903,10 @@ $(document).ready(function () {
 							color = true
 						}
 					}
-					$("#temporizador").text(horas+ ":" + minutos+ ":" + segundosRestantes);
+					$("#temporizador").text(horas + ":" + minutos + ":" + segundosRestantes);
 					//$("#temporizador").text(hora);
 
-					
+
 				}, 1000)
 			}
 		})
