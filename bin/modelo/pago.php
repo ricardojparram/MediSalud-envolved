@@ -384,7 +384,6 @@
                     $new->execute();
                     
                     parent::desconectarDB();
-
                     $this->cedula = openssl_decrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
                     $this->nombre;
                     $this->apellido ;

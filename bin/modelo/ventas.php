@@ -78,11 +78,11 @@
     $this->cantidad = $cantidad;
     $this->id = $idVenta;
 
-    return $this->VentaXProducto();
+    return $this->ventaXProducto();
 
    }
 
-   private function VentaXProducto(){
+   private function ventaXProducto(){
     try{
      parent::conectarDB();
      $new = $this->con->prepare("INSERT INTO `venta_producto`(`num_fact`, `cod_producto`, `cantidad`, `precio_actual`) VALUES (?,?,?,?)");

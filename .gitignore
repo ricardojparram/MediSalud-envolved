@@ -3,3 +3,7 @@
 /assets/reportes/*.xlsx
 /assets/tickets/*.pdf
 /assets/img/perfil/*.png
+.phpunit.result.cache
+.phpunit.result.cache
+/vendor
+/Tests/

@@ -5,7 +5,6 @@
    
     class proveedor extends DBConnect{
 
-      private $cod_lab;
       private $rif;
       private $direccion;
       private $razon;

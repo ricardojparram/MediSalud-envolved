@@ -851,9 +851,7 @@ $(document).ready(function () {
 									location = '?url=inico'
 								}, 2500); 
 							  }
-							);
-							
-
+							);	
 						} else {
 							Toast.fire({ icon: 'error', title: 'No fue Posible Realizar la Compra' })
 						}
@@ -867,7 +865,6 @@ $(document).ready(function () {
 
 
 	})
-
 
 
 

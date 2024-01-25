@@ -2,6 +2,7 @@ $(document).ready(function(){
 
   let tiempo_para_repetir_peticion = 1800000; 
 
+
   getRegistrarNotificaciones()
   setInterval(getRegistrarNotificaciones, tiempo_para_repetir_peticion);
 
@@ -12,19 +13,17 @@ $(document).ready(function(){
           throw new Error('notificaciones registradas');
         }
         
-      }, 
-      error(qXHR, textStatus, errorThrown){
-        throw new Error('Error al obtener datos de notificación:', textStatus, errorThrown);
       }
     })
   }
 
-  
+
   getNotificaciones()
   setInterval(getNotificaciones , tiempo_para_repetir_peticion);
 
+
   function getNotificaciones(){
-    $.ajax({ type : 'POST', url: '?url=notificaciones', dataType: 'json', data: {notificaciones: ''},
+    $.ajax({ type : 'POST', url: '?url=notificaciones', dataType: 'json', data: {notificaciones: 'consultar'},
       success(data){
         notificaciones = data;
         mostrarNotificacion(notificaciones);
@@ -174,7 +173,7 @@ $(document).ready(function(){
                 </div>
                 <div>
                   <h4>Se realizo una compra online</h4>
-                  <p>${row.mensaje}</p>
+                  <p>${row.mensaje}<br> ${row.fecha}</p>
                   <p class='tiempo'>tiempo activo: ${minutos} minutos</p>
                 </div>
               </div>
@@ -196,6 +195,7 @@ $(document).ready(function(){
 
     let total_notificaciones = count_stock_bajo + count_vencidos + count_dia_inventario + count_pedido_pagos;
 
+    $('.notifications .item').html('');
     $('.notifications .item').append(mostrar);
     $('.notifications .item').append(mostrar1);
     $('.notifications .item').append(mostrar2);
@@ -205,8 +205,9 @@ $(document).ready(function(){
 
   }
 
+
    $(document).on('click' , '.leido' , function(e){
-      e.preventDefault()
+      e.stopPropagation();
       
       const notificationId = $(this).attr('id');
       const selectedNotification = $(this).closest('.notification-item');
@@ -214,10 +215,13 @@ $(document).ready(function(){
 
         $.ajax({ type : 'POST', url: '?url=notificaciones', dataType: 'json', data: {notificacionVista: '' , notificationId},
         success(data){
-         $('.notifications .item').html('');
-         $('.contador').text('');
-         $('.numNoti').text('');
-         getNotificaciones()
+          selectedNotification.add(divisor).fadeOut('slow', function() {
+          $(this).remove();
+         });
+          total_notificaciones = $('.contador').text() - 1;
+          $('.contador').text(total_notificaciones);
+          total_notificaciones = $('.numNoti').text() - 1;
+          $('.numNoti').text(total_notificaciones)
         }
      })
 

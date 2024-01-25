@@ -21,7 +21,7 @@
 
         <li class="nav-item dropdown">
 
-          <a class="nav-link nav-icon notification_icon" href="#" data-bs-toggle="dropdown">
+          <a class="nav-link nav-icon notification_icon" href="#" data-bs-toggle="dropdown" data-bs-auto-close="false">
             <i class="bi bi-bell"></i>
             <span class="badge iconos badge-number contador"></span>
           </a><!-- End Notification Icon -->
@@ -45,9 +45,7 @@
               
             </li>
 
-           <li class="dropdown-footer text-start">
-              Anteriores
-            </li>
+
              <li class="itemVisto list-group">
               
             </li>

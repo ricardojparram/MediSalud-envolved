@@ -111,9 +111,6 @@
 					$new->bindValue(4, null);
 					$new->bindValue(5, null);
 					$new->execute();
-                    }else{
-                      echo json_encode(['resultado' => 'Error de consulta productos vencidos']);
-					  die();
                     }
 			
 				}
@@ -136,10 +133,7 @@
 					$new->bindValue(4, null);
 					$new->bindValue(5, null);
 					$new->execute();
-					}else{
-                       echo json_encode(['resultado' => 'Error de consulta stock bajo']);
-					   die();
-                    }
+					}
 				}
 
 			foreach ($dia_de_inventario as $data) {
@@ -161,10 +155,7 @@
 					$new->bindValue(4, $stock);
 					$new->bindValue(5, $dia_inventario);
 					$new->execute();
-				  }else{
-                    	echo json_encode(['resultado' => 'Error de consulta dia de inventario']);
-						die();
-                    }
+				  }
 				}
 
 
@@ -173,6 +164,7 @@
 				die();
 			}
 		}
+
 
 		public function actualizarNotificacion($mensaje, $nombre){			
 			try {
@@ -189,7 +181,6 @@
 
 			$mensaje = $resultado . ' de: ' . $name . ' ' . $apellido . ' CI: ' . $cedula;
 
-
 			 $new = $this->con->prepare('INSERT INTO notificaciones(id, tipo_notificacion, mensaje, fecha, stock , dia_de_inventario, status) VALUES (default,?,?,?,?,?,1)');
 
 			 $new->bindValue(1, $nombre);
@@ -200,13 +191,12 @@
 			 $new->execute();
 
 			 $this->desconectarDB();
-			 echo json_encode(['resultado' => 'notificacione registrada']);
+			 echo json_encode(['resultado' => 'notificacion registrada']);
 			 die();
 
 			} catch (\PDOException $e) {
 				die($e);
 			}
-
 		}
 
 		private function getProductosVencidos(){
