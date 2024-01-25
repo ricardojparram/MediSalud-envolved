@@ -5,5 +5,5 @@
 /assets/img/perfil/*.png
 .phpunit.result.cache
 .phpunit.result.cache
-/vendor
+/vendor/
 /Tests/
