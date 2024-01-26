@@ -14,14 +14,22 @@
 
 		public function mostrarPagos($bitacora){
 			try{
+				$this->key = parent::KEY();
+                $this->iv = parent::IV();
+                $this->cipher = parent::CIPHER();
+
 				$this->conectarDB();
-				$query='SELECT p.id_pago, v.num_fact, c.cedula, CONCAT(c.nombre, " ", c.apellido) as nombre_cliente, p.monto_total, p.status FROM pago p 
+				$query='SELECT p.id_pago, v.num_fact, c.cedula, v.fecha, CONCAT(c.nombre, " ", c.apellido) as nombre_cliente, p.monto_total, p.status FROM pago p 
 						INNER JOIN venta v ON v.num_fact = p.num_fact
 						INNER JOIN cliente c ON c.cedula = v.cedula_cliente
 						WHERE v.online = 1;';
 				$new = $this->con->prepare($query);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
+				foreach ($data as $item) {
+					$item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0, $this->iv);
+				}
+
 
 				if($bitacora === "true") $this->binnacle("Comprobar pagos",$_SESSION['cedula'],"Consultó listado.");
 				$this->desconectarDB();
@@ -36,6 +44,8 @@
 		public function getComprobacion($id_pago, $estado){
 			$this->id_pago = $id_pago;
 			$this->estado = $estado;
+
+			
 
 			$this->comprobarPago();
 		}

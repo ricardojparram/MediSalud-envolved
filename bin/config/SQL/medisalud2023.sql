@@ -82,6 +82,17 @@ CREATE TABLE bitacora (
   FOREIGN KEY (usuario) REFERENCES usuario (cedula) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
+-- TABLA PARA NOTIFICACIONES 
+CREATE TABLE notificaciones (
+  id int AUTO_INCREMENT PRIMARY KEY,
+  tipo_notificacion varchar(30) NOT NULL,
+  mensaje varchar(100) NOT NULL,
+  fecha date NOT NULL,
+  stock int,
+  dia_de_inventario decimal(10,2),
+  status int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
 -- TABLA PARA EL CONTACTO DE LOS CLIENTES 
 CREATE TABLE contacto_cliente(
     id_contacto int AUTO_INCREMENT PRIMARY KEY,
@@ -136,7 +147,6 @@ CREATE TABLE presentacion(
 CREATE TABLE producto( 
     cod_producto int AUTO_INCREMENT PRIMARY KEY,
     codigo varchar(50) NOT NULL,
-    nombre varchar(30) NOT NULL,
     descripcion varchar(200) COLLATE utf8_spanish2_ci NOT NULL,
     ubicacion varchar(100)COLLATE utf8_spanish2_ci NOT NULL,
     composicion varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
@@ -252,8 +262,8 @@ CREATE TABLE venta(
 CREATE TABLE venta_producto(
     num_fact int NOT NULL,
     cod_producto int NOT NULL,
-    cantidad varchar(10)  NOT NULL,
-    precio_actual varchar(10)  NOT NULL,
+    cantidad int NOT NULL,
+    precio_actual decimal (10,2)  NOT NULL,
     FOREIGN KEY (num_fact) REFERENCES venta(num_fact) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (cod_producto) REFERENCES producto(cod_producto) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
@@ -280,7 +290,7 @@ CREATE TABLE datos_cobro_farmacia(
 -- TABLA PARA PAGOS
 CREATE TABLE pago(
     id_pago int AUTO_INCREMENT PRIMARY KEY,
-    monto_total varchar(20) NOT NULL,
+    monto_total decimal (10,2) NOT NULL,
     num_fact int NOT NULL,
     status int NOT NULL,
     FOREIGN KEY (num_fact) REFERENCES venta(num_fact) ON DELETE CASCADE ON UPDATE CASCADE

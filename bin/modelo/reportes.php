@@ -27,6 +27,11 @@
 		}
 
 		private function obtenerReporte(){
+			$this->key = parent::KEY();
+            $this->iv = parent::IV();
+            $this->cipher = parent::CIPHER();
+                
+               
 			$queries = [
 				"compra" => "SELECT c.orden_compra, p.razon_social, SUM(cp.cantidad) as cantidad, c.fecha,
 							CONCAT(IF(MOD(c.monto_total / cm.cambio, 1) >= 0.5, CEILING(c.monto_total / cm.cambio), FLOOR(c.monto_total / cm.cambio) + 0.5), ' ', m.nombre) as 'total_divisa', c.monto_total, m.nombre as 'moneda',
@@ -62,9 +67,15 @@
 				$new->bindValue(1, $this->fechaInicio);
 				$new->bindValue(2, $this->fechaFinal);
 				$new->execute();
-
 				$reporte = $new->fetchAll();
 				$this->desconectarDB();
+				if (isset($reporte[0]['cedula'])) {
+					foreach ($reporte as &$fila) {
+						$fila['cedula'] = openssl_decrypt($fila['cedula'], $this->cipher, $this->key, 0, $this->iv);
+						$fila[1] = openssl_decrypt($fila[1], $this->cipher, $this->key, 0, $this->iv);
+					}
+				}
+
 				return $reporte;
 
 			} catch (\PDOException $e) {

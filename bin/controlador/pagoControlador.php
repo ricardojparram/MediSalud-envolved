@@ -41,8 +41,8 @@
     $objModel->mostrarSede($_POST['nomEstado']);
   }
 
-  if (isset($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles'])) {
-    $objModel->getRegistar($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccion'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccion'], $_POST['detalles']);
+  if (isset($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['direccionF'], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccionE'], $_POST['detalles'])) {
+    $objModel->getRegistar($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST["direccionF"], $_POST['telefono'], $_POST['correo'], $_POST['sede'], $_POST['direccionE'], $_POST['detalles']);
   }
 
   if (isset($_POST['mostrarB'])){
@@ -50,6 +50,9 @@
   }
   if (isset($_POST['calculaT'])){
     $objModel->calcularTipo($_SESSION['cedula']);
+  }
+  if (isset($_POST['tiempo'])){
+    $objModel->temporizador($_SESSION['cedula']);
   }
   
   $VarComp = new initcomponents();

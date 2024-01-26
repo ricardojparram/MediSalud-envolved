@@ -22,11 +22,11 @@
 
 	<!-- ======= Sidebar ======= -->
 
-	<?php 
-
-	$menu->Menu();
-
-	?>
+	<?php
+      
+         $menu->Menu();
+                
+      ?>
 
 	<!-- End Sidebar-->
 	<main class="main" id="main">
