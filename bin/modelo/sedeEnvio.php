@@ -70,7 +70,7 @@
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 				if($bitacora ===  "true") $this->binnacle("Sede de envío",$_SESSION['cedula'],"Consultó listado.");
 				$this->desconectarDB();
-				die(json_encode($data));
+				return $data;
 
 			}catch(\PDOException $e){
 				return $e;
@@ -104,8 +104,17 @@
 			}
 		}
 
-		public function validarEmpresa($empresa){
+		public function getValidarEmpresa($empresa){
+			if(preg_match_all("/^[0-9]{1,10}$/", $empresa) != 1)
+				return ['resultado' => 'error','error' => 'Id inválida.'];
+
 			$this->empresa = $empresa;
+
+			return $this->validarEmpresa();
+		}
+
+		public function validarEmpresa(){
+
 			try {
 				$this->conectarDB();
 				$new = $this->con->prepare('SELECT * FROM empresa_envio WHERE id_empresa = ? AND status = 1');
@@ -121,30 +130,29 @@
 		}
 
 		public function getRegistrarSede($empresa, $estado, $nombre, $ubicacion){
-
-			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{7,70}$/', $ubicacion) != 1){
-				die(json_encode(['resultado' => 'Error de sede','error' => 'Direccion inválida.']));
-			}
-			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{7,70}$/', $nombre) != 1){
-				die(json_encode(['resultado' => 'Error de sede','error' => 'Nombre de sede inválido.']));
-			}
-			if(preg_match_all("/^[0-9]{1,5}$/", $estado) != 1){
-				die(json_encode(['resultado' => 'Error de estado','error' => 'Estado inválido.']));
-			}
-			if(preg_match_all("/^[0-9]{1,5}$/", $empresa) != 1){
-				die(json_encode(['resultado' => 'Error de empresa','error' => 'Empresa inválido.']));
-			}
+			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s+,.\-\/\'"#]{7,200}$/', $ubicacion) != 1)
+				return ['resultado' => 'Error de sede','error' => 'Direccion inválida.'];
+			
+			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{7,70}$/', $nombre) != 1)
+				return ['resultado' => 'Error de sede','error' => 'Nombre de sede inválido.'];
+			
+			if(preg_match_all("/^[0-9]{1,5}$/", $estado) != 1)
+				return ['resultado' => 'Error de estado','error' => 'Estado inválido.'];
+			
+			if(preg_match_all("/^[0-9]{1,5}$/", $empresa) != 1)
+				return ['resultado' => 'Error de empresa','error' => 'Empresa inválido.'];
+			
 
 			$this->empresa = $empresa;
 			$this->estado = $estado;
 			$this->ubicacion = $ubicacion;
 			$this->nombre = $nombre;
 
-			if($this->validarEmpresa($this->empresa)){
-				$this->registrarSede();
-			}else{
-				die(json_encode(['resultado' => false, 'msg' => 'La empresa no existe.']));
-			}
+			if($this->validarEmpresa($this->empresa) != true)
+				return ['resultado' => false, 'msg' => 'La empresa no existe.'];
+
+			return $this->registrarSede();
+
 		}
 
 		private function registrarSede(){
@@ -167,8 +175,7 @@
 					die('xd');
 				}
 				$this->desconectarDB();
-				die(json_encode($resultado));
-
+				return $resultado;
 
 			}catch(\PDOException $error){
 				return $error;
@@ -178,10 +185,8 @@
 
 		public function getSede($id){
 
-			if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1){
-				echo json_encode(['resultado' => 'Error de id','error' => 'Id inválida.']);
-				die();
-			}
+			if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1)
+				return ['resultado' => 'error','error' => 'Id inválida.'];
 
 			$this->id = $id;
 
@@ -212,18 +217,18 @@
 
 		public function getEditarSede($empresa, $estado, $nombre, $ubicacion, $id){
 
-			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{7,70}$/', $ubicacion) != 1){
-				die(json_encode(['resultado' => 'Error de sede','error' => 'Direccion inválida.']));
-			}
-			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{7,70}$/', $nombre) != 1){
-				die(json_encode(['resultado' => 'Error de sede','error' => 'Nombre de sede inválido.']));
-			}
-			if(preg_match_all("/^[0-9]{1,5}$/", $estado) != 1){
-				die(json_encode(['resultado' => 'Error de estado','error' => 'Estado inválido.']));
-			}
-			if(preg_match_all("/^[0-9]{1,5}$/", $empresa) != 1){
-				die(json_encode(['resultado' => 'Error de empresa','error' => 'Empresa inválido.']));
-			}
+			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{7,200}$/', $ubicacion) != 1)
+				return ['resultado' => 'Error de sede','error' => 'Direccion inválida.'];
+			
+			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{4,70}$/', $nombre) != 1)
+				return ['resultado' => 'Error de sede','error' => 'Nombre de sede inválido.'];
+			
+			if(preg_match_all("/^[0-9]{1,5}$/", $estado) != 1)
+				return ['resultado' => 'Error de estado','error' => 'Estado inválido.'];
+			
+			if(preg_match_all("/^[0-9]{1,5}$/", $empresa) != 1)
+				return ['resultado' => 'Error de empresa','error' => 'Empresa inválido.'];
+			
 
 			$this->empresa = $empresa;
 			$this->estado = $estado;
@@ -231,13 +236,11 @@
 			$this->nombre = $nombre;
 			$this->id = $id;
 
-			if($this->validarEmpresa($this->empresa)){
-				if($this->selectSede() != false){
-					$this->editarSede();
-				}
-			}else{
-				die(json_encode(['resultado' => false, 'msg' => 'La empresa no existe.']));
-			}
+			if($this->validarEmpresa($this->empresa) !== true)
+				return ['resultado' => false, 'msg' => 'La empresa no existe.'];				
+
+			if($this->selectSede() != false)
+				return $this->editarSede();
 
 		}
 
@@ -253,17 +256,12 @@
 				$new->bindValue(3, $this->estado);
 				$new->bindValue(4, $this->empresa);
 				$new->bindValue(5, $this->id);
+				$new->execute();
 
-				$resultado;
-				if($new->execute()){
-					$this->binnacle("Sede de envío",$_SESSION['cedula'],"Editó sede de envío.");
-					$resultado = ['resultado' => true, 'msg' => 'Sede de envío editada.'];
-				}else{
-					$resultado = ['resultado' => false, 'msg' => 'Ha ocurrido un error al editar la sede.'];
-				}
-
+				$this->binnacle("Sede de envío",$_SESSION['cedula'],"Editó sede de envío.");
 				$this->desconectarDB();
-				die(json_encode($resultado));
+
+				return ['resultado' => true, 'msg' => 'Sede de envío editada.'];
 
 			}catch(\PDOException $error){
 				echo json_encode($error);
@@ -274,18 +272,15 @@
 
 
 		public function getEliminarSede($id){
-			if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1){
-				echo json_encode(['resultado' => 'Error de id','error' => 'Id inválida.']);
-				die();
-			}
+			if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1)
+				return ['resultado' => 'Error de id','error' => 'Id inválida.'];
 
 			$this->id = $id;
 
-			if($this->selectSede() != false){
-				$this->eliminarSede();
-			}else {
-				die(json_encode(['resultado' => true, 'msg' => 'La sede de envío no existe.']));
-			}
+			if($this->selectSede() != true)
+				return ['resultado' => true, 'msg' => 'La sede de envío no existe.'];
+
+			return  $this->eliminarSede();
 		}
 
 		private function eliminarSede(){
@@ -296,8 +291,8 @@
 				$new->execute();
 				$this->binnacle("Sede de envío",$_SESSION['cedula'],"Eliminó sede de envío.");
 				$this->desconectarDB();
-				$resultado = ['resultado' => true, 'msg' => 'Se eliminó la sede correctamente.'];
-				die(json_encode($resultado));
+
+				return ['resultado' => true, 'msg' => 'Se eliminó la sede correctamente.'];
 
 			}catch(\PDOException $e){
 				return $e;

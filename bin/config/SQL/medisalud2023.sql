@@ -147,7 +147,6 @@ CREATE TABLE presentacion(
 CREATE TABLE producto( 
     cod_producto int AUTO_INCREMENT PRIMARY KEY,
     codigo varchar(50) NOT NULL,
-    nombre varchar(30) NOT NULL,
     descripcion varchar(200) COLLATE utf8_spanish2_ci NOT NULL,
     ubicacion varchar(100)COLLATE utf8_spanish2_ci NOT NULL,
     composicion varchar(50) COLLATE utf8_spanish2_ci NOT NULL,

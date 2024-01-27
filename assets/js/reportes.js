@@ -1,8 +1,21 @@
 $(document).ready(function(){
 
 	fechaHoy($('#fecha'), $('#fecha2'));
-
 	let tabla, tipo, fechaInicio, fechaFinal, thead, columns, reporte;
+
+	$('input[type="date"]').on('change', function(){
+
+		if($('#fecha').val() > $('#fecha2').val()){
+			$('#error').text("La fecha de inicio no puede ser mayor a la final.")	
+			$('#fecha').attr("style","border-color: red;")
+			return false
+		}else{
+			$('#error').text("")	
+			$('#fecha').attr("style","border-color: none;")
+		}
+
+		validarFechaAyer($(this), $('#error'), "La fecha")
+	})
 
 	const tipoAcciones = {
 		venta : () => {
@@ -78,6 +91,7 @@ $(document).ready(function(){
 
 		if(!tipoAcciones.hasOwnProperty(tipo)) tipoAcciones.error();
 		tipoAcciones[tipo]();
+
 
 		$.ajax({type: 'post', url:'', dataType: 'json', 
 			data :{mostrar: 'reporte', tipo, fechaInicio, fechaFinal},

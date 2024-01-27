@@ -94,7 +94,7 @@
                 </div>
                 <div class="col-6 mt-3 text-end">
                   <button class="btn btn-danger" id="exportar">Reporte <i class="bi bi-file-pdf"></i></button>
-                  <button class="btn btn-success" id="exportarEstadistico">Reporte estadístico <i class="bi bi-file-spreadsheet"></i></button>
+                  <button class="btn btn-danger" id="exportarEstadistico">Reporte estadístico <i class="bi bi-file-pdf-fill"></i></button>
                 </div>
               </div>
 

@@ -47,8 +47,8 @@ $(document).ready(function(){
 	function validarRif(input, div, edit = false){
 		$.post('',{rif : input.val(), validar: "rif", edit}, function(data){
 			let mensaje = JSON.parse(data);
-			if(mensaje.resultado === "Error de rif"){
-				div.text(mensaje.error);
+			if(mensaje.resultado === "error"){
+				div.text(mensaje.msg);
 				input.attr("style","border-color: red;")
 				input.attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
 			}
@@ -95,8 +95,8 @@ $(document).ready(function(){
 			},
 			success(data){
 
-				if(data.resultado === "Error de rif"){
-					$("#error").text(data.error);
+				if(data.resultado === "error"){
+					$("#error").text(data.msg);
 					$("#rif").attr("style","border-color: red;")
 					$("#rif").attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
 					throw new Error('Rif inválido');
@@ -178,7 +178,7 @@ $(document).ready(function(){
 				id
 			},
 			success(data){
-				if(data.resultado === "Error de rif"){
+				if(data.resultado === "error"){
 					$("#errorEdit").text(data.msg);
 					$("#rifEdit").attr("style","border-color: red;")
 					$("#rifEdit").attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 

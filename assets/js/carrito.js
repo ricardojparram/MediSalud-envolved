@@ -114,7 +114,6 @@ $(document).ready(function(){
 				}
 			},
 			error(response){
-				Toast.fire({ icon: 'error', title: 'Ha ocurrido un error al consultar carrito.' });
 				res = false;
 				throw new Error("Ha ocurrido un error al consultar carrito: "+response);
 			}

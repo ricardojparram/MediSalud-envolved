@@ -55,16 +55,18 @@
                 $new->bindValue(1, $cedula);
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
-                 foreach ($data as $item) {
-                    $item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0, $this->iv);
-                    $item->direccion = openssl_decrypt($item->direccion, $this->cipher, $this->key, 0, $this->iv);
-                    $item->celular = openssl_decrypt($item->celular, $this->cipher, $this->key, 0, $this->iv);
-                    $item->correo = openssl_decrypt($item->correo, $this->cipher, $this->key, 0, $this->iv);
-                }
+                // var_dump($data);
+                // die();
                 parent::desconectarDB();
-                if(isset($data[0]["cedula"])){ 
+                if(isset($data[0]->cedula)){ 
+                    foreach ($data as $item) {
+                       $item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0, $this->iv);
+                       $item->direccion = openssl_decrypt($item->direccion, $this->cipher, $this->key, 0, $this->iv);
+                       $item->celular = openssl_decrypt($item->celular, $this->cipher, $this->key, 0, $this->iv);
+                       $item->correo = openssl_decrypt($item->correo, $this->cipher, $this->key, 0, $this->iv);
+                   }
                     echo json_encode($data);
-                }elseif (!isset($data[0]["cedula"])) {
+                }elseif (!isset($data[0]->cedula)) {
                     parent::conectarDB();
                     $new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo FROM usuario u WHERE u.cedula = ?");
                     $new->bindValue(1, $cedula);
@@ -233,12 +235,14 @@
                 $new->bindValue(1, $this->cedula);
                 $new->execute();
                 $data = $new->fetchAll();
+               
+               
                 parent::desconectarDB();
 
                 if(isset($data[0]["cedula"])){
                     
                     parent::conectarDB();
-                    $new = $this->con->prepare("UPDATE cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula SET c.cedula = ?, c.nombre = ?, c.apellido = ?, c.direccion = ?, cc.celular= ?, cc.correo = ?, cc.cedula = ? WHERE c.cedula = ?");
+                    $new = $this->con->prepare("UPDATE cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula SET c.cedula = ?, c.nombre = ?, c.apellido = ?, c.direccion = ?, cc.celular= ?, cc.correo = ?, cc.cedula = ?, c.status = 1 WHERE c.cedula = ?");
                     $new->bindValue(1, $this->cedula);
                     $new->bindValue(2, $this->nombre);
                     $new->bindValue(3, $this->apellido);
@@ -331,7 +335,7 @@
                 
 
                     $new = $this->con->prepare("INSERT INTO pago(id_pago, monto_total, num_fact, status) 
-                                            VALUES (DEFAULT, ?, ?, 1)");
+                                            VALUES (DEFAULT, ?, ?, 2)");
                     $new->bindValue(1, $totalMonto);
                     $new->bindValue(2, $numFactura);
                     $new->execute();
@@ -368,10 +372,11 @@
                     $new = $this->con->prepare("SELECT num_fact FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
-                    $venta = $new->fetchAll(\PDO::FETCH_OBJ);
+                    $venta = $new->fetchAll();
+                    
     
                     $new = $this->con->prepare("SELECT cantidad, cod_producto FROM venta_producto WHERE num_fact = ?");
-                    $new->bindValue(1, $venta[0]->num_fact);
+                    $new->bindValue(1, $venta[0]['num_fact']);
                     $new->execute();
                     $productos = $new->fetchAll(\PDO::FETCH_OBJ);
                     parent::desconectarDB();
@@ -380,7 +385,7 @@
                     }
                     parent::conectarDB();
                     $new = $this->con->prepare("DELETE FROM venta WHERE num_fact = ?");
-                    $new->bindValue(1, $venta[0]->num_fact);
+                    $new->bindValue(1, $venta[0]['num_fact']);
                     $new->execute();
                     
                     parent::desconectarDB();
@@ -442,7 +447,6 @@
                 $new->execute();
                 [0 => $data] = $new->fetchAll(\PDO::FETCH_OBJ);
                 
-
                 
                 parent::desconectarDB();
 

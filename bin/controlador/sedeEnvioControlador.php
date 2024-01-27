@@ -8,7 +8,6 @@
 	if(!isset($_SESSION['nivel'])) die('<script> window.location = "?url=login" </script>');
 
 	$model = new sedeEnvio();
-	//$model->registrarSedes();
 
 	$permisos = $model->getPermisosRol($_SESSION['nivel']);
 	$permiso = $permisos['Sedes de Envio'];
@@ -17,8 +16,8 @@
 
 
 	if(isset($_POST['notificacion'])) {
-    $objModel->getNotificacion();
-  }
+		$objModel->getNotificacion();
+	}
 
 	$selectEmpresa = $model->selectEmpresas();
 	$selectEstados = $model->selectEstados();
@@ -28,16 +27,18 @@
 	}
 
 	if(isset($_POST['mostrar'], $_POST['bitacora'])){
-		$model->mostrarSedes($_POST['bitacora']);
+		$res = $model->mostrarSedes($_POST['bitacora']);
+		die(json_encode($res));
 	}
 
 	if(isset($_POST['validar'], $_POST['empresa'], $permiso['Consultar'])){
-		$validar = $model->validarEmpresa($_POST['empresa']);
+		$validar = $model->getValidarEmpresa($_POST['empresa']);
 		die(json_encode(['resultado' => $validar]));
 	}
 
 	if(isset($_POST['registrar'], $_POST['empresa'], $_POST['estado'], $_POST['nombre'], $_POST['ubicacion'], $permiso['Registrar'])){
-		$model->getRegistrarSede($_POST['empresa'], $_POST['estado'], $_POST['nombre'], $_POST['ubicacion']);
+		$res = $model->getRegistrarSede($_POST['empresa'], $_POST['estado'], $_POST['nombre'], $_POST['ubicacion']);
+		die(json_encode($res));
 	}
 
 	if(isset($_POST['select'], $_POST['id'], $permiso['Editar'])){
@@ -46,11 +47,13 @@
 	}
 
 	if(isset($_POST['editar'], $_POST['id'], $_POST['empresa'], $_POST['estado'], $_POST['nombre'], $_POST['ubicacion'], $permiso['Editar'])){
-		$model->getEditarSede( $_POST['empresa'], $_POST['estado'], $_POST['nombre'], $_POST['ubicacion'], $_POST['id']);
+		$res = $model->getEditarSede( $_POST['empresa'], $_POST['estado'], $_POST['nombre'], $_POST['ubicacion'], $_POST['id']);
+		die(json_encode($res));
 	}
 
 	if(isset($_POST['eliminar'], $_POST['id'], $permiso['Eliminar'])){
-		$model->getEliminarSede($_POST['id']);
+		$res = $model->getEliminarSede($_POST['id']);
+		die(json_encode($res));
 	}
 
 	$VarComp = new initcomponents();

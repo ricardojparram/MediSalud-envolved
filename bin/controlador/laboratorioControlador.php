@@ -13,41 +13,43 @@
 
   if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
 
-  if(isset($_POST['notificacion'])) {
-    $objModel->getNotificacion();
-  }
-
   if(isset($_POST['getPermisos'], $permiso["Consultar"])){
     die(json_encode($permiso));
   }
 
   if(isset($_POST['mostrar'], $permiso["Consultar"])){
-    $objModel->mostrarLaboratoriosAjax($_POST['bitacora']);
+    $res = $objModel->mostrarLaboratoriosAjax($_POST['bitacora']);
+    die(json_encode($res));
   }
 
   if(isset($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto'], $permiso["Registrar"])){
 
-    $objModel->getDatosLab($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto']);
+    $res= $objModel->getDatosLab($_POST['rif'], $_POST['direccion'], $_POST['razon'], $_POST['telefono'], $_POST['contacto']);
+    die(json_encode($res));
+
 
   }
 
   if(isset($_POST['select'], $permiso["Editar"])){
-    $objModel->getItem($_POST['id']);
+    $res= $objModel->getItem($_POST['id']);
+    die(json_encode($res));
   }
 
   if(isset($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id'], $permiso["Editar"])){
 
-    $objModel->getEditar($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id']);
+    $res = $objModel->getEditar($_POST['rifEdit'], $_POST['direccionEdit'], $_POST['razonEdit'], $_POST['telefonoEdit'], $_POST['contactoEdit'], $_POST['id']);
+    die(json_encode($res));
 
   }
 
   if(isset($_POST['eliminar'], $permiso["Eliminar"])){
-    $objModel->getEliminar($_POST['id']);
+    $res = $objModel->getEliminar($_POST['id']);
+    die(json_encode($res));
   }
 
   if(isset($_POST['rif'], $_POST['validar'], $_POST['edit'])){
-    $resultado = $objModel->getRif($_POST['rif'], $_POST['edit']);
-    die(json_encode($resultado));
+    $res = $objModel->getRif($_POST['rif'], $_POST['edit']);
+    die(json_encode($res));
   }
   
 
