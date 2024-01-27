@@ -131,16 +131,16 @@
 
 		public function getRegistrarSede($empresa, $estado, $nombre, $ubicacion){
 			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s+,.\-\/\'"#]{7,200}$/', $ubicacion) != 1)
-				return ['resultado' => 'Error de sede','error' => 'Direccion inválida.'];
+				return ['resultado' => 'error','error' => 'Direccion inválida.'];
 			
 			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{7,70}$/', $nombre) != 1)
-				return ['resultado' => 'Error de sede','error' => 'Nombre de sede inválido.'];
+				return ['resultado' => 'error','error' => 'Nombre de sede inválido.'];
 			
 			if(preg_match_all("/^[0-9]{1,5}$/", $estado) != 1)
-				return ['resultado' => 'Error de estado','error' => 'Estado inválido.'];
+				return ['resultado' => 'error','error' => 'Estado inválido.'];
 			
 			if(preg_match_all("/^[0-9]{1,5}$/", $empresa) != 1)
-				return ['resultado' => 'Error de empresa','error' => 'Empresa inválido.'];
+				return ['resultado' => 'error','error' => 'Empresa inválido.'];
 			
 
 			$this->empresa = $empresa;
@@ -218,17 +218,19 @@
 		public function getEditarSede($empresa, $estado, $nombre, $ubicacion, $id){
 
 			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{7,200}$/', $ubicacion) != 1)
-				return ['resultado' => 'Error de sede','error' => 'Direccion inválida.'];
+				return ['resultado' => 'error','error' => 'Direccion inválida.'];
 			
 			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{4,70}$/', $nombre) != 1)
-				return ['resultado' => 'Error de sede','error' => 'Nombre de sede inválido.'];
+				return ['resultado' => 'error','error' => 'Nombre de sede inválido.'];
 			
 			if(preg_match_all("/^[0-9]{1,5}$/", $estado) != 1)
-				return ['resultado' => 'Error de estado','error' => 'Estado inválido.'];
+				return ['resultado' => 'error','error' => 'Estado inválido.'];
 			
 			if(preg_match_all("/^[0-9]{1,5}$/", $empresa) != 1)
-				return ['resultado' => 'Error de empresa','error' => 'Empresa inválido.'];
+				return ['resultado' => 'error','error' => 'Empresa inválido.'];
 			
+			if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1)
+				return ['resultado' => 'error','error' => 'Id inválida.'];
 
 			$this->empresa = $empresa;
 			$this->estado = $estado;
@@ -273,7 +275,7 @@
 
 		public function getEliminarSede($id){
 			if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1)
-				return ['resultado' => 'Error de id','error' => 'Id inválida.'];
+				return ['resultado' => 'error','error' => 'Id inválida.'];
 
 			$this->id = $id;
 
