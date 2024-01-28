@@ -33,7 +33,7 @@
 
 				if($bitacora === "true") $this->binnacle("Comprobar pagos",$_SESSION['cedula'],"Consultó listado.");
 				$this->desconectarDB();
-				die(json_encode($data));
+				return $data;
 				
 			}catch(\PDOexection $e){
 				print("Error!: ".$e);
@@ -42,12 +42,16 @@
 		}
 
 		public function getComprobacion($id_pago, $estado){
+			if(preg_match_all("/^[0-9]{1,10}$/", $id_pago) != 1)
+				return ['resultado' => 'error','error' => 'Id de pago inválida.'];
+
+			if(preg_match_all("/^[0-9]{1,10}$/", $estado) != 1)
+				return ['resultado' => 'error','error' => 'Id de estado inválida.'];
+
 			$this->id_pago = $id_pago;
 			$this->estado = $estado;
 
-			
-
-			$this->comprobarPago();
+			return $this->comprobarPago();
 		}
 
 		private function comprobarPago(){
@@ -65,7 +69,7 @@
 
 				$resultado = ['resultado' => 'ok', 'msg' => 'Se ha actualizado el estado del pago.'];
 				$this->desconectarDB();
-				die(json_encode($resultado));
+				return $resultado;
 
 			}catch(\PDOexection $e){
 				print("Error!: ".$e);
@@ -75,9 +79,11 @@
 		}
 
 		public function getDetallePago($id_pago){
-			$this->id_pago = $id_pago;
+			if(preg_match_all("/^[0-9]{1,10}$/", $id_pago) != 1)
+				return ['resultado' => 'error','error' => 'Id de pago inválida.'];
 
-			$this->detallePago();
+			$this->id_pago = $id_pago;
+			return $this->detallePago();
 		}
 
 		private function detallePago(){
@@ -100,7 +106,7 @@
 				$new->bindValue(1, $this->id_pago);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
-				die(json_encode($data));
+				return $data;
 
 			} catch (\PDOexection $e){
 				print("Error!: ".$e);

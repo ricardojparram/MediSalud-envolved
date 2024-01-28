@@ -31,10 +31,12 @@
 		public function mostrarCatalogo(){
 			try {
 
-				$query='SELECT p.cod_producto, p.nombre, p.descripcion, p.stock, p.p_venta, p.img, p.contraindicaciones, cl.des_clase, ps.cantidad as cantidad_pres, ps.medida as medida_pres, ps.peso as peso_pres FROM producto p
+				$query='SELECT p.cod_producto, p.descripcion as nombre, p.descripcion, p.stock, p.p_venta, p.img, p.contraindicaciones, cl.des_clase, ps.cantidad as cantidad_pres, ps.medida as medida_pres, ps.peso as peso_pres FROM producto p
 				        INNER JOIN clase cl ON cl.cod_clase = p.cod_clase
 				        INNER JOIN presentacion ps ON ps.cod_pres = p.cod_pres
 				        WHERE p.status = 1 and p.stock != 0;';
+
+
 				$this->conectarDB();
 				$new = $this->con->prepare($query); 
 				$new->execute();

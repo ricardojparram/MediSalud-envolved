@@ -129,13 +129,13 @@ $(document).ready(function(){
     	let vselectEmpresa, vdireccion, vnombre, vselectEstado;
         vselectEmpresa = validarSelect($('#empresa_envioEdit'), $('#error1'), 'Empresa de envío,');
         vselectEstado = validarSelect($('#estado_sedeEdit'), $('#error2'), 'Estado,');
-        vnombre = validarDireccion($('#nombre_sedeEdit'),$('#error3'), 'Nombre,');
+        vnombre = validarNombre($('#nombre_sedeEdit'),$('#error3'), 'Nombre,');
         vdireccion = validarDireccion($('#ubicacionEdit'),$('#error4'), 'Sede de envío,');
 
     	if(!vselectEmpresa || !vselectEstado || !vnombre || !vdireccion){
             throw new Error('Error en las entradas de los inputs.');
         }
-
+        console.log($("#ubicacionEdit").val())
     	$.post('', {validar:'', empresa : $('#empresa_envioEdit').val()},
     		function(response){
     			data = JSON.parse(response);

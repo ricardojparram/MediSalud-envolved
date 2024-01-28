@@ -6,5 +6,9 @@
 .phpunit.result.cache
 .phpunit.result.cache
 phpunit.xml
+<<<<<<< HEAD
 /vendor/
 
+=======
+/vendor
+>>>>>>> 2e00e5b9dcf1ca0dee6a94a5045af4f503f36cbb

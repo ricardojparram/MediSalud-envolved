@@ -101,14 +101,14 @@ $(document).ready(function(){
 		let producto = getProdDetalle(id);
 		let precio_dolar = (Number(producto.p_venta) / getDolar()).toFixed(2);
 
-		$('.tipo_medicamento').html(producto.des_tipo);
+		$('.tipo_medicamento').html(producto.des_clase).attr('href', `?url=catalogo&filtro=${producto.des_clase}`)
 		$('.nombre_medicamento').html(producto.nombre);
 		$('.descripcion_medicamento').html(producto.descripcion);
 		$('.precio_bs').html(producto.p_venta);
 		$('.precio_dolar').html(precio_dolar);
 		$('.producto_imagen_modal').attr('src', producto.img);
 		$('.codigo_producto').html(producto.cod_producto);
-		$('.tipo_producto').html(producto.des_tipo);
+		$('.tipo_producto').html(producto.des_clase);
 		$('.contraindicaciones').html(producto.contraindicaciones);
 
 	})
@@ -123,7 +123,7 @@ $(document).ready(function(){
 		window.history.pushState(null, "", `?${params.toString()}`);
 		let products = getProductos();
 
-		if(filtro === "todas_las_categorias") return mostrarCatalogo(products);
+    if(filtro === "todas_las_categorias") return mostrarCatalogo(products);
 
 		let busqueda = normalizar(filtro.toUpperCase());
 
