@@ -8,7 +8,7 @@ use modelo\comprobarPago;
  * @group configuraciones 
  * @group relacionadoPagos
 */
-class comprobarPagoTest extends TestCase{
+class comprobarPagosTest extends TestCase{
 
     private $obj;
     public function setUp():void{
@@ -60,8 +60,8 @@ class comprobarPagoTest extends TestCase{
      * @test
      * @group validaciones
     */
-    public function detallePago()(){
-        $res = $this->obj->getDetallePago('asdgadsgds')
+    public function detallePago(){
+        $res = $this->obj->getDetallePago('asdgadsgds');
         if(!isset($res['resultado']))
             $this->assertArrayHasKey('resultado',  $res);
 
