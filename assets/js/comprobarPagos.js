@@ -3,20 +3,23 @@ $(document).ready(function(){
 	let mostrar;
 	let permisos, comprobarPagoPermiso;
 	$.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:''},
-		success(data){ permisos = data; }
+		success(data){
+			permisos = data;
+			comprobarPagoPermiso = (typeof permisos['Comprobar pago'] === "undefined") ? 'disabled' : '';
+		}
 	}).then(() => rellenar(true));
 
-	const estados = {
-		"1" : `<button type="button" class="btn btn-success estadoPago" data-bs-toggle="modal" data-bs-target="#comprobacion">Aprobado</button>`,
-		"2" : `<button type="button" class="btn btn-warning estadoPago" data-bs-toggle="modal" data-bs-target="#comprobacion">En espera</button>`,
-		"3" : `<button type="button" class="btn btn-danger estadoPago" data-bs-toggle="modal" data-bs-target="#comprobacion">Negado</button>`
- 	}
+	
 
-	function rellenar(bitacora = false){ 
+	function rellenar(bitacora = false){
+		const estados = {
+			"1" : `<button type="button" ${comprobarPagoPermiso} class="btn btn-success estadoPago" data-bs-toggle="modal" data-bs-target="#comprobacion">Aprobado</button>`,
+			"2" : `<button type="button" ${comprobarPagoPermiso} class="btn btn-warning estadoPago" data-bs-toggle="modal" data-bs-target="#comprobacion">En espera</button>`,
+			"3" : `<button type="button" ${comprobarPagoPermiso} class="btn btn-danger estadoPago" data-bs-toggle="modal" data-bs-target="#comprobacion">Negado</button>`
+		}
         $.ajax({ type: "post", url: "", dataType: "json", data: {mostrar: "", bitacora},
             success(data){
                 let tabla;
-                comprobarPagoPermiso = (typeof permisos['Comprobar pago'] === "undefined") ? 'disabled' : '';
                 data.forEach(row => {
                     tabla += `
                         <tr>
@@ -26,7 +29,7 @@ $(document).ready(function(){
 	                        <td class="d-flex justify-content-center" pago_id=${row.id_pago}>${estados[row.status]}</td>
 	                        <td>
 	                        	<span class="d-flex justify-content-center">
-	                        		<button type="button" pago="${row.id_pago}" ${comprobarPagoPermiso} title="Detalles del pago" class="btn btn-dark detalle_pago mx-2" data-bs-toggle="modal" data-bs-target="#detallePago">
+	                        		<button type="button" pago="${row.id_pago}" title="Detalles del pago" class="btn btn-dark detalle_pago mx-2" data-bs-toggle="modal" data-bs-target="#detallePago">
 	                        			<i class="bi bi-card-checklist"></i>
 	                        		</button>
 	                        	</span>

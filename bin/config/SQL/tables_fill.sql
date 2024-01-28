@@ -332,6 +332,7 @@ INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES
 (1, 19, 'Eliminar', '1'),
 (1, 19, 'Consultar', '1'),
 (1, 20, 'Consultar', '1'),
+(1, 20, 'Comprobar pago', '1'),
 (1, 21, 'Consultar', '1'),
 (1, 21, 'Asignar estado', '1');
 INSERT INTO permisos(id_rol, id_modulo, nombre_accion, status) VALUES 
