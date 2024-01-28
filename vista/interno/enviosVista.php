@@ -69,17 +69,6 @@
                 <th scope="col">Estado</th>
               </tr>
             </thead>
-            <tfoot>
-              <tr>
-                <th scope="col">N° Envío</th>
-                <th scope="col">Cédula cliente</th>
-                <th scope="col">Nombre cliente</th>
-                <th scope="col">Sede de envío</th>
-                <th scope="col">Fecha de envío</th>
-                <th scope="col">Fecha de entrega</th>
-                <th scope="col">Estado</th>
-              </tr>
-            </tfoot>
             <tbody>
             </tbody>
           </table>
