@@ -18,15 +18,18 @@
 	if(!isset($permiso["Consultar"])) die('<script> window.location = "?url=home" </script>');
 
 	if(isset($_POST['mostrar'], $_POST['bitacora'], $permiso['Consultar'])){
-		$model->mostrarPagos($_POST['bitacora']);
+		$res = $model->mostrarPagos($_POST['bitacora']);
+		die(json_encode($res));
 	}
 
 	if(isset($_POST['id_pago'], $_POST['estado'])){
-		$model->getComprobacion($_POST['id_pago'], $_POST['estado']);
+		$res = $model->getComprobacion($_POST['id_pago'], $_POST['estado']);
+		die(json_encode($res));
 	}
 
 	if(isset($_POST['id_pago'], $_POST['detalle_pago'], $permiso['Consultar'])){
-		$model->getDetallePago($_POST['id_pago']);
+		$res = $model->getDetallePago($_POST['id_pago']);
+		die(json_encode($res));
 	}
 
 	$comp = new initcomponents();
