@@ -7,4 +7,3 @@
 .phpunit.result.cache
 phpunit.xml
 /vendor
-/Tests/
