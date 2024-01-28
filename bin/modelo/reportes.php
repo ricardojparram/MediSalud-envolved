@@ -1,6 +1,7 @@
 <?php 
 	
 	namespace modelo;
+	use DateTime;
 	use FPDF as FPDF;
 	use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
 	use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -20,10 +21,20 @@
 		private $reporte;
 		private $lista;
 		private $sheet;
+		private $tiposDeReporteValidos;
 
 
 		public function __construct(){
 			parent::__construct();
+			$this->tiposDeReporteValidos = [
+				'compra' => '',
+				'venta' => ''
+			];
+		}
+
+		private function validateDate($date, $format = 'Y-m-d'){
+			$d = DateTime::createFromFormat($format, $date);
+			return $d && $d->format($format) == $date;
 		}
 
 		private function obtenerReporte(){
@@ -84,6 +95,15 @@
 		}
 
 		public function getMostrarReporte($tipo, $inicio, $final){
+			if($this->validateDate($inicio) === false)
+				return  ['resultado' => 'error', 'msg' => 'Fecha de inicio inválida'];
+
+			if($this->validateDate($final) === false)
+				return  ['resultado' => 'error', 'msg' => 'Fecha final inválida'];
+
+			if(!isset($this->tiposDeReporteValidos[$tipo]))
+				return  ['resultado' => 'error', 'msg' => 'Tipo de reporte inválido'];
+
 			$this->tipo = $tipo;
 			$this->fechaInicio = $inicio;
 			$this->fechaFinal = $final;
@@ -101,6 +121,15 @@
 		}
 
 		public function getExportar($tipo, $fecha1, $fecha2){
+			if($this->validateDate($fecha1) === false)
+				return  ['resultado' => 'error', 'msg' => 'Fecha de inicio inválida'];
+
+			if($this->validateDate($fecha2) === false)
+				return  ['resultado' => 'error', 'msg' => 'Fecha final inválida'];
+
+			if(!isset($this->tiposDeReporteValidos[$tipo]))
+				return  ['resultado' => 'error', 'msg' => 'Tipo de reporte inválido'];
+
 			$this->tipo = $tipo;
 			$this->fechaInicio = $fecha1;
 			$this->fechaFinal = $fecha2;
