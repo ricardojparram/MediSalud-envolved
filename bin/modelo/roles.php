@@ -51,7 +51,7 @@
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 				if($bitacora == "true") $this->binnacle("Roles",$_SESSION['cedula'],"Consultó listado.");
 				$this->desconectarDB();
-				die(json_encode($data));
+				return $data;
 
 			}catch(\PDOException $e){
 				die($e);
@@ -60,11 +60,11 @@
 
 		public function getPermisos($id){
 			if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-				die(json_encode(['error' => 'Id inválida.']));
+				return ['resultado' => 'error', 'error' => 'Id inválida.'];
 			}
 			$this->id_rol = $id;
 
-			$this->mostrarPermisos();
+			return $this->mostrarPermisos();
 		}
 
 		private function mostrarPermisos(){
@@ -101,7 +101,7 @@
 				}
 				$this->binnacle("Roles",$_SESSION['cedula'],"Consultó el los permisos del rol {$this->roles[$this->id_rol]}.");
 				$this->desconectarDB();
-				die(json_encode($permisos));
+				return $permisos;
 				
 			} catch (\PDOException $e) {
 				die($e);
@@ -110,13 +110,16 @@
 		}
 
 		public function getDatosPermisos($datos, $id){
+			if(!is_array($datos))
+				return ['resultado' => 'error', 'error' => 'Permisos inválidos'];
+
+			if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1)
+				return ['resultado' => 'error', 'error' => 'Id inválida.'];
+			
 			$this->permisos = $datos;
-			if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-				die(json_encode(['error' => 'Id inválida.']));
-			}
 			$this->id_rol = $id;
 
-			$this->actualizarPermisos();
+			return $this->actualizarPermisos();
 		}
 
 		private function actualizarPermisos(){
@@ -142,7 +145,7 @@
 				$respuesta = ['respuesta' => 'ok', 'msg' => 'Se han actualizado los permisos correctamente.'];
 				$this->binnacle("Roles",$_SESSION['cedula'],"Actualizó los permisos del rol {$this->roles[$this->id_rol]}.");
 				$this->desconectarDB();
-				die(json_encode($respuesta));
+				return $respuesta;
 
 			} catch (\PDOException $e) {
 				die($e);
