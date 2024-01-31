@@ -10,9 +10,11 @@ use modelo\sedeEnvio;
 class sedeEnvioTest extends TestCase{
 
     private $obj;
+    private $nombre;
     public function setUp():void{
         $this->obj = new sedeEnvio();
         $_SESSION['cedula'] = 'testing';
+        $this->nombre = "Sede Test";
     }   
 
 	/** 
@@ -67,13 +69,26 @@ class sedeEnvioTest extends TestCase{
         ];
     }
 
+    /** 
+     * @test 
+     * @group consultar
+    */
+    public function validacionesEmpresa(): void{
+        $res = $this->obj->getValidarEmpresa("asf");
+        if(!isset($res['resultado']))
+            $this->assertArrayHasKey('resultado',  $res);
+        
+        $this->assertEquals('error', $res['resultado']);
+    }
+    
+
     /**
      * @test
      * @group registro
      * @group crud
     */
     public function registrarSede(){
-        $res = $this->obj->getRegistrarSede('1', '2', 'Sede envío TEST', 'Av.Test con Calle Test');
+        $res = $this->obj->getRegistrarSede('1', '2', $this->nombre, 'Av.Test con Calle Test');
         if(!isset($res["resultado"]))
             $this->assertArrayHasKey('resultado',  $res);
         
@@ -81,6 +96,34 @@ class sedeEnvioTest extends TestCase{
             $this->fail($res['msg']);
         else
             $this->assertEquals('ok', $res['resultado']);
+    }
+
+    /**
+     * @test 
+     * @group consultar
+    */
+    public function getIdTest(): string{
+        $res = $this->obj->getIdSedeByName($this->nombre);
+        if(!isset($res['id']))
+            $this->fail('No se encontró el LaboratorioTest en la base de datos.');
+        if($res['resultado'] === 'error')
+            $this->fail($res['msg']);
+        if($res['resultado'] === 'ok')
+            $this->assertEquals('ok', $res['resultado']);
+            return $res['id'];
+    }
+
+    /**
+     * @test 
+     * @group consultar
+     * @depends getIdTest
+    */
+    public function getItemParaEditar($id): void{
+        $res = $this->obj->getSede($id);
+        if(!isset($res->nombre))
+            $this->fail('No existe la sede con el ID indicada.');
+        else
+            $this->assertIsObject($res);
     }
 
     /** 
@@ -101,13 +144,14 @@ class sedeEnvioTest extends TestCase{
      * @test
      * @group editar
      * @group crud
+     * @depends getIdTest
     */
-    public function editarSedeEnvio(){
-        $res = $this->obj->getEditarSede('1', '15', 'Juan Griego', 'CALLE GUEVARA, NRO 12 B, ENTRE CALLES LA MARINA Y MARCANO, DIAGONAL A COMERCIAL JUAN GRIEGO.','01a1d01d26');
+    public function editarSedeEnvio($id){
+        $res = $this->obj->getEditarSede('1', '15', 'Sede Test Editar', 'Av.Test con Calle Test', $id);
         if(!isset($res["resultado"]))
             $this->assertArrayHasKey('resultado',  $res);
-        
-        $this->assertEquals('error', $res['resultado']);
+        else
+            $this->assertEquals('error', $res['resultado']);
     }
 
     /**
@@ -120,6 +164,20 @@ class sedeEnvioTest extends TestCase{
             $this->assertArrayHasKey('resultado',  $res);
         
         $this->assertEquals('error', $res['resultado']);
+    }
+
+    /**
+     * @test
+     * @group eliminar
+     * @group crud
+     * @depends getIdTest
+    */
+    public function getEliminarSede($id){
+        $res = $this->obj->getEliminarSede($id);
+         if(!isset($res["resultado"]))
+            $this->assertArrayHasKey('resultado',  $res);
+        
+        $this->assertEquals('ok', $res['resultado']);
     }
 
     

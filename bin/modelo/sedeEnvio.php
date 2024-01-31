@@ -302,6 +302,32 @@
 
 		}
 
+		public function getIdSedeByName($name){
+			if(preg_match_all('/^[a-zA-ZÀ-ÿ0-9\s,.\-\/\'"#]{4,70}$/', $name) != 1){
+				return ['resultado' => 'error','msg' => 'Nombre inválido.'];
+			}
+			$this->nombre = $name;
+
+			return $this->gettingIdTest();
+		}
+
+		private function gettingIdTest(){
+			try {
+
+				$this->conectarDB();
+				$sql = "SELECT id_sede FROM sede_envio WHERE nombre = ? AND status = 1";
+				$new = $this->con->prepare($sql);
+				$new->bindValue(1, $this->nombre);
+				$new->execute();
+				[$data] = $new->fetchAll(\PDO::FETCH_OBJ);
+
+				return ['resultado' => "ok", "id"=> $data->id_sede];
+
+			} catch (\PDOException $e) {
+				die($e);
+			}
+		}
+
 	}
 
 ?>

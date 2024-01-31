@@ -121,62 +121,6 @@ class reportesTest extends TestCase{
         
         $this->assertEquals('Archivo guardado', $res['respuesta']);
     }
-
-    // /**
-    //  * @test
-    //  * @group registro
-    //  * @group crud
-    // */
-    // public function registrarSede(){
-    //     $res = $this->obj->getRegistrarSede('1', '2', 'Sede envío TEST', 'Av.Test con Calle Test');
-    //     if(!isset($res["resultado"]))
-    //         $this->assertArrayHasKey('resultado',  $res);
-        
-    //     if($res['resultado'] != "ok")
-    //         $this->fail($res['msg']);
-    //     else
-    //         $this->assertEquals('ok', $res['resultado']);
-    // }
-
-    // /** 
-    //  * @test 
-    //  * @dataProvider datosValidacionSedeEnvio
-    //  * @group validaciones
-    // */
-    // public function validacionesEditarSedeEnvio($empresa, $estado, $nombre, $ubicacion, $id = ""){
-    //     $res = $this->obj->getEditarSede($empresa, $estado, $nombre, $ubicacion, $id);
-    //      if(!isset($res["resultado"]))
-    //         $this->assertArrayHasKey('resultado',  $res);
-        
-    //     $this->assertEquals('error', $res['resultado']);
-    // }
-
-
-    // /**
-    //  * @test
-    //  * @group editar
-    //  * @group crud
-    // */
-    // public function editarSedeEnvio(){
-    //     $res = $this->obj->getEditarSede('1', '15', 'Juan Griego', 'CALLE GUEVARA, NRO 12 B, ENTRE CALLES LA MARINA Y MARCANO, DIAGONAL A COMERCIAL JUAN GRIEGO.','01a1d01d26');
-    //     if(!isset($res["resultado"]))
-    //         $this->assertArrayHasKey('resultado',  $res);
-        
-    //     $this->assertEquals('error', $res['resultado']);
-    // }
-
-    // /**
-    //  * @test
-    //  * @group validaciones 
-    // */
-    // public function validacionesEliminarSedeEnvio(){
-    //     $res = $this->obj->getEliminarSede("xxxxxxxxx");
-    //     if(!isset($res["resultado"]))
-    //         $this->assertArrayHasKey('resultado',  $res);
-        
-    //     $this->assertEquals('error', $res['resultado']);
-    // }
-
     
 }
 
