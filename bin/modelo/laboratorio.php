@@ -267,6 +267,32 @@
         }
 
       }
+
+      public function getIdLaboratorioByRif($rif){
+        if(preg_match_all("/^[0-9]{7,10}$/", $rif) != 1){
+          return ['resultado' => 'error','msg' => 'Rif inválido.'];
+        }
+        $this->rif = $rif;
+
+        return $this->gettingIdTest();
+      }
+
+      private function gettingIdTest(){
+        try {
+
+          $this->conectarDB();
+          $sql = "SELECT cod_lab FROM laboratorio WHERE rif = ? AND status = 1";
+          $new = $this->con->prepare($sql);
+          $new->bindValue(1, $this->rif);
+          $new->execute();
+          [$data] = $new->fetchAll(\PDO::FETCH_OBJ);
+          
+          return ['resultado' => "ok", "id"=> $data->cod_lab];
+
+        } catch (\PDOException $e) {
+          die($e);
+        }
+      }
   }
 
 ?>

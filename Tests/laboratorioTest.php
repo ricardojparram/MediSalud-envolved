@@ -10,12 +10,14 @@ use modelo\laboratorio;
 class laboratorioTest extends TestCase{
 
     private $obj;
+    private string $rif; // numeros 7-10. ej: "123123123"
     public function setUp():void{
         $this->obj = new laboratorio();
         $_SESSION['cedula'] = '123123123';
+        $this->rif = "123123123";
     }   
 
-	/** 
+	/**
      * @test 
      * @group consultar
      * @group crud
@@ -77,7 +79,8 @@ class laboratorioTest extends TestCase{
      * @group crud
     */
     public function registrarLaboratorio(){
-        $res = $this->obj->getDatosLab('123123123', 'Av.Test Calle Test', 'LaboratorioTest', '04128883333', '');
+        $rif = "123123123";
+        $res = $this->obj->getDatosLab($this->rif, 'Av. Test Registrar', 'LaboratorioTest', '04128883333', '');
         if(!isset($res["resultado"]))
             $this->assertArrayHasKey('resultado',  $res);
         
@@ -88,6 +91,34 @@ class laboratorioTest extends TestCase{
                 $this->fail($res['msg']);
         else
             $this->assertEquals('ok', $res['resultado']);
+    }
+
+    /**
+     * @test 
+     * @group consultar
+    */
+    public function getIdTest(): string{
+        $res = $this->obj->getIdLaboratorioByRif($this->rif);
+        if(!isset($res['id']))
+            $this->fail('No se encontró el LaboratorioTest en la base de datos.');
+        if($res['resultado'] === 'error')
+            $this->fail($res['msg']);
+        if($res['resultado'] === 'ok')
+            $this->assertEquals('ok', $res['resultado']);
+            return $res['id'];
+    }
+
+    /**
+     * @test 
+     * @group consultar
+     * @depends getIdTest
+    */
+    public function getItemParaEditar($id): void{
+        $res = $this->obj->getItem($id);
+        if(!isset($res[0]))
+            $this->fail('No existe el laboratorio con el ID indicada.');
+        else
+            $this->assertArrayHasKey('0', $res);
     }
 
     /** 
@@ -108,13 +139,17 @@ class laboratorioTest extends TestCase{
      * @test
      * @group editar
      * @group crud
+     * @depends getIdTest
     */
-    public function editarLaboratorio(){
-        $res = $this->obj->getEditar('1234567', 'Av. Venezuela', 'MedicalCare', '0251939333', '', "8fcfd29ec4");
-         if(!isset($res["resultado"]))
+    public function editarLaboratorio($id){
+        $res = $this->obj->getEditar('123123123', 'Av. TestEditar', 'TestEditar', '0251939333', '', $id);
+        if(!isset($res["resultado"]))
             $this->assertArrayHasKey('resultado',  $res);
-        
-        $this->assertEquals('ok', $res['resultado']);
+        if($res['resultado'] === "ok")    
+            $this->assertEquals('ok', $res['resultado']);
+        if($res['resultado'] === "error")    
+            $this->fail($res['msg']);
+            
     }
 
     /**
@@ -127,6 +162,20 @@ class laboratorioTest extends TestCase{
             $this->assertArrayHasKey('resultado',  $res);
         
         $this->assertEquals('error', $res['resultado']);
+    }
+
+    /**
+     * @test
+     * @group eliminar
+     * @group crud
+     * @depends getIdTest
+    */
+    public function eliminarLaboratorio($id){
+        $res = $this->obj->getEliminar($id);
+         if(!isset($res["resultado"]))
+            $this->assertArrayHasKey('resultado',  $res);
+        
+        $this->assertEquals('ok', $res['resultado']);
     }
 
     
