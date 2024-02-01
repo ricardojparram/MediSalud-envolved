@@ -7,6 +7,6 @@
 .phpunit.result.cache
 phpunit.xml
 /Tests/
-/Vendor
+/Vendor/
 Composer.json
 Composer.lock

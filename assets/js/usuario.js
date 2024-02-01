@@ -45,7 +45,8 @@ $(document).ready(function () {
 	}
 
 
-
+	let click = 0;
+	setInterval(() => { click = 0; }, 2000);
 
 	$("#name").keyup(() => { validarNombre($("#name"), $("#errorNom"), "Error de Nombre,") });
 	$("#apellido").keyup(() => { validarNombre($("#apellido"), $("#errorApe"), "Error de Apellido,") });
@@ -62,7 +63,8 @@ $(document).ready(function () {
 
 
 	$("#enviar").click((e) => {
-
+		e.preventDefault();
+		if (click >= 1) throw new Error('Spam de clicks');
 		if (typeof permisos.Registrar === 'undefined') {
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
 			throw new Error('Permiso denegado.');
@@ -112,6 +114,7 @@ $(document).ready(function () {
 				}
 			})
 		}
+		click++
 	})
 
 
@@ -121,7 +124,9 @@ $(document).ready(function () {
 
 	});
 
-	$("#delete").click(() => {
+	$("#delete").click((e) => {
+		e.preventDefault()
+		if (click >= 1) throw new Error('Spam de clicks');
 
 		if (typeof permisos.Eliminar === 'undefined') {
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
@@ -152,6 +157,7 @@ $(document).ready(function () {
 				}
 			})
 		})
+		click++
 	})
 
 
@@ -187,7 +193,8 @@ $(document).ready(function () {
 	$("#selectEdit").keyup(() => { validarSelect($("#selectEdit"), $("#errorNivelEdit"), "Error de Nivel,") });
 
 	$("#enviarEdit").click((e) => {
-
+		e.preventDefault()
+		if (click >= 1) throw new Error('Spam de clicks');
 		if (typeof permisos.Editar === 'undefined') {
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
 			throw new Error('Permiso denegado.');
@@ -236,6 +243,7 @@ $(document).ready(function () {
 				}
 			})
 		}
+		click++
 	})
 
 	$(document).on('click', '#cerrarRegisEdit', function () {

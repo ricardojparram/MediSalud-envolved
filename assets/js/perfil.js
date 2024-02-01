@@ -42,6 +42,9 @@ $(document).ready(function(){
 			})
 	}
 
+	let click = 0;
+	setInterval(() => { click = 0; }, 2000);
+
 	$("#nameEdit").keyup(()=> {  validarNombre($("#nameEdit"),$("#error") ,"Error de nombre,") });
 	$("#apeEdit").keyup(()=> {  validarNombre($("#apeEdit"),$("#error") ,"Error de apellido,") });
 	$("#cedulaEdit").keyup(()=> {	validarCedula($("#cedulaEdit"),$("#error") ,"Error de cedula,") });
@@ -109,6 +112,8 @@ $(document).ready(function(){
 	$("#enviarDatos").click((e)=>{
 
 		e.preventDefault();
+
+		if (click >= 1) throw new Error('Spam de clicks');
 
 		name = validarNombre($("#nameEdit"),$("#error") ,"Error de nombre,");
 		lastname = validarNombre($("#apeEdit"),$("#error") ,"Error de apellido,");
@@ -193,7 +198,7 @@ $(document).ready(function(){
 
 
 		}
-
+		click++
 	})
 
 	let actContra;
@@ -220,7 +225,9 @@ $(document).ready(function(){
 	$("#newPassword").keyup(()=> {  validarContraseña($("#newPassword"),$("#error2") ,"Error de Contraseña Nueva,") });
 	$("#rePassword").keyup(()=> {  validarRepContraseña($("#rePassword"),$("#error2") ,$("#newPassword")) });
 	let contra, reContra;
-	$("#editContra").click(()=> {
+	$("#editContra").click((e)=> {
+		e.preventDefault()
+		if (click >= 1) throw new Error('Spam de clicks');
 		reContra = validarRepContraseña($("#rePassword"),$("#error2") ,$("#newPassword"));
 		contra = validarContraseña($("#newPassword"),$("#error2") ,"Error de Contraseña Nueva,");
 
@@ -248,6 +255,7 @@ $(document).ready(function(){
 				}
 			})
 		}
+		click++
 	})
 
 })
