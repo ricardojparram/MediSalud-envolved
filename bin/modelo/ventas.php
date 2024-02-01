@@ -24,7 +24,7 @@
 
       $this->cedula = $cedula; 
 
-      $this->agregarVenta();
+       return $this->agregarVenta();
 
     }
 
@@ -44,14 +44,13 @@
        $new->execute();
 
        $this->id = $this->con->lastInsertId();
-       echo json_encode(['id' => $this->id]);
+       return ['id' => $this->id ,'resultado' => 'Venta general registrada'];
 
        $this->binnacle("Venta",$_SESSION['cedula'], "Registró Venta.");
        parent::desconectarDB();
-       die();
 
        }else{
-        return ("¡Cedula no se encuentra registrado!");
+        return ['resultado' => 'Error de cedula','error' => '¡Cedula no se encuentra registrado!'];
       }
 
     }catch(\PDOexection $error){
@@ -62,15 +61,18 @@
   //---------------------------------AGREGAR VENTA POR PRODUCTO--------------------------------
 
    public function agregarVentaXProd($producto,$precio,$cantidad,$idVenta){
-    
+      
+      if(preg_match_all("/^[0-9]{1,15}$/", $idVenta) != 1){
+        return ['resultado' => 'Error de id','error' => 'Id inválida.'];
+      }
       if(preg_match_all("/^[0-9]{1,15}$/", $producto) != 1){
-        die("Error de producto!") ;
+        return ['resultado' => 'Error de producto','error' => 'producto inválida.'];
       }
       if(preg_match_all("/^([0-9]+\.+[0-9]|[0-9])+$/", $precio) != 1){
-        die("Error de precio!") ;
+        return ['resultado' => 'Error de precio','error' => 'precio inválida.'];
       }
       if(preg_match_all("/^[0-9]{1,15}$/", $cantidad) != 1){
-        die("Error de cantidad!") ;
+        return ['resultado' => 'cantidad de precio','error' => 'cantidad inválida.'];
       } 
 
     $this->codigoP = $producto;
@@ -91,8 +93,9 @@
      $new->bindValue(3, $this->cantidad);
      $new->bindValue(4, $this->precio);
      $new->execute();
-     $this->actualizarStock($this->codigoP , $this->cantidad);
+    
      parent::desconectarDB();
+     return $this->actualizarStock($this->codigoP , $this->cantidad);
 
     }catch(\PDOexection $error){
       die($error);
@@ -118,6 +121,7 @@
      $new->bindValue(1, $newStock);
      $new->bindValue(2, $codigoP);
      $new->execute();
+     return ['resultado' => 'Venta por producto registrada y stock actualizado'];
      parent::desconectarDB();
     }catch(\PDOexection $error){
       die($error);
@@ -129,17 +133,17 @@
    public function getPago($montoT , $id){
     
     if(preg_match_all("/^([0-9]+\.+[0-9]|[0-9])+$/", $montoT) != 1){
-      die("Error de monto!");
+      return['resultado' => 'Error de monto','error' => 'Monto inválida.'];
     }
 
     if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
-      die("Error de id!");
+      return["Error de id!"];
     }
 
     $this->monto = $montoT;
     $this->id = $id;
 
-    $this->agregarPago();
+    return $this->agregarPago();
 
 
    }
@@ -151,10 +155,10 @@
       $new->bindValue(1, $this->monto);
       $new->bindValue(2, $this->id);
       $new->execute();
-      $this->id = $this->con->lastInsertId();
-      echo json_encode(['id' => $this->id]);
+      $this->id = $this->con->lastInsertId();  
       parent::desconectarDB();
-      die();
+
+      return ['id' => $this->id , 'resultado' => 'Pago general registrada'];
 
     } catch (\PDOException $error) {
       die($error);
@@ -165,16 +169,16 @@
 
      public function agregarDetallePago($tipoPago , $montoPorTipo , $id , $moneda){
         if(preg_match_all("/^[0-9]{1,15}$/", $tipoPago) != 1){
-          die("Error de id!");
+          return['resultado' => 'Error de id tipo pago','error' => 'Id inválida.'];
         }
         if(preg_match_all("/^([0-9]+\.+[0-9]|[0-9])+$/", $montoPorTipo) != 1){
-          die("Error de precio!") ;
+          return['resultado' => 'Error de precio','error' => 'precio inválida.'] ;
         }
         if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
-          die("Error de id!");
+          return['resultado' => 'Error de id','error' => 'Id inválida.'];
         }
         if(preg_match_all("/^[0-9]{1,15}$/", $moneda) != 1){
-          die("Error de moneda!");
+          return['resultado' => 'Error de moneda','error' => 'Id moneda.'];
         }
 
         $this->metodo = $tipoPago; 
@@ -182,7 +186,7 @@
         $this->id = $id;
         $this->moneda = $moneda;
 
-        $this->detallePago();
+        return $this->detallePago();
 
      }
 
@@ -196,6 +200,8 @@
         $new->bindValue(4, $this->moneda);
         $new->execute();
 
+        return ['resultado' => 'Detalles de pago registrada'];
+
       } catch (\PDOException $error) {
         die($error);
       }
@@ -206,10 +212,13 @@
      public function validarSelect($id){
 
       if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
-        return "Error de id!";
+        return ['resultado' => 'Error de id','error' => 'Id inválida.'];
       }
 
       $this->id = $id;
+
+      try{
+
       parent::conectarDB();
       $new = $this->con->prepare("SELECT * FROM venta v WHERE v.status = 1 and v.num_fact = ?");
       $new->bindValue(1, $this->id);
@@ -218,20 +227,34 @@
       parent::desconectarDB();
 
       if(isset($data[0]["num_fact"])){
-        echo json_encode(['resultado' => 'Si existe esa venta.']);
-        die();
+        return ['resultado' => 'Si existe esa venta.'];
+
       }else{
-       echo json_encode(['resultado' => 'Error de venta']);
-       die();
+       return['resultado' => 'Error de venta'];
      }
-     
+    }catch(\PDOException $error){
+      die($error);
+    }
+          
    }
    
     //---------------------------------ELIMINAR VENTA--------------------------------
 
-   public function eliminarVenta($id){
-     try{
-      $this->id = $id;
+   public function getEliminar($id){
+   
+    if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
+      return ['resultado' => 'Error de id','error' => 'Id inválida.'];
+    }
+
+    $this->id = $id;
+
+   return $this->eliminarVenta();
+
+  }
+
+   private function eliminarVenta(){
+      try{
+
       parent::conectarDB();
 
       $new = $this->con->prepare("SELECT p.cod_producto , vp.cantidad , p.stock FROM venta_producto vp INNER JOIN producto p ON p.cod_producto = vp.cod_producto WHERE vp.num_fact = ?");
@@ -259,30 +282,30 @@
       $new->bindValue(1, $this->id);
       $new->execute();
       $data = $new->fetchAll(\PDO::FETCH_OBJ);
-      echo json_encode(['resultado' => 'Venta eliminada.']);
+    
       $this->binnacle("Venta",$_SESSION['cedula'], "Venta Anulada.");
       parent::desconectarDB();
-      die();
+
+      return ['resultado' => 'Venta eliminada.'];
 
     }
     catch(\PDOexection $error){
       return $error;
     }
     
-  }
+   }
     
     //---------------------------------MOSTRAR VENTA--------------------------------
 
     public function getMostrarVentas($bitacora = false){
       try{
+
          parent::conectarDB();
-
-
          $this->key = parent::KEY();
          $this->iv = parent::IV();
          $this->cipher = parent::CIPHER();
 
-        $query ="SELECT v.num_fact, v.fecha, v.cedula_cliente , format(p.monto_total,2,'de_DE') as total, 
+        $query = "SELECT v.num_fact, v.fecha, v.cedula_cliente , format(p.monto_total,2,'de_DE') as total, 
         CONCAT(IF(MOD(format(p.monto_total,2,'de_DE') / format(cm.cambio,2,'de_DE'), 1) >= 0.5, 
         CEILING(p.monto_total / cm.cambio), 
         FLOOR(format(p.monto_total,2,'de_DE')  / format(cm.cambio,2,'de_DE') ) + 0.5), ' ', m.nombre) as 'total_divisa' FROM venta v  
@@ -299,11 +322,12 @@
         foreach ($data as $item) {
           $item->cedula_cliente = openssl_decrypt($item->cedula_cliente, $this->cipher, $this->key, 0 , $this->iv);
         }
-
-        echo json_encode($data);
+        
         if($bitacora) $this->binnacle("Ventas",$_SESSION['cedula'],"Consultó listado.");
         parent::desconectarDB();
-        die();
+
+        return $data;
+
       }catch(\PDOexection $error){
 
        return $error;     
@@ -315,7 +339,7 @@
     public function ExportarFactura($id){
 
       if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
-        return "Error de id!";
+        return ['resultado' => 'Error de id','error' => 'Id inválida.'];
       }
 
       $this->id = $id;
@@ -452,10 +476,11 @@
        $pdf->Output('F',$repositorio);
 
        $respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
-       echo json_encode($respuesta);
+       
        $this->binnacle("Venta",$_SESSION['cedula'], "Exporto Ticket de Venta");
        parent::desconectarDB();
-       die();
+
+       return $respuesta;
 
       }catch(\PDOexection $error){
         die($error);
@@ -482,11 +507,9 @@
        parent::desconectarDB();
        
        if(isset($data[0]["cedula"])){
-        echo json_encode(['resultado' => 'cedula valida.']);
-        die();
+        return['resultado' => 'cedula valida.'];
        }else{
-        echo json_encode(['resultado' => 'Error de cedula', 'error' => 'La cedula no está registrado.']);
-        die();
+        return['resultado' => 'Error de cedula', 'error' => 'La cedula no está registrado.'];
        }
 
      }
@@ -495,26 +518,38 @@
 
     public function getDetalleV($id){
       try{
+
+        if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
+        return ['resultado' => 'Error de id','error' => 'Id inválida.'];
+        }
+
         $this->id = $id;
+
         parent::conectarDB();
 
-        $new = $this->con->prepare("SELECT p.descripcion , vp.cantidad , vp.precio_actual , v.num_fact FROM venta_producto vp INNER JOIN producto p ON vp.cod_producto = p.cod_producto INNER JOIN venta v ON v.num_fact = vp.num_fact WHERE v.status = 1 AND v.num_fact = ?");
+       $new = $this->con->prepare("SELECT p.descripcion , vp.cantidad , vp.precio_actual , v.num_fact FROM venta_producto vp INNER JOIN producto p ON vp.cod_producto = p.cod_producto INNER JOIN venta v ON v.num_fact = vp.num_fact WHERE v.status = 1 AND v.num_fact = ?");
+
         $new->bindValue(1, $this->id);
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        echo json_encode($data);
+       
         parent::desconectarDB();
-        die();
+        return $data;
 
       }catch(\PDOexection $error){
         return $error;
       }
     }
 
-         //---------------------------------DETALLES PRODUCTOS POR VENTA--------------------------------
+         //---------------------------------DETALLES TIPO PAGO POR VENTA--------------------------------
 
     public function getDetalleTipoPago($id){
       try{
+
+        if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
+        return ['resultado' => 'Error de id','error' => 'Id inválida.'];
+        }
+
         $this->id = $id;
         parent::conectarDB();
 
@@ -522,9 +557,9 @@
         $new->bindValue(1, $this->id);
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        echo json_encode($data);
+        
         parent::desconectarDB();
-        die();
+        return $data;
 
       }catch(\PDOexection $error){
         return $error;
@@ -540,9 +575,8 @@
         $new = $this->con->prepare("SELECT cod_producto, descripcion FROM producto WHERE status = 1 and stock > 0");
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        echo json_encode($data);
         parent::desconectarDB();
-        die();
+        return $data;
 
       }catch(\PDOexection $error){
 
@@ -553,7 +587,12 @@
      //---------------------------------MOSTRA CANTIDAD Y PRECIO DE PRODUCTO--------------------------------
 
     public function productoDetalle($id){
-      $this->producto = $id;
+      
+      if(preg_match_all("/^[0-9]{1,15}$/", $id) != 1){
+        return ['resultado' => 'Error de id','error' => 'Id inválida.'];
+        }
+
+       $this->producto = $id;
 
       try {
          parent::conectarDB();
@@ -562,9 +601,8 @@
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
         
-        echo json_encode($data);
         parent::desconectarDB();
-        die();
+        return $data;
 
       } catch (\PDOException $e) {
         return $e;
@@ -579,9 +617,8 @@
       $new->execute();
       $data = $new->fetchAll(\PDO::FETCH_OBJ);
 
-      echo json_encode($data);
       parent::desconectarDB();
-      die();
+      return $data;
 
     }catch(\PDOexection $error){
 
@@ -599,9 +636,8 @@
         $new = $this->con->prepare("SELECT id_tipo_pago, des_tipo_pago FROM `tipo_pago` WHERE status = 1");
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        echo json_encode($data);
         parent::desconectarDB();
-        die();
+        return $data;
 
       }catch(\PDOexection $error){
 

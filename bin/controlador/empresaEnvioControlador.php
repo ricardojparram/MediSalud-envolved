@@ -22,33 +22,38 @@
     }
 
     if (isset($_POST['mostrar']) && isset($_POST['bitacora'])) {
-    	($_POST['bitacora'] == 'true')
-    	? $objModel->mostrarEmpresas(true)
-    	: $objModel->mostrarEmpresas();
+    	$res = $objModel->mostrarEmpresas($_POST['bitacora']);
+        die(json_encode($res));
     }
 
     if (isset($_POST['rif']) && isset($_POST['validarRif']) && $permiso['Consultar'] == 1) {
-    	$objModel->validarRif($_POST['rif'] , $_POST['id']);
+    	$res = $objModel->validarRif($_POST['rif'] , $_POST['id']);
+        die(json_encode($res));
     }
 
     if(isset($_POST['rif']) && isset($_POST['name']) && isset($_POST['contacto']) && isset($_POST['registra']) && $permiso['Registrar'] == 1) {
-        $objModel->getRegistrarEmpresa($_POST['rif'], $_POST['name'], $_POST['contacto']);
+       $res = $objModel->getRegistrarEmpresa($_POST['rif'], $_POST['name'], $_POST['contacto']);
+       die(json_encode($res));
     }
 
     if(isset($_POST['validarC']) && isset($_POST['id']) && $permiso['Consultar'] == 1) {
-    	 $objModel->validarSelect($_POST['id']);
+    	$res = $objModel->validarSelect($_POST['id']);
+        die(json_encode($res));
     }
 
     if(isset($_POST['clickEdit']) && isset($_POST['id'])) {
-    	$objModel->rellenarEdit($_POST['id']);
+       $res = $objModel->rellenarEdit($_POST['id']);
+       die(json_encode($res));
     }
 
     if(isset($_POST['rifEdit']) && isset($_POST['nameEdit']) && isset($_POST['contactoEdit']) && isset($_POST['id']) && isset($_POST['editar']) && $permiso['Editar'] == 1) {
-    	$objModel->getEditarEmpresa($_POST['rifEdit'], $_POST['nameEdit'], $_POST['contactoEdit'], $_POST['id']);
+    	$res = $objModel->getEditarEmpresa($_POST['rifEdit'], $_POST['nameEdit'], $_POST['contactoEdit'], $_POST['id']);
+        die(json_encode($res));
     }
 
     if (isset($_POST['ElimnarEmpresa']) && isset($_POST['id']) && $permiso['Eliminar']){
-    	$objModel->getEliminarEmpresa($_POST['id']);
+    	$res = $objModel->getEliminarEmpresa($_POST['id']);
+        die(json_encode($res));
     }
 
 

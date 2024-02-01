@@ -357,7 +357,6 @@
        let totalAsignado = 0;
 
        precioXTipo.each(function(){
-        let precioFila = parseFloat($(this).val());
 
         if (totalAsignado + precioPorFila <= montoMax){
           $(this).val(precioPorFila.toFixed(2));
@@ -378,7 +377,7 @@
 
     $(document).on('keyup', '.precio-tipo', () => {
       let montoMax = parseFloat($('#monto').val());
-      let preciosPorTipo = $('.precio-tipo');
+      let preciosPorTipo = parseFloat($('.precio-tipo'));
       let numFilas = preciosPorTipo.length;
 
       if (numFilas === 1) {
@@ -391,7 +390,6 @@
         } else {
           preciosPorTipo.eq(1).val((montoMax - precio1).toFixed(2));
         }
-
       }
 
       let totalAsignado = 0;
@@ -399,20 +397,11 @@
         totalAsignado += parseFloat($(this).val());
       });
 
-      if (totalAsignado > montoMax) {
+      if (totalAsignado > montoMax || totalAsignado < montoMax || totalAsignado < 1) {
         preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
         $(preciosPorTipo).attr('valid', 'false');
-
-      }else if(totalAsignado < montoMax){
-        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
-        $(preciosPorTipo).attr('valid', 'false');
-
-      } else if(totalAsignado < 1 ){
-        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
-        $(preciosPorTipo).attr('valid', 'false');
-
-      }else if(totalAsignado == montoMax){
-         preciosPorTipo.css({"border": "none"});
+      } else {
+        preciosPorTipo.css({"border": "none"});
         $(preciosPorTipo).attr('valid', 'true');
       }
     })

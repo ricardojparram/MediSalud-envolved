@@ -210,8 +210,8 @@ $(document).ready(function(){
 
     $('.cerrar').click(()=>{
      $('#agregarform').trigger('reset'); // LIMPIAR EL FORMULARIO
-     $('#Agregar select').attr("style","borden-color:none;","borden-color:none;");
-     $('#Agregar input').attr("style","borden-color:none;","borden-color:none;");
+     $('select').attr("style","borden-color:none;","borden-color:none;");
+     $('input').attr("style","borden-color:none;","borden-color:none;");
      $('.error').text(" ");
     })
 

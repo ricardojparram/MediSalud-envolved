@@ -24,10 +24,9 @@ class banco extends DBConnect{
 			$new = $this->con->prepare($sql);
 			$new->execute();
 			$data = $new->fetchAll(\PDO::FETCH_OBJ);
-			echo json_encode($data);
 			if($bitacora) $this->binnacle("Banco",$_SESSION['cedula'],"Consultó listado.");
 			parent::desconectarDB();
-			die();
+			return $data;
 
 		}catch(\PDOException $e){
 			die($e);
@@ -59,9 +58,8 @@ class banco extends DBConnect{
 			$new = $this->con->prepare($sql);
 			$new->execute();
 			$data = $new->fetchAll(\PDO::FETCH_OBJ);
-			echo json_encode($data);
 			parent::desconectarDB();
-			die();
+			return $data;
 
 		}catch(\PDOException $e){
 			die($e);
@@ -72,8 +70,7 @@ class banco extends DBConnect{
 	public function validarTipoP($id){
      
 		if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-			echo json_encode(['resultado' => 'Error de id','error' => 'Id inválida.']);
-			die();
+			return['resultado' => 'Error de id','error' => 'Id inválida.'];	
 		}
 
         $this->id = $id;
@@ -93,11 +90,9 @@ class banco extends DBConnect{
 			parent::desconectarDB();
 
 			if(isset($data[0]['id_tipo_pago'])) {
-				echo json_encode(['resultado' => 'Codigo tipo válido.']);
-				die();
+				return['resultado' => 'Codigo tipo válido.'];
 			}else{
-				echo json_encode(['resultado' => 'Error de tipoP', 'error' => 'El tipo pago no está registrado.']);
-				die();
+				return['resultado' => 'Error de tipoP', 'error' => 'El tipo pago no está registrado.'];
 			}
 
 		}catch(\PDOException $e){
@@ -105,35 +100,36 @@ class banco extends DBConnect{
 		}
 	}
 
-	public function ValidarDatos($tipoP, $tipo ,$cedulaRif ,$id){
+	public function ValidarDatos($tipoP, $tipo ,$cedulaRif , $nombre ,$id){
 		if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $tipoP) != 1){
-			echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
-			die();
+			return['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.'];
 		}
 
 		if(preg_match_all("/^(?=.*[0-9])(?=.*[-])[0-9-]{1,25}$|^[0-9]{3,50}$/", $tipo) !== 1){
-			echo json_encode(['resultado' => 'Error telefono o cuenta','error' => 'Tipo pago inválida.']);
-			die();
+			return['resultado' => 'Error telefono o cuenta','error' => 'Tipo pago inválida.'];
 		}
 
 		if(preg_match_all("/^[0-9]{7,10}$/", $cedulaRif) != 1) {
-			echo json_encode(['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.']);
-			die();
+			return['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.'];
+		}
+		if (preg_match_all("/^[0-9]{1,10}$/", $nombre) != 1) {
+			return['resultado' => 'Error de id banco','error' => 'id banco inválido.'];
 		}
 
 		$this->tipoP = $tipoP;
 		$this->nombre = $tipo;
 		$this->cedulaRif = $cedulaRif;
+		$this->codBank = $nombre;
 
 		if ($id != null) {
 		  
 		  $this->id = $id;
 
-		  $this->validDatosEdit();
+		 return $this->validDatosEdit();
 
 		}else{
 
-		  $this->validDatos();
+		 return $this->validDatos();
 
 		}
 
@@ -146,26 +142,25 @@ class banco extends DBConnect{
 			$query = "SELECT * FROM (SELECT 'Pago movil' as  tipo_pago, id_datos_cobro as id, rif_cedula, telefono as tipo, id_banco as banco FROM datos_cobro_farmacia
 				WHERE telefono IS NOT NULL
 				UNION 
-				SELECT 'Transferencia' as tipo_pago, id_datos_cobro, rif_cedula, num_cuenta, id_banco FROM datos_cobro_farmacia
+				SELECT 'Transferencia' as tipo_pago, id_datos_cobro, rif_cedula, num_cuenta, id_banco as banco FROM datos_cobro_farmacia
 				WHERE num_cuenta IS NOT NULL
 				) as detalle
-				WHERE detalle.tipo_pago = ? AND detalle.tipo = ? AND detalle.rif_cedula = ?";
+				WHERE detalle.tipo_pago = ? AND detalle.tipo = ? AND detalle.rif_cedula = ? AND detalle.banco = ?";
 
 			$new = $this->con->prepare($query);
 			$new->bindValue(1, $this->tipoP);
 			$new->bindValue(2, $this->nombre);
 			$new->bindValue(3, $this->cedulaRif);
+			$new->bindValue(4, $this->codBank);
 			$new->execute();
 			$data = $new->fetchAll();
 
 			parent::desconectarDB();
             
 			if (isset($data[0])) {
-				echo json_encode(['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco']);
-				die();
+				return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
 			}else{
-				echo json_encode(['resultado' => 'Datos validos']);
-				die();
+				return['resultado' => 'Datos validos'];
 			}
 		} catch (\PDOException $e) {
 			die($e);
@@ -179,27 +174,26 @@ class banco extends DBConnect{
 		$query = "SELECT * FROM (SELECT 'Pago movil' as  tipo_pago, id_datos_cobro as id, rif_cedula, telefono as tipo, id_banco as banco FROM        	  datos_cobro_farmacia
 				WHERE telefono IS NOT NULL
 				UNION 
-				SELECT 'Transferencia' as tipo_pago, id_datos_cobro, rif_cedula, num_cuenta, id_banco FROM datos_cobro_farmacia
+				SELECT 'Transferencia' as tipo_pago, id_datos_cobro, rif_cedula, num_cuenta, id_banco as banco FROM datos_cobro_farmacia
 				WHERE num_cuenta IS NOT NULL
 				) as detalle
-				WHERE detalle.tipo_pago = ? AND detalle.tipo = ? AND detalle.rif_cedula = ? AND detalle.id != ?";
+				WHERE detalle.tipo_pago = ? AND detalle.tipo = ? AND detalle.rif_cedula = ? AND detalle.banco = ? AND detalle.id != ?";
 
 		$new = $this->con->prepare($query);
 		$new->bindValue(1, $this->tipoP);
 		$new->bindValue(2, $this->nombre);
 		$new->bindValue(3, $this->cedulaRif);
-		$new->bindValue(4, $this->id);
+		$new->bindValue(4, $this->codBank);
+		$new->bindValue(5, $this->id);
 		$new->execute();
 		$data = $new->fetchAll();
 
 		parent::desconectarDB();
 
 		if (isset($data[0])) {
-			echo json_encode(['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco']);
-			die();
+			return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
 		}else{
-			echo json_encode(['resultado' => 'Datos validos']);
-			die();
+			return['resultado' => 'Datos validos'];
 		}
 
 		} catch (\PDOException $e) {
@@ -211,28 +205,28 @@ class banco extends DBConnect{
 
 		$datosA = $datos;
 
+
 		switch ($datosA[0]) {
 
 			case 'Transferencia' :
 
 
 			if(preg_match_all("/^[0-9]{1,10}$/", $datosA[1]) !== 1){
-				echo json_encode(['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.']);
-				die();
+				return['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.'];
 			}
 
 			if(preg_match_all("/^[0-9]{7,10}$/", $datosA[2]) != 1) {
-				echo json_encode(['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.']);
-				die();
+				return['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.'];
 			}
 			if(preg_match_all("/^(?=.*[0-9])(?=.*[-])[0-9-]{1,25}$/", $datosA[3]) != 1){
-				echo json_encode(['resultado' => 'Error de cuenta de Banco','error' => 'Cuenta de Banco inválida.']);
-				die();
+				return['resultado' => 'Error de cuenta de Banco','error' => 'Cuenta de Banco inválida.'];
 			}
 
 			$this->nombre = $datosA[1];
 			$this->cedulaRif = $datosA[2];
 			$this->cuentaBank = $datosA[3];
+			$validarDatos = $this->ValidarDatos($datosA[0], $this->cuentaBank ,$this->cedulaRif , $this->nombre , null);
+			if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
 
             return $this->registrarBanco();
 			break;
@@ -241,29 +235,29 @@ class banco extends DBConnect{
 			
 
 			if(preg_match_all("/^[0-9]{1,10}$/", $datosA[1]) !== 1){
-				echo json_encode(['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.']);
-				die();
+				return['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.'];
 			}
 
 			if(preg_match_all("/^[0-9]{7,10}$/", $datosA[2]) != 1) {
-				echo json_encode(['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.']);
-				die();
+				return['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.'];
 			}
 
 			if(preg_match_all("/^[0-9]{10,30}$/", $datosA[3]) != 1){
-				echo json_encode(['resultado' => 'Error de telefono','error' => 'telefono inválida.']);
-				die();
+				return['resultado' => 'Error de telefono','error' => 'telefono inválida.'];
 			}
             
 			$this->nombre = $datosA[1];
 			$this->cedulaRif = $datosA[2];
 			$this->telefono = $datosA[3];
 
+			$validarDatos = $this->ValidarDatos($datosA[0], $this->telefono ,$this->cedulaRif , $this->nombre , null);
+			if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
+
             return $this->registrarBanco();
 			break;
 
 			default:
-			die("Error");
+			return "Error";
 			break;
 		} 
 
@@ -282,10 +276,9 @@ class banco extends DBConnect{
         $new->execute();
         $data = $new->fetchAll(); 
         $resultado = ['resultado' => 'banco registrado.'];
-        echo json_encode($resultado);
         $this->binnacle("Banco",$_SESSION['cedula'],"Registró un Banco .");
         parent::desconectarDB();
-        die();
+        return $resultado;
 		} catch (\PDOException $e) {
 			die($e);
 		}
@@ -295,8 +288,7 @@ class banco extends DBConnect{
 	public function validarSelect($id){
 
 		if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-			echo json_encode(['resultado' => 'Error de id','error' => 'id inválida.']);
-			die();
+			return['resultado' => 'Error de id','error' => 'id inválida.'];
 		}
 
 		$this->id = $id;
@@ -308,11 +300,9 @@ class banco extends DBConnect{
 		parent::desconectarDB();
 
 		if(isset($data[0]["id_banco"])){
-			echo json_encode(['resultado' => 'Si existe esa banco.']);
-			die();
+			return['resultado' => 'Si existe esa banco.'];
 		}else{
-			echo json_encode(['resultado' => 'Error de banco']);
-			die();
+			return['resultado' => 'Error de banco'];
 		}
 
 	}
@@ -320,8 +310,7 @@ class banco extends DBConnect{
 	public function rellenarEdit($id){
 
 		if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-			echo json_encode(['resultado' => 'Error de id','error' => 'id inválida.']);
-			die();
+			return['resultado' => 'Error de id','error' => 'id inválida.'];
 		}
 
         $this->id = $id;
@@ -338,9 +327,8 @@ class banco extends DBConnect{
 			$new->bindValue(1, $this->id);
 			$new->execute();
 			$data = $new->fetchAll(\PDO::FETCH_OBJ);
-			echo json_encode($data);
 			parent::desconectarDB();
-			die();
+			return $data;
 
 		}catch (\PDOException $e) {
 			die($e);
@@ -356,22 +344,18 @@ class banco extends DBConnect{
 			case 'Transferencia' :
 
             if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-				echo json_encode(['resultado' => 'Error de id','error' => 'id inválida.']);
-				die();
+				return['resultado' => 'Error de id','error' => 'id inválida.'];
 			}
 
 			if(preg_match_all("/^[0-9]{1,10}$/", $datosA[1]) !== 1){
-				echo json_encode(['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.']);
-				die();
+				return['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.'];
 			}
 
 			if(preg_match_all("/^[0-9]{7,10}$/", $datosA[2]) != 1) {
-				echo json_encode(['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.']);
-				die();
+				return['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.'];
 			}
 			if(preg_match_all("/^(?=.*[0-9])(?=.*[-])[0-9-]{1,25}$/", $datosA[3]) != 1){
-				echo json_encode(['resultado' => 'Error de cuenta de Banco','error' => 'Cuenta de Banco inválida.']);
-				die();
+				return['resultado' => 'Error de cuenta de Banco','error' => 'Cuenta de Banco inválida.'];
 			}
             
             $this->id = $id;
@@ -379,28 +363,27 @@ class banco extends DBConnect{
 			$this->cedulaRif = $datosA[2];
 			$this->cuentaBank = $datosA[3];
 
+			$validarDatos = $this->ValidarDatos($datosA[0], $this->cuentaBank ,$this->cedulaRif , $this->nombre , $this->id);
+			if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
+
             return $this->editarBanco();
 			break;
 
 			case 'Pago movil' :
 
 			 if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-				echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
-				die();
+				return['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.'];
 			}
 
 			if(preg_match_all("/^[0-9]{1,10}$/", $datosA[1]) !== 1){
-				echo json_encode(['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.']);
-				die();
+				return['resultado' => 'Error de Nombre banco','error' => 'Nombre banco inválida.'];
 			}
 
 			if(preg_match_all("/^[0-9]{7,10}$/", $datosA[2]) != 1) {
-				echo json_encode(['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.']);
-				die();
+				return['resultado' => 'Error de rif o cedula','error' => 'Rif o cedula inválido.'];
 			}
 			if(preg_match_all("/^[0-9]{10,30}$/", $datosA[3]) != 1){
-				echo json_encode(['resultado' => 'Error de telefono','error' => 'telefono inválida.']);
-				die();
+				return['resultado' => 'Error de telefono','error' => 'telefono inválida.'];
 			}
             
             $this->id = $id;
@@ -408,11 +391,14 @@ class banco extends DBConnect{
 			$this->cedulaRif = $datosA[2];
 			$this->telefono = $datosA[3];
 
+			$validarDatos = $this->ValidarDatos($datosA[0], $this->telefono ,$this->cedulaRif , $this->nombre , $this->id);
+			if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
+
             return $this->editarBanco();
 			break;
 
 			default:
-			die("Error XD");
+			return "Error Edit";
 			break;
 		} 
 	}
@@ -430,11 +416,10 @@ class banco extends DBConnect{
        	$new->execute();
        	$data = $new->fetchAll();
 
-       	$resultado = ['resultado' => 'banco editado.' , $new->execute()];
-       	echo json_encode($resultado);
+       	$resultado = ['resultado' => 'banco editado.'];
        	$this->binnacle("Banco",$_SESSION['cedula'],"Editó un Banco .");
        	parent::desconectarDB();
-       	die();
+       	return $resultado;
 
        } catch (\PDOException $e) {
        	die($e);
@@ -444,11 +429,12 @@ class banco extends DBConnect{
 
     public function getEliminarBanco($id){
     	if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-    		echo json_encode(['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.']);
-    		die();
+    		return['resultado' => 'Error de banco','error' => 'banco inválida.'];
     	}
 
     	$this->id = $id;
+		$validarId = $this->validarSelect($id);
+		if($validarId['resultado'] == 'Error de banco') return['resultado' => 'Error de banco'];
 
     	return $this->eliminarBanco();
 
@@ -462,10 +448,9 @@ class banco extends DBConnect{
     	$new->execute();
     	$data = $new->fetchAll();
         $resultado = ['resultado' => 'Eliminado'];
-        echo json_encode($resultado);
         $this->binnacle("Banco",$_SESSION['cedula'],"Eliminó un Banco .");
         parent::desconectarDB();
-        die();
+        return $resultado;
 	
     	} catch (\PDOException $e) {
     		die($e);	

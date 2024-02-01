@@ -28,43 +28,51 @@
     }
 
      if (isset($_POST['mostrar']) && isset($_POST['bitacora'])) {
-      ($_POST['bitacora'] == 'true')
-      ? $objModel->mostrarBank(true)
-      : $objModel->mostrarBank();
+  
+       $res = $objModel->mostrarBank($_POST['bitacora']);
+        die(json_encode($res));
      }
 
       $datosBanco = $objModel->datosBanco();
 
      if (isset($_POST['selecTipoPago']) && $permiso['Consultar'] == 1) {
-     	$objModel->selecTipoPago();
+     	$res = $objModel->selecTipoPago();
+      die(json_encode($res));
      }
 
      if(isset($_POST['id']) && isset($_POST['validar']) && $permiso['Consultar'] == 1){
-      $objModel->validarTipoP($_POST['id']);
+      $res = $objModel->validarTipoP($_POST['id']);
+      die(json_encode($res));
      }
 
-     if(isset($_POST['tipoP']) && isset($_POST['tipo']) && isset($_POST['cedulaRif']) && isset($_POST['id']) &&  isset($_POST['validarD']) && $permiso['Consultar'] == 1 ){
-      $objModel->ValidarDatos($_POST['tipoP'] , $_POST['tipo'] , $_POST['cedulaRif'] , $_POST['id']);
+     if(isset($_POST['tipoP']) && isset($_POST['tipo']) && isset($_POST['cedulaRif']) && isset($_POST['nombre']) && isset($_POST['id']) &&  isset($_POST['validarD']) && $permiso['Consultar'] == 1 ){
+       $res = $objModel->ValidarDatos($_POST['tipoP'] , $_POST['tipo'] , $_POST['cedulaRif'], $_POST['nombre'] , $_POST['id']);
+        die(json_encode($res));
      }
 
      if (isset($_POST['data']) && isset($_POST['registro']) && $permiso['Registrar'] == 1) {
-       $objModel->getRegistrarBanco($_POST['data']);
+      $res = $objModel->getRegistrarBanco($_POST['data']);
+       die(json_encode($res));
      }
 
      if (isset($_POST['validarC']) && isset($_POST['id']) && $permiso['Consultar'] == 1) {
-       $objModel->validarSelect($_POST['id']);
+      $res = $objModel->validarSelect($_POST['id']);
+       die(json_encode($res));
      }
 
      if (isset($_POST['clickEdit']) && isset($_POST['id']) && $permiso['Consultar'] == 1) {
-       $objModel->rellenarEdit($_POST['id']);
+      $res = $objModel->rellenarEdit($_POST['id']);
+       die(json_encode($res));
      }
 
      if (isset($_POST['data']) && isset($_POST['id']) && isset($_POST['editar']) && $permiso['Editar'] == 1) {
-      $objModel->getEditarBanco($_POST['data'] , $_POST['id']);
+      $res = $objModel->getEditarBanco($_POST['data'] , $_POST['id']);
+       die(json_encode($res));
      }
 
      if (isset($_POST['eliminar']) && isset($_POST['id']) && $permiso['Eliminar'] == 1) {
-       $objModel->getEliminarBanco($_POST['id']);
+      $res = $objModel->getEliminarBanco($_POST['id']);
+       die(json_encode($res));
      }
 
 

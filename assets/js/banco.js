@@ -114,9 +114,9 @@ $(document).ready(function(){
       })
     }
     
-    function ValidarDatos(dato ,dato1 , dato2, div , id = null){
+    function ValidarDatos(dato ,dato1 , dato2 , dato3, div , id = null){
         return new Promise((resolve, reject) => {
-            $.post('',{tipoP : dato , tipo : dato1.val(), cedulaRif : dato2.val(), id ,validarD: "CedulaRif"},
+            $.post('',{tipoP : dato , tipo : dato1.val(), cedulaRif : dato2.val(), nombre: dato3.val() , id ,validarD: "CedulaRif"},
                function(data){
                 let mensaje = JSON.parse(data);
                 if(mensaje.resultado === "Error Datos"){
@@ -178,8 +178,8 @@ $(document).ready(function(){
       $('#cuentaBank').keyup(() =>{ validarBanco($('#cuentaBank'), $('#error4') , "Error de codigo banco") });
       $('#telefono').keyup(() =>{ validarTelefono($('#telefono'), $('#error5') , "Error de telefono") });
 
-     $('#cuentaBank').keyup(()=>{ ValidarDatos($('#tipoP').find('option:selected').text() , $('#cuentaBank'), $('#cedulaRif'), $("#error")) }); 
-     $('#telefono').keyup(()=>{ ValidarDatos($('#tipoP').find('option:selected').text() , $('#telefono'), $('#cedulaRif'), $("#error")) });
+     $('#cuentaBank').keyup(()=>{ ValidarDatos($('#tipoP').find('option:selected').text() , $('#cuentaBank'), $('#cedulaRif'), $('#nombre'), $("#error")) }); 
+     $('#telefono').keyup(()=>{ ValidarDatos($('#tipoP').find('option:selected').text() , $('#telefono'), $('#cedulaRif'), $('#nombre'), $("#error")) });
 
 
      let click = 0;
@@ -212,7 +212,7 @@ $(document).ready(function(){
                 telefono = validarTelefono($('#telefono'), $('#error5'), "Error de telefono");
                 
 
-                ValidarDatos(tPago , $('#telefono'), $('#cedulaRif'), $("#error")).then((validar) => {
+                ValidarDatos(tPago , $('#telefono'), $('#cedulaRif'), $('#nombre'), $("#error")).then((validar) => {
                   if (tipoP && Nombre && cedulaRif && telefono && validar) {
                     let name = $('#nombre').val();
                     let cRif = $('#cedulaRif').val();
@@ -247,7 +247,7 @@ $(document).ready(function(){
                 cedulaRif = validarCedula($('#cedulaRif'), $('#error3') , 'Error de Rif');
                 cuentaBank = validarBanco($('#cuentaBank'), $('#error4') , 'Error de Rif');
                 
-                ValidarDatos(tPago, $('#cuentaBank'), $('#cedulaRif'), $("#error")).then((validar) => {
+                ValidarDatos(tPago, $('#cuentaBank'), $('#cedulaRif'),  $('#nombre') ,$("#error")).then((validar) => {
                   if (tipoP && Nombre && cedulaRif && cuentaBank && validar) {
                     let name = $('#nombre').val();
                     let cRif = $('#cedulaRif').val();
@@ -360,8 +360,8 @@ $(document).ready(function(){
       $('#cuentaBankEdit').keyup(() =>{ validarBanco($('#cuentaBankEdit'), $('#errorEdit4') , "Error de codigo banco") });
       $('#telefonoEdit').keyup(() =>{ validarTelefono($('#telefonoEdit'), $('#errorEdit6') , "Error de telefono") });
 
-      $('#cuentaBankEdit').keyup(()=>{ ValidarDatos($('#tipopEdit').find('option:selected').text() , $('#cuentaBankEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id) }); 
-      $('#telefonoEdit').keyup(()=>{ ValidarDatos($('#tipopEdit').find('option:selected').text() , $('#telefonoEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id) });
+      $('#cuentaBankEdit').keyup(()=>{ ValidarDatos($('#tipopEdit').find('option:selected').text() , $('#cuentaBankEdit'), $('#cedulaRifEdit'), $('#nombreEdit'), $("#errorEdit"), id) }); 
+      $('#telefonoEdit').keyup(()=>{ ValidarDatos($('#tipopEdit').find('option:selected').text() , $('#telefonoEdit'), $('#cedulaRifEdit'), $('#nombreEdit'),$("#errorEdit"), id) });
 
       $('#editar').click((e) =>{
          e.preventDefault();
@@ -390,7 +390,7 @@ $(document).ready(function(){
             cedulaRifEdit = validarCedula($('#cedulaRifEdit'), $('#errorEdit3'), 'Error de Rif');
             telefonoEdit = validarTelefono($('#telefonoEdit'), $('#errorEdit6'), "Error de telefono");
 
-            ValidarDatos(tPagoEdit , $('#telefonoEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id).then((validarE) => {
+            ValidarDatos(tPagoEdit , $('#telefonoEdit'), $('#cedulaRifEdit'),  $('#nombreEdit'), $("#errorEdit"), id).then((validarE) => {
               if (tipopEdit && nombreEdit && cedulaRifEdit && telefonoEdit && validarE) {
                 let pago = $('#tipopEdit').val();
                 let name = $('#nombreEdit').val();
@@ -425,7 +425,7 @@ $(document).ready(function(){
             cedulaRifEdit = validarCedula($('#cedulaRifEdit'), $('#errorEdit3'), 'Error de Rif');
             cuentaBankEdit = validarBanco($('#cuentaBankEdit'), $('#errorEdit4') , 'Error de Rif');
 
-            ValidarDatos(tPagoEdit , $('#cuentaBankEdit'), $('#cedulaRifEdit'), $("#errorEdit"), id).then((validarE) => {
+            ValidarDatos(tPagoEdit , $('#cuentaBankEdit'), $('#cedulaRifEdit'), $('#nombreEdit') , $("#errorEdit"), id).then((validarE) => {
                 
               if (tipopEdit && nombreEdit && cedulaRifEdit && cuentaBankEdit && validarE) {
                 let name = $('#nombreEdit').val();
