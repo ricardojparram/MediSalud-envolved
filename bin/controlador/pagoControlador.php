@@ -48,11 +48,17 @@
   if (isset($_POST['mostrarB'])){
     $objModel->banco();
   }
+
   if (isset($_POST['calculaT'])){
     $objModel->calcularTipo($_SESSION['cedula']);
   }
+
   if (isset($_POST['tiempo'])){
     $objModel->temporizador($_SESSION['cedula']);
+  }
+
+  if (isset($_POST['eliminar'])) {
+    $objModel->getEliminar($_SESSION['cedula'], $_POST['eliminar']);
   }
   
   $VarComp = new initcomponents();

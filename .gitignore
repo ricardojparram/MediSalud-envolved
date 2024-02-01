@@ -6,5 +6,7 @@
 .phpunit.result.cache
 .phpunit.result.cache
 phpunit.xml
-/vendor/
 /Tests/
+/Vendor
+Composer.json
+Composer.lock

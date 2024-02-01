@@ -55,8 +55,7 @@
                 $new->bindValue(1, $cedula);
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
-                // var_dump($data);
-                // die();
+                
                 parent::desconectarDB();
                 if(isset($data[0]->cedula)){ 
                     foreach ($data as $item) {
@@ -83,7 +82,7 @@
 
                 die();
                 
-            } catch(\PDOexection $error){
+            } catch(\PDOException $error){
                 die($error);
             }
         }
@@ -104,7 +103,7 @@
                 parent::desconectarDB();
                 die();
 
-            } catch(\PDOexection $error){
+            } catch(\PDOException $error){
                 return $error;
             }
         }
@@ -119,7 +118,7 @@
                 parent::desconectarDB();
                 die();
 
-            } catch(\PDOexection $error){
+            } catch(\PDOException $error){
                 return $error;
             }
         }
@@ -135,7 +134,7 @@
                 parent::desconectarDB();
                 die();
 
-            } catch(\PDOexection $error){
+            } catch(\PDOException $error){
                 return $error;
             }
         }
@@ -150,7 +149,7 @@
               parent::desconectarDB();
               die();
       
-            }catch(\PDOexection $error){
+            }catch(\PDOException $error){
       
              return $error;   
       
@@ -167,7 +166,7 @@
                 parent::desconectarDB();
                 die();
         
-              }catch(\PDOexection $error){
+              }catch(\PDOException $error){
         
                return $error;   
         
@@ -253,9 +252,7 @@
                     $new->bindValue(8, $this->cedula);
                     $new->execute();
                     parent::desconectarDB();
-                    // $resultado = ['resultado' => 'Editado'];
-                    // echo json_encode($resultado);
-                    // die();
+                   
                 }else {
                     parent::conectarDB();
                     $new = $this->con->prepare("INSERT INTO cliente(cedula, nombre, apellido, direccion, status) VALUES (?,?,?,?,1)");
@@ -270,9 +267,7 @@
                     $new->bindValue(2, $this->correo); 
                     $new->bindValue(3, $this->cedula);
                     $new->execute();
-                    $resultado = ['resultado' => 'Registrado correctamente.'];
-                    // echo json_encode($resultado);
-                    // die();
+                   
                     parent::desconectarDB();
                 }
 
@@ -283,13 +278,14 @@
                     $new->bindValue(1, $this->sede);
                     $new->execute();
 
+                    $id_envio = $this->con->lastinsertid();
+
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
                                                 VALUES (DEFAULT, DEFAULT, ?, NULL, ?, 1, 1)");
                     $new->bindValue(1, $this->cedula);
-                    $new->bindValue(2, $this->sede);
+                    $new->bindValue(2, $id_envio);
                     $new->execute();
-                    // $resultado = ['resultado' => 'Registrado Sede'];
-                    // echo json_encode($resultado);
+        
                 }elseif ($this->direccionE != NULL || $this->direccionE != "") {
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
@@ -298,16 +294,12 @@
                     $new->bindValue(2, $this->direccionE);
                     $new->execute();
 
-                    // $resultado = ['resultado' => 'Registrado Direccion'];
-                    // echo json_encode($resultado);
                 }else{
 
                     $new = $this->con->prepare("INSERT INTO venta(num_fact, fecha, cedula_cliente, direccion, id_envio, online, status) 
                                                 VALUES (DEFAULT, DEFAULT, ?, NULL, NULL, 1, 1)");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
-                    // $resultado = ['resultado' => 'Registrado Entrega'];
-                    // echo json_encode($resultado);
                 }
                 $numFactura = $this->con->lastInsertId();
 
@@ -366,40 +358,14 @@
                     }
 
                 }
-                try {
-                    parent::conectarDB();
-    
-                    $new = $this->con->prepare("SELECT num_fact FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
-                    $new->bindValue(1, $this->cedula);
-                    $new->execute();
-                    $venta = $new->fetchAll();
+                    $this->eliminar("registrar");
                     
-    
-                    $new = $this->con->prepare("SELECT cantidad, cod_producto FROM venta_producto WHERE num_fact = ?");
-                    $new->bindValue(1, $venta[0]['num_fact']);
-                    $new->execute();
-                    $productos = $new->fetchAll(\PDO::FETCH_OBJ);
-                    parent::desconectarDB();
-                    foreach($productos as $producto){
-                        $this->actualizarStockProducto($producto->cod_producto, $producto->cantidad, "sumar");
-                    }
-                    parent::conectarDB();
-                    $new = $this->con->prepare("DELETE FROM venta WHERE num_fact = ?");
-                    $new->bindValue(1, $venta[0]['num_fact']);
-                    $new->execute();
-                    
-                    parent::desconectarDB();
                     $this->cedula = openssl_decrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
-                    $this->nombre;
-                    $this->apellido ;
-
                     $resultado = ['resultado' => 'Registrado Pedido', 'cedula' => $this->cedula , 'nombre' =>  $this->nombre , 'apellido' => $this->apellido];
                     echo json_encode($resultado);
     
                     die();
-                } catch(\PDOException $e){
-                    die($e);
-                }
+                
             } catch (\PDOException $error) {
                 die($error);
             }
@@ -582,7 +548,7 @@
                 $new->bindValue(2, $cod_producto);
                 $new->execute();
                 parent::desconectarDB();
-            }catch(\PDOexection $error){
+            }catch(\PDOException $error){
                 die($error);
             }
         }
@@ -607,7 +573,7 @@
                 echo json_encode($resultado);
                 die();
                 
-            }catch(\PDOexection $error){
+            }catch(\PDOException $error){
                 die($error);
             }
         }
@@ -622,12 +588,55 @@
                 parent::desconectarDB();
                 echo json_encode($data[0]->fecha);
                 die();
-            } catch(\PDOexection $error){
+            } catch(\PDOException $error){
                 die($error);
             }
         }
 
-        
+        public function getEliminar($cedula, $eliminar){
+            $this->cedula = $cedula;
+            $this->eliminar($eliminar);
+        }
+
+        private function eliminar($carrito = "contar"){
+            try {
+                    parent::conectarDB();
+    
+                    $new = $this->con->prepare("SELECT num_fact FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?;");
+                    $new->bindValue(1, $this->cedula);
+                    $new->execute();
+                    $venta = $new->fetchAll();
+                    parent::desconectarDB();
+                    
+                    if ($carrito == "sumar") {
+                    parent::conectarDB();
+                    $new = $this->con->prepare("SELECT cantidad, cod_producto FROM venta_producto WHERE num_fact = ?");
+                    $new->bindValue(1, $venta[0]['num_fact']);
+                    $new->execute();
+                    $productos = $new->fetchAll(\PDO::FETCH_OBJ);
+                    parent::desconectarDB();
+                        foreach($productos as $producto){
+                            $this->actualizarStockProducto($producto->cod_producto, $producto->cantidad, "sumar");
+                        }
+                    }
+                    
+                    parent::conectarDB();
+                    $new = $this->con->prepare("DELETE FROM venta WHERE num_fact = ?");
+                    $new->bindValue(1, $venta[0]['num_fact']);
+                    $new->execute();
+                    
+                    parent::desconectarDB();
+
+                    if ($carrito != "registrar") {
+                        $resultado = ['resultado' => 'Eliminado'];
+                        echo json_encode($resultado);
+                        die();
+                    }
+
+            } catch(\PDOException $error){
+                die($error);
+            }
+        }
 
     }
 ?>
