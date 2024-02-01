@@ -32,7 +32,7 @@ $(document).ready(function () {
 							<td>${cambio} </td>
 							<td>${fecha} </td>
 							<td class="d-flex justify-content-center">
-							<button type="button" ${editarPermiso} class="btn btn-primary history mx-2" id="${row.nombre}" data-bs-toggle="modal" data-bs-target="#editHistory"><i class="bi bi-clock-history"></i></button>
+							<button type="button" ${editarPermiso} class="btn btn-primary history mx-2" id="${row.id_moneda}" data-bs-toggle="modal" data-bs-target="#editHistory"><i class="bi bi-clock-history"></i></button>
 							<button type="button" ${editarPermiso} class="btn btn-success update mx-2" id="${row.id_moneda}" data-bs-toggle="modal" data-bs-target="#editModal"><i class="bi bi-pencil"></i></button>
 							<button type="button" ${eliminarPermiso} class="btn btn-danger delete mx-2" id="${row.id_moneda}" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash3"></i></button>
 								</td>
@@ -48,11 +48,12 @@ $(document).ready(function () {
 	}
 
 	let click = 0;
-	setInterval(() => { click = 0; }, 2000);
+	setInterval(() => { click = 0; }, 1500);
 
 	let moneda, name;
 	$('#moneda').keyup(() => { validarNombre($('#moneda'), $('#ms'), "Error de moneda") });
 	$('#registrar').click((e) => {
+		e.preventDefault();
 		if (click >= 1) throw new Error('Spam de clicks');
 
 		if (typeof permisos.Registrar === 'undefined') {
@@ -60,7 +61,6 @@ $(document).ready(function () {
 			throw new Error('Permiso denegado.');
 		}
 
-		e.preventDefault();
 
 
 		moneda = validarNombre($('#moneda'), $('#ms'), "Error de moneda");
@@ -104,13 +104,13 @@ $(document).ready(function () {
 	$('#editMon').keyup(() => { validarNombre($('#editMon'), $('#ms2'), "Error de moneda") });
 
 	$('#editar').click((e) => {
+		e.preventDefault();
 		if (click >= 1) throw new Error('Spam de clicks');
 
 		if (typeof permisos.Editar === 'undefined') {
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
 			throw new Error('Permiso denegado.');
 		}
-		e.preventDefault();
 		let editN = validarNombre($('#editMon'), $('#ms2'), "Error de moneda");
 
 		if (editN) {
@@ -139,6 +139,7 @@ $(document).ready(function () {
 
 
 	$('#eliminar').click((e) => {
+		e.preventDefault()
 		if (click >= 1) throw new Error('Spam de clicks');
 		if (typeof permisos.Eliminar === 'undefined') {
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
@@ -169,13 +170,15 @@ $(document).ready(function () {
 	let idHistory
 
 	$(document).on('click', '.history', function () {
-		idHistory = this.id;
-		$("#nomMoneda").text(idHistory)
 
+		idHistory = this.id;
+
+
+		console.log(idHistory)
 		rellenar(idHistory)
 		tabla.destroy();
 	})
-
+	
 	function rellenar(idHistory) {
 
 		$.ajax({
@@ -184,16 +187,20 @@ $(document).ready(function () {
 			dataType: 'json',
 			data: { mostrar: 'xd', idHistory },
 			success(angeles) {
-				console.log(angeles)
+				
+				$("#nomMoneda").text(angeles[0]['nombre'])
+
 				angeles.forEach(row => {
+					if (row.cambio == null) return
+					
 					tabla += `
-					<tr>
-					<td>${row.cambio} </td>
-					<td>${row.fecha} </td>
-					<td class="d-flex justify-content-center">
-							<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.id_cambio}" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="bi bi-pencil"></i></button>
-							<button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.id_cambio}" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
-							</td>
+						<tr>
+						<td>${row.cambio} </td>
+						<td>${row.fecha} </td>
+						<td class="d-flex justify-content-center">
+						<button type="button" ${editarPermiso} class="btn btn-success editar mx-2" id="${row.id_cambio}" data-bs-toggle="modal" data-bs-target="#editarModal"><i class="bi bi-pencil"></i></button>
+						<button type="button" ${eliminarPermiso} class="btn btn-danger borrar mx-2" id="${row.id_cambio}" data-bs-toggle="modal" data-bs-target="#delModal"><i class="bi bi-trash3"></i></button>
+						</td>
 						</tr>`;
 				});
 				$('#tbody').html(tabla);
@@ -211,7 +218,7 @@ $(document).ready(function () {
 
 
 	selectMoneda();
-
+	let selectOp
 	function selectMoneda() {
 		$.ajax({
 			type: "POST",
@@ -220,6 +227,7 @@ $(document).ready(function () {
 			data: { select: 'mostrar' },
 			success(data) {
 				let option = "";
+				selectOp = data
 				data.forEach((row) => {
 					option += `<option value="${row.id_moneda}">${row.nombre}</option>`;
 				})
@@ -229,6 +237,11 @@ $(document).ready(function () {
 			}
 		})
 	}
+	let resultado
+	$(document).on('click', '#agregarMoneda', function (){
+		
+		$('#selectMoneda').val(idHistory)
+	})
 
 	let select, vcambio;
 
@@ -239,16 +252,16 @@ $(document).ready(function () {
 
 
 	$("#enviar").click((e) => {
-		if (click >= 1) throw new Error('Spam de clicks');
 		e.preventDefault()
+		if (click >= 1) throw new Error('Spam de clicks');
 
 		if (typeof permisos.Registrar === 'undefined') {
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
 			throw new Error('Permiso denegado.');
 		}
 
-		select = validarSelect($("#selectMoneda"), $("#error"), "Error de Tipo de Moneda,");
 		vcambio = validarNumero($("#cambio"), $("#error"), "Error de Valor de Moneda,");
+		select = validarSelect($("#selectMoneda"), $("#error"), "Error de Tipo de Moneda,");
 
 		if (select && vcambio) {
 			$.ajax({
@@ -281,12 +294,12 @@ $(document).ready(function () {
 		id = this.id;
 	})
 	$("#delete").click((e) => {
+		e.preventDefault()
 		if (click >= 1) throw new Error('Spam de clicks');
 		if (typeof permisos.Eliminar === 'undefined') {
 			Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
 			throw new Error('Permiso denegado.');
 		}
-		e.preventDefault()
 		$.ajax({
 			type: "POST",
 			url: '',
@@ -324,6 +337,7 @@ $(document).ready(function () {
 				unico
 			},
 			success(uni) {
+				console.log(uni)
 				$("#monedaEdit").val(uni[0].moneda);
 				$("#cambioEdit").val(uni[0].cambio);
 
@@ -338,6 +352,7 @@ $(document).ready(function () {
 
 	let etipo, ecambio;
 	$("#enviarEdit").click((e) => {
+		e.preventDefault()
 		if (click >= 1) throw new Error('Spam de clicks');
 
 		if (typeof permisos.Editar === 'undefined') {
@@ -383,7 +398,13 @@ $(document).ready(function () {
 
 
 
+	$('#cerrar').click(()=> {
+		if (click >= 1) throw new Error('Spam de clicks');
+		tabla.destroy()
+		click++
+	})
 
+	
 
 
 })

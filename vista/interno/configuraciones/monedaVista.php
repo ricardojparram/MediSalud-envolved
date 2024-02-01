@@ -127,7 +127,7 @@
               <p id="ms" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
               <div class="modal-footer">
                 <button type="reset" id="cerrarR" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" id="registrar" class="btn btn-success">Registrar</button>
+                <button type="button" id="registrar" class="btn btn-success">Registrar</button>
               </div>
             </form>
           </div>
@@ -171,7 +171,7 @@
               <p id="ms2" style="color:#ff0000;text-align: center;"><?php echo (isset($respuesta))? $respuesta : " " ?></p>
               <div class="modal-footer">
                 <button type="reset" id="cerrarA" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" id="editar" class="btn btn-success">Actualizar</button>
+                <button type="button" id="editar" class="btn btn-success">Actualizar</button>
               </div>
             </form>
           </div>
@@ -206,7 +206,7 @@
 
 
      <!-- Modal Registrar Cambio-->
-     <div class="modal fade z-1" id="registrarModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+     <div class="modal fade z-1" id="registrarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
@@ -229,7 +229,7 @@
                       <div class="input-group">
 
                         <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""><i class="bi bi-currency-exchange"></i></button> 
-                        <select id="selectMoneda" class="form-select selectM">
+                        <select disabled id="selectMoneda" class="form-select selectM">
                           <option selected disabled>Moneda</option>
                         </select>
                       </div>  
@@ -342,12 +342,12 @@
 
 
     <!-- Modal con Historial de Cambios -->
-    <div class="modal fade" id="editHistory" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="editHistory" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
           <div class="modal-header alert alert-success">
               <h3 class="modal-title"> <strong>Gestionar Cambio</strong> </h3>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="cerrar"></button>
             </div>
           <div class="modal-body">
           <div class="row">
@@ -387,7 +387,7 @@
       </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrar">Cerrar</button>
           </div>
         </div>
       </div>

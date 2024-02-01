@@ -53,9 +53,8 @@ class moneda extends DBConnect{
    public function getMostrarCambio($nombreMon){
    	try{
         parent::conectarDB();
-       $new = $this->con->prepare("
-        SELECT m.nombre, format(c.cambio,2,'de_DE') as cambio, c.fecha, c.id_cambio  FROM moneda m INNER JOIN cambio c ON c.moneda = m.id_moneda WHERE c.status = 1 AND m.status = 1");
-
+       $new = $this->con->prepare("SELECT m.nombre, format(tabla_cambio.cambio,2,'de_DE') as cambio, tabla_cambio.fecha, tabla_cambio.id_cambio FROM moneda m LEFT JOIN ( SELECT c.cambio, c.fecha, c.id_cambio, c.moneda FROM cambio c WHERE c.status = 1 ORDER BY c.fecha ASC LIMIT 99999 ) as tabla_cambio ON tabla_cambio.moneda = m.id_moneda WHERE m.status = 1 AND m.id_moneda = ?");
+      $new->bindValue(1 , $nombreMon);
        $new->execute();
        $data = $new->fetchAll();
        echo json_encode($data);

@@ -167,7 +167,7 @@
                     </div>
                     <p id="error" style="color:#ff0000;text-align: center;"></p>
                     <div class="text-center">
-                      <button type="submit" class="btn btn-success" id="enviarDatos">Guardar Cambios</button>
+                      <button type="button" class="btn btn-success" id="enviarDatos">Guardar Cambios</button>
                     </div>
                   </form><!-- End Profile Edit Form -->
 
