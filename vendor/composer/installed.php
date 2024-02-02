@@ -3,7 +3,7 @@
         'name' => 'medi-salud/bin',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '318bdcb6bfc766a9f4c120e923534755097d927c',
+        'reference' => '101c7cb96e535539fc912459e46e4c1c5c0ba28a',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'medi-salud/bin' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '318bdcb6bfc766a9f4c120e923534755097d927c',
+            'reference' => '101c7cb96e535539fc912459e46e4c1c5c0ba28a',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

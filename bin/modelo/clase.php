@@ -17,13 +17,12 @@ class clase extends DBConnect{
     public function getAgregarClase($clase){
     	if(preg_match_all("/^[a-zA-Z]{3,30}$/", $clase) == false){
             $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
-            echo json_encode($resultado);
-            die();
+            return $resultado;
         }
 
         $this->clase = $clase;
 
-        $this->agregarClase();
+        return $this->agregarClase();
     }
 
     private function agregarClase(){
@@ -35,9 +34,8 @@ class clase extends DBConnect{
             $data = $new->fetchAll();
 
             $resultado = ['resultado' => 'Registrado correctamente.'];
-              echo json_encode($resultado);
-               parent::desconectarDB();
-              die();
+             parent::desconectarDB();
+            return $resultado;
     	} catch (\PDOException $error) {
     		return $error;
     	}
@@ -50,9 +48,8 @@ class clase extends DBConnect{
             $new = $this->con->prepare($query);
             $new->execute();
             $data = $new->fetchAll(\PDO::FETCH_OBJ);
-            echo json_encode($data);
             parent::desconectarDB();
-            die();
+            return $data;
     	} catch (\PDOException $error) {
     		return $error;
     		
@@ -62,7 +59,7 @@ class clase extends DBConnect{
     public function getEliminar($id){
     	$this->id = $id;
 
-    	$this->eliminarClase();
+    	return $this->eliminarClase();
     }
 
     private function eliminarClase(){
@@ -72,9 +69,8 @@ class clase extends DBConnect{
             $new->bindValue(1, $this->id);
             $new->execute();
             $resultado = ['resultado' => 'Eliminado'];
-            echo json_encode($resultado);
             parent::desconectarDB();
-            die();
+            return $resultado;
     	} catch (\PDOException $error) {
     		return $error;
     	}
@@ -83,7 +79,7 @@ class clase extends DBConnect{
     public function getItem($item){
     	$this->id = $item;
 
-    	$this->item();
+    	return $this->item();
     }
 
     private function item(){
@@ -93,9 +89,9 @@ class clase extends DBConnect{
             $new->bindValue(1, $this->id);
             $new->execute();
             $data = $new->fetchAll(\PDO::FETCH_OBJ);
-            echo json_encode($data);
             parent::desconectarDB();
-            die();
+            return $data;
+
     	}catch (\PDOException $error) {
     		return $error;
     	}
@@ -104,14 +100,13 @@ class clase extends DBConnect{
     public function getEditarClase($clase, $id){
     	if(preg_match_all("/^[a-zA-Z]{3,30}$/", $clase) == false){
             $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
-            echo json_encode($resultado);
-            die();
+            return $resultado;
         }
 
         $this->clase = $clase;
         $this->idEdit = $id;
 
-        $this->editarClase();
+        return $this->editarClase();
     }
 
     private function editarClase(){
@@ -124,9 +119,8 @@ class clase extends DBConnect{
             $data = $new->fetchAll();
 
             $resultado = ['resultado' => 'Editado correctamente.'];
-              echo json_encode($resultado);
               parent::desconectarDB();
-              die();
+            return $resultado;
     	} catch (\PDOException $error) {
     		return $error;
     	}

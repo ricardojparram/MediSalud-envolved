@@ -36,13 +36,10 @@
 				$new->execute();
 				$data = $new->fetchAll();
 
-				echo json_encode($data);
-
-
 				if($bitacora) $this->binnacle("Compras",$_SESSION['cedula'],"Consultó listado.");
 
 				parent::desconectarDB();
-				die();
+				return $data;
 
 			} catch (\PDOException $e) {
 				return $e;
@@ -72,10 +69,9 @@
 				$new = $this->con->prepare("SELECT cod_producto , descripcion FROM producto WHERE status = 1");
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
-				
-				echo json_encode($data);
+
 				parent::desconectarDB();
-				die();
+				return $data;
 
 			} catch (\PDOException $e) {
 				return $e;
@@ -95,11 +91,8 @@
 					GROUP BY tabla.nombre");
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
-
-				echo json_encode($data);
 				parent::desconectarDB();
-				die();
-
+				return $data;
 			}catch(\PDOexection $error){
 
 				return $error;   
@@ -120,9 +113,8 @@
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 				
-				echo json_encode($data);
 				parent::desconectarDB();
-				die();
+				return $data;
 
 			} catch (\PDOException $e) {
 				return $e;
@@ -131,11 +123,11 @@
 
 		public function getOrden($orden){
 			if(preg_match_all("/^[0-9]{1,30}$/", $orden) != 1){
-				die(json_encode(['resultado' => 'Error de orden', 'error' => 'Orden inválida']));
+				return['resultado' => 'Error de orden', 'error' => 'Orden inválida'];
 			}
 			$this->orden = abs($orden);
 
-			$this->validarOrden();
+			return $this->validarOrden();
 		}
 
 		private function validarOrden(){
@@ -150,9 +142,9 @@
 
  
 				if(isset($data[0]->orden_compra)){
-					die(json_encode(['resultado' => 'Error de orden', 'error' => 'Orden de compra ya registrada.']));
+					return['resultado' => 'Error de orden', 'error' => 'Orden de compra ya registrada.'];
 				}else{
-					die(json_encode(['resultado' => 'Orden válida']));
+					return['resultado' => 'Orden válida'];
 				}
 
 			} catch (\PDOException $e) {
@@ -163,19 +155,19 @@
 		public function getCompras($prove, $orden, $fecha, $cambio, $montoT){
 
 			if(preg_match_all("/^[0-9]{1,10}$/", $prove) != 1){
-				die(json_encode(['error' => 'Proveedor inválido.']));
+				return['error' => 'Proveedor inválido.'];
 			}
 			if(preg_match_all("/^[0-9]{1,30}$/", $orden) != 1){
-				die(json_encode(['error' => 'Orden inválida']));
+				return['error' => 'Orden inválida'];
 			}
 			if(preg_match_all("/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/", $fecha) != 1){
-				die(json_encode(['error' => 'Fecha inválida.']));
+				return['error' => 'Fecha inválida.'];
 			}
 			if(!is_numeric($cambio)){
-				die(json_encode(['error' => 'Moneda inválida.']));
+				return['error' => 'Moneda inválida.'];
 			}
 			if(!is_numeric($montoT)){
-				die(json_encode(['error' => 'Monto inválido.']));
+				return['error' => 'Monto inválido.'];
 			}
 
 			$this->proveedor = abs($prove);
@@ -184,7 +176,7 @@
 			$this->cambio = abs($cambio);
 			$this->montoT = abs($montoT);
 
-			$this->registrarCompras();
+			return $this->registrarCompras();
 		}
 
 		private function registrarCompras(){
@@ -200,7 +192,7 @@
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
 
 				if(isset($data[0]->orden_compra)){
-					die(json_encode(['resultado' => 'Error de orden', 'error' => 'Orden de compra ya registrada.']));
+					return['resultado' => 'Error de orden', 'error' => 'Orden de compra ya registrada.'];
 				}
 
 				$new = $this->con->prepare('INSERT INTO compra (orden_compra, fecha, id_cambio, monto_total, status , cod_prove) VALUES (?, ?, ?, ?, 1, ?)');
@@ -212,12 +204,10 @@
 				$new->execute();
 
 				$this->id = $this->con->lastInsertId();
-				echo json_encode(['resultado' => 'Orden registrada.', 'id' => $this->id]);
+				$data = ['resultado' => 'Orden registrada.', 'id' => $this->id];
 				parent::desconectarDB();
 
-
-
-				die();
+				return $data;
 
 			}catch(\PDOException $e){
 				return $e;
@@ -227,14 +217,14 @@
 
 		public function getProducto($cantidad, $precio, $producto, $idcompra){
 			if(!is_numeric($cantidad) || !is_numeric($precio) || !is_numeric($producto) || !is_numeric($idcompra)){
-				die(['error' => 'Parámetros de producto inválido.']);
+				return['error' => 'Parámetros de producto inválido.'];
 			}
 			$this->cantidad = $cantidad;
 			$this->precio = $precio;
 			$this->producto = $producto;
 			$this->id = $idcompra;
 
-			$this->registrarProducto();
+			return $this->registrarProducto();
 		}
 
 		private function registrarProducto(){
@@ -262,9 +252,9 @@
 				$new->bindValue(1, $stockActual);
 				$new->bindValue(2, $this->producto);
 				$new->execute();
-				echo "Stock actualizado";
+				$data = ['resultado' => 'Stock actualizado'];
 				parent::desconectarDB();
-				die();	
+				return $data;	
 				
 			} catch (\PDOException $e) {
 				return $e;
@@ -274,11 +264,11 @@
 
 		public function getDetalleCompra($id){
 			if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-				die(json_encode(['error' => 'Id inválida.']));
+				return['error' => 'Id inválida.'];
 			}
 			$this->id = $id;
 
-			$this->detalleCompra();
+			return $this->detalleCompra();
 		}
 
 		private function detalleCompra(){
@@ -297,9 +287,8 @@
 				$new->bindValue(1, $this->id);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
-				echo json_encode($data);
 				parent::desconectarDB();
-				die();
+				return $data;
 				
 			} catch (\PDOException $e) {
 				return $e;
@@ -309,11 +298,11 @@
 
 		public function getEliminarCompra($id){
 			if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-				die(json_encode(['error' => 'Id inválida.']));
+				return['error' => 'Id inválida.'];
 			}
 			$this->id = $id;
 
-			$this->eliminarCompra();
+			return $this->eliminarCompra();
 		}
 
 		private function eliminarCompra(){
@@ -354,7 +343,7 @@
 
                 parent::desconectarDB();
 
-				die(json_encode(['resultado' => 'Compra anulada.']));
+				return ['resultado' => 'Compra anulada.'];
 
 			} catch (\PDOException $e) {
 				return $e;

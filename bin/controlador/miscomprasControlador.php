@@ -16,26 +16,27 @@
  
 
       if (isset($_POST['mostrar']) && isset($_POST['bitacora'])) {
-        
-        $objModel->getMostrarVentas();
+        $res = $objModel->getMostrarVentas();
+        die (json_encode($res)); 
       }
       if(isset($_POST['detalleV'])) {
-          $objModel->getDetalleV($_POST['id']);
+          $res = $objModel->getDetalleV($_POST['id']);
+          die (json_encode($res)); 
        }
      if (isset($_POST['id']) && isset($_POST['factura']) ){
-       $objModel->ExportarFactura($_POST['id']);
+       $res = $objModel->ExportarFactura($_POST['id']);
+       die (json_encode($res)); 
      }
       if(isset($_POST['detalleTipo'])) {
-          $objModel->getDetalleTipoPago($_POST['id']);
+          $res = $objModel->getDetalleTipoPago($_POST['id']);
+          die (json_encode($res)); 
        }
 
      if(isset($_POST['validarCI']) && isset($_POST['id'])){
-      $objModel->validarSelect($_POST['id']);
+      $res = $objModel->validarSelect($_POST['id']);
+      die (json_encode($res)); 
      }
 
-     if (isset($_POST["eliminar"]) && $permiso->eliminar == 1) {
-       $MS = $objModel->eliminarVenta($_POST["id"]);
-     }
 
      $VarComp = new initcomponents();
      $header = new header();

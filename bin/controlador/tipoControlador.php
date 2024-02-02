@@ -26,24 +26,27 @@
     
 
 	if(isset($_POST["mostrar"]) && isset($_POST['bitacora'])){
-		($_POST['bitacora'] == 'true')
-		? $objModel->getMostrarTipo(true)
-		: $objModel->getMostrarTipo();
+		$res = $objModel->getMostrarTipo($_POST['bitacora']);
+		die(json_encode($res));
 	}
 
-	if (isset($_POST["tipo"]) && $permiso['Registrar'] == 1){
-		$objModel->getAgregarTipo($_POST["tipo"]);
-
+	if(isset($_POST["tipo"]) && $permiso['Registrar'] == 1) {
+		$eres = $objModel->getAgregarTipo($_POST["tipo"]);
+		die (json_encode($res));
 	}
+
 
 if (isset($_POST["borrar"]) && isset($_POST["id"]) && $permiso['Eliminar'] == 1){
-	$objModel->getEliminarTipo($_POST["id"]);
+	$res = $objModel->getEliminarTipo($_POST["id"]);
+	die(json_encode($res));
 }
  if (isset($_POST["editar"]) && isset($_POST["tipoedit"]) && $permiso['Consultar'] == 1){
- 	$objModel->mostrarlot($_POST["tipoedit"]);
+	$res = $objModel->mostrarlot($_POST["tipoedit"]);
+	die(json_encode($res));
  }
  if(isset($_POST["tipoEditar"]) && isset($_POST["tipoedit"]) && $permiso['Editar'] ==1){
- 	$objModel->getEditarTipo($_POST["tipoEditar"], $_POST["tipoedit"]);
+	$res = $objModel->getEditarTipo($_POST["tipoEditar"], $_POST["tipoedit"]);
+	die(json_encode($res));
  }
 
 	$VarComp = new initcomponents();
@@ -51,10 +54,13 @@ if (isset($_POST["borrar"]) && isset($_POST["id"]) && $permiso['Eliminar'] == 1)
 	$menu = new menuLateral($permisos);
 
 
+
+
+
 	if(file_exists("vista/interno/productos/tipoVista.php")){
 		require_once("vista/interno/productos/tipoVista.php");
 	}else{
-		die('La vista no existe.');
+		
 	}
 
 ?>

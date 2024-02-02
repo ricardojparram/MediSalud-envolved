@@ -17,14 +17,15 @@
      public function getAgregarMetodo($metodo){
        if(preg_match_all("/[$%&|<>0-9]/", $metodo) == true){
         $resultado = ['resultado'=> 'error de metodo', 'error'=>'metodo invalido'];
-        echo json_encode($resultado);
-        die();
+        
+        return $resultado;
+
       }
 
       
       $this->metodo = $metodo;
 
-      $this->agregarMetodo(); 
+      return $this->agregarMetodo(); 
 
     }
 
@@ -38,9 +39,10 @@
       $data = $new->fetchAll();
       
       $resultado = ["resultado" => "registrado correctamente"];
-      echo json_encode($resultado);
+     
       parent::desconectarDB();
-      die();
+      return $resultado;
+
 
       
     }catch(\PDOexection $error){
@@ -55,9 +57,10 @@
        $new = $this->con->prepare("SELECT * FROM tipo_pago t WHERE t.status = 1");
        $new->execute();
        $data = $new->fetchAll(\PDO::FETCH_OBJ);
-       echo json_encode($data);
+       
       parent::desconectarDB();
-      die();
+      return $data;
+
 
 
      }catch(\PDOexection $error){
@@ -70,7 +73,7 @@
     public function getEliminarMetodo($id){
       $this->id = $id;
 
-      $this->eliminarMetodo();
+      return $this->eliminarMetodo();
     }
 
     private function eliminarMetodo(){
@@ -81,9 +84,10 @@
       $new->bindValue(1,$this->id);
       $new->execute();
       $resultado = ['resultado' => 'Eliminado'];
-      echo json_encode($resultado);
+     
       parent::desconectarDB();
-      die();
+      return $resultado;
+
      } 
      catch (\PDOexception $error) {
       return $error;
@@ -94,7 +98,7 @@
     public function mostrarunicas($unicas){
       $this->id = $unicas;
 
-      $this->unicas();
+      return $this->unicas();
 
   }
 
@@ -102,19 +106,19 @@
    public function editarOnline($check , $id){
 
       if(preg_match_all("/^[0-9]{1,10}$/", $check) != 1){
-        echo json_encode(['resultado' => 'Error de check','error' => 'check inválida.']);
-        die();
+        return['resultado' => 'Error de check','error' => 'check inválida.'];
+
       }
 
       if(preg_match_all("/^[0-9]{1,10}$/", $id) != 1){
-        echo json_encode(['resultado' => 'Error de id','error' => 'id inválida.']);
-        die();
+        return['resultado' => 'Error de id','error' => 'id inválida.'];
+
       }
 
       $this->id = $id;
       $this->check = $check;
 
-      $this->editOnline();
+      return $this->editOnline();
 
    }
 
@@ -128,10 +132,8 @@
 
       $resultado = ['resultado'=> 'check editado'];
 
-      echo json_encode($resultado);
+      return $resultado;
 
-      parent::desconectarDB($resultado);
-      die();
       
     } catch (PDOexception $e) {
       return $e;
@@ -148,9 +150,10 @@
         $new->bindValue(1, $this->id);
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        echo json_encode($data);
+       
         parent::desconectarDB();
-        die();
+        return $data;
+
       }catch (\PDOexception $error) {
        return $error;
       }
@@ -159,13 +162,13 @@
     public function getEditarMetodo($metodo, $unicas){
       if(preg_match_all("/[$%&|<>0-9]/", $metodo) == true){
               $resultado = ['resultado' => 'Error de metodo' , 'error' => 'metodo inválido.'];
-              echo json_encode($resultado);
-              die();
+            
+              return $resultado;
     }
     $this->metodo = $metodo;
     $this->idedit = $unicas;
 
-        $this->editarMetodo(); 
+      return $this->editarMetodo(); 
 
   }
   private function editarMetodo(){
@@ -179,10 +182,10 @@
         
   $resultado = ['resultado'=> 'Editado'];
   $this->binnacle("Metodo",$_SESSION['cedula'],"Editó un Valor de metodo.");
-  echo json_encode($resultado);
+
 
   parent::desconectarDB();
-  die();
+  return $resultado;
 
   }catch(\PDOexception $error){
     return$error;

@@ -28,41 +28,49 @@
     }
     
 	if(isset($_POST['mostrar']) && isset($_POST['bitacora'])){
-		($_POST['bitacora'] == 'true')
-		? $objModel->mostrarCompras(true)
-		: $objModel->mostrarCompras();
+		$res = $objModel->mostrarCompras($_POST['bitacora']);
+		die(json_encode($res));
 	}
 
   
 	if (isset($_POST['selectM'])&& $permiso['Consultar'] == 1) {
-		$objModel->mostrarMoneda();
+		$res = $objModel->mostrarMoneda();
+		die(json_encode($permiso));
+
 	}
 
 	if(isset($_POST['select'])&& $permiso['Consultar'] == 1){
-		$objModel->mostrarSelect();
+		$res = $objModel->mostrarSelect();
+		die (json_encode($res));
 	}
 
 	if(isset($_GET['producto']) && isset($_GET['fill'])&& $permiso['Consultar'] == 1){
-		$objModel->productoDetalle($_GET['producto']);
+		$res = $objModel->productoDetalle($_GET['producto']);
+		die (json_encode($res));
 	}
 
 	if(isset($_POST['orden']) && isset($_POST['validar'])&& $permiso['Consultar'] == 1){
-		$objModel->getOrden($_POST['orden']);
+		$res = $objModel->getOrden($_POST['orden']);
+		die (json_encode($res));
 	}
 
 	if(isset($_POST['proveedor']) && isset($_POST['orden']) && isset($_POST['fecha']) && isset($_POST['cambio']) && isset($_POST['montoT'])&& $permiso['Registrar'] == 1){
-		$objModel->getCompras($_POST['proveedor'], $_POST['orden'], $_POST['fecha'], $_POST['cambio'], $_POST['montoT']);
+		$res = $objModel->getCompras($_POST['proveedor'], $_POST['orden'], $_POST['fecha'], $_POST['cambio'], $_POST['montoT']);
+		die (json_encode($res));
 	}
 	if(isset($_POST['cantidad']) && isset($_POST['precio']) && isset($_POST['producto']) && isset($_POST['id'])&& $permiso['Registrar'] == 1){
-		$objModel->getProducto($_POST['cantidad'], $_POST['precio'], $_POST['producto'], $_POST['id']);
+		$res = $objModel->getProducto($_POST['cantidad'], $_POST['precio'], $_POST['producto'], $_POST['id']);
+		die (json_encode($res));
 	}
 
 	if(isset($_POST['detalleCompra']) && isset($_POST['id'])&& $permiso['Consultar'] == 1){
-		$objModel->getDetalleCompra($_POST['id']);
+		$res = $objModel->getDetalleCompra($_POST['id']);
+		die (json_encode($res));
 	}
 
 	if(isset($_POST['eliminar']) && isset($_POST['id']) && $permiso['Eliminar'] == 1){
-		$objModel->getEliminarCompra($_POST['id']);
+		$res = $objModel->getEliminarCompra($_POST['id']);
+		die (json_encode($res));
 	}
 	  
 	$VarComp = new initcomponents();
@@ -72,7 +80,7 @@
 	if(file_exists("vista/interno/comprasVista.php")){
 		require_once("vista/interno/comprasVista.php");
 	}else{
-		die('La vista no existe');
+		
 	}
 
 

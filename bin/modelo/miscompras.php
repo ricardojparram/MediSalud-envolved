@@ -44,10 +44,9 @@
           $item->cedula_cliente = openssl_decrypt($item->cedula_cliente, $this->cipher, $this->key, 0 , $this->iv);
         }
 
-        echo json_encode($data);
         if($bitacora) $this->binnacle("Ventas",$_SESSION['cedula'],"Consultó sus compras.");
         parent::desconectarDB();
-        die();
+        return $data;
       }catch(\PDOexection $error){
 
        return $error;     
@@ -197,49 +196,16 @@
        $pdf->Output('F',$repositorio);
 
        $respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorio];
-       echo json_encode($respuesta);
        $this->binnacle("Venta",$_SESSION['cedula'], "Exporto Ticket de Venta");
        parent::desconectarDB();
-       die();
+       return $respuesta;
 
       }catch(\PDOexection $error){
-        die($error);
+        return($error);
       }
     }
 
-     //--------------------------------- VALIDAR CLIENTE --------------------------------
-
-     public function validarCliente($cedula){
-     
-      if(preg_match_all("/^[0-9]{3,30}$/", $cedula) != 1){
-        return "Error de cedula!";
-      }
-      
-       $this->cedula = $cedula;
-
-       return $this->validarC();
-
-     }
-
-     private function validarC(){
-       parent::conectarDB();
-
-       $new = $this->con->prepare("SELECT `cedula` FROM `cliente` WHERE `status` = 1 and `cedula` = ?");
-       $new->bindValue(1, $this->cedula);
-       $new->execute();
-       $data = $new->fetchAll();
-       parent::desconectarDB();
-       
-       if(isset($data[0]["cedula"])){
-        echo json_encode(['resultado' => 'cedula valida.']);
-        die();
-       }else{
-        echo json_encode(['resultado' => 'Error de cedula', 'error' => 'La cedula no está registrado.']);
-        die();
-       }
-
-     }
-
+    
      //---------------------------------DETALLES PRODUCTOS POR VENTA--------------------------------
 
     public function getDetalleV($id){
@@ -251,9 +217,9 @@
         $new->bindValue(1, $this->id);
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        echo json_encode($data);
+        die (json_encode($data));
         parent::desconectarDB();
-        die();
+        return $data;
 
       }catch(\PDOexection $error){
         return $error;
@@ -271,110 +237,18 @@
         $new->bindValue(1, $this->id);
         $new->execute();
         $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        echo json_encode($data);
+        die (json_encode($data));
         parent::desconectarDB();
-        die();
-
+        return $data;
       }catch(\PDOexection $error){
         return $error;
       }
     }
 
 
-     //---------------------------------MOSTRAR PRODUCTO--------------------------------
-
-    public function getMostrarProducto(){
-      try{
-        parent::conectarDB();
-        $new = $this->con->prepare("SELECT * FROM producto WHERE status = 1 and stock > 0");
-        $new->execute();
-        $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        echo json_encode($data);
-        parent::desconectarDB();
-        die();
-
-      }catch(\PDOexection $error){
-
-       return $error;   
-
-     }   
-    }
-     //---------------------------------MOSTRA CANTIDAD Y PRECIO DE PRODUCTO--------------------------------
-
-    public function productoDetalle($id){
-      $this->producto = $id;
-
-      try {
-         parent::conectarDB();
-        $new = $this->con->prepare("SELECT p_venta, stock FROM producto WHERE cod_producto = ? and status = 1");
-        $new->bindValue(1, $this->producto);
-        $new->execute();
-        $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        
-        echo json_encode($data);
-        parent::desconectarDB();
-        die();
-
-      } catch (\PDOException $e) {
-        return $e;
-      }
-    }
-
-    public function getMostrarMoneda(){
-     try{
-      parent::conectarDB();
-      $new = $this->con->prepare("SELECT * FROM( SELECT c.id_cambio, m.nombre, c.cambio FROM cambio c INNER JOIN moneda m ON c.moneda = m.id_moneda WHERE c.status = 1 ORDER BY c.fecha DESC LIMIT 9999999) as tabla GROUP BY tabla.nombre");
-      $new->execute();
-      $data = $new->fetchAll(\PDO::FETCH_OBJ);
-
-      echo json_encode($data);
-      parent::desconectarDB();
-      die();
-
-    }catch(\PDOexection $error){
-
-     return $error;   
-
-   } 
- }
-
-
-     //---------------------------------MOSTRAR METODO DE PAGO--------------------------------
-
-    public function getMostrarMetodo(){
-      try{
-        parent::conectarDB();
-        $new = $this->con->prepare("SELECT * FROM `tipo_pago` WHERE status = 1");
-        $new->execute();
-        $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        echo json_encode($data);
-        parent::desconectarDB();
-        die();
-
-      }catch(\PDOexection $error){
-
-       return $error;   
-
-     }   
-    }
     
-     //---------------------------------MOSTRAR CLIENTE--------------------------------
     
-    public function getMostrarCliente(){
-      try{
-        parent::conectarDB();
-        $new = $this->con->prepare("SELECT * FROM `cliente` WHERE status = 1");
-        $new->execute();
-        $data = $new->fetchAll(\PDO::FETCH_OBJ);
-        parent::desconectarDB();
-        return $data;
-        
-      }catch(\PDOexection $error){
 
-       return $error;   
-
-     }   
-    }
     
   }
 
