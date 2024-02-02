@@ -101,7 +101,7 @@
   <div class="modal-dialog modal-md ">
     <div class="modal-content">
       <div class="modal-header alert alert-success">
-        <h4 class="modal-title"> <strong>Registrar Laboratorio</strong> </h4>
+        <h4 class="modal-title"> <strong>Registrar Sede de envío</strong> </h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
@@ -199,7 +199,7 @@
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header alert alert-success">
-        <h4 class="modal-title"> <strong>Editar Laboratorio</strong> </h4>
+        <h4 class="modal-title"> <strong>Editar Sede de envío</strong> </h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
