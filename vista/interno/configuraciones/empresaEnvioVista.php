@@ -140,7 +140,7 @@
         </form>
       </div>
 
-      <p style="color:#ff0000;text-align: center;" id="error"><?php echo (isset($respuesta)) ? $respuesta : " "; ?></p>
+      <p style="color:#ff0000;text-align: center;" id="error"></p>
         
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
@@ -208,7 +208,7 @@
 
       </div>
 
-      <div style="color:#ff0000;text-align: center;" id="errorEdit"></div>
+      <p style="color:#ff0000;text-align: center;" class="error" id="errorEdit"></p>
         
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>

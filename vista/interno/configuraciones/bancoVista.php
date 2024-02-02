@@ -287,7 +287,7 @@
 	        
 	        <div class="modal-footer">
 	          <button type="button" id="cancelar" class="btn btn-secondary cerrar" data-bs-dismiss="modal">Cancelar</button>
-	          <button type="submit" class="btn btn-success " id="editar">Registrar</button>
+	          <button type="submit" class="btn btn-success " id="editar">Editar</button>
 	        </div>
 	      </form>
 	    </div>

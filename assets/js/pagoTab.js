@@ -82,9 +82,10 @@ $(document).ready(function () {
 					impuesto = pre[0].total * 0.16;
 					$("#impuesto").html(parseFloat(impuesto).toFixed(2) + " Bs");
 					$('#pEnvio').html(parseFloat(pTarifas).toFixed(2) + " Bs");
-					total = pre[0].total + impuesto + pTarifas;
+					total = parseFloat(pre[0].total + impuesto + pTarifas).toFixed(2);
 					$("#total").html(parseFloat(total).toFixed(2) + " Bs");
 					$("#valorUsd").html(parseFloat(total / pre[0].cambio).toFixed(2) + " $");
+					console.log(pre[0].cuenta, impuesto, pTarifas, total)
 
 
 

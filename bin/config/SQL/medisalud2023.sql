@@ -153,7 +153,7 @@ CREATE TABLE producto(
     contraindicaciones varchar(400) COLLATE utf8_spanish2_ci NOT NULL,
     posologia varchar(400) COLLATE utf8_spanish2_ci NOT NULL,
     vencimiento date NOT NULL,
-    p_venta varchar(10) COLLATE utf8_spanish2_ci NOT NULL,
+    p_venta decimal (10,2) COLLATE utf8_spanish2_ci NOT NULL,
     stock varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
     img varchar(100),
     cod_lab varchar(10),
