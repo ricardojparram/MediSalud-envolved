@@ -17,18 +17,19 @@
 		die(json_encode($permiso));
 	}
 
-
-	
 	if(isset($_POST['precio_envio'])){
-		$model->calcularPrecioEnvio();
+		$res = $model->calcularPrecioEnvio();
+		die(json_encode($res));
 	}
 
 	if(isset($_POST['mostrar'], $_POST['bitacora'], $permiso['Consultar'])){
-		$model->mostrarEnvios($_POST['bitacora']);
+		$res = $model->mostrarEnvios($_POST['bitacora']);
+		die(json_encode($res));
 	}
 
 	if(isset($_POST['id_envio'], $_POST['estado'], $permiso['Asignar estado'])){
-		$model->getComprobacion($_POST['id_envio'], $_POST['estado']);
+		$res = $model->getComprobacion($_POST['id_envio'], $_POST['estado']);
+		die(json_encode($res));
 	}
 	
 	$comp = new initcomponents();

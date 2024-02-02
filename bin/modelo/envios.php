@@ -15,6 +15,9 @@
 		public function mostrarEnvios($bitacora){
 			try{
 				$this->conectarDB();
+				$this->key = parent::KEY();
+				$this->iv = parent::IV();
+				$this->cipher = parent::CIPHER();
 				$query='SELECT v.num_fact, e.id_envio, e.status, e.fecha_envio, e.fecha_entrega, 
 						CONCAT(c.nombre," ", c.apellido) as nombre_cliente, c.cedula, 
 						CONCAT(emp.nombre," ",sd.ubicacion) as sede_empresa FROM envio e 
@@ -25,10 +28,13 @@
 				$new = $this->con->prepare($query);
 				$new->execute();
 				$data = $new->fetchAll(\PDO::FETCH_OBJ);
+				foreach ($data as $item) {
+					$item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0, $this->iv);
+				}
 
 				if($bitacora === "true") $this->binnacle("Envios",$_SESSION['cedula'],"Consultó listado.");
 				$this->desconectarDB();
-				die(json_encode($data));
+				return $data;
 				
 			}catch(\PDOexection $e){
 				print("Error!: ".$e);
@@ -37,10 +43,16 @@
 		}
 
 		public function getComprobacion($id_envio, $estado){
+			if(preg_match_all("/^[0-9]{1,10}$/", $id_envio) != 1)
+				return ['resultado' => 'error','error' => 'Id inválida.'];
+
+			if(preg_match_all("/^[0-9]{1,10}$/", $estado) != 1)
+				return ['resultado' => 'error','error' => 'Status inválido.'];
+
 			$this->id_envio = $id_envio;
 			$this->estado = $estado;
 
-			$this->asignarEstadoEnvio();
+			return $this->asignarEstadoEnvio();
 		}
 
 		private function asignarEstadoEnvio(){
@@ -64,7 +76,7 @@
 				$this->binnacle("Envios",$_SESSION['cedula'],"Modificó estado del envío #$this->id_envio.");
 				$resultado = ['resultado' => 'ok', 'msg' => "Se ha actualizado el estado del envio correctamente."];
 				$this->desconectarDB();
-				die(json_encode($resultado));
+				return $resultado;
 
 			}catch(\PDOexection $e){
 				print("Error!: ".$e);
@@ -123,8 +135,8 @@
 
 			$precio = number_format(floatval(str_replace('Bs. ', '', $total_envio)), 2);
 
-			$resultado = ['precio_solo' => $precio, 'precio_bs' => "$total_envio"];
-			die(json_encode($resultado));
+			$resultado = ['resultado' => 'ok','precio_solo' => $precio, 'precio_bs' => "$total_envio"];
+			return $resultado;
 
 		}
 

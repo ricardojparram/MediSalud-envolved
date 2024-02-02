@@ -22,15 +22,18 @@
 	}
 
 	if(isset($_POST['mostrar'], $_POST['bitacora'], $permiso['Consultar'])){
-		$model->mostrarRoles($_POST['bitacora']);
+		$res = $model->mostrarRoles($_POST['bitacora']);
+		die(json_encode($res));
 	}
 
 	if(isset($_POST['mostrar_permisos'], $_POST['id'], $permiso['Modificar acciones'])){
-		$model->getPermisos($_POST['id']);
+		$res = $model->getPermisos($_POST['id']);
+		die(json_encode($res));
 	}
 
 	if(isset($_POST['datos_permisos'], $_POST['id'], $permiso['Modificar acciones'])){
-		$model->getDatosPermisos($_POST['datos_permisos'], $_POST['id']);
+		$res = $model->getDatosPermisos($_POST['datos_permisos'], $_POST['id']);
+		die(json_encode($res));
 	}
 
 	$VarComp = new initcomponents();

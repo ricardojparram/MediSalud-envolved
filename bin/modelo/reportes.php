@@ -1,6 +1,7 @@
 <?php 
 	
 	namespace modelo;
+	use DateTime;
 	use FPDF as FPDF;
 	use PhpOffice\PhpSpreadsheet\Calculation\Calculation;
 	use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -20,10 +21,20 @@
 		private $reporte;
 		private $lista;
 		private $sheet;
+		private $tiposDeReporteValidos;
 
 
 		public function __construct(){
 			parent::__construct();
+			$this->tiposDeReporteValidos = [
+				'compra' => '',
+				'venta' => ''
+			];
+		}
+
+		private function validateDate($date, $format = 'Y-m-d'){
+			$d = DateTime::createFromFormat($format, $date);
+			return $d && $d->format($format) == $date;
 		}
 
 		private function obtenerReporte(){
@@ -84,11 +95,20 @@
 		}
 
 		public function getMostrarReporte($tipo, $inicio, $final){
+			if($this->validateDate($inicio) === false)
+				return  ['resultado' => 'error', 'msg' => 'Fecha de inicio inválida'];
+
+			if($this->validateDate($final) === false)
+				return  ['resultado' => 'error', 'msg' => 'Fecha final inválida'];
+
+			if(!isset($this->tiposDeReporteValidos[$tipo]))
+				return  ['resultado' => 'error', 'msg' => 'Tipo de reporte inválido'];
+
 			$this->tipo = $tipo;
 			$this->fechaInicio = $inicio;
 			$this->fechaFinal = $final;
 
-			$this->mostrarReporte();
+			return $this->mostrarReporte();
 		}
 
 		private function mostrarReporte(){
@@ -96,22 +116,31 @@
 			$this->conectarDB();
 			$this->binnacle("Reporte",$_SESSION['cedula'], "Genero reporte de ".$this->tipo);
 			$this->desconectarDB();
-			die(json_encode($this->reporte));
+			return $this->reporte;
 
 		}
 
 		public function getExportar($tipo, $fecha1, $fecha2){
+			if($this->validateDate($fecha1) === false)
+				return  ['resultado' => 'error', 'msg' => 'Fecha de inicio inválida'];
+
+			if($this->validateDate($fecha2) === false)
+				return  ['resultado' => 'error', 'msg' => 'Fecha final inválida'];
+
+			if(!isset($this->tiposDeReporteValidos[$tipo]))
+				return  ['resultado' => 'error', 'msg' => 'Tipo de reporte inválido'];
+
 			$this->tipo = $tipo;
 			$this->fechaInicio = $fecha1;
 			$this->fechaFinal = $fecha2;
 
-			$this->exportarReporte();
+			return $this->exportarReporte();
 		}
 
 		private function exportarReporte(){
 			$reporte = $this->obtenerReporte();
 			if(empty($reporte)){
-				die(json_encode(['Error' => 'Reporte vacío.']));
+				return ['resultado' => 'error', 'Error' => 'Reporte vacío.'];
 			}
 			$fechaI = date('d-m-Y', strtotime($this->fechaInicio));
 			$fechaF = date('d-m-Y', strtotime($this->fechaFinal));
@@ -170,21 +199,30 @@
 			$this->conectarDB();
 			$this->binnacle("Reporte",$_SESSION['cedula'], "Exportó reporte de ".$this->tipo);
 			$this->desconectarDB();
-			die(json_encode($respuesta));
+			return $respuesta;
 		}
 
 		public function getReporteEstadistico($tipo, $fecha1, $fecha2){
+			if($this->validateDate($fecha1) === false)
+				return  ['resultado' => 'error', 'msg' => 'Fecha de inicio inválida'];
+
+			if($this->validateDate($fecha2) === false)
+				return  ['resultado' => 'error', 'msg' => 'Fecha final inválida'];
+
+			if(!isset($this->tiposDeReporteValidos[$tipo]))
+				return  ['resultado' => 'error', 'msg' => 'Tipo de reporte inválido'];
+
 			$this->tipo = $tipo;
 			$this->fechaInicio = $fecha1;
 			$this->fechaFinal = $fecha2;
 
-			$this->exportarReporteEstadistico();
+			return $this->exportarReporteEstadistico();
 		}
 
 		private function exportarReporteEstadistico(){
 
 			$reporte = $this->obtenerReporte();
-			if(empty($reporte)) die(json_encode(['Error' => 'Reporte vacío.']));
+			if(empty($reporte)) return ['Error' => 'Reporte vacío.'];
 
 			$fechaI = $this->fechaInicio;
 			$fechaF = $this->fechaFinal;
@@ -307,7 +345,7 @@
 			if(file_exists($repositorio)) unlink($repositorio);
 
 			$respuesta = ['respuesta' => 'Archivo guardado', 'ruta' => $repositorioPdf];
-			die(json_encode($respuesta));
+			return $respuesta;
 		}
 
 		private function funcionesEstadisticas($lastRow){

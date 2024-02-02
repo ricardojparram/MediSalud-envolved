@@ -31,27 +31,29 @@
           $data = $new->fetchAll(\PDO::FETCH_OBJ);
           if($bitacora == "true") $this->binnacle("Laboratorio",$_SESSION['cedula'],"Consultó listado.");
           $this->desconectarDB();
-          die(json_encode($data));
+          return $data;
 
         }catch(\PDOException $e){
-          print "¡Error!: " . $e->getMessage() . "<br/>";
-          die();
+          return ['error' => $e->getMessage()];
         }
       } 
 
       public function getDatosLab($rif, $direccion, $razon, $telefono, $contacto){
 
         if(preg_match_all("/^[0-9]{7,10}$/", $rif) != 1){
-          die(json_encode(['resultado' => 'Error de rif','msg' => 'Rif inválido.']));
+          return ['resultado' => 'error','msg' => 'Rif inválido.'];
         }
-        if(preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $razon) != 1){
-          die(json_encode(['resultado' => 'Error de nombre','msg' => 'Nombre inválido.']));
+        if(preg_match_all("/^[a-zA-ZÀ-ÿ]{5,30}$/", $razon) != 1){
+          return ['resultado' => 'error','msg' => 'Nombre inválido.'];
         }
         if(preg_match_all('/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s#\/,.-]){7,160}$/', $direccion) != 1){
-          die(json_encode(['resultado' => 'Error de direccion','msg' => 'Direccion inválida.']));
+          return ['resultado' => 'error','msg' => 'Direccion inválida.'];
         }
         if(preg_match_all("/^[0-9]{10,30}$/", $telefono) != 1){
-          die(json_encode(['resultado' => 'Error de telefono','msg' => 'Telefono inválido.']));
+          return ['resultado' => 'error','msg' => 'Telefono inválido.'];
+        }
+        if(preg_match_all("/^[^';]*$/", $contacto) != 1){
+          return ['resultado' => 'error','msg' => 'Contacto inválido.'];
         }
 
         $this->rif = $rif;
@@ -60,7 +62,11 @@
         $this->telefono = $telefono;
         $this->contacto = $contacto;
 
-        $this->registrarLab();
+        $this->idedit = false;
+        $validarRif = $this->validarRif();
+        if($validarRif['res'] === false) return ["resultado" => "error", "msg" => "Rif ya registrado"];
+
+        return $this->registrarLab();
 
       }
 
@@ -84,7 +90,7 @@
           $resultado = ['resultado' => 'ok', 'msg' => "Laboratorio registrado."];
           $this->binnacle("Laboratorio",$_SESSION['cedula'],"Registró laboratorio.");
           $this->desconectarDB();
-          die(json_encode($resultado));            
+          return $resultado;            
 
         }catch(\PDOException $error){
           print "¡Error!: " . $e->getMessage() . "<br/>";
@@ -96,7 +102,7 @@
       public function getRif($rif, $idLab){
 
         if(preg_match_all("/^[0-9]{7,10}$/", $rif) != 1){
-          die(json_encode(['resultado' => 'Error de rif','msg' => 'Rif inválido.']));
+          return ['resultado' => 'error','msg' => 'Rif inválido.'];
         }
 
         $this->idedit = ($idLab === "false") ? false : $idLab;
@@ -124,7 +130,7 @@
 
           $resultado;
           if(isset($data[0]['rif'])){
-            $resultado = ['resultado' => 'Error de rif', 'msg' => 'El rif ya está registrado.', 'res' => false];
+            $resultado = ['resultado' => 'error', 'msg' => 'El rif ya está registrado.', 'res' => false];
           }else{
             $resultado = ['resultado' => 'Rif válido.', 'res' => true];
           }
@@ -142,12 +148,12 @@
       public function getItem($id){
 
         if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1){
-          die(json_encode(['resultado' => 'Error de id','msg' => 'Id inválida.']));
+          return ['resultado' => 'error','msg' => 'Id inválida.'];
         }
 
         $this->id = $id;
 
-        $this->selectItem();
+        return $this->selectItem();
       }
 
       private function selectItem(){
@@ -162,7 +168,7 @@
           $new->execute();
           $data = $new->fetchAll(\PDO::FETCH_OBJ);
           $this->desconectarDB();
-          die(json_encode($data));
+          return $data;
 
         }catch(\PDOException $e){
           print "¡Error!: " . $e->getMessage() . "<br/>";
@@ -174,19 +180,22 @@
       public function getEditar($rif, $direccion, $razon, $telefono, $contacto, $id){
 
         if(preg_match_all("/^[0-9]{7,10}$/", $rif) != 1){
-          die(json_encode(['resultado' => 'Error de rif','msg' => 'Rif inválido.']));
+          return ['resultado' => 'error','msg' => 'Rif inválido.'];
         }
-        if(preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $razon) != 1){
-          die(json_encode(['resultado' => 'Error de nombre','msg' => 'Nombre inválido.']));
+        if(preg_match_all("/^[a-zA-ZÀ-ÿ]{5,30}$/", $razon) != 1){
+          return ['resultado' => 'error','msg' => 'Nombre inválido.'];
         }
         if(preg_match_all('/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s#\"\/,.-]){7,160}$/', $direccion) != 1){
-          die(json_encode(['resultado' => 'Error de direccion','msg' => 'Direccion inválida.']));
+          return ['resultado' => 'error','msg' => 'Direccion inválida.'];
         }
         if(preg_match_all("/^[0-9]{10,30}$/", $telefono) != 1){
-          die(json_encode(['resultado' => 'Error de telefono','msg' => 'Telefono inválido.']));
+          return ['resultado' => 'error','msg' => 'Telefono inválido.'];
         }
         if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1){
-          die(json_encode(['resultado' => 'Error de id','msg' => 'Id inválida.']));
+          return ['resultado' => 'error','msg' => 'Id inválida.'];
+        }
+        if(preg_match_all("/^[^';]*$/", $contacto) != 1){
+          return ['resultado' => 'error','msg' => 'Contacto inválido.'];
         }
 
         $this->rif = $rif;
@@ -197,9 +206,9 @@
         $this->idedit = $id;
 
         $validarRif = $this->validarRif();
-        if($validarRif['res'] === false) die(json_encode(["resultado" => "error", "msg" => "Rif ya registrado"]));
+        if($validarRif['res'] === false) return ["resultado" => "error", "msg" => "Rif ya registrado"];
 
-        $this->editarLaboratorio();
+        return $this->editarLaboratorio();
       }
 
       private function editarLaboratorio(){
@@ -221,7 +230,7 @@
           $resultado = ['resultado' => 'ok', "msg" => "Laboratorio editado correctamente."];
           $this->binnacle("Laboratorio",$_SESSION['cedula'],"Editó laboratorio.");
           $this->desconectarDB();
-          die(json_encode($resultado));
+          return $resultado;
 
         }catch(\PDOException $error){
           print "¡Error!: " . $e->getMessage() . "<br/>";
@@ -233,12 +242,12 @@
 
       public function getEliminar($id){
         if(preg_match_all("/^[a-fA-F0-9]{10}$/", $id) != 1){
-          die(json_encode(['resultado' => 'Error de id','msg' => 'Id inválida.']));
+          return ['resultado' => 'error','msg' => 'Id inválida.'];
         }
 
         $this->id = $id;
 
-        $this->eliminarLaboratorio();
+        return $this->eliminarLaboratorio();
       }
 
       private function eliminarLaboratorio(){
@@ -250,13 +259,39 @@
           $resultado = ['resultado' => 'ok', 'msg' => "Laboratorio eliminado correctamente."];
           $this->binnacle("Laboratorio",$_SESSION['cedula'],"Eliminó laboratorio.");
           $this->desconectarDB();
-          die(json_encode($resultado));
+          return $resultado;
 
         }catch(\PDOException $e){
           print "¡Error!: " . $e->getMessage() . "<br/>";
           die();
         }
 
+      }
+
+      public function getIdLaboratorioByRif($rif){
+        if(preg_match_all("/^[0-9]{7,10}$/", $rif) != 1){
+          return ['resultado' => 'error','msg' => 'Rif inválido.'];
+        }
+        $this->rif = $rif;
+
+        return $this->gettingIdTest();
+      }
+
+      private function gettingIdTest(){
+        try {
+
+          $this->conectarDB();
+          $sql = "SELECT cod_lab FROM laboratorio WHERE rif = ? AND status = 1";
+          $new = $this->con->prepare($sql);
+          $new->bindValue(1, $this->rif);
+          $new->execute();
+          [$data] = $new->fetchAll(\PDO::FETCH_OBJ);
+          
+          return ['resultado' => "ok", "id"=> $data->cod_lab];
+
+        } catch (\PDOException $e) {
+          die($e);
+        }
       }
   }
 
