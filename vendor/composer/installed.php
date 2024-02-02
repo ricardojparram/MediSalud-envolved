@@ -41,6 +41,7 @@
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
             'reference' => '0f5c7c4b7754978159c468aa04b551be25c69f43',
+
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
