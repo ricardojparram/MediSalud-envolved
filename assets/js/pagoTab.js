@@ -77,10 +77,9 @@ $(document).ready(function () {
 					impuesto = pTotal * 0.16;
 					$("#impuesto").html(parseFloat(impuesto).toFixed(2) + " Bs");
 					$('#pEnvio').html(parseFloat(pTarifas).toFixed(2) + " Bs");
-					total = parseFloat(pre[0].total + impuesto + pTarifas).toFixed(2);
+					total = pTotal + impuesto + parseFloat(pTarifas);
 					$("#total").html(parseFloat(total).toFixed(2) + " Bs");
-					$("#valorUsd").html(parseFloat(total / pre[0].cambio).toFixed(2) + " $");
-					console.log(pre[0].cuenta, impuesto, pTarifas, total)
+					$("#valorUsd").html(parseFloat(total / precioUsd).toFixed(2) + " $");
 
 				} else {
 					let div = `
@@ -205,8 +204,7 @@ $(document).ready(function () {
 			case "nacional":
 				$(".glass").fadeOut(0);
 				$("#envio").fadeIn(300);
-				// calcularTipo().then((res) => calTipo = res)
-				calTipo = calcularTipo();
+				calcularTipo().then((res) => calTipo = res)
 				pTarifas = valorT
 				precio();
 				break;
@@ -277,8 +275,7 @@ $(document).ready(function () {
 			case "nacional":
 				estado = validarSelect($("#estado"), $("#errorEstado"), "Error de Estado,");
 				sedeV = validarSelect($("#sede"), $("#errorSede"), "Error de Sede,");
-				calTipo = calcularTipo()
-
+				calcularTipo();
 				if (estado && sedeV && calTipo) {
 					next_step = true;
 				} else {
@@ -623,7 +620,7 @@ $(document).ready(function () {
 		let valid = false
 		let vtipoPago = true
 		let vprecio = true
-		let estado, sede, calle, avenida, numCasa, referencia, calTipo
+		let estado, sede, calle, avenida, numCasa, referencia
 
 		let direccion = validarDireccion($("#direcClien"), $("#errorDirec"), "Error de Direccion,");
 		let correo = validarCorreo($("#emailClien"), $("#errorEmail"), "Error de Correo,");
@@ -648,7 +645,7 @@ $(document).ready(function () {
 			case "nacional":
 				estado = validarSelect($("#estado"), $("#errorEstado"), "Error de Estado,");
 				sedeV = validarSelect($("#sede"), $("#errorSede"), "Error de Sede,");
-				calTipo = calcularTipo();
+				
 
 				if (estado && sedeV && calTipo) {
 					valid = true;
