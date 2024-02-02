@@ -205,7 +205,8 @@ $(document).ready(function () {
 			case "nacional":
 				$(".glass").fadeOut(0);
 				$("#envio").fadeIn(300);
-				calcularTipo().then((res) => calTipo = res)
+				// calcularTipo().then((res) => calTipo = res)
+				calTipo = calcularTipo();
 				pTarifas = valorT
 				precio();
 				break;
@@ -276,7 +277,7 @@ $(document).ready(function () {
 			case "nacional":
 				estado = validarSelect($("#estado"), $("#errorEstado"), "Error de Estado,");
 				sedeV = validarSelect($("#sede"), $("#errorSede"), "Error de Sede,");
-				calcularTipo()
+				calTipo = calcularTipo()
 
 				if (estado && sedeV && calTipo) {
 					next_step = true;
@@ -647,7 +648,7 @@ $(document).ready(function () {
 			case "nacional":
 				estado = validarSelect($("#estado"), $("#errorEstado"), "Error de Estado,");
 				sedeV = validarSelect($("#sede"), $("#errorSede"), "Error de Sede,");
-				calcularTipo()
+				calTipo = calcularTipo();
 
 				if (estado && sedeV && calTipo) {
 					valid = true;
