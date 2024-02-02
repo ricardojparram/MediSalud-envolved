@@ -21,12 +21,9 @@ function bar_progress(progress_line_object, direction) {
 
 $(document).ready(function () {
 	var data
-	var next_step = false;
-	let tipo
-	let select
-	let memas
-	let cambio
-	var pTarifas = 0
+	let next_step = false;
+	let tipo, select, memas, cambio, calTipo, valorT
+	let pTarifas = 0
 
 	temporizador();
 	DatosP();
@@ -35,13 +32,10 @@ $(document).ready(function () {
 	banco();
 	tarifa();
 
+	let click = 0;
+	setInterval(() => { click = 0; }, 2000);
 
 
-
-
-	$(window).on('beforeunload', function () {
-		return
-	})
 
 
 	// Datos Personales
@@ -65,8 +59,8 @@ $(document).ready(function () {
 
 
 	let impuesto
-	let total
-	var precioUsd
+	let total, pTotal
+	let precioUsd
 	// Precio y Cambio
 	function precio() {
 		$.ajax({
@@ -75,19 +69,18 @@ $(document).ready(function () {
 			dataType: "json",
 			data: { mostrarP: "hola" },
 			success(pre) {
-				precioUsd = pre[0].cambio
-				cambio = pre[0].id_cambio
+				precioUsd = parseFloat(pre[0].cambio)
+				cambio = parseFloat(pre[0].id_cambio)
+				pTotal = parseFloat(pre[0].total)
 				if (pre[0].cuenta > 0) {
-					$("#valorBs").html(parseFloat(pre[0].total).toFixed(2) + " Bs");
-					impuesto = pre[0].total * 0.16;
+					$("#valorBs").html(parseFloat(pTotal).toFixed(2) + " Bs");
+					impuesto = pTotal * 0.16;
 					$("#impuesto").html(parseFloat(impuesto).toFixed(2) + " Bs");
 					$('#pEnvio').html(parseFloat(pTarifas).toFixed(2) + " Bs");
 					total = parseFloat(pre[0].total + impuesto + pTarifas).toFixed(2);
 					$("#total").html(parseFloat(total).toFixed(2) + " Bs");
 					$("#valorUsd").html(parseFloat(total / pre[0].cambio).toFixed(2) + " $");
 					console.log(pre[0].cuenta, impuesto, pTarifas, total)
-
-
 
 				} else {
 					let div = `
@@ -122,7 +115,7 @@ $(document).ready(function () {
 
 
 	};
-	var valorT
+
 	function tarifa() {
 		$.ajax({
 			type: "post",
@@ -164,8 +157,7 @@ $(document).ready(function () {
 		sede = $("#sede").val()
 		sedeU = sedes.find(item => item.id_sede == sede)
 		$("#ubicacion").val(sedeU.ubicacion);
-		console.log(sedes)
-		console.log(sedes.find(item => item.id_sede == sede))
+
 	})
 
 
@@ -213,7 +205,7 @@ $(document).ready(function () {
 			case "nacional":
 				$(".glass").fadeOut(0);
 				$("#envio").fadeIn(300);
-				calcularTipo()
+				calcularTipo().then((res) => calTipo = res)
 				pTarifas = valorT
 				precio();
 				break;
@@ -229,8 +221,9 @@ $(document).ready(function () {
 		}
 	})
 
-	function calcularTipo() {
-		$.ajax({
+	async function calcularTipo() {
+		let valid = false
+		await $.ajax({
 			url: '',
 			type: 'post',
 			dataType: 'JSON',
@@ -238,14 +231,15 @@ $(document).ready(function () {
 			success(data) {
 				if (data.resultado == 'cuenta superior') {
 					$("#errorBot").html("No puedes exceder las 12 unidades (no más de tres del mismo tipo) por envio nacional")
-					return false
+					valid = false
 				} else {
 					$("#errorBot").html("")
-					return true
+					valid = true
 				}
 			}
 
 		})
+		return valid
 	}
 
 	// Validicaiones Segundo Step
@@ -282,7 +276,9 @@ $(document).ready(function () {
 			case "nacional":
 				estado = validarSelect($("#estado"), $("#errorEstado"), "Error de Estado,");
 				sedeV = validarSelect($("#sede"), $("#errorSede"), "Error de Sede,");
-				if (estado && sedeV) {
+				calcularTipo()
+
+				if (estado && sedeV && calTipo) {
 					next_step = true;
 				} else {
 					next_step = false;
@@ -376,7 +372,6 @@ $(document).ready(function () {
 			$('.select-tipo').each(function () {
 				contadorM = ($(this).val() == 4) ? contadorM + 1 : contadorM
 				contadorT = ($(this).val() == 5) ? contadorT + 1 : contadorT
-				console.log(contadorM, contadorT)
 				if (contadorM < 1) {
 					$(".movil").fadeOut(0);
 				}
@@ -534,22 +529,22 @@ $(document).ready(function () {
 			})
 		})
 	}
-
+	let contadorB
 	function validarRepetidoB() {
 		let valores = [];
-		selects = $(this)
 		$('.select-tipo').each(function () {
+			selects = $(this)
 			// $(this).attr('valid', 'true');
 			var valor = $(this).val();
 			valores.push(valor);
 		});
 
 		for (var i = 0; i < valores.length; i++) {
-			var contador = 0;
+			contadorB = 0;
 
 			for (var j = 0; j < valores.length; j++) {
 				if (valores[i] === valores[j]) {
-					contador++;
+					contadorB++;
 					cuentaB();
 				}
 
@@ -560,7 +555,7 @@ $(document).ready(function () {
 
 		function cuentaB() {
 
-			if (contador >= 2) {
+			if (contadorB >= 2) {
 				selects.closest('tr').attr('style', 'border-color: red;')
 				selects.attr('valid', 'false');
 				$('#error3').text('No pueden haber tipos de pagos repetidos');
@@ -620,8 +615,8 @@ $(document).ready(function () {
 	let direcE
 
 
-	$("#3").click((e) => {
-		console.log("hola")
+	$('#3').on('click', function () {
+		if (click >= 1) throw new Error('Spam de clicks');
 		let vmonto
 		let monto = 0
 		let valid = false
@@ -652,7 +647,7 @@ $(document).ready(function () {
 			case "nacional":
 				estado = validarSelect($("#estado"), $("#errorEstado"), "Error de Estado,");
 				sedeV = validarSelect($("#sede"), $("#errorSede"), "Error de Sede,");
-				calTipo = calcularTipo()
+				calcularTipo()
 
 				if (estado && sedeV && calTipo) {
 					valid = true;
@@ -697,6 +692,13 @@ $(document).ready(function () {
 
 		});
 
+		let repetido = false
+		if ($('.select-tipo').is('[valid="false"]')) {
+			repetido = false
+		} else if (!$('.select-tipo').is('[valid="false"]')) {
+			repetido = true
+		}
+
 		// monto = (typeof monto === 'undefined') ? 0 : monto;
 
 		if (monto == total) {
@@ -714,7 +716,6 @@ $(document).ready(function () {
 			vmonto = false;
 			$("#errorMonto").text('Error en el monto, la Cantidad es Invalida')
 		}
-
 
 		let push = []
 
@@ -769,9 +770,9 @@ $(document).ready(function () {
 
 		})
 
-		console.log($("#direcClien").val())
 
-		if (nombre && direccion && telefono && cedula && correo && movil && trans && valid && vtipoPago && vprecio && vmonto) {
+
+		if (nombre && direccion && telefono && cedula && correo && movil && trans && valid && vtipoPago && vprecio && vmonto && repetido) {
 
 
 			$.ajax({
@@ -792,64 +793,66 @@ $(document).ready(function () {
 					detalles: push
 
 
-					},
-					success(final) {
-						if (final.resultado === "Registrado Pedido") {
-							Swal.fire({
-								title: 'Compra Realizada',
-								text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
-								icon: 'success',
-							})
-							actualizarNotificacion(final).then(() => {
-							   localStorage.clear()
-								setTimeout(function () {
-									location = '?url=inico'
-								}, 2500); 
-							  }
-							);	
-						} else {
-							Toast.fire({ icon: 'error', title: 'No fue Posible Realizar la Compra' })
-						}
+				},
+				success(final) {
+					if (final.resultado === "Registrado Pedido") {
+						clearInterval(intervalo)
+						Swal.fire({
+							title: 'Compra Realizada',
+							text: 'Espere un Maximo de 24 Horas para la Revision de su Pago',
+							icon: 'success',
+						})
+						actualizarNotificacion(final).then(() => {
+						   localStorage.clear()
+							setTimeout(function () {
+								location = '?url=inico'
+							}, 2500); 
+						  }
+						);	
+					} else {
+						Toast.fire({ icon: 'error', title: 'No fue Posible Realizar la Compra' })
 					}
-				})
-			//})
+				}
+			})
+			
 
 		} else {
 
 		}
 
-
+		click++
 	})
 
 
 
-		function actualizarNotificacion(mensaje) {
-		  return new Promise((resolve, reject) => {
-		    $.ajax({
-		      url: '?url=notificaciones',
-		      dataType: 'json',
-		      method: 'POST',
-		      data: { 
-		      	mensaje: JSON.stringify(mensaje),
-		        nombreNotificacion: 'compra_realizada' },
-		      success: () => {
-		        resolve();
-		      },
-		      error: () => {
-		        reject();
-		      }
-		    });
-		  });
-		}
+	function actualizarNotificacion(mensaje) {
+		return new Promise((resolve, reject) => {
+			$.ajax({
+				url: '?url=notificaciones',
+				dataType: 'json',
+				method: 'POST',
+				data: {
+					mensaje: JSON.stringify(mensaje),
+					nombreNotificacion: 'compra_realizada'
+				},
+				success: () => {
+					resolve();
+				},
+				error: () => {
+					reject();
+				}
+			});
+		});
+	}
 
 
 	// next step
 	$('.f1 .btn-next').on('click', function () {
-		var parent_fieldset = $(this).parents('fieldset');
+		let parent_fieldset = $(this).parents('fieldset');
 
 		// navigation steps / progress steps
-		var current_active_step = $(this).parents('.f1').find('.f1-step.active');
-		var progress_line = $(this).parents('.f1').find('.f1-progress-line');
+		let current_active_step = $(this).parents('.f1').find('.f1-step.active');
+		let progress_line = $(this).parents('.f1').find('.f1-progress-line');
 
 		if (next_step) {
 			parent_fieldset.fadeOut(400, function () {
@@ -869,8 +872,8 @@ $(document).ready(function () {
 	// previous step
 	$('.f1 .btn-previous').on('click', function () {
 		// navigation steps / progress steps
-		var current_active_step = $(this).parents('.f1').find('.f1-step.active');
-		var progress_line = $(this).parents('.f1').find('.f1-progress-line');
+		let current_active_step = $(this).parents('.f1').find('.f1-step.active');
+		let progress_line = $(this).parents('.f1').find('.f1-progress-line');
 
 		$(this).parents('fieldset').fadeOut(400, function () {
 			// change icons
@@ -884,8 +887,7 @@ $(document).ready(function () {
 		});
 	});
 
-
-
+	let intervalo
 	function temporizador() {
 		let color = true
 		$.ajax({
@@ -895,9 +897,8 @@ $(document).ready(function () {
 			data: {
 				tiempo: "val"
 			}, success(data) {
-				console.log(data)
 				let segundos = (data)
-				let intervalo = setInterval(() => {
+				intervalo = setInterval(() => {
 
 					let fecha = new Date(segundos);
 					let fechaActual = new Date();
@@ -906,8 +907,8 @@ $(document).ready(function () {
 					let hora = 3600 + diferenciaEnSegundos
 
 					if (hora <= 0) {
-						eliminarVenta()
-						return clearInterval(intervalo)
+						return eliminarVenta("tiempo")
+
 
 					}
 					let horas = Math.floor(hora / 3600).toString().padStart(2, '0')
@@ -931,31 +932,42 @@ $(document).ready(function () {
 		})
 	}
 
-	function eliminarVenta() {
-		setTimeout(() => {
-			$.ajax({
-				url: '',
-				dataType: 'JSON',
-				method: 'POST',
-				data: { comprobarLimitePago: '', url_param: "pago" },
-				success(asd) {
-					console.log(asd);
-					if (asd.resultado == "Eliminado correctamente.") {
-						Swal.fire({
-							title: 'Tiempo Limite Superdado!',
-							text: 'Acaba de Superar el Tiempo Limite de 1 Hora',
-							icon: 'error',
-						})
-						setTimeout(function () {
-							location = '?url=carrito'
-						}, 1600);
-					}
+	function eliminarVenta(elimina) {
+		let eliminar = (elimina == "tiempo" || elimina == "cancelar") ? "sumar" : "contar"
+		$.ajax({
+			url: '',
+			dataType: 'JSON',
+			method: 'POST',
+			data: { eliminar: eliminar },
+			success(asd) {
+				if (asd.resultado == "Eliminado" && elimina == "tiempo") {
+					Swal.fire({
+						title: 'Tiempo Limite Superdado!',
+						text: 'Acaba de Superar el Tiempo Limite de 1 Hora',
+						icon: 'error',
+					})
+
 				}
-			})
-		}, 2000)
+				if (asd.resultado == "Eliminado" && elimina == "cancelar") {
+					Swal.fire({
+						title: 'Compra Cancelada',
+						text: 'Ha cancelado su compra',
+						icon: 'error',
+					})
+
+				}
+				clearInterval(intervalo)
+				setTimeout(function () {
+					location = '?url=carrito'
+				}, 1400);
+			}
+		})
 	}
 
-	// Ejemplo de uso
-
+	$('#cancel').on('click', function () {
+		if (click >= 1) throw new Error('Spam de clicks');
+		eliminarVenta("cancelar")
+		click++;
+	})
 
 });

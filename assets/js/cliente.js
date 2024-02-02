@@ -68,6 +68,9 @@ $(document).ready(function () {
     })
   }
 
+  let click = 0;
+	setInterval(() => { click = 0; }, 2000);
+
   //Validaciones Keyup Registrar
   $("#nomClien").keyup(() => { validarNombre($("#nomClien"), $("#errorNom"), "Error de nombre,") });
   $("#apeClien").keyup(() => { validarNombre($("#apeClien"), $("#errorApe"), "Error de apellido,") });
@@ -86,6 +89,8 @@ $(document).ready(function () {
 
   //Envio de Datos Registrar
   $("#enviar").click((e) => {
+    e.preventDefault()
+    if (click >= 1) throw new Error('Spam de clicks');
 
     if (typeof permisos.Registrar === 'undefined') {
       Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
@@ -139,6 +144,7 @@ $(document).ready(function () {
         }
       })
     }
+    click++
   })
 
   //Asignacion id para Eliminar
@@ -148,7 +154,9 @@ $(document).ready(function () {
   });
 
   //Eliminar id asignado
-  $("#delete").click(() => {
+  $("#delete").click((e) => {
+    e.preventDefault()
+    if (click >= 1) throw new Error('Spam de clicks');
 
     if (typeof permisos.Eliminar === 'undefined') {
       Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
@@ -176,6 +184,7 @@ $(document).ready(function () {
         }
       })
     })
+    click++
   })
 
   //Asignacion id para Editar con Relleno de Inputs
@@ -215,7 +224,9 @@ $(document).ready(function () {
 
   //Envio de Datos Registrar
   $("#enviarEdit").click((e) => {
-
+    e.preventDefault()
+    if (click >= 1) throw new Error('Spam de clicks');
+    
     if (typeof permisos.Editar === 'undefined') {
       Toast.fire({ icon: 'error', title: 'No tienes permisos para esta acción.' });
       throw new Error('Permiso denegado.');
@@ -262,6 +273,7 @@ $(document).ready(function () {
         }
       })
     }
+    click++
   })
 
   //Reset de Error y Validaciones

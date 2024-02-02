@@ -101,6 +101,7 @@
                                 <p class="nota col-11 mx-auto small mt-2">*Si encuentras algún dato personal incorrecto, corrígelo en la sección de perfil antes de seguir con el registro</p>
                                 <p class="m-0" id="error1" style="color:#ff0000;text-align: center;"></p>
                                 <div class="f1-buttons mt-3">
+                                    <button type="button" class="btn btn-danger" id="cancelar" data-bs-toggle="modal" data-bs-target="#cancelarModal">Cancelar</button>
                                     <button type="button" class="btn btn-success btn-next" id="1">Siguiente</button>
                                 </div>
                         </fieldset>
@@ -123,15 +124,15 @@
                                         <div class="col-lg-6">
                                             <label for="inputText" class="col-12 col-form-label"><strong>Calle</strong></label>
                                             <div class="input-group ">
-                                                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el Numero de Calle."><i class="bi bi-bank"></i></button>
+                                                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el Numero de Calle."><i class="bi bi-signpost"></i></button>
                                                 <input type="text" class="form-control" placeholder="Calle ##" id="calle">
                                             </div>
                                             <p class="m-0" id="errorCalle" style="color:#ff0000;text-align: center;"></p>
                                         </div>
                                         <div class="col-lg-6">
-                                            <label for="inputText" class="col-12 col-form-label"><strong>Avenida</strong></label>
+                                            <label for="inputText" class="col-12 col-form-label"><strong>Avenida/Carrera</strong></label>
                                             <div class="input-group">
-                                                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el Numero o Nombre de la Avenida."><i class="bi bi-card-checklist"></i></button>
+                                                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Introduzca el Numero o Nombre de la Avenida."><i class="bi bi-signpost-split"></i></button>
                                                 <input type="text" class="form-control" placeholder="Avenida ##" id="numAv">
                                             </div>
                                             <p class="m-0" id="errorNumAv" style="color:#ff0000;text-align: center;"></p>
@@ -141,7 +142,7 @@
                                         <div class="col-lg-6">
                                             <label for="inputText" class="col-12 col-form-label"><strong>Numero de Casa</strong></label>
                                             <div class="input-group ">
-                                                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el Numero de la Casa o Departamento."><i class="bi bi-bank"></i></button>
+                                                <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el Numero de la Casa o Departamento."><i class="bi bi-house"></i></button>
                                                 <input type="text" class="form-control" placeholder="Numero de Casa" id="numCasa">
                                             </div>
                                             <p class="m-0" id="errorNumCasa" style="color:#ff0000;text-align: center;"></p>
@@ -194,9 +195,14 @@
                                 </div>
                             </div>
                             <p class="mt-2" id="error2" style="color:#ff0000;text-align: center;"></p>
-                            <div class="f1-buttons mt-3">
-                                <button type="button" class="btn btn-secondary btn-previous">Atrás</button>
-                                <button type="button" class="btn btn-success btn-next" id="2">Siguiente</button>
+                            <div class="row mt-3">
+                                <div class="col-4">
+                                    <button type="button" class="btn btn-secondary btn-previous ">Atrás</button>
+                                </div>
+                                <div class="f1-buttons col-8">
+                                    <button type="button" class="btn btn-danger" id="cancelar" data-bs-toggle="modal" data-bs-target="#cancelarModal">Cancelar</button>
+                                    <button type="button" class="btn btn-success btn-next" id="2">Siguiente</button>
+                                </div>
                             </div>
                             
                         </fieldset>
@@ -237,9 +243,14 @@
                             </div>
                             <p class="mt-2" id="error3" style="color:#ff0000;text-align: center;"></p>
                             <p class="mt-2" id="errorMonto" style="color:#ff0000;text-align: center;"></p>
-                            <div class="f1-buttons mt-3">
-                                <button type="button" class="btn btn-secondary btn-previous">Atrás</button>
-                                <button type="button" class="btn btn-success enviar" id="3">Registar Datos</button>
+                            <div class="row mt-3">
+                                <div class="col-4">
+                                    <button type="button" class="btn btn-secondary btn-previous ">Atrás</button>
+                                </div>
+                                <div class="f1-buttons col-8">
+                                    <button type="button" class="btn btn-danger" id="cancelar" data-bs-toggle="modal" data-bs-target="#cancelarModal">Cancelar</button>
+                                    <button type="button" class="btn btn-success enviar" id="3">Registar Datos</button>
+                                </div>
                             </div>
                         </fieldset>
                         <!--fin del paso 3 -->
@@ -400,6 +411,27 @@
             </form>
         </div>
 
+    </div>
+
+    <!-- Modal Eliminar-->
+    <div class="modal fade" id="cancelarModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="staticBackdropLabel">¿Desea Cancelar su Compra?</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5>Perdera el Progreso y los Datos de su Compra</h5>
+                <p></p>
+                <p class="m-0" id="errorDel" style="color:#ff0000;text-align: center;"></p>
+            </div>
+            <div class="modal-footer" id="divEli">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrarModal">Cerrar</button>
+                <button type="button" class="btn btn-danger" id="cancel">Confirmar</button>
+            </div>
+            </div>
+        </div>
     </div>
 
 
