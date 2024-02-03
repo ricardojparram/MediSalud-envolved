@@ -51,11 +51,11 @@ INSERT INTO tipo(des_tipo, status) VALUES
 -- INSERTA LAS CLASE
 INSERT INTO clase (cod_clase, des_clase, status) VALUES
 (1, 'NO ASIGNADO', 1),
-(2, 'Analgesico', 1),
-(3, 'Antialergicos', 1),
+(2, 'Analgésico', 1),
+(3, 'Antialérgicos', 1),
 (4, 'Antidiarreicos', 1),
-(5, 'Antimicoticos', 1),
-(6, 'Antipireticos', 1);
+(5, 'Antimicóticos', 1),
+(6, 'Antipiréticos', 1);
 
 
 

@@ -386,7 +386,7 @@
 				$this->sheet->setCellValue('J7', "Mayor proveedor:");
 				$this->sheet->setCellValue('K7', $datos_compra['count_proveedor']->proveedor_mas);
 				$this->sheet->setCellValue('J8', "Produto más comprado:");
-				$this->sheet->setCellValue('K8', $datos_compra["producto_mas_ventas"]->nombre);
+				$this->sheet->setCellValue('K8', $datos_compra["producto_mas_ventas"]->descripcion);
 				$this->sheet->setCellValue('J9', "Cantidad comprada de ese producto: ");
 				$this->sheet->setCellValue('K9', "{$datos_compra["producto_mas_ventas"]->cantidad}");
 
@@ -445,7 +445,7 @@
 						ORDER BY COUNT(*) DESC LIMIT 1;
 					",
 					"producto_mas_ventas" => "
-						SELECT p.nombre, SUM(cp.cantidad) as cantidad FROM compra c 
+						SELECT p.descripcion, SUM(cp.cantidad) as cantidad FROM compra c 
 						INNER JOIN compra_producto cp ON cp.cod_compra = c.cod_compra
 						INNER JOIN producto p ON p.cod_producto = cp.cod_producto
 						WHERE c.fecha BETWEEN ? AND ?

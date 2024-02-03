@@ -16,9 +16,8 @@ class footerInicio{
 	              <h5 class="lh-lg fw-bold text-white">Enlaces Utiles</h5>
 	              <ul class="list-unstyled mb-md-4 mb-lg-0">
 	                <li class="lh-lg"><a class="text-white link" href="?url=inicio">Inicio</a></li>
-	                <li class="lh-lg"><a class="text-white link" href="#!">Nosotros</a></li>
-	                <li class="lh-lg"><a class="text-white link" href="#!">Catalogo</a></li>
-	                 <li class="lh-lg"><a class="text-white link" href="#!">Contactos</a></li>
+	                <li class="lh-lg"><a class="text-white link" href="?url=nosotros">Nosotros</a></li>
+	                <li class="lh-lg"><a class="text-white link" href="?url=catalogo">Catalogo</a></li>
 	              </ul>
 	            </div>
 	            <div class="col-6 col-lg-2 mb-3">

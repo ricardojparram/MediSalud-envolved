@@ -205,8 +205,8 @@ $(document).ready(function () {
 			case "nacional":
 				$(".glass").fadeOut(0);
 				$("#envio").fadeIn(300);
-				// calcularTipo().then((res) => calTipo = res)
-				calTipo = calcularTipo();
+				calcularTipo().then((res) => calTipo = res)
+				// calTipo = calcularTipo();
 				pTarifas = valorT
 				precio();
 				break;
