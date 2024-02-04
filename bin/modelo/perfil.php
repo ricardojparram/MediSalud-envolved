@@ -146,11 +146,11 @@ class perfil extends DBConnect{
 
 	    $resultadoEdit = $this->editarDatos();
 
-	    if(isset($this->foto['name'])){
-	    	$resultadoFoto = $this->subirImagen();
-	    }
 	    if($this->borrar != false){
 	    	$resultadoFoto = $this->borrarImagen();
+	    }
+	    if(isset($this->foto['name'])){
+	    	$resultadoFoto = $this->subirImagen();
 	    }
 
 	    echo json_encode(['edit' => $resultadoEdit, 'foto' => $resultadoFoto]);

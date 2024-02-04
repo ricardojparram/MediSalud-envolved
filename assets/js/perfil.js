@@ -84,7 +84,8 @@ $(document).ready(function(){
 			}
 		}
 	});
-
+	
+	let cropper;
 	$('#fotoModal').on('shown.bs.modal', function () {
 		cropper = new Cropper(imagen, {
 			aspectRatio: 1,
@@ -120,86 +121,93 @@ $(document).ready(function(){
 		id = validarCedula($("#cedulaEdit"),$("#error") ,"Error de cedula,");
 		email = validarCorreo($("#emailEdit"),$("#error") ,"Error de email,");
 
-
-
-		if(name && lastname && id && email) {
-
-			canvas.toBlob(function (blob) {
-
-				let form = new FormData($('#formEditar')[0]);
-				form.set('foto', blob, 'avatar.png')
-
-				let borrar = $('#imgEditar').is('[src="assets/img/profile_photo.jpg"]');
-				if(borrar){
-					form.append("borrar", "borrarImg");
-				}
-
-				$.ajax({
-					type: "POST",
-					url: '',
-					dataType: 'JSON',
-					data: form,
-					contentType: false,
-					processData: false,
-					xhr(){
-						let xhr = new window.XMLHttpRequest();
-						$('#displayProgreso').show();
-						xhr.upload.addEventListener("progress", function(event){
-
-							if(event.lengthComputable){
-								let porcentaje = parseInt( (event.loaded / event.total * 100), 10);
-								$('#progressBar').data("aria-valuenow",porcentaje)
-								$('#progressBar').css("width",porcentaje+'%')
-								$('#progressBar').html(porcentaje+'%')
-							}
-
-						},false)
-						xhr.addEventListener("progress", function(e){
-
-							if (e.lengthComputable) {
-								percentComplete = parseInt( (e.loaded / e.total * 100), 10);
-								$('#progressBar').data("aria-valuenow",percentComplete);
-								$('#progressBar').css("width",percentComplete+'%');
-								$('#progressBar').html(percentComplete+'%');
-							}else{
-								$('#progressBar').html("Upload");
-							}
-
-						}, false);
-
-						return xhr;
-					},
-					success(data){
-						$('#displayProgreso').hide();
-						if(data.foto.respuesta == 'Error'){
-							$('#error').text(data.foto.error);
-							throw new Error('Error de foto.');
-						}
-						if(data.foto.respuesta == 'Imagen guardada.' || data.foto.respuesta == 'Imagen eliminada.'){
-							$('.fotoPerfil').attr('src', data.foto.url);
-						}
-						if (data.edit.respuesta == "Editado correctamente") {
-							$('#formEditar').trigger('reset');
-							rellenar();
-							mostrarUsuarios();
-							Toast.fire({ icon: 'success', title: 'Usuario Actualizado' });
-							$("#perfil").click();
-						}
-					},
-					error(data){
-						$('#displayProgreso').hide();
-						Toast.fire({ icon: 'error', title: 'Ha ocurrido un error al subir la imágen.' });
-						console.log(data);
-					}
-				})
-
-			})
-			
-
-
+		if(!name && !lastname && !id && !email) {
+			throw new Error('Datos inválidos');
 		}
+
+		let form = new FormData($('#formEditar')[0]);
+		let borrar = $('#imgEditar').is('[src="assets/img/profile_photo.jpg"]');
+
+		if(borrar != true){
+			if(typeof canvas === "undefined" || typeof canvas == null){
+				Toast.fire({ icon: 'warning', title: 'No ha cambiado la imagen.' });
+				throw Error('Canvas no tiene ninguna imagen cortada');
+			}else{
+				canvas.toBlob(function(blob){
+					form.set('foto', blob, 'avatar.png')
+					editarImagen(form);
+				});
+			}
+		}
+
+		if(borrar){
+			form.append("borrar", "borrarImg");
+			editarImagen(form);
+		}
+
 		click++
 	})
+
+	function editarImagen(form){
+		$.ajax({
+			type: "POST",
+			url: '',
+			dataType: 'JSON',
+			data: form,
+			contentType: false,
+			processData: false,
+			xhr(){
+				let xhr = new window.XMLHttpRequest();
+				$('#displayProgreso').show();
+				xhr.upload.addEventListener("progress", function(event){
+
+					if(event.lengthComputable){
+						let porcentaje = parseInt( (event.loaded / event.total * 100), 10);
+						$('#progressBar').data("aria-valuenow",porcentaje)
+						$('#progressBar').css("width",porcentaje+'%')
+						$('#progressBar').html(porcentaje+'%')
+					}
+
+				},false)
+				xhr.addEventListener("progress", function(e){
+
+					if (e.lengthComputable) {
+						percentComplete = parseInt( (e.loaded / e.total * 100), 10);
+						$('#progressBar').data("aria-valuenow",percentComplete);
+						$('#progressBar').css("width",percentComplete+'%');
+						$('#progressBar').html(percentComplete+'%');
+					}else{
+						$('#progressBar').html("Upload");
+					}
+
+				}, false);
+
+				return xhr;
+			},
+			success(data){
+				$('#displayProgreso').hide();
+				if(data.foto.respuesta == 'Error'){
+					$('#error').text(data.foto.error);
+					throw new Error('Error de foto.');
+				}
+				if(data.foto.respuesta == 'Imagen guardada.' || data.foto.respuesta == 'Imagen eliminada.'){
+					$('.fotoPerfil').attr('src', data.foto.url);
+				}
+				if (data.edit.respuesta == "Editado correctamente") {
+					$('#formEditar').trigger('reset');
+					rellenar();
+					mostrarUsuarios();
+					Toast.fire({ icon: 'success', title: 'Usuario Actualizado' });
+					$("#perfil").click();
+				}
+			},
+			error(data){
+				$('#displayProgreso').hide();
+				Toast.fire({ icon: 'error', title: 'Ha ocurrido un error al subir la imágen.' });
+				console.log(data);
+			}
+		})
+	}
 
 	let actContra;
 	function validarContra(input, div){

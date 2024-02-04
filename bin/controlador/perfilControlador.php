@@ -31,13 +31,13 @@
     $objModel->getValidarContraseña($_POST['password'], $_SESSION['cedula']);
   }
 
-  if (isset($_FILES['foto'], $_POST['nombre'], $_POST['apellido'], $_POST['cedula'], $_POST['email'], $_SESSION['cedula'])) {
+  if (isset($_POST['nombre'], $_POST['apellido'], $_POST['cedula'], $_POST['email'], $_SESSION['cedula'])) {
 
-    if(isset($_POST['borrar'])){
-      $objModel->getEditar($_FILES['foto'], $_POST['nombre'], $_POST['apellido'], $_POST['cedula'], $_POST['email'], $_SESSION['cedula'], $_POST['borrar']);
-    }
-
-    $objModel->getEditar($_FILES['foto'], $_POST['nombre'], $_POST['apellido'], $_POST['cedula'], $_POST['email'], $_SESSION['cedula']);
+    if(isset($_POST['borrar']))
+      $objModel->getEditar('', $_POST['nombre'], $_POST['apellido'], $_POST['cedula'], $_POST['email'], $_SESSION['cedula'], $_POST['borrar']);
+    
+    if(isset($_FILES['foto']))
+      $objModel->getEditar($_FILES['foto'], $_POST['nombre'], $_POST['apellido'], $_POST['cedula'], $_POST['email'], $_SESSION['cedula']);
 
   }
 
