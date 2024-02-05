@@ -898,7 +898,7 @@ $(document).ready(function () {
 			data: {
 				tiempo: "val"
 			}, success(data) {
-				let segundos = (data)
+				let segundos = (data[0]['fecha'])
 				intervalo = setInterval(() => {
 
 					let fecha = new Date(segundos);

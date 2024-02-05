@@ -122,7 +122,7 @@
                                 <div class="glass" id="delivery">
                                     <div class="row form-group col-md-12">
                                         <div class="col-lg-6">
-                                            <label for="inputText" class="col-12 col-form-label"><strong>Calle</strong></label>
+                                            <label for="inputText" class="col-12 col-form-label"><strong>Calle/Avenida</strong></label>
                                             <div class="input-group ">
                                                 <button type="button" class="iconos btn btn-secondary" data-bs-trigger="hover focus"data-bs-container="body" data-bs-toggle="popover"data-bs-placement="top" data-bs-content="Introduzca el Numero de Calle."><i class="bi bi-signpost"></i></button>
                                                 <input type="text" class="form-control" placeholder="Calle ##" id="calle">

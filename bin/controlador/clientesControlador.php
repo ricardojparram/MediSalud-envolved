@@ -25,37 +25,38 @@ if (isset($_POST['getPermisos']) && isset($permiso['Consultar'])) {
 }
 
 if (isset($_POST['mostrar']) && isset($permiso['Consultar'])) {
-  ($_POST['bitacora'] == 'true')
-    ? $objModel->mostrarClientes(true)
-    : $objModel->mostrarClientes();
+  $res = $objModel->mostrarClientes($_POST['bitacora'] );
+  die(json_encode($res));
 }
 
 if (isset($_GET['validar'])) {
-  $objModel->getValidarC($_GET['cedula'], $_GET['idVal']);
-  //var_dump($_GET['cedula'], $_GET['idVal']);
-  //die();
+  $res = $objModel->getValidarC($_GET['cedula'], $_GET['idVal']);
+  die(json_encode($res));
 }
 
 if (isset($_GET['validarE'])) {
-  $objModel->getValidarE($_GET['correo'], $_GET['idVal']);
-  // var_dump($_GET['correo'], $_GET['idVal']);
-  // die();
+  $res = $objModel->getValidarE($_GET['correo'], $_GET['idVal']);
+  die(json_encode($res));
 }
 
 if (isset($_POST['nomClien']) && isset($_POST['apeClien']) && isset($_POST['cedClien']) && isset($_POST['direcClien']) && isset($_POST['telClien']) && isset($_POST['emailClien']) && isset($permiso['Registrar'])) {
-  $objModel->getRegistrarClientes($_POST['nomClien'], $_POST['apeClien'], $_POST['cedClien'], $_POST['direcClien'], $_POST['telClien'], $_POST['emailClien']);
+  $res = $objModel->getRegistrarClientes($_POST['nomClien'], $_POST['apeClien'], $_POST['cedClien'], $_POST['direcClien'], $_POST['telClien'], $_POST['emailClien']);
+  die(json_encode($res));
 }
 
 if (isset($_POST['cedulaDel']) && isset($_POST['eliminar']) && isset($permiso['Eliminar'])) {
-  $objModel->eliminarClientes($_POST['cedulaDel']);
+  $res = $objModel->eliminarClientes($_POST['cedulaDel']);
+  die(json_encode($res));
 }
 
 if (isset($_POST['idCed']) && isset($_POST['unico']) && isset($permiso['Editar'])) {
-  $objModel->unicoCliente($_POST['idCed']);
+  $res = $objModel->unicoCliente($_POST['idCed']);
+  die(json_encode($res));
 }
 
 if (isset($_POST['nomEdit']) && isset($_POST['apeEdit']) && isset($_POST['cedEdit']) && isset($_POST['direcEdit']) && isset($_POST['celuEdit']) && isset($_POST['emailEdit']) && isset($_POST['idCed']) && isset($permiso['Editar'])) {
   $respuesta = $objModel->getEditar($_POST['nomEdit'], $_POST['apeEdit'], $_POST['cedEdit'], $_POST['direcEdit'], $_POST['celuEdit'], $_POST['emailEdit'], $_POST['idCed']);
+  die(json_encode($respuesta));
 }
 
 

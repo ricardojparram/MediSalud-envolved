@@ -28,25 +28,34 @@ class clientes extends DBConnect
     public function getRegistrarClientes($nombre, $apellido, $cedula, $direccion, $telefono, $correo)
     {
 
-        if (preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $nombre) == false) {
-            $resultado = ['resultado' => 'Error de nombre', 'error' => 'Nombre inválido.'];
-            echo json_encode($resultado);
-            die();
+        if (preg_match_all("/^[a-zA-ZÀ-ÿ ]{0,30}$/", $nombre) == false) {
+            $resultado = ['resultado' => 'Error', 'error' => 'Nombre inválido.'];
+            return $resultado;
         }
-        if (preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $apellido) == false) {
-            $resultado = ['resultado' => 'Error de apellido', 'error' => 'Apellido inválido.'];
-            echo json_encode($resultado);
-            die();
+        if (preg_match_all("/^[a-zA-ZÀ-ÿ ]{0,30}$/", $apellido) == false) {
+            $resultado = ['resultado' => 'Error', 'error' => 'Apellido inválido.'];
+            return $resultado;
         }
         if (preg_match_all("/^[0-9]{7,10}$/", $cedula) == false) {
-            $resultado = ['resultado' => 'Error de cedula', 'error' => 'Cédula inválida.'];
-            echo json_encode($resultado);
-            die();
+            $resultado = ['resultado' => 'Error', 'error' => 'Cédula inválida.'];
+            return $resultado;
         }
         if (preg_match_all("/[$%&|<>]/", $direccion) == true) {
-            $resultado = ['resultado' => 'Error de direccion', 'error' => 'Direccion inválida.'];
-            echo json_encode($resultado);
-            die();
+            $resultado = ['resultado' => 'Error', 'error' => 'Direccion inválida.'];
+            return $resultado;
+        }
+        if ($telefono != "") {
+            if (preg_match_all("/^[0-9]{10,30}$/", $telefono) == false) {
+                $resultado = ['resultado' => 'Error', 'error' => 'Telefono Invalido'];
+                return $resultado;
+            }
+        }
+        if ($correo != "") {
+            
+            if (preg_match_all("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/", $correo) == false) {
+                $resultado = ['resultado' => 'Error', 'error' => 'Correo invalida.'];
+                return $resultado;
+            }
         }
 
         $this->nombre = $nombre;
@@ -96,7 +105,7 @@ class clientes extends DBConnect
                 $new->bindValue(3, $this->cedula);
                 $new->execute();
                 $resultado = ['resultado' => 'Registrado correctamente.'];
-                echo json_encode($resultado);
+                
                 $this->binnacle("Cliente", $_SESSION['cedula'], "Registró un cliente");
                 parent::desconectarDB();
 
@@ -113,14 +122,14 @@ class clientes extends DBConnect
                 $new->bindValue(6, $this->cedula);
                 $new->execute();
                 $resultado = ['resultado' => 'Registrado correctamente.'];
-                echo json_encode($resultado);
+                
                 $this->binnacle("Cliente", $_SESSION['cedula'], "Registro");
                 parent::desconectarDB();
             } else {
-                $resultado = ['resultado' => 'Error de cedula', 'error' => 'La cédula ya está registrada.'];
-                echo json_encode($resultado);
+                $resultado = ['resultado' => 'Error', 'error' => 'La cédula ya está registrada.'];
+                
             }
-            die();
+            return $resultado;
 
         } catch (PDOException $error) {
             return $error;
@@ -143,10 +152,9 @@ class clientes extends DBConnect
             $new->bindValue(1, $this->id);
             $new->execute();
             $resultado = ['resultado' => 'Eliminado'];
-            echo json_encode($resultado);
             $this->binnacle("Cliente", $_SESSION['cedula'], "Eliminó un cliente");
             parent::desconectarDB();
-            die();
+            return $resultado;
 
         } catch (PDOexection $error) {
             return $error;
@@ -171,11 +179,10 @@ class clientes extends DBConnect
                 $item->celular = openssl_decrypt($item->celular, $this->cipher, $this->key, 0, $this->iv);
                 $item->correo = openssl_decrypt($item->correo, $this->cipher, $this->key, 0, $this->iv);
             }
-            echo json_encode($data);
             if ($bitacora)
                 $this->binnacle("Clientes", $_SESSION['cedula'], "Consultó listado.");
             parent::desconectarDB();
-            die();
+            return $data;
         } catch (\PDOexection $error) {
             return $error;
         }
@@ -198,7 +205,7 @@ class clientes extends DBConnect
             $this->iv = parent::IV();
             $this->cipher = parent::CIPHER();
 
-            $new = $this->con->prepare("SELECT * FROM cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula WHERE status = 1 and c.cedula = ?");
+            $new = $this->con->prepare("SELECT * FROM cliente c INNER JOIN contacto_cliente cc ON c.cedula = cc.cedula WHERE c.cedula = ?");
             $new->bindValue(1, $this->unico);
             $new->execute();
             $data = $new->fetchAll(\PDO::FETCH_OBJ);
@@ -206,9 +213,9 @@ class clientes extends DBConnect
             $data[0]->correo = openssl_decrypt($data[0]->correo, $this->cipher, $this->key, 0, $this->iv);
             $data[0]->celular = openssl_decrypt($data[0]->celular, $this->cipher, $this->key, 0, $this->iv);
             $data[0]->direccion = openssl_decrypt($data[0]->direccion, $this->cipher, $this->key, 0, $this->iv);
-            echo json_encode($data);
+
             parent::desconectarDB();
-            die();
+            return $data;
         } catch (\PDOexection $error) {
             return $error;
         }
@@ -217,25 +224,34 @@ class clientes extends DBConnect
     public function getEditar($nombre, $apellido, $cedula, $direccion, $telefono, $correo, $id)
     {
 
-        if (preg_match_all("/^[a-zA-Z]{0,30}$/", $nombre) == false) {
-            $resultado = ['resultado' => 'Error de nombre', 'error' => 'Nombre inválido.'];
-            echo json_encode($resultado);
-            die();
+        if (preg_match_all("/^[a-zA-ZÀ-ÿ ]{0,30}$/", $nombre) == false) {
+            $resultado = ['resultado' => 'Error', 'error' => 'Nombre inválido.'];
+            return $resultado;
         }
-        if (preg_match_all("/^[a-zA-Z]{0,30}$/", $apellido) == false) {
-            $resultado = ['resultado' => 'Error de apellido', 'error' => 'Apellido inválido.'];
-            echo json_encode($resultado);
-            die();
+        if (preg_match_all("/^[a-zA-ZÀ-ÿ ]{0,30}$/", $apellido) == false) {
+            $resultado = ['resultado' => 'Error', 'error' => 'Apellido inválido.'];
+            return $resultado;
         }
         if (preg_match_all("/^[0-9]{7,10}$/", $cedula) == false) {
-            $resultado = ['resultado' => 'Error de cedula', 'error' => 'Cédula inválida.'];
-            echo json_encode($resultado);
-            die();
+            $resultado = ['resultado' => 'Error', 'error' => 'Cédula inválida.'];
+            return $resultado;
         }
         if (preg_match_all("/[$%&|<>]/", $direccion) == true) {
-            $resultado = ['resultado' => 'Error de direccion', 'error' => 'Direccion inválida.'];
-            echo json_encode($resultado);
-            die();
+            $resultado = ['resultado' => 'Error', 'error' => 'Direccion inválida.'];
+            return $resultado;
+        }
+        if ($telefono != "") {
+            if (preg_match_all("/^[0-9]{10,30}$/", $telefono) == false) {
+                $resultado = ['resultado' => 'Error', 'error' => 'Telefono Invalido'];
+                return $resultado;
+            }
+        }
+        if ($correo != "") {
+            
+            if (preg_match_all("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/", $correo) == false) {
+                $resultado = ['resultado' => 'Error', 'error' => 'Correo invalida.'];
+                return $resultado;
+            }
         }
 
         $this->nombre = $nombre;
@@ -277,9 +293,9 @@ class clientes extends DBConnect
             $new->execute();
             $this->binnacle("Cliente", $_SESSION['cedula'], "Editó un cliente");
             $resultado = ['resultado' => 'Editado'];
-            echo json_encode($resultado);
+            
             parent::desconectarDB();
-            die();
+            return $resultado;
         } catch (\PDOException $error) {
             return $error;
         }
@@ -290,7 +306,7 @@ class clientes extends DBConnect
         $this->cedula = $cedula;
         $this->id = $id;
 
-        $this->validarC();
+        return $this->validarC();
     }
 
     private function validarC()
@@ -309,12 +325,8 @@ class clientes extends DBConnect
                 if (isset($data[0]['cedula'])) {
                     $resultado = ['resultado' => 'Correcto', 'msj' => 'La cédula está registrada.'];
 
-                    echo json_encode($resultado);
-                    die();
                 } else {
                     $resultado = ['resultado' => 'Error', 'msj' => 'Cedula no Registrada'];
-                    echo json_encode($resultado);
-                    die();
                 }
             } elseif ($this->id == " ") {
                 $this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
@@ -326,12 +338,8 @@ class clientes extends DBConnect
                 parent::desconectarDB();
                 if (isset($data[0]['cedula'])) {
                     $resultado = ['resultado' => 'Error', 'msj' => 'La cédula ya está registrada.'];
-                    echo json_encode($resultado);
-                    die();
                 } else {
                     $resultado = ['resultado' => 'Correcto'];
-                    echo json_encode($resultado);
-                    die();
                 }
             } elseif ($this->id != " " && $this->cedula != " " && openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv) != $this->id) {
                 $this->cedula = openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
@@ -343,29 +351,21 @@ class clientes extends DBConnect
                 parent::desconectarDB();
                 if (isset($data[0]['status']) && $data[0]['status'] == 0) {
                     $resultado = ['resultado' => 'Error', 'msj' => 'No Puede Ser Registrada'];
-                    echo json_encode($resultado);
-                    die();
                 } elseif (isset($data[0]['cedula']) && $data[0]['cedula'] == $this->cedula && $data[0]['status'] == 1) {
                     $resultado = ['resultado' => 'Error', 'msj' => 'La Cedula ya esta Registrada'];
-                    echo json_encode($resultado);
-                    die();
                 } else {
                     $resultado = ['resultado' => 'Correcto'];
-                    echo json_encode($resultado);
-                    die();
                 }
             } elseif (openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv) == $this->id) {
                 $resultado = ['resultado' => 'Correcto'];
-                echo json_encode($resultado);
-                die();
+            }else{
+                $resultado = ['resultado' => 'Ninguno'];
             }
-            $resultado = ['resultado' => 'Ninguno'];
-            echo json_encode($resultado);
-            die();
+            return $resultado;
 
 
         } catch (\PDOException $error) {
-            die($error);
+            return $error;
         }
     }
 
@@ -374,7 +374,7 @@ class clientes extends DBConnect
         $this->correo = $correo;
         $this->id = $id;
 
-        $this->validarE();
+        return $this->validarE();
     }
 
     private function validarE()
@@ -385,8 +385,7 @@ class clientes extends DBConnect
             $this->cipher = parent::CIPHER();
             if ($this->correo == "") {
                 $resultado = ['resultado' => 'Correcto'];
-                echo json_encode($resultado);
-                die();
+                return $resultado;
             }
 
             parent::conectarDB();
@@ -396,25 +395,20 @@ class clientes extends DBConnect
             $new->bindValue(2, $this->correo);
             $new->execute();
             $data = $new->fetchAll();
-            // echo json_encode($data);
-            // die();
             parent::desconectarDB();
             if (isset($data[0]['correo']) && $data[0]['status'] === 1) {
                 $resultado = ['resultado' => 'Error', 'msj' => 'El Correo ya esta Registrado'];
-                echo json_encode($resultado);
-                die();
+                return $resultado;
             }
             // elseif (isset($data[0]['correo']) && $data[0]['status'] === 0 ) {
             //     $resultado = ['resultado' => 'Error', 'msj' => 'El Correo no Puede Ser Registrado'];
-            //     echo json_encode($resultado);
-            //     die();
+            //     return $resultado;
             // } -------> Preguntar si dejo esta validacion <-------
             $resultado = ['resultado' => 'Correcto'];
-            echo json_encode($resultado);
-            die();
+            return $resultado;
 
         } catch (\PDOException $e) {
-            die($e);
+            return $e;
         }
     }
 
