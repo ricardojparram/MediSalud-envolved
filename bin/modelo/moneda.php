@@ -47,7 +47,7 @@ class moneda extends DBConnect{
       return $resultado;
 
      }catch(\PDOexection $error){
-    	die($error);
+    	return $error;
       }
 
    }
@@ -201,7 +201,7 @@ class moneda extends DBConnect{
    }
 
    public function getAgregarMoneda($name){
-    if(preg_match_all("/^[a-zA-ZÀ-ÿ]{3,30}$/", $name) == false){
+    if(preg_match_all("/^[a-zA-ZÀ-ÿ ]{3,30}$/", $name) == false){
       $resultado = ['resultado' => 'error', 'error' => 'Nombre de Moneda Invalida'];
       return $resultado;
     }
@@ -250,7 +250,7 @@ class moneda extends DBConnect{
    }
 
    public function getEditarM($nameEdit, $id){
-     if(preg_match_all("/^[a-zA-ZÀ-ÿ]{3,30}$/", $nameEdit) == false){
+     if(preg_match_all("/^[a-zA-ZÀ-ÿ ]{3,30}$/", $nameEdit) == false){
       return ['resultado' => 'error', 'error' => 'Nombre de Moneda Invalida'];
     }
     
@@ -297,30 +297,7 @@ class moneda extends DBConnect{
      }
   }
 
-  public function  actualizarMoneda(){
-  //   if (extension_loaded('openssl')) {
-  //     echo 'OpenSSL está habilitado en tu servidor.';
-  // } else {
-  //     echo 'OpenSSL no está habilitado en tu servidor.';
-  // }
-  // die();
-    
-    // Obtener el contenido HTML de una página web a través de su URL
-    $html = file_get_contents('https://www.bcv.org.ve/');
-
-    // Crear un objeto DOMDocument
-    $dom = new DOMDocument();
-
-    // Cargar el contenido HTML desde la variable
-    $dom->loadHTML($html);
-
-    // Crear un nuevo elemento y añadirlo al DOM
-    $newElement = $dom->createElement('p', 'Nuevo párrafo');
-    $dom->getElementsById('euro')->item(0)->appendChild($newElement);
-
-    echo $newElement;
-    die();
-  }
+  
 
 }
 ?>

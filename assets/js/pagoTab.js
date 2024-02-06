@@ -623,7 +623,7 @@ $(document).ready(function () {
 		let valid = false
 		let vtipoPago = true
 		let vprecio = true
-		let estado, sede, calle, avenida, numCasa, referencia, calTipo
+		let estado, sede, calle, avenida, numCasa, referencia
 
 		let direccion = validarDireccion($("#direcClien"), $("#errorDirec"), "Error de Direccion,");
 		let correo = validarCorreo($("#emailClien"), $("#errorEmail"), "Error de Correo,");
