@@ -225,8 +225,8 @@ class banco extends DBConnect{
 			$this->nombre = $datosA[1];
 			$this->cedulaRif = $datosA[2];
 			$this->cuentaBank = $datosA[3];
-			$validarDatos = $this->ValidarDatos($datosA[0], $this->cuentaBank ,$this->cedulaRif , $this->nombre , null);
-			if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
+			//$validarDatos = $this->ValidarDatos($datosA[0], $this->cuentaBank ,$this->cedulaRif , $this->nombre , null);
+			//if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
 
             return $this->registrarBanco();
 			break;
@@ -250,8 +250,8 @@ class banco extends DBConnect{
 			$this->cedulaRif = $datosA[2];
 			$this->telefono = $datosA[3];
 
-			$validarDatos = $this->ValidarDatos($datosA[0], $this->telefono ,$this->cedulaRif , $this->nombre , null);
-			if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
+			//$validarDatos = $this->ValidarDatos($datosA[0], $this->telefono ,$this->cedulaRif , $this->nombre , null);
+			//if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
 
             return $this->registrarBanco();
 			break;

@@ -74,7 +74,7 @@ class bancoTest extends TestCase{
 
    public function testGetRegistrarBanco(){
       $datoT = ['Transferencia', '2', '30233547', '2323223-2345454'];
-      $datoP = ['Pago movil', '2', '21727935', '04245699810'];
+      $datoP = ['Pago movil', '2', '217279357', '04245699810'];
 		$res = $this->obj->getRegistrarBanco($datoP);
 		if (isset($res["error"])) {
 			$this->fail($res['error']);
@@ -96,7 +96,7 @@ class bancoTest extends TestCase{
 
    public function testGetEditarBanco(){
       $datoT = ['Transferencia', '2', '30233547', '2323223-2345454'];
-      $datoP = ['Pago movil', '2', '21727935', '04245699810'];
+      $datoP = ['Pago movil', '2', '217279358', '04245699810'];
 		$res = $this->obj->getEditarBanco($datoP, 35);
 		if (isset($res["error"])) {
 			$this->fail($res['error']);

@@ -28,14 +28,14 @@ class ventasTest extends TestCase{
             $this->assertEquals('Venta general registrada', $res['resultado']);
         }
 
-        $res2 = $this->obj->agregarVentaXProd(8,10.00,10, $res['id']);
+        $res2 = $this->obj->agregarVentaXProd(8,10.00,9, $res['id']);
         if (isset($res2["error"])) {
             $this->fail($res2['error']);
         }else{
            $this->assertEquals('Venta por producto registrada y stock actualizado', $res2['resultado']);
        }
 
-       $res3 =  $this->obj->getPago(100.00, $res['id']);
+       $res3 =  $this->obj->getPago(120.00, $res['id']);
 
         if (isset($res3["error"])) {
             $this->fail($res3['error']);

@@ -25,6 +25,11 @@
       
        $mostrarC = $objModel->getMostrarCliente();
 
+       if(isset($_POST['recargar'])){
+        $res = $objModel->getMostrarCliente();
+        die(json_encode($res));
+       }
+
        if (isset($_POST['selectTipo']) && $permiso['Consultar'] == 1) {
          $res = $objModel->getMostrarMetodo();
          die(json_encode($res));
