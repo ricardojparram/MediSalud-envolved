@@ -16,7 +16,7 @@ $(document).ready(function(){
 	            localStorage.setItem('productos', JSON.stringify(productos));
 				let mostrar = '';
 	            data.forEach(row =>{
-	            	let precio_dolar = (Number(row.p_venta) / getDolar()).toFixed(2);
+	            	let precio_dolar = (Number(row.p_venta) / Number(getDolar())).toFixed(2);
 	             	mostrar += `
 		            <div class="product-container">
 		              <div class="card-product position-relative">
