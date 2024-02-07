@@ -58,14 +58,6 @@
                           <th scope="col">Fecha</th>
                         </tr>
                       </thead>
-                      <tfoot>
-                        <tr>
-                          <th scope="col">Modulo</th>
-                          <th scope="col">Usuario</th>
-                          <th scope="col">Descripcion</th>
-                          <th scope="col">Fecha</th>
-                        </tr>
-                      </tfoot>
                       <tbody>
                     
                       </tbody>

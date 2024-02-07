@@ -36,9 +36,8 @@
                 $new = $this->con->prepare($query);
                 $new->execute();
                 $data = $new->fetchAll();
-                echo json_encode($data);
                 parent::desconectarDB();
-                die();
+                return $data;
             } catch (\PDOException $error){
                 return $error;
               }
@@ -64,7 +63,7 @@
                        $item->celular = openssl_decrypt($item->celular, $this->cipher, $this->key, 0, $this->iv);
                        $item->correo = openssl_decrypt($item->correo, $this->cipher, $this->key, 0, $this->iv);
                    }
-                    echo json_encode($data);
+                   return $data;
                 }elseif (!isset($data[0]->cedula)) {
                     parent::conectarDB();
                     $new = $this->con->prepare("SELECT u.cedula, u.nombre, u.apellido, u.correo FROM usuario u WHERE u.cedula = ?");
@@ -75,12 +74,11 @@
                         $item->cedula = openssl_decrypt($item->cedula, $this->cipher, $this->key, 0, $this->iv);
                         $item->correo = openssl_decrypt($item->correo, $this->cipher, $this->key, 0, $this->iv);
                     }
-                    echo json_encode($data);
+                    return $data;
                     parent::desconectarDB();
                     
                 }
 
-                die();
                 
             } catch(\PDOException $error){
                 die($error);
@@ -99,9 +97,8 @@
                 $new->bindValue(2, $cedula);
                 $new->execute();
                 $data = $new->fetchAll();
-                echo json_encode($data);
                 parent::desconectarDB();
-                die();
+                return $data;
 
             } catch(\PDOException $error){
                 return $error;
@@ -114,10 +111,8 @@
                 $new = $this->con->prepare('SELECT * FROM `estados_venezuela` ORDER BY nombre ASC');
                 $new->execute();
                 $data = $new->fetchAll();
-                echo json_encode($data);
                 parent::desconectarDB();
-                die();
-
+                return $data;
             } catch(\PDOException $error){
                 return $error;
             }
@@ -130,9 +125,8 @@
                 $new->bindValue(1, $estado);
                 $new->execute();
                 $data = $new->fetchAll();
-                echo json_encode($data);
                 parent::desconectarDB();
-                die();
+                return $data;
 
             } catch(\PDOException $error){
                 return $error;
@@ -145,9 +139,8 @@
               $new = $this->con->prepare("SELECT * FROM tipo_pago WHERE status = 1 and online = 1");
               $new->execute();
               $data = $new->fetchAll(\PDO::FETCH_OBJ);
-              echo json_encode($data);
               parent::desconectarDB();
-              die();
+              return $data;
       
             }catch(\PDOException $error){
       
@@ -162,48 +155,41 @@
                 $new = $this->con->prepare("SELECT * FROM banco WHERE status = 1");
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
-                echo json_encode($data);
                 parent::desconectarDB();
-                die();
+                return $data;
         
               }catch(\PDOException $error){
         
-               return $error;   
+               return $error;
         
              }   
         }
 
         public function getRegistar($cedula, $nombre, $apellido, $direccionF, $telefono, $correo, $sede, $direccionE, $detalles){
 
-            if(preg_match_all("/^[a-zA-Z]{0,30}$/", $nombre) == false){
-                $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
-                echo json_encode($resultado);
-                die();
+            if(preg_match_all("/^[a-zA-ZÀ-ÿ ]{0,30}$/", $nombre) == false){
+                $resultado = ['resultado' => 'Error' , 'error' => 'Nombre inválido.'];
+                return $resultado;
             }
-            if(preg_match_all("/^[a-zA-Z]{0,30}$/", $apellido) == false){
-                $resultado = ['resultado' => 'Error de apellido' , 'error' => 'Apellido inválido.'];
-                echo json_encode($resultado);
-                die();
+            if(preg_match_all("/^[a-zA-ZÀ-ÿ ]{0,30}$/", $apellido) == false){
+                $resultado = ['resultado' => 'Error' , 'error' => 'Apellido inválido.'];
+                return $resultado;
             }
             if(preg_match_all("/^[0-9]{7,10}$/", $cedula) == false){
-                $resultado = ['resultado' => 'Error de cedula' , 'error' => 'Cédula inválida.'];
-                echo json_encode($resultado);
-                die();
+                $resultado = ['resultado' => 'Error' , 'error' => 'Cédula inválida.'];
+                return $resultado;
             }
             if(preg_match_all("/[$%&|<>]/", $direccionF) == true){
-                $resultado = ['resultado' => 'Error de direccion factura' , 'error' => 'Direccion inválida.'];
-                echo json_encode($resultado);
-                die();
+                $resultado = ['resultado' => 'Error' , 'error' => 'Direccion de factura inválida.'];
+                return $resultado;
             }
             if(preg_match_all("/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/", $correo) == false){
-                $resultado = ['resultado' => 'Error de email' , 'error' => 'Correo invalida.'];
-                echo json_encode($resultado);
-                die();
+                $resultado = ['resultado' => 'Error' , 'error' => 'Correo invalida.'];
+                return $resultado;
             }
             if(preg_match_all("/[$%&|<>]/", $direccionE) == true){
-                $resultado = ['resultado' => 'Error de direccion entrega' , 'error' => 'Direccion inválida.'];
-                echo json_encode($resultado);
-                die();
+                $resultado = ['resultado' => 'Error' , 'error' => 'Direccion de entrega inválida.'];
+                return $resultado;
             }
 
 
@@ -216,7 +202,7 @@
             $this->sede = $sede;
             $this->direccionE = $direccionE;
             $this->detalles = $detalles;
-            $this->registrar();
+            return $this->registrar();
           }
 
           private function registrar(){
@@ -354,7 +340,7 @@
                         $new->execute();
 
                     }catch(\PDOException $e){
-                        die($e);
+                        return $e;
                     }
 
                 }
@@ -362,12 +348,10 @@
                     
                     $this->cedula = openssl_decrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv);
                     $resultado = ['resultado' => 'Registrado Pedido', 'cedula' => $this->cedula , 'nombre' =>  $this->nombre , 'apellido' => $this->apellido];
-                    echo json_encode($resultado);
-    
-                    die();
+                    return $resultado;
                 
             } catch (\PDOException $error) {
-                die($error);
+                return $error;
             }
           }
 
@@ -519,16 +503,16 @@
                         
                         if($cedula != NULL) {
                             $resultado = ['resultado' => 'Eliminado correctamente.'];
-                            echo json_encode($resultado);
-                            die();
+                            return $resultado;
                         }
                     }
-                }
-                die();
+                }$resultado = ['resultado' => 'Nada'];
+                return $resultado;
+                
 
 
             } catch (\PDOException $e) {
-                die($e);
+                return $e;
             }
         }
 
@@ -565,37 +549,34 @@
                 foreach ($data as $item) {
                     if ($item->cuenta > 3) {
                         $resultado = ['resultado' => 'cuenta superior'];
-                        echo json_encode($resultado);
-                        die();
+                        return $resultado;
                     }
                 }
                 $resultado = ['resultado' => 'cuenta regulada'];
-                echo json_encode($resultado);
-                die();
+                return $resultado;
                 
             }catch(\PDOException $error){
-                die($error);
+                return $error;
             }
         }
 
-        public function temporizador($cedula,$venta = false){
+        public function temporizador($cedula){
             try {
                 parent::conectarDB();
                 $new = $this->con->prepare("SELECT fecha FROM venta WHERE online = 1 AND status = 2 AND cedula_cliente = ?");
                 $new->bindValue(1, $cedula);
                 $new->execute();
-                $data = $new->fetchAll(\PDO::FETCH_OBJ);
+                $data = $new->fetchAll();
                 parent::desconectarDB();
-                echo json_encode($data[0]->fecha);
-                die();
+                return $data;
             } catch(\PDOException $error){
-                die($error);
+                return $error;
             }
         }
 
         public function getEliminar($cedula, $eliminar){
             $this->cedula = $cedula;
-            $this->eliminar($eliminar);
+            return $this->eliminar($eliminar);
         }
 
         private function eliminar($carrito = "contar"){
@@ -629,12 +610,11 @@
 
                     if ($carrito != "registrar") {
                         $resultado = ['resultado' => 'Eliminado'];
-                        echo json_encode($resultado);
-                        die();
+                        return $resultado;
                     }
 
             } catch(\PDOException $error){
-                die($error);
+                return $error;
             }
         }
 

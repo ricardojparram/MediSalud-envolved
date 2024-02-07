@@ -70,14 +70,6 @@
               <th scope="col">Opciones</th>
             </tr>
           </thead>
-          <tfoot>
-            <tr>
-              <th scope="col">Moneda</th>
-              <th scope="col">Cambio</th>
-              <th scope="col">Fecha</th>
-              <th scope="col">Opciones</th>
-            </tr>
-          </tfoot>
           <tbody id = "tbody1">
             
           </tbody>
@@ -372,14 +364,6 @@
               <th scope="col">Opciones</th>
             </tr>
           </thead>
-          <tfoot>
-            <tr>
-
-              <th scope="col">Alcambio</th>
-              <th scope="col">Fecha</th>
-              <th scope="col">Opciones</th>
-            </tr>
-          </tfoot>
           <tbody id = "tbody">
 
           </tbody>
