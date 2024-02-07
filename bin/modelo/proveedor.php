@@ -43,7 +43,7 @@
         if(preg_match_all("/^[0-9]{7,10}$/", $rif) != 1){
           die(json_encode(['resultado' => 'Error de rif','msg' => 'Rif inválido.']));
         }
-        if(preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $razon) != 1){
+        if(preg_match_all("/^[a-zA-ZÀ-ÿ\s]{0,30}$/", $razon) != 1){
           die(json_encode(['resultado' => 'Error de nombre','msg' => 'Nombre inválido.']));
         }
         if(preg_match_all('/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s#\/,.-]){7,160}$/', $direccion) != 1){
@@ -166,7 +166,8 @@
         if(preg_match_all("/^[0-9]{7,10}$/", $rif) != 1){
           die(json_encode(['resultado' => 'Error de rif','msg' => 'Rif inválido.']));
         }
-        if(preg_match_all("/^[a-zA-ZÀ-ÿ]{0,30}$/", $razon) != 1){
+        if(preg_match_all("/^[a-zA-ZÀ-ÿ\s]{0,30}$/", $razon) != 1){
+          die($razon);
           die(json_encode(['resultado' => 'Error de nombre','msg' => 'Nombre inválido.']));
         }
         if(preg_match_all('/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s#\"\/,.-]){7,160}$/', $direccion) != 1){
@@ -202,8 +203,8 @@
           WHERE p.cod_prove = ?";
           $new = $this->con->prepare($sql);
           $new->bindValue(1, $this->rif);
-          $new->bindValue(2, $this->direccion);
-          $new->bindValue(3, $this->razon);
+          $new->bindValue(2, $this->razon);
+          $new->bindValue(3, $this->direccion);
           $new->bindValue(4, $this->telefono);
           $new->bindValue(5, $this->contacto);
           $new->bindValue(6, $this->idedit);

@@ -15,7 +15,7 @@ class clase extends DBConnect{
     }
 
     public function getAgregarClase($clase){
-    	if(preg_match_all("/^[a-zA-Z]{3,30}$/", $clase) == false){
+    	if(preg_match_all("/^[a-zA-ZÀ-ÿ]{3,30}$/", $clase) == false){
             $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
             echo json_encode($resultado);
             die();
@@ -102,7 +102,7 @@ class clase extends DBConnect{
     }
 
     public function getEditarClase($clase, $id){
-    	if(preg_match_all("/^[a-zA-Z]{3,30}$/", $clase) == false){
+    	if(preg_match_all("/^[a-zA-ZÀ-ÿ]{3,30}$/", $clase) == false){
             $resultado = ['resultado' => 'Error de nombre' , 'error' => 'Nombre inválido.'];
             echo json_encode($resultado);
             die();
