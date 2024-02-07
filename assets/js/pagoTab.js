@@ -805,7 +805,7 @@ $(document).ready(function () {
 						actualizarNotificacion(final).then(() => {
 						   localStorage.clear()
 							setTimeout(function () {
-								location = '?url=inico'
+								location = '?url=inicio'
 							}, 2500); 
 						  }
 						);	

@@ -58,7 +58,6 @@
   if(isset($_POST["cambio"]) && isset($_POST["tipo"])&& isset($permiso['Registrar'])) {
 
     $objModel->getAgregarCambio($_POST["cambio"], $_POST["tipo"]);
-    die("1");
   } 
 
 

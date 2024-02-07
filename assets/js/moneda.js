@@ -180,7 +180,7 @@ $(document).ready(function () {
 	})
 	
 	function rellenar(idHistory) {
-
+		selectMoneda()
 		$.ajax({
 			type: "POST",
 			url: '',
@@ -231,9 +231,9 @@ $(document).ready(function () {
 				data.forEach((row) => {
 					option += `<option value="${row.id_moneda}">${row.nombre}</option>`;
 				})
-				$('.selectM').each(function () {
-					$(this).append(option);
-				})
+				$('.selectM').html(option);
+					
+				
 			}
 		})
 	}
@@ -398,11 +398,11 @@ $(document).ready(function () {
 
 
 
-	$('#cerrar').click(()=> {
-		if (click >= 1) throw new Error('Spam de clicks');
-		tabla.destroy()
-		click++
-	})
+	// $('#cerrar').click(()=> {
+	// 	if (click >= 1) throw new Error('Spam de clicks');
+	// 	tabla.destroy()
+	// 	click++
+	// })
 
 	
 
