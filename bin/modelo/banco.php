@@ -100,7 +100,7 @@ class banco extends DBConnect{
 		}
 	}
 
-	public function ValidarDatos($tipoP, $tipo ,$cedulaRif , $nombre ,$id){
+	public function ValidarDatos($tipoP, $tipo ,$cedulaRif , $nombre ,$id = null){
 		if(preg_match_all("/^[a-zA-ZÀ-ÿ]+([a-zA-ZÀ-ÿ0-9\s,.-]){3,50}$/", $tipoP) != 1){
 			return['resultado' => 'Error de Tipo pago','error' => 'Tipo pago inválida.'];
 		}
@@ -119,7 +119,7 @@ class banco extends DBConnect{
 		$this->tipoP = $tipoP;
 		$this->nombre = $tipo;
 		$this->cedulaRif = $cedulaRif;
-		$this->codBank = $nombre;
+		$this->cuentaBank = $nombre;
 
 		if ($id != null) {
 		  
@@ -151,7 +151,7 @@ class banco extends DBConnect{
 			$new->bindValue(1, $this->tipoP);
 			$new->bindValue(2, $this->nombre);
 			$new->bindValue(3, $this->cedulaRif);
-			$new->bindValue(4, $this->codBank);
+			$new->bindValue(4, $this->cuentaBank);
 			$new->execute();
 			$data = $new->fetchAll();
 
@@ -183,7 +183,7 @@ class banco extends DBConnect{
 		$new->bindValue(1, $this->tipoP);
 		$new->bindValue(2, $this->nombre);
 		$new->bindValue(3, $this->cedulaRif);
-		$new->bindValue(4, $this->codBank);
+		$new->bindValue(4, $this->cuentaBank);
 		$new->bindValue(5, $this->id);
 		$new->execute();
 		$data = $new->fetchAll();
@@ -222,10 +222,11 @@ class banco extends DBConnect{
 				return['resultado' => 'Error de cuenta de Banco','error' => 'Cuenta de Banco inválida.'];
 			}
 
+			$this->tipoP = $datosA[0];
 			$this->nombre = $datosA[1];
 			$this->cedulaRif = $datosA[2];
 			$this->cuentaBank = $datosA[3];
-			$validarDatos = $this->ValidarDatos($datosA[0], $this->cuentaBank ,$this->cedulaRif , $this->nombre , null);
+			$validarDatos = $this->validDatos();
 			if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
 
             return $this->registrarBanco();
@@ -246,11 +247,14 @@ class banco extends DBConnect{
 				return['resultado' => 'Error de telefono','error' => 'telefono inválida.'];
 			}
             
+			$this->tipoP = $datosA[0];
 			$this->nombre = $datosA[1];
 			$this->cedulaRif = $datosA[2];
-			$this->telefono = $datosA[3];
-
-			$validarDatos = $this->ValidarDatos($datosA[0], $this->telefono ,$this->cedulaRif , $this->nombre , null);
+			$this->cuentaBank = $datosA[3];
+			
+			$validarDatos = $this->validDatos();
+			$this->telefono = $this->cuentaBank;
+			$this->cuentaBank = null;
 			if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
 
             return $this->registrarBanco();
@@ -363,7 +367,7 @@ class banco extends DBConnect{
 			$this->cedulaRif = $datosA[2];
 			$this->cuentaBank = $datosA[3];
 
-			$validarDatos = $this->ValidarDatos($datosA[0], $this->cuentaBank ,$this->cedulaRif , $this->nombre , $this->id);
+			$validarDatos = $this->validDatosEdit();
 			if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
 
             return $this->editarBanco();
@@ -391,7 +395,9 @@ class banco extends DBConnect{
 			$this->cedulaRif = $datosA[2];
 			$this->telefono = $datosA[3];
 
-			$validarDatos = $this->ValidarDatos($datosA[0], $this->telefono ,$this->cedulaRif , $this->nombre , $this->id);
+			$validarDatos = $this->validDatosEdit();
+			$this->telefono = $this->cuentaBank;
+			$this->cuentaBank = null;
 			if($validarDatos['resultado'] == 'Error Datos') return['resultado' => 'Error Datos', 'error' => 'Cedula ya registrada al mismo tipo de pago y banco'];
 
             return $this->editarBanco();

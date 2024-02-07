@@ -70,6 +70,14 @@ $(document).ready(function(){
         }else{
           vcorreo = true;
         }
+        if(data.resultado === "Error de contraseña"){
+          $("#error").text(data.error);
+          $("#password").attr("style","border-color: red;")
+          $("#password").attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
+          throw new Error('Cedula ya registrada.');
+        }else{
+          vcedula = true;
+        }
 
         if(vcedula && vname && vapellido && vcorreo && vpassword && vrepass){
           

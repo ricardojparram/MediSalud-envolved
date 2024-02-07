@@ -94,14 +94,15 @@
 						INNER JOIN tipo_pago tp ON dp.id_tipo_pago = tp.id_tipo_pago
 						INNER JOIN cambio c ON c.id_cambio = dp.id_cambio
 						LEFT JOIN (
-						    SELECT dc.id_datos_cobro, b.nombre as banco_cobro FROM datos_cobro_farmacia dc
-						    INNER JOIN banco b ON b.id_banco = dc.id_banco
+							SELECT dc.id_datos_cobro, b.nombre as banco_cobro FROM datos_cobro_farmacia dc
+							INNER JOIN banco b ON b.id_banco = dc.id_banco
 						) as datos_cobro ON datos_cobro.id_datos_cobro = dp.id_datos_cobro
 						LEFT JOIN (
-						  SELECT b.id_banco, b.nombre as banco_cliente FROM banco b 
-						    INNER JOIN detalle_pago dp ON dp.id_banco_cliente = b.id_banco
+						SELECT b.id_banco, b.nombre as banco_cliente FROM banco b 
+							INNER JOIN detalle_pago dp ON dp.id_banco_cliente = b.id_banco
 						) as datos_cliente ON datos_cliente.id_banco = dp.id_banco_cliente
-						WHERE p.id_pago = ?";
+						WHERE p.id_pago = ?
+						GROUP BY tp.id_tipo_pago;";
 				$new = $this->con->prepare($sql);
 				$new->bindValue(1, $this->id_pago);
 				$new->execute();

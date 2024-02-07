@@ -67,15 +67,6 @@
                 <th scope="col">Opciones</th>
               </tr>
             </thead>
-            <tfoot>
-              <tr>
-                <th scope="col">N° Factura</th>
-                <th scope="col">Cédula cliente</th>
-                <th scope="col">Nombre cliente</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Opciones</th>
-              </tr>
-            </tfoot>
             <tbody>
             </tbody>
           </table>

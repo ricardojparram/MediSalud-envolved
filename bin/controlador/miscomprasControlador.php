@@ -33,7 +33,7 @@
       $objModel->validarSelect($_POST['id']);
      }
 
-     if (isset($_POST["eliminar"]) && $permiso->eliminar == 1) {
+     if (isset($_POST["eliminar"])) {
        $MS = $objModel->eliminarVenta($_POST["id"]);
      }
 

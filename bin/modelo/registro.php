@@ -38,8 +38,8 @@
         echo json_encode($resultado);
         die();
       }
-      if(preg_match_all("/^[A-Za-z0-9 *?=&_!¡()@#]{3,30}$/", $password) == false) {
-        $resultado = ['resultado' => 'Error de contraseña' , 'error' => 'Correo inválida.'];
+      if(preg_match_all("/^[A-Za-zA-ZÀ-ÿ0-9*?=&_!¡().@#-]{3,30}$/", $password) == false) {
+        $resultado = ['resultado' => 'Error de contraseña' , 'error' => 'Contraseña inválida.'];
         echo json_encode($resultado);
         die();
       }

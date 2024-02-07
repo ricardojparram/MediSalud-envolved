@@ -4,18 +4,18 @@ $(document).ready(function(){
 	let comprobarEnvioPermiso;
 	$.ajax({method: 'POST', url: "", dataType: 'json', data: {getPermisos:''},
 		success(permisos){
-			comprobarPagoPermiso = (typeof permisos['Comprobar pago'] === "undefined") ? 'disabled' : '';
+			asignarEstadoPermiso = (typeof permisos['Asignar estado'] === "undefined") ? 'disabled' : '';
 		}
 	}).then(() => rellenar(true));
 
-	const estados = {
-		"1" : `<button type="button" class="btn btn-success estadoEnvio" data-bs-toggle="modal" data-bs-target="#comprobacion">Entregado</button>`,
-		"2" : `<button type="button" class="btn btn-warning estadoEnvio" data-bs-toggle="modal" data-bs-target="#comprobacion">En camino</button>`,
-		"3" : `<button type="button" class="btn btn-dark estadoEnvio" data-bs-toggle="modal" data-bs-target="#comprobacion">En proceso</button>`
- 	}
-
+	
 	function rellenar(bitacora = false){ 
-        $.ajax({ type: "post", url: "", dataType: "json", data: {mostrar: "", bitacora},
+		const estados = {
+			"1" : `<button type="button" ${asignarEstadoPermiso} class="btn btn-success estadoEnvio" data-bs-toggle="modal" data-bs-target="#comprobacion">Entregado</button>`,
+			"2" : `<button type="button" ${asignarEstadoPermiso} class="btn btn-warning estadoEnvio" data-bs-toggle="modal" data-bs-target="#comprobacion">En camino</button>`,
+			"3" : `<button type="button" ${asignarEstadoPermiso} class="btn btn-dark estadoEnvio" data-bs-toggle="modal" data-bs-target="#comprobacion">En proceso</button>`
+		 }
+		$.ajax({ type: "post", url: "", dataType: "json", data: {mostrar: "", bitacora},
             success(data){
                 let tabla;
                 data.forEach(row => {
