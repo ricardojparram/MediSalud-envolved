@@ -297,7 +297,54 @@ class moneda extends DBConnect{
      }
   }
 
-  
+  public function getValidarMoneda($id, $nombre){
+
+    if(preg_match_all("/^[0-9]{|1,10}$/", $id) != 1){
+      return ['resultado' => 'error','error' => 'Id inválida.'];
+    }
+    if(preg_match_all("/^[a-zA-ZÀ-ÿ ]{3,30}$/", $name) == false){
+      $resultado = ['resultado' => 'error', 'error' => 'Nombre de Moneda Invalida'];
+      return $resultado;
+    }
+    $this->idedit = ($idLab === "false") ? false : $idLab;
+    $this->rif = $rif;
+
+    return $this->validarRif();
+  }
+
+  private function validarRif(){
+
+    try {
+      $this->conectarDB();
+
+      if($this->idedit === false){
+        $new = $this->con->prepare('SELECT rif FROM laboratorio WHERE status = 1 and rif = ?');
+        $new->bindValue(1, $this->rif);
+      }else{
+        $new = $this->con->prepare('SELECT rif FROM laboratorio WHERE status = 1 and rif = ? AND cod_lab != ?');
+        $new->bindValue(1, $this->rif);
+        $new->bindValue(2, $this->idedit);
+      }
+      
+      $new->execute();
+      $data = $new->fetchAll();
+
+      $resultado;
+      if(isset($data[0]['rif'])){
+        $resultado = ['resultado' => 'Error de rif', 'msg' => 'El rif ya está registrado.', 'res' => false];
+      }else{
+        $resultado = ['resultado' => 'Rif válido.', 'res' => true];
+      }
+      $this->desconectarDB();
+      return $resultado;
+
+    } catch (PDOException $e) {
+      print "¡Error!: " . $e->getMessage() . "<br/>";
+      die();
+    }
+
+  }
+
 
 }
 ?>

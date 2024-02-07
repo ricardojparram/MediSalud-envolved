@@ -71,16 +71,6 @@
                       <th scope="col">Opciones</th>
                     </tr>
                   </thead>
-                  <tfoot>
-                    <tr>
-                      <th scope="col">Cedula</th>
-                      <th scope="col">Nombre</th>
-                      <th scope="col">Apellido</th>
-                      <th scope="col">Correo</th>
-                      <th scope="col">Nivel</th>
-                      <th scope="col">Opciones</th>
-                    </tr>
-                  </tfoot>
                   <tbody id="tbody">
                   </tbody>
                 </table>

@@ -185,6 +185,10 @@ class usuarios extends DBConnect
   private function eliminarUsuario()
   {
     try {
+      if ($this->cedula == $_SESSION['cedula']) {
+        $resultado = ['resultado' => 'Error', 'msj' => 'No se puede Eliminar su Propia Cuenta'];
+        return $resultado;
+      }
 
       parent::conectarDB();
       $new = $this->con->prepare("UPDATE `usuario` SET `status` = '0' WHERE `usuario`.`cedula` = ?"); //"DELETE FROM `usuario` WHERE `usuario`.`cedula` = ?"
@@ -328,7 +332,7 @@ class usuarios extends DBConnect
         $data = $new->fetchAll();
         parent::desconectarDB();
         if (isset($data[0]['cedula'])) {
-          $resultado = ['resultado' => 'Error', 'msj' => 'La cédula está registrada.'];
+          $resultado = ['resultado' => 'Correcto', 'msj' => 'La cédula está registrada.'];
 
           
         } else {
@@ -371,7 +375,7 @@ class usuarios extends DBConnect
       } elseif (openssl_encrypt($this->cedula, $this->cipher, $this->key, 0, $this->iv) == $this->id) {
         $resultado = ['resultado' => 'Correcto'];
         
-      }
+      } 
       return $resultado;
 
 
