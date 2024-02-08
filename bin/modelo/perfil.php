@@ -151,7 +151,9 @@ class perfil extends DBConnect{
 	    }
 	    if(isset($this->foto['name'])){
 	    	$resultadoFoto = $this->subirImagen();
-	    }
+	    }else{
+			$resultadoFoto = 'Sin cambios';
+		}
 
 	    echo json_encode(['edit' => $resultadoEdit, 'foto' => $resultadoFoto]);
 	    die();

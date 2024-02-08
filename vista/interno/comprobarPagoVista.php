@@ -125,6 +125,7 @@
 
                     <tr>
                       <th scope="col">Tipo de pago</th>
+                      <th scope="col">Referencia</th>
                       <th scope="col">Monto</th>
                       <th scope="col">Cambio</th>
                       <th scope="col">Banco cobro</th>

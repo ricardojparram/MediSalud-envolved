@@ -220,8 +220,8 @@ $(document).ready(function () {
 
 	selectMoneda();
 	let selectOp
-	function selectMoneda() {
-		$.ajax({
+	async function selectMoneda() {
+		await $.ajax({
 			type: "POST",
 			url: '',
 			dataType: 'json',
@@ -239,9 +239,9 @@ $(document).ready(function () {
 		})
 	}
 	let resultado
-	$(document).on('click', '#agregarMoneda', function (){
-		selectMoneda();
-		
+	$(document).on('click', '#agregarMoneda', async function (){
+		await selectMoneda();
+		$('#selectMoneda').val(idHistory)
 	})
 
 	let select, vcambio;

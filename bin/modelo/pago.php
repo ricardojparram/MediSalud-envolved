@@ -54,7 +54,6 @@
                 $new->bindValue(1, $cedula);
                 $new->execute();
                 $data = $new->fetchAll(\PDO::FETCH_OBJ);
-                
                 parent::desconectarDB();
                 if(isset($data[0]->cedula)){ 
                     foreach ($data as $item) {
@@ -409,7 +408,7 @@
                     $new->bindValue(4, "");
                     $new->execute();
 
-                    $new = $this->con->prepare("INSERT INTO contacto_cliente(cedula) VALUES (?)");
+                    $new = $this->con->prepare("INSERT INTO contacto_cliente(cedula,telefono) VALUES (?, '')");
                     $new->bindValue(1, $this->cedula);
                     $new->execute();
                     parent::desconectarDB();

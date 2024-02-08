@@ -89,7 +89,7 @@
 		private function detallePago(){
 			try {
 				$this->conectarDB();
-				$sql = "SELECT tp.des_tipo_pago, p.num_fact, dp.monto_pago, datos_cobro.banco_cobro, datos_cliente.banco_cliente, c.cambio FROM pago p
+				$sql = "SELECT tp.des_tipo_pago, p.num_fact, dp.monto_pago, dp.referencia, datos_cobro.banco_cobro, datos_cliente.banco_cliente, c.cambio FROM pago p
 						INNER JOIN detalle_pago dp ON p.id_pago = dp.id_pago
 						INNER JOIN tipo_pago tp ON dp.id_tipo_pago = tp.id_tipo_pago
 						INNER JOIN cambio c ON c.id_cambio = dp.id_cambio

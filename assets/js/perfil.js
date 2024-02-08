@@ -129,15 +129,14 @@ $(document).ready(function(){
 		let borrar = $('#imgEditar').is('[src="assets/img/profile_photo.jpg"]');
 
 		if(borrar != true){
-			if(typeof canvas === "undefined" || typeof canvas == null){
-				Toast.fire({ icon: 'warning', title: 'No ha cambiado la imagen.' });
-				throw Error('Canvas no tiene ninguna imagen cortada');
-			}else{
+			if(typeof canvas !== "undefined"){
 				canvas.toBlob(function(blob){
 					form.set('foto', blob, 'avatar.png')
 					editarImagen(form);
 				});
 			}
+			form.set('foto', null)
+					editarImagen(form);
 		}
 
 		if(borrar){

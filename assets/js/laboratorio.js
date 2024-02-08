@@ -97,8 +97,6 @@ $(document).ready(function(){
 
 				if(data.resultado === "error"){
 					$("#error").text(data.msg);
-					$("#rif").attr("style","border-color: red;")
-					$("#rif").attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
 					throw new Error('Rif inválido');
 				}
 
@@ -180,8 +178,6 @@ $(document).ready(function(){
 			success(data){
 				if(data.resultado === "error"){
 					$("#errorEdit").text(data.msg);
-					$("#rifEdit").attr("style","border-color: red;")
-					$("#rifEdit").attr("style","border-color: red; background-image: url(assets/img/Triangulo_exclamacion.png); background-repeat: no-repeat; background-position: right calc(0.375em + 0.1875rem) center; background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);"); 
 					throw new Error('Rif ya registrado.');
 				}
 

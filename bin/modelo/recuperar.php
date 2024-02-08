@@ -54,10 +54,9 @@
 				$generatedPass = hash('crc32b', $str);
 				$pass = password_hash($generatedPass, PASSWORD_BCRYPT);
 
-
 				$new = $this->con->prepare("UPDATE usuario SET password = ? WHERE correo = ? AND status = 1");
 				$new->bindValue(1, $pass);
-				$new->bindValue(2, $this->email);
+				$new->bindValue(2, $emailEncrypt);
 				$new->execute();
 
 				if($this->enviarEmail($this->email, $generatedPass, $nombre)){

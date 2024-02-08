@@ -88,6 +88,7 @@ $(document).ready(function(){
                     tabla += `
                         <tr>
 	                        <td >${row.des_tipo_pago}</td>
+							<td >${row.referencia}</td>
 	                        <td >${row.monto_pago}</td>
 	                        <td >${row.cambio}</td>
 	                        <td >${row.banco_cobro}</td>
