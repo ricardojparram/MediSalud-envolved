@@ -49,9 +49,14 @@ $(document).ready(function(){
 
     }
 
-    let id;
+    let id, status;
     $(document).on('click','.estadoPago',function(){
     	id = this.closest('td').attributes.pago_id.value;
+		// $(`.asignacionDeEstado input:radio`).removeAttr('checked')
+		// if($(this).hasClass('btn-success')) status = 1;
+		// if($(this).hasClass('btn-warning')) status = 2;
+		// if($(this).hasClass('btn-danger')) status = 3;
+		// $(`.asignacionDeEstado input:radio[value="${status}"]`).attr('checked', 'true')
     })
 
     $('#enviarEstadoDePago').click(function(){

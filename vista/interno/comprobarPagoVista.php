@@ -86,7 +86,7 @@
                 <section class="row justify-content-center asignacionDeEstado">
 
                   <span class="col-4 d-flex justify-content-center">
-                    <input type="radio" value=1 class="btn-check" checked name="options-outlined" id="success-outlined">
+                    <input type="radio" value=1 class="btn-check" name="options-outlined" id="success-outlined">
                     <label class="btn btn-outline-success" for="success-outlined">Aprobado</label>
                   </span>
                   <span class="col-4 d-flex justify-content-center">
