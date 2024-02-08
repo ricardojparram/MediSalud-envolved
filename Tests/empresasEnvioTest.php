@@ -32,7 +32,7 @@ class empresasEnvioTest extends TestCase{
  	}
 
 	public function testRegistrarEmpresa(){
-		$res = $this->obj->getRegistrarEmpresa('1234567','ZOON', null);
+		$res = $this->obj->getRegistrarEmpresa('76543321','ZOON', null);
 		if (isset($res["error"])) {
 			$this->fail($res['error']);
 		}else{
@@ -63,7 +63,7 @@ class empresasEnvioTest extends TestCase{
 	}
 
 	public function testEditarEmpresa(){
-		$res = $this->obj->getEditarEmpresa('12345678','ZOON', null,'3');
+		$res = $this->obj->getEditarEmpresa('123456799','ZOON', null,'3');
 		if (isset($res["error"])) {
 			$this->fail($res['error']);
 		}else{

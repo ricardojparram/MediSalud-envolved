@@ -166,7 +166,7 @@
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success factura" data-bs-dismiss="modal" id=" ">Exportar Factura</button>
+        <button type="button" class="btn btn-success factura" data-bs-dismiss="modal" id=" ">Exportar ticket</button>
         <button type="button" class="btn btn-secondary cerrar" data-bs-dismiss="modal" id="cerrarDetalles">Cerrar</button>
       </div>
     </div>
@@ -203,6 +203,7 @@
                         }
                       }else{"";}?>
                     </select> 
+                    <button type="button" class="iconos btn btn-secondary recargar"><i class="bi bi-arrow-clockwise fs-6"></i></button>
                   </div>
                   <p class="error" style="color:#ff0000;text-align: center;" id="error1"></p>
                 </div>
@@ -269,7 +270,7 @@
                     <tbody id="FILL">
                       <tr>
                         <td width="1%"><a class="removeRowPagoTipo a-asd" href="#"><i class="bi bi-trash-fill"></i></a></td>
-                        <td width='30%'> 
+                        <td width='40%'> 
                           <select class="select-tipo select-asd" name="TipoPago">
                             <option></option>
                           </select>

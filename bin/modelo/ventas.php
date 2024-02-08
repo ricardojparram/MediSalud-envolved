@@ -74,7 +74,7 @@
       if(preg_match_all("/^[0-9]{1,15}$/", $cantidad) != 1){
         return ['resultado' => 'cantidad de precio','error' => 'cantidad inválida.'];
       } 
-
+    
     $this->codigoP = $producto;
     $this->precio = $precio;
     $this->cantidad = $cantidad;

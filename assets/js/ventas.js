@@ -44,7 +44,30 @@
       }
     })
   }
-
+ 
+  $(document).on('click', '.recargar', function() {
+    $.ajax({
+      method: "POST",
+      url: " ",
+      dataType: "json",
+      data: {recargar: "clienta"},
+      success: function(data) {
+        let mostrarC = data;
+        let select = $("#cedula");
+        select.html('<option value="0" selected disabled>Clientes</option>');
+        if (mostrarC) {
+          for (var i = 0; i < mostrarC.length; i++) {
+            var option = $("<option>");
+            option.val(mostrarC[i].cedulaE);
+            option.text(mostrarC[i].nombre + " " + mostrarC[i].apellido + " " + mostrarC[i].cedula);
+            select.append(option);
+          }
+        }
+      }
+    });
+  });
+    
+    
   let id;
 
   $(document).on('click', '.detalleV' , function(){
@@ -84,7 +107,7 @@
           </tr>
           `  
         })
-        $('#ventaNombreTipoPago').text(`Numero de Factura #${lista[0].num_fact}.`);
+        $('#ventaNombreTipoPago').text(`Numero de ticket #${lista[0].num_fact}.`);
         $('#bodyDetalleTipo').html(tabla);
       })
      })
@@ -375,9 +398,9 @@
 
      //Calcular Cantidad por tipo de pago por cambio del usuario
 
-    $(document).on('keyup', '.precio-tipo', () => {
+      $(document).on('keyup', '.precio-tipo', () => {
       let montoMax = parseFloat($('#monto').val());
-      let preciosPorTipo = parseFloat($('.precio-tipo'));
+      let preciosPorTipo = $('.precio-tipo');
       let numFilas = preciosPorTipo.length;
 
       if (numFilas === 1) {
@@ -390,6 +413,7 @@
         } else {
           preciosPorTipo.eq(1).val((montoMax - precio1).toFixed(2));
         }
+
       }
 
       let totalAsignado = 0;
@@ -397,11 +421,20 @@
         totalAsignado += parseFloat($(this).val());
       });
 
-      if (totalAsignado > montoMax || totalAsignado < montoMax || totalAsignado < 1) {
+      if (totalAsignado > montoMax) {
         preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
         $(preciosPorTipo).attr('valid', 'false');
-      } else {
-        preciosPorTipo.css({"border": "none"});
+
+      }else if(totalAsignado < montoMax){
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+        $(preciosPorTipo).attr('valid', 'false');
+
+      } else if(totalAsignado < 1 ){
+        preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
+        $(preciosPorTipo).attr('valid', 'false');
+
+      }else if(totalAsignado == montoMax){
+         preciosPorTipo.css({"border": "none"});
         $(preciosPorTipo).attr('valid', 'true');
       }
     })
@@ -416,6 +449,7 @@
       });
 
        resto = montoMax - totalAsignado
+       console.log(totalAsignado = montoMax)
 
       if (totalAsignado > montoMax) {
         preciosPorTipo.css({"border": "solid 1px", "border-color": "red"});
@@ -741,7 +775,6 @@
       },
       function(data){
        let idVenta = JSON.parse(data);
-       console.log(idVenta);
        enviarProductos(idVenta.id);
        datosPago(idVenta.id).then((idPago)=>{
 
