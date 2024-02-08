@@ -1,13 +1,22 @@
 $(document).ready(function(){
 
-	mostrarCatalogo()
+	
 	const getProductos = () => JSON.parse(localStorage.getItem('productos'));
 	const getProdDetalle = (id) => {let prod = getProductos(); return prod[`${id}`] }
-
+	
 	const getDolar = () => Number(localStorage.getItem('dolar'))
-
-	function mostrarCatalogo(){
-		$.ajax({type: 'POST',url: '',dataType: 'json',data:{mostraC: ''},
+	
+	async function getPrecioDolar(){
+		await $.post('?url=carrito',{precioDolar: ''}, function(res){
+			let dolar = JSON.parse(res)[0]
+			localStorage.setItem('dolar', dolar.cambio);
+		})
+	}
+	getPrecioDolar().then(()=>{
+		mostrarCatalogo()
+	})
+	async function mostrarCatalogo(){
+		await $.ajax({type: 'POST',url: '',dataType: 'json',data:{mostraC: ''},
 			success(data){
 				let productos = data.reduce((acc, curr) => {
 					acc[curr.cod_producto] = curr;
@@ -16,7 +25,10 @@ $(document).ready(function(){
 	            localStorage.setItem('productos', JSON.stringify(productos));
 				let mostrar = '';
 	            data.forEach(row =>{
+					console.log(row.p_venta)
+					console.log(getDolar())
 	            	let precio_dolar = (Number(row.p_venta) / Number(getDolar())).toFixed(2);
+					console.log(precio_dolar)
 	             	mostrar += `
 		            <div class="product-container">
 		              <div class="card-product position-relative">
